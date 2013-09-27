@@ -7,20 +7,22 @@
         }, {
             input: "",
             output: { }
+        }, {
+            input: "asdf sdds asd asd asd asd\n",
+            output: { }
         }
     ];
 
-    QUnit.cases(lexer_cases).asyncTest("lexer", function(params) {
+    QUnit.cases(lexer_cases).test("lexer", function(params) {
         // arrange
         var lexer = new yasp.Lexer();
-        var fakeAssembler = { };
         var expectedResult = params.output;
         var result;
 
         // act
-        result = lexer.pass(fakeAssembler, params.input);
+        result = JSON.parse(JSON.stringify(lexer.pass({ }, params.input)));
 
         // assert
-        deepEqual(result, expectedResult, "Assembler does not generate valid tokens");
+        deepEqual(result, expectedResult);
     });
 })();
