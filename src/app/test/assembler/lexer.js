@@ -78,7 +78,7 @@
         }
     ];
 
-    QUnit.cases(lexer_cases).test("lexer", function(params) {
+    QUnit.cases(lexer_cases).test("ensure lexer working", function(params) {
         // arrange
         var lexer = new yasp.Lexer();
         var expectedResult = params.output;
