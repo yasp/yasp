@@ -26,7 +26,7 @@ if (typeof yasp == "undefined") yasp = { };
         for (var i = 0; i < input.length; i++) {
             var token = input.charAt(i);
             if (splitter.indexOf(token) != -1) {
-                var text = input.substring(lastFound, i - 0);
+                var text = input.substring(lastFound, i);
                 this.newToken(new yasp.Token(text, line, char - text.length));
 
                 if (token == commentSplitter) {
@@ -43,6 +43,10 @@ if (typeof yasp == "undefined") yasp = { };
                 line++;
                 char = 0;
             }
+        }
+        if (lastFound < input.length) {
+            var text = input.substring(lastFound, i);
+            this.newToken(new yasp.Token(text, line, char - text.length));
         }
 
         return this.tokens;
