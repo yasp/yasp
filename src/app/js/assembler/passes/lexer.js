@@ -39,15 +39,20 @@ if (typeof yasp == "undefined") yasp = { };
             }
 
             char++;
-            if (token == '\n') {
+            if (input.charAt(i) == '\n') {
                 line++;
                 char = 0;
             }
         }
-        
+
         return this.tokens;
     };
 
+    /**
+     * Creates a new token and adds it to the token array list
+     * If the token is either empty or in the deadSplitter array it is not added to the array
+     * @param token Which token should be added
+     */
     yasp.Lexer.prototype.newToken = function(token) {
         if (!!token && token.text.length > 0 && deadSplitter.indexOf(token.text) == -1) {
             this.tokens.push(token);
@@ -75,6 +80,10 @@ if (typeof yasp == "undefined") yasp = { };
         return "UNKNOWN";
     };
 
+    /**
+     * Returns the string representation of a token. This should only be used for testing purpose
+     * @returns {string}
+     */
     yasp.Token.prototype.toString = function() {
         return "'" + (this.text == '\n' ? "NEWLINE" : this.text) + "'\n";
     };
