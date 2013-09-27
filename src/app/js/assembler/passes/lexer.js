@@ -5,6 +5,17 @@ if (typeof yasp == "undefined") yasp = { };
     var deadSplitter = " \t";
     var commentSplitter = ';';
 
+    var validLabel = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_";
+    var validByteRegisters = [];
+    for (var i = 0; i < 32; i++) {
+        validByteRegisters.push("B"+i);
+    }
+    var validWordRegisters = [];
+    for (var i = 0; i < 16; i++) {
+        validWordRegisters.push("W"+i);
+    }
+
+
     /**
      * @class Tokenizes (= Lexer) all the tokens
      */
@@ -63,6 +74,16 @@ if (typeof yasp == "undefined") yasp = { };
         }
     };
 
+    yasp.TokenType = {
+        COMMAND: "command",
+        LABEL: "label",
+        BYTE_LITERAL: "byte literal",
+        WORD_LITERAL: "word literal",
+        BYTE_REGISTER: "byte register",
+        WORD_REGISTER: "word register",
+        UNKNOWN: "unknown"
+    }
+
     /**
      * A Token representing an atomic group of characters in the assembler code
      * @param text The content of the token
@@ -80,8 +101,46 @@ if (typeof yasp == "undefined") yasp = { };
      * @function Returns the type of this Token (Literal, Label, ...)
      */
     yasp.Token.prototype.getType = function() {
-        // TODO Implement this
-        return "UNKNOWN";
+        // TODO: optimize this function => cache values and dont iterate through everything
+
+        var name = this.text.toUpperCase();
+
+        if (!isNaN(name)) {
+            // what num?
+            var num = parseInt(this.text);
+            if (num < Math.pow(2, 8)) {
+                return yasp.TokenType.BYTE_LITERAL;
+            } else if (num < Math.pow(2, 16)){
+                return yasp.TokenType.WORD_LITERAL;
+            } else {
+                return yasp.TokenType.UNKNOWN;
+            }
+        }
+
+        // am i a byte register
+        for (var i = 0; i < validByteRegisters.length; i++) {
+            if (validByteRegisters[i] == name) return yasp.TokenType.BYTE_REGISTER;
+        }
+
+        // am i a word register
+        for (var i = 0; i < validWordRegisters.length; i++) {
+            if (validWordRegisters[i] == name) return yasp.TokenType.WORD_REGISTER;
+        }
+
+        // am i a command?
+        for (var i = 0; i < yasp.commands.length; i++) {
+            if (yasp.commands[i].name.toUpperCase() == name) return yasp.TokenType.COMMAND;
+        }
+
+        // am i a label?
+        var amILabel= true;
+        for (var i = 0; i < this.text.length; i++) {
+            if (validLabel.indexOf(name.charAt(i)) == -1) {
+                amILabel = false;
+                break;
+            }
+        }
+        return amILabel ? yasp.TokenType.LABEL : yasp.TokenType.UNKNOWN;
     };
 
     /**

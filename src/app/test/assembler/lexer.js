@@ -62,13 +62,13 @@
         }, {
             input: "asdf sdds asd asd asd asd\n",
             output: [
-                { "char": 0, "line": 0, "text": "asdf" },
-                { "char": 5, "line": 0, "text": "sdds" },
-                { "char": 10, "line": 0, "text": "asd" },
-                { "char": 14, "line": 0, "text": "asd" },
-                { "char": 18, "line": 0, "text": "asd" },
-                { "char": 22, "line": 0, "text": "asd" },
-                { "char": 25, "line": 0, "text": "\n" }
+                {"char": 0, "line": 0, "text": "asdf"},
+                {"char": 5, "line": 0, "text": "sdds"},
+                {"char": 10, "line": 0, "text": "asd"},
+                {"char": 14, "line": 0, "text": "asd"},
+                {"char": 18, "line": 0, "text": "asd"},
+                {"char": 22, "line": 0, "text": "asd"},
+                {"char": 25, "line": 0, "text": "\n"}
             ]
         }, {
             input: "test123",
@@ -89,5 +89,30 @@
 
         // assert
         deepEqual(result, expectedResult);
+    });
+})();
+
+(function() {
+    module("assembler token");
+    test("ensure token constructor working", function() {
+        ok(!!new yasp.Token("test", 0, 0));
+    });
+
+    var tokentype_cases = [
+        {text: "MOV", type: yasp.TokenType.COMMAND},
+        {text: "asdf12_3", type: yasp.TokenType.LABEL},
+        {text: "&as??", type: yasp.TokenType.UNKNOWN},
+        {text: "123", type: yasp.TokenType.BYTE_LITERAL},
+        {text: "0xFF", type: yasp.TokenType.BYTE_LITERAL},
+        // {text: "11111111b", type: yasp.TokenType.BYTE_LITERAL}, <- Not implemented yet
+        {text: "1234", type: yasp.TokenType.WORD_LITERAL},
+        {text: "0xFFFF", type: yasp.TokenType.WORD_LITERAL},
+        // {text: "1111111111111111b", type: yasp.TokenType.WORD_LITERAL}, <- Not implemented yet
+        {text: "b31", type: yasp.TokenType.BYTE_REGISTER},
+        {text: "w15", type: yasp.TokenType.WORD_REGISTER}
+    ];
+
+    QUnit.cases(tokentype_cases).test("ensure token getType working", function(params) {
+        equal(new yasp.Token(params.text).getType(), params.type);
     });
 })();

@@ -7,6 +7,7 @@ if (typeof yasp == 'undefined') yasp = { };
      */
     yasp.Assembler = function() {
         this.jobs = [ ];
+        this.errors = [ ]; // array containing all the errors that occured while assembling
 
         // results
         this.map = null;
@@ -15,9 +16,9 @@ if (typeof yasp == 'undefined') yasp = { };
 
         this.passes = [
             new yasp.Lexer(),
+            new yasp.PreProcessor(),
             new yasp.Checker(),
             new yasp.Analyser(),
-            new yasp.PreProcessor(),
             new yasp.Parser(),
             new yasp.Generator()
         ];
@@ -43,6 +44,11 @@ if (typeof yasp == 'undefined') yasp = { };
     yasp.Assembler.prototype.riseSyntaxError = function(iterator, msg) {
         var token = iterator.current();
         console.log(msg = ("Syntax error: " + msg + " in line " + token.line + " at character " + token.char));
+        this.errors.push({
+            token: token,
+            msg: msg
+        });
+
         throw msg;
     }
 
@@ -115,5 +121,13 @@ if (typeof yasp == 'undefined') yasp = { };
         // restore state => continue until \n is reached, and then skip the \n
         while (this.hasNext() && !this.is('\n')) this.next();
         if (this.hasNext()) this.next();
+    }
+
+    /**
+     * Wrapper for the yasp.Assembler.riseSyntaxError function
+     * @param msg
+     */
+    yasp.TokenIterator.prototype.riseSyntaxError = function(msg) {
+        this.assembler.riseSyntaxError(this, msg);
     }
 })();
