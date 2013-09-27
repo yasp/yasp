@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assembler Enviroment</title>
+    <script src="passes/analyser.js" type="application/javascript"></script>
+    <script src="passes/checker.js" type="application/javascript"></script>
+    <script src="passes/generator.js" type="application/javascript"></script>
+    <script src="passes/lexer.js" type="application/javascript"></script>
+    <script src="passes/parser.js" type="application/javascript"></script>
+    <script src="passes/preprocessor.js" type="application/javascript"></script>
+    <script src="assembler.js" type="application/javascript"></script>
+    <script type="application/javascript" defer="true">
+        var text = '; ADC-Werte: \n\
+                ;   0 ...  80 => rote LED leuchtet \n\
+        ;  81 ... 165 => gelbe LED leuchtet \n\
+        ; 166 ... 255 => grüne LED leuchtet \n\
+        ; ================================= \n\
+        s: \n\
+                adc1 w0		; Wert von Poti einlesen \n\
+        debug b1	; brauchbaren Teil zum Vergleichen ausgeben \n\
+        cmp b1, 81	; auf erste Grenze testen \n\
+        jnc m1		; wenn größer oder gleich dann weiter springen \n\
+        high 3		; erste LED setzen \n\
+        low 4		; zweite LED löschen \n\
+        low 5		; dritte LED löschen \n\
+        jmp s		; endlos \n\
+        m1: \n\
+                cmp b1, 166	; zweite Grenze testen \n\
+        jnc m2		; wenn größer oder gleich dann weiter springen \n\
+        low 3		; erste LED löschen \n\
+        high 4		; zweite LED setzen \n\
+        low 5		; dritte LED löschen \n\
+        jmp s		; endlos \n\
+        m2: \n\
+                low 3		; erste LED löschen \n\
+        low 4		; zweite LED löschen \n\
+        high 5		; dritte LED setzen \n\
+        jmp s		; endlos \n\
+        end\n';
+
+        var assembler = new yasp.Assembler();
+        assembler.assemble({
+            code: text,
+            jobs: ['symbols', 'bitcode', 'map']
+        });
+
+        console.log("Result: "+assembler.result);
+    </script>
+</head>
+<body>
+    <pre>
+        Look into the JS console : - )
+    </pre>
+</body>
+</html>
