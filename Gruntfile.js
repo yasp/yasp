@@ -12,10 +12,15 @@ module.exports = function(grunt) {
         'http://code.jquery.com/qunit/qunit-1.12.0.css'
       ],
     },
+    qunit: {
+      all: ['src/app/test/*.html']
+    }
   });
 
   grunt.loadNpmTasks('grunt-curl');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
+  grunt.registerTask('test', [ 'qunit' ]);
 };

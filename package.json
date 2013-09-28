@@ -2,7 +2,8 @@
   "name": "yasp",
   "version": "0.0.0",
   "devDependencies": {
-    "grunt": "~0.4.1"
+    "grunt": "~0.4.1",
+    "grunt-contrib-qunit": "~0.2.2"
   },
   "dependencies": {
     "grunt-curl": "~1.1.1"
