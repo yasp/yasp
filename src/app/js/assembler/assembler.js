@@ -10,15 +10,19 @@ if (typeof yasp == 'undefined') yasp = { };
     this.errors = [ ]; // array containing all the errors that occured while assembling
 
     // results
-    this.map = null;
-    this.symbols = null;
+    this.map = { };
+    this.symbols = {
+      labels: [ ],
+      usedRegisters: [ ],
+      defines: [ ],
+      instructions: { }
+    };
     this.result = null;
 
     this.passes = [
       new yasp.Lexer(),
-      new yasp.PreProcessor(),
-      new yasp.Checker(),
       new yasp.Analyser(),
+      new yasp.PreProcessor(),
       new yasp.Parser(),
       new yasp.Generator()
     ];
@@ -129,5 +133,25 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.TokenIterator.prototype.riseSyntaxError = function (msg) {
     this.assembler.riseSyntaxError(this, msg);
+  }
+
+  /**
+   * Iterates through the source code
+   * @param func Function that is called at the beginning of each line
+   */
+  yasp.TokenIterator.prototype.iterate = function(func) {
+    while (iterator.hasNext()) {
+      try {
+        func();
+
+        if (iterator.hasNext()) {
+          do {
+            iterator.match('\n');
+          } while (iterator.is('\n'));
+        }
+      } catch (ex) {
+        iterator.restore(); // error occured => try to make state consistent again
+      }
+    }
   }
 })();

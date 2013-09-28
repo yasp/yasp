@@ -2,7 +2,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
 (function () {
   /**
-   * @class Analyzes the source code and returns the map
+   * @class Analyzes the source code and returns all the labels defined in the source code
    */
   yasp.Analyser = function () {
 
@@ -10,26 +10,22 @@ if (typeof yasp == 'undefined') yasp = { };
 
   yasp.Analyser.prototype.pass = function (assembler, input) {
     var iterator = new yasp.TokenIterator(assembler, input);
-
-    while (iterator.hasNext()) {
-      // is command?
-      try {
-        var type;
-        if (iterator.current().getType() == yasp.TokenType.LABEL) {
-          // label \o/
-
-        } else {
-          while (iterator.hasNext() && !iterator.is('\n')) iterator.next();
+    var labels = [ ];
+    iterator.iterate(function() {
+      var type;
+      if (iterator.current().getType() == yasp.TokenType.LABEL) {
+        // label \o/
+        var label = iterator.current();
+        iterator.next();
+        if (iterator.is(":")) {
+          labels.push(label);
         }
-
-        if (iterator.hasNext()) {
-          do {
-            iterator.match('\n');
-          } while (iterator.is('\n'));
-        }
-      } catch (ex) {
-        iterator.restore(); // error occured => try to make state consistent again
       }
-    }
+      while (iterator.hasNext() && !iterator.is('\n')) iterator.next(); // go to \n
+    });
+
+    assembler.symbols.labels = labels;
+
+    return input;
   }
 })();

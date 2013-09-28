@@ -18,30 +18,25 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Parser.prototype.pass = function (assembler, input) {
     var iterator = new yasp.TokenIterator(assembler, input);
 
-    while (iterator.hasNext()) {
-      // is command?
-      try {
-        var type;
-        switch (type = iterator.current().getType()) {
-          case yasp.TokenType.COMMAND:
-            this.parseCommand(iterator);
-            break;
-          case yasp.TokenType.LABEL:
-            this.parseLabel(iterator);
-            break;
-          default:
-            iterator.riseSyntaxError(iterator, "Expecting command or label, got " + type + " instead.");
-        }
-
-        if (iterator.hasNext()) {
-          do {
-            iterator.match('\n');
-          } while (iterator.is('\n'));
-        }
-      } catch (ex) {
-        iterator.restore(); // error occured => try to make state consistent again
+    iterator.iterate(function() {
+      var type;
+      switch (type = iterator.current().getType()) {
+        case yasp.TokenType.COMMAND:
+          this.parseCommand(iterator);
+          break;
+        case yasp.TokenType.LABEL:
+          this.parseLabel(iterator);
+          break;
+        default:
+          iterator.riseSyntaxError(iterator, "Expecting command or label, got " + type + " instead.");
       }
-    }
+
+      if (iterator.hasNext()) {
+        do {
+          iterator.match('\n');
+        } while (iterator.is('\n'));
+      }
+    });
 
     return input;
   };
