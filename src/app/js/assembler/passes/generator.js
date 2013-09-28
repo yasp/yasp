@@ -15,19 +15,13 @@ if (typeof yasp == 'undefined') yasp = { };
    * @returns {number}
    */
   yasp.Generator.prototype.pass = function (assembler, input) {
-    var results = [ ]; // attay containing all the ArrayBuffer of the nodes
     for (var i = 0; i < input.length; i++) {
       var node = input[i];
       if (!!node) {
-        var result = node.type.generate.call(node, this);
-        if (result.length > 0) results.push(result);
+        node.type.generate.call(node, this);
       }
     }
-    
-    // merge all results together
-    var result = 42;
-    
-    return result;
+    return this.bitWriter.toUint8Array();
   };
 
   /**
@@ -37,17 +31,99 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.AstNodeTypes = {
     NODE_LABEL: {
       name: "label",
-      generate: function (generator) { }
+      generate: function(generator) { }
     },
     NODE_COMMAND: {
       name: "command",
-      generate: function (generator) {
-        generator.bitWriter.append();
-        for (var i = 0; i < this.params.params.length; i++) {
-          var param = this.params.params[i];
+      generate: function(generator) {
+        var writer = generator.bitWriter;
+        var commandCode = this.params.command.code;
+        var commandParam = this.params.command.params;
+        var params = this.params.params;
+        
+        for (var i = 0; i < commandCode.length; i++) {
+          var code = commandCode[i];
+          var data;
+          if (typeof code.value == "string") {
+            data = +parseInt(code.value, 2);
+          } else {
+            data = +code.value;
+          }
+          var len;
+          if (typeof code.length == 'undefined') {
+            len = 8;
+          } else {
+            len = code.length;
+          }
           
-          
+          writer.append(data, len);
         }
+        
+        // params
+        for (var i = 0; i < params.length; i++) {
+          var param = params.params[i];
+          var type = yasp.ParamType[codeParam[i].toLowerCase()];
+          
+          writer.append(type.data(param), type.len);
+        }
+      }
+    }
+  };
+  
+  yasp.ParamType = {
+    "r_byte": {
+      len: 5,
+      check: function(cur, assembler) {
+        return cur.getType() == yasp.TokenType.BYTE_REGISTER;
+      },
+      data: function(data) {
+        return +(data.substr(1)); // skip b from b2 for example
+      }
+    },
+    "r_word": {
+      len: 5,
+      check: function(cur, assembler) {
+        return cur.getType() == yasp.TokenType.WORD_REGISTER;
+      },
+      data: function(data) {
+        return +(data.substr(1)); // skip w from w2 for example
+      }
+    },
+    "l_byte": {
+      len: 8,
+      check: function(cur, assembler) {
+        return cur.getType() == yasp.TokenType.NUMBER && +cur.text < Math.pow(2, 8);
+      },
+      data: function(data) {
+        return data;
+      }
+    },
+    "l_word": {
+      len: 16,
+      check: function(cur, assembler) {
+        return cur.getType() == yasp.TokenType.NUMBER && +cur.text < Math.pow(2, 16);
+      },
+      data: function(data) {
+        return data;
+      }
+    },
+    "pin": {
+      len: 5,
+      check: function(cur, assembler) {
+        return cur.getType() == yasp.TokenType.NUMBER || +cur.text < Math.pow(2, 5);
+      },
+      data: function(data) {
+        return data;
+      }
+    },
+    "address": {
+      len: 11,
+      check: function(cur, assembler) {
+        return cur.getType() != yasp.TokenType.LABEL || !assembler.getLabel(cur.text);
+      },
+      data: function(data) {
+        // TODO implement
+        return 0;
       }
     }
   };
@@ -80,7 +156,14 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.BitWriter.prototype.append = function(data, length) {
     var bits = (+data).toString(2); // convert to binary
-    bits = bits.substr(bits.length - length, length);
+    bits = bits.substr(bits.length - length, length); // if its too long => cut
+    
+    if (bits.length < length) { // if its too short => add
+      var origLen = bits.length;
+      for (var i = origLen; i < length; i++) {
+        bits = "0" + bits;
+      }
+    }
     this.bits += bits; // append
   }
 

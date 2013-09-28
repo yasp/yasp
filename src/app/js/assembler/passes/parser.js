@@ -71,39 +71,10 @@ if (typeof yasp == 'undefined') yasp = { };
             params.push(cur);
             
             var paramType = command.params[paramPos].type;
-            
-            switch (paramType) {
-              case "r_byte":
-                if (cur.getType() != yasp.TokenType.BYTE_REGISTER) {
-                  itsMe = false;
-                }
-                break;
-              case "r_word":
-                if (cur.getType() != yasp.TokenType.WORD_REGISTER) {
-                  itsMe = false;
-                }
-                break;
-              case "l_byte":
-                if (cur.getType() != yasp.TokenType.NUMBER || +cur.text >= Math.pow(2, 8)) {
-                  itsMe = false;
-                }
-                break;
-              case "l_word":
-                if (cur.getType() != yasp.TokenType.NUMBER || +cur.text >= Math.pow(2, 16)) {
-                  itsMe = false;
-                }
-                break;
-              case "pin":
-                if (cur.getType() != yasp.TokenType.NUMBER || +cur.text >= Math.pow(2, 5)) {
-                  itsMe = false;
-                }
-                break;
-              case "address":
-                if (cur.getType() != yasp.TokenType.LABEL || !iterator.assembler.getLabel(cur.text)) {
-                  itsMe = false;
-                }
-                break;
-              default:
+            var param = yasp.ParamType[paramType.toLowerCase()];
+            if (!!param) {
+              itsMe = !param.check(cur, iterator.assembler);
+            } else {
                 iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType);
             }
             
