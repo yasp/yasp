@@ -10,17 +10,26 @@ module.exports = function(grunt) {
       ],
       'src/lib/css': [
         'http://code.jquery.com/qunit/qunit-1.12.0.css'
-      ],
+      ]
     },
     qunit: {
-      all: ['src/app/test/*.html']
+      test: ['src/app/test/*.html']
+    },
+    doctool: {
+      doc: {
+        converter: "commandsjs",
+        input: "src/app/instructions/",
+        output: "src/app/js/commands.js"
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-curl');
   grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-doctool');
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
   grunt.registerTask('test', [ 'qunit' ]);
+  grunt.registerTask('commandsjs', [ 'doctool' ]);
 };
