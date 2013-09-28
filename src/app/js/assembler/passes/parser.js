@@ -173,35 +173,4 @@ if (typeof yasp == 'undefined') yasp = { };
       iterator.riseSyntaxError("Expecting label, got " + type + " instead");
     }
   };
-
-  /**
-   * What types exist in an AST?
-   * @type {{NODE_LABEL: {name: string, generate: Function}, NODE_COMMAND: {name: string, generate: Function}}}
-   */
-  yasp.AstNodeTypes = {
-    NODE_LABEL: {
-      name: "label",
-      generate: function () {
-      }
-    },
-    NODE_COMMAND: {
-      name: "command",
-      generate: function () {
-        // create bitcode
-      }
-    }
-  };
-
-  /**
-   * An AST Node
-   * @param type
-   * @param token
-   * @param params
-   * @constructor
-   */
-  yasp.AstNode = function (type, token, params) {
-    this.type = type;
-    this.params = params;
-    this.token = token;
-  }
 })();
