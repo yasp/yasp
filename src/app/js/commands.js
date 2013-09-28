@@ -110,5 +110,27 @@ yasp.commands = [
                 "type": "pin"
             }
         ]
+    },
+    {
+        "name": "GOTO",
+        "description": "This is an awesome GOTO command yolo",
+        "code": [
+            {
+                "value": 42,
+                "length": 8
+            },
+            {
+                "value": 1337,
+                "length": 8
+            }
+        ],
+        "params": [
+            {
+                "type": "r_byte"
+            },
+            {
+                "type": "pin"
+            }
+        ]
     }
 ]
