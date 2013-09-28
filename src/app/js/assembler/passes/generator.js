@@ -5,7 +5,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @class Generates the machine code that can be executed by the emulator
    */
   yasp.Generator = function () {
-    this.bitWriter = new yasp.BitWriter();
+    this.bitWriter = null;
   };
 
   /**
@@ -15,6 +15,19 @@ if (typeof yasp == 'undefined') yasp = { };
    * @returns {number}
    */
   yasp.Generator.prototype.pass = function (assembler, input) {
+    // 1 pass: get position in machine code (for labels)
+    var pos = 0;
+    for (var i = 0; i < input.length; i++) {
+      var node = input[i];
+      if (!!node) {
+        this.bitWriter = new yasp.BitWriter();
+        node.type.generate.call(node, this);
+        pos += this.bitWriter.bits.length;
+      }
+    }
+
+    this.bitWriter = new yasp.BitWriter();
+    // 2 pass: real generation
     for (var i = 0; i < input.length; i++) {
       var node = input[i];
       if (!!node) {
@@ -31,7 +44,10 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.AstNodeTypes = {
     NODE_LABEL: {
       name: "label",
-      generate: function(generator) { }
+      generate: function(generator) {
+        // update machine position
+        
+      }
     },
     NODE_COMMAND: {
       name: "command",
@@ -62,7 +78,7 @@ if (typeof yasp == 'undefined') yasp = { };
         // params
         for (var i = 0; i < params.length; i++) {
           var param = params.params[i];
-          var type = yasp.ParamType[codeParam[i].toLowerCase()];
+          var type = yasp.ParamType[commandParam[i].toLowerCase()];
           
           writer.append(type.data(param), type.len);
         }
@@ -139,6 +155,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.type = type;
     this.params = params;
     this.token = token;
+    this.machinePosition = 0;
   };
 
   /**
