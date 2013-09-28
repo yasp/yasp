@@ -41,7 +41,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.running = true;
     }
     else if(!isNaN(+count)) {
-      if(count < 0 || count >= this.rom.length)
+      if(count < 0)
         return 0;
       this.running = +count;
     }

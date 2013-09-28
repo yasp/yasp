@@ -18,6 +18,18 @@
     ok(emulator.rom instanceof Uint8Array);
   });
 
+  test("load", function () {
+    var expected = new Uint8Array(5);
+    expected.set([1, 2, 3, 4, 5], 0);
+
+    emulator.load(expected, 0);
+    var actual = emulator.rom;
+
+    for (var i = 0; i < expected.length; i++) {
+      strictEqual(expected[i], actual[i]);
+    }
+  });
+
   test("load - start < 0", function () {
     var expected = 0;
     var actual = emulator.load(new Uint8Array(0), -1);
@@ -39,6 +51,39 @@
   test("load - bitcode is no Uint8Array", function () {
     var expected = 2;
     var actual = emulator.load("yasp", 0);
+    strictEqual(expected, actual);
+  });
+
+  test("continue - invalid count type", function () {
+    var expected = 2;
+    var actual = emulator.continue("a");
+    strictEqual(expected, actual);
+  });
+
+  test("continue - count < 0", function () {
+    var expected = 0;
+    var actual = emulator.continue(-1);
+    strictEqual(expected, actual);
+  });
+
+  test("continue - count = null", function () {
+    var expected = true;
+    emulator.continue(null);
+    var actual = emulator.running;
+    strictEqual(expected, actual);
+  });
+
+  test("continue - count = 1", function () {
+    var expected = 1;
+    emulator.continue(1);
+    var actual = emulator.running;
+    strictEqual(expected, actual);
+  });
+
+  test("break", function () {
+    var expected = false;
+    emulator.break();
+    var actual = emulator.running;
     strictEqual(expected, actual);
   });
 
