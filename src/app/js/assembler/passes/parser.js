@@ -36,7 +36,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /**
-   * This method parses a command (like MOV, PUSH, ...) but only syntactiv correctness (no datatype parses are performed)
+   * This method parses a command (like MOV, PUSH, ...) => generates AST for these commands
    * @param iterator
    * @param opt If this is true, no error is rised if the current token is no command. Default is false.
    */
@@ -70,7 +70,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /**
-   * This method parses a label (myLabel: )
+   * This method parses a label (myLabel: ) => only syntactical correctness
    * @param iterator
    * @param opt If this is true, no error is rised if the current token is no command. Default is false.
    */

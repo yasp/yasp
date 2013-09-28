@@ -20,7 +20,7 @@
     }
   });
   test("ensure tokeniterator match working", function () {
-    ok(iterator.match("A").text == "B");
+    strictEqual(iterator.match("A").text, "B");
   });
   test("ensure tokeniterator match not working", function () {
     throws(function () {
@@ -33,7 +33,7 @@
   });
 
   test("ensure tokeniterator next working", function () {
-    ok(iterator.next().text == "B");
+    strictEqual(iterator.next().text, "B");
   });
   test("ensure tokeniterator next not working", function () {
     throws(function () {
@@ -44,7 +44,7 @@
   });
 
   test("ensure tokeniterator current working", function () {
-    ok(iterator.current().text == "A");
+    strictEqual(iterator.current().text, "A");
   });
 
   test("ensure tokeniterator hasNext working", function () {
