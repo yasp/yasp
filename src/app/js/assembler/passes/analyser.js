@@ -11,7 +11,7 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Analyser.prototype.pass = function (assembler, input) {
     var iterator = new yasp.TokenIterator(assembler, input);
     var labels = [ ];
-    iterator.iterate(function() {
+    iterator.iterate((function() {
       var type;
       if (iterator.current().getType() == yasp.TokenType.LABEL) {
         // label \o/
@@ -22,7 +22,7 @@ if (typeof yasp == 'undefined') yasp = { };
         }
       }
       while (iterator.hasNext() && !iterator.is('\n')) iterator.next(); // go to \n
-    });
+    }).bind(this));
 
     assembler.symbols.labels = labels;
 

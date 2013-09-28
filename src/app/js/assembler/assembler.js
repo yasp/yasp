@@ -140,17 +140,17 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param func Function that is called at the beginning of each line
    */
   yasp.TokenIterator.prototype.iterate = function(func) {
-    while (iterator.hasNext()) {
+    while (this.hasNext()) {
       try {
         func();
 
-        if (iterator.hasNext()) {
+        if (this.hasNext()) {
           do {
-            iterator.match('\n');
-          } while (iterator.is('\n'));
+            this.match('\n');
+          } while (this.is('\n'));
         }
       } catch (ex) {
-        iterator.restore(); // error occured => try to make state consistent again
+        this.restore(); // error occured => try to make state consistent again
       }
     }
   }

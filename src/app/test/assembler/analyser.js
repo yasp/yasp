@@ -1,7 +1,8 @@
 (function() {
   module("assembler analyser");
   var analyser_cases = [
-    {input: "asdf: hallo jahah \n molo: swag\n", labels: ["asdf", "molo"]}
+    {input: "asdf: hallo jahah \n molo: swag\n", labels: ["asdf", "molo"]},
+    {input: "asdf asdf:\n hallo mallo\n yolo:", labels: ["yolo"]}
   ];
 
   QUnit.cases(analyser_cases).test("ensure analyser finds labels", function(params) {
