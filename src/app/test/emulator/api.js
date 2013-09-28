@@ -82,8 +82,15 @@
 
   test("break", function () {
     var expected = false;
+    emulator.running = true;
     emulator.break();
     var actual = emulator.running;
+    strictEqual(expected, actual);
+  });
+
+  test("break", function () {
+    var expected = 0;
+    var actual = emulator.break();
     strictEqual(expected, actual);
   });
 
