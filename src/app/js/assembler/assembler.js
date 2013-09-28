@@ -54,14 +54,14 @@ if (typeof yasp == 'undefined') yasp = { };
     });
 
     throw msg;
-  }
+  };
 
   /**
    * Returns the label with the name
    */
   yasp.Assembler.prototype.getLabel = function(label) {
     return !!this.symbols.labels ? this.symbols.labels[label.toUpperCase()] : null;
-  }
+  };
   
   /**
    * Creates an iterator that iterates through a token array.
@@ -73,7 +73,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.tokens = tokens;
     this.pos = 0;
     this.assembler = assembler;
-  }
+  };
 
   /**
    * Matches the current token with the specified text, if it fails an error is raised
@@ -86,7 +86,7 @@ if (typeof yasp == 'undefined') yasp = { };
     } else {
       this.assembler.riseSyntaxError(this, "Unexpected token '" + this.current().text + "', expecting '" + text + "'");
     }
-  }
+  };
 
   /**
    * Checks whether the current token equals the given text.
@@ -95,7 +95,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.TokenIterator.prototype.is = function (text) {
     return this.current().text == text;
-  }
+  };
 
   /**
    * Moves to the next token. If there is none, an error is rised.
@@ -107,7 +107,7 @@ if (typeof yasp == 'undefined') yasp = { };
     } else {
       this.assembler.riseSyntaxError(this, "Unexpected end of file");
     }
-  }
+  };
 
   /**
    * Returns the current token
@@ -115,7 +115,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.TokenIterator.prototype.current = function () {
     return this.tokens[this.pos];
-  }
+  };
 
   /**
    * Returns whether there is a next token or not
@@ -123,7 +123,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.TokenIterator.prototype.hasNext = function () {
     return this.pos + 1 < this.tokens.length
-  }
+  };
 
   /**
    * Restores the TokenIterator to the next consistent state (used for multiple error messages)
@@ -132,7 +132,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // restore state => continue until \n is reached, and then skip the \n
     while (this.hasNext() && !this.is('\n')) this.next();
     if (this.hasNext()) this.next();
-  }
+  };
 
   /**
    * Wrapper for the yasp.Assembler.riseSyntaxError function
@@ -140,7 +140,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.TokenIterator.prototype.riseSyntaxError = function (msg) {
     this.assembler.riseSyntaxError(this, msg);
-  }
+  };
 
   /**
    * Iterates through the source code
@@ -160,5 +160,5 @@ if (typeof yasp == 'undefined') yasp = { };
         this.restore(); // error occured => try to make state consistent again
       }
     }
-  }
+  };
 })();

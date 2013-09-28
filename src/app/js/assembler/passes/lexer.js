@@ -81,7 +81,7 @@ if (typeof yasp == "undefined") yasp = { };
     BYTE_REGISTER: "byte register",
     WORD_REGISTER: "word register",
     UNKNOWN: "unknown"
-  }
+  };
 
   /**
    * A Token representing an atomic group of characters in the assembler code
