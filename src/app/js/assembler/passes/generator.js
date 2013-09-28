@@ -6,6 +6,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Generator = function () {
     this.bitWriter = null;
+    this.assembler = null;
   };
 
   /**
@@ -15,14 +16,20 @@ if (typeof yasp == 'undefined') yasp = { };
    * @returns {number}
    */
   yasp.Generator.prototype.pass = function (assembler, input) {
-    // 1 pass: get position in machine code (for labels)
+    this.assembler = assembler;
+    
+    var labelMachinePosition = { };
+    
+    // 1 pass: get position in machine code for every Ast Node (for labels)
+    // TODO: Optimize this code (do not call generate and DO NOT call toUint8Array => slow as fuck...)
     var pos = 0;
     for (var i = 0; i < input.length; i++) {
       var node = input[i];
       if (!!node) {
         this.bitWriter = new yasp.BitWriter();
+        node.machinePosition = pos;
         node.type.generate.call(node, this);
-        pos += this.bitWriter.bits.length;
+        pos += this.bitWriter.toUint8Array().length;
       }
     }
 
@@ -46,7 +53,7 @@ if (typeof yasp == 'undefined') yasp = { };
       name: "label",
       generate: function(generator) {
         // update machine position
-        
+        labelMachinePosition[this.params.label.text.toUpperCase()] = this.machinePosition;
       }
     },
     NODE_COMMAND: {
@@ -138,8 +145,7 @@ if (typeof yasp == 'undefined') yasp = { };
         return cur.getType() != yasp.TokenType.LABEL || !assembler.getLabel(cur.text);
       },
       data: function(data) {
-        // TODO implement
-        return 0;
+        return labelMachinePosition[data];
       }
     }
   };

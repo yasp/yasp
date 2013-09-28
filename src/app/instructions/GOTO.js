@@ -1,5 +1,5 @@
 {
-  "name": "GOTO",
+  "name": ["GOTO", "JMP"],
   "description": "",
   "code": [
     {

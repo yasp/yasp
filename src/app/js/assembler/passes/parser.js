@@ -55,7 +55,20 @@ if (typeof yasp == 'undefined') yasp = { };
       iterator.next();
       
       for (var i = 0; i < yasp.commands.length; i++) {
-        if (yasp.commands[i].name.toUpperCase() == name) {
+        var commandName;
+        if (yasp.commands[i].name instanceof Array) {
+          commandName = yasp.commands[i].name[0];
+          for (var j = 0; j < yasp.commands[i].name; j++) {
+            if (yasp.commands[i].name[j].toUpperCase() == name) {
+              commandName = yasp.commands[i].name[j];
+              break;
+            }
+          }
+        } else {
+          commandName = yasp.commands[i].name;
+        }
+        
+        if (commandName.toUpperCase() == name) {
           command = yasp.commands[i];
           var oldPos = iterator.pos;
           var itsMe = true;
