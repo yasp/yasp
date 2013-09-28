@@ -76,7 +76,7 @@ if (typeof yasp == 'undefined') yasp = { };
           var start = true;          
           params = [ ];
           
-          while (!iterator.is('\n') && itsMe) {
+          while (!(iterator.is('\n') || !iterator.hasNext()) && itsMe) {
             if (!start) {
               iterator.match(",");
             }
@@ -91,7 +91,7 @@ if (typeof yasp == 'undefined') yasp = { };
                 iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType);
             }
             
-            iterator.next();
+            if (iterator.hasNext()) iterator.next();
             start = false;
             paramPos++;
           }
