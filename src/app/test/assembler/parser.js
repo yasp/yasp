@@ -17,11 +17,10 @@
   });
 
   var parser_cases = [
-    {input: "MOV a, b \n PUSH W0 \n ASDF: GOTO ASDF \n", fails: false },
+    {input: "MOV W0, 100 \n PUSH W0 \n ASDF: GOTO ASDF \n", fails: false },
     {input: "", fails: false},
     {input: "MOV MOV MOV", fails: true},
-    {input: "ASDF: GOTO ASDF\n\n\nPUSH W0 \n", fails: false},
-    {input: "asdfasdf", fails: false}
+    {input: "ASDF: GOTO ASDF\n\n\nPUSH W0 \n", fails: false}
   ];
 
   QUnit.cases(parser_cases).test("ensure parser syntax checking working", function (params) {
@@ -36,6 +35,5 @@
 
     // assert
     ok(params.fails ? assemblerMockup.errors : !assemblerMockup.errors);
-    deepEqual(pass1, pass2);
   });
 })();

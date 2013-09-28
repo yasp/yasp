@@ -12,7 +12,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // results
     this.map = { };
     this.symbols = {
-      labels: [ ],
+      labels: { },
       usedRegisters: [ ],
       defines: [ ],
       instructions: { }
@@ -56,6 +56,13 @@ if (typeof yasp == 'undefined') yasp = { };
     throw msg;
   }
 
+  /**
+   * Returns the label with the name
+   */
+  yasp.Assembler.prototype.getLabel = function(label) {
+    return !!this.symbols.labels ? this.symbols.labels[label.toUpperCase()] : null;
+  }
+  
   /**
    * Creates an iterator that iterates through a token array.
    * It also features some useful methods

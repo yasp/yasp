@@ -10,7 +10,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
   yasp.Analyser.prototype.pass = function (assembler, input) {
     var iterator = new yasp.TokenIterator(assembler, input);
-    var labels = [ ];
+    var labels = { };
     iterator.iterate((function() {
       var type;
       if (iterator.current().getType() == yasp.TokenType.LABEL) {
@@ -18,7 +18,11 @@ if (typeof yasp == 'undefined') yasp = { };
         var label = iterator.current();
         iterator.next();
         if (iterator.is(":")) {
-          labels.push(label);
+          if (!!labels[label.text.toUpperCase()]) {
+            iterator.riseSyntaxError("Duplicate label "+label.text);
+          } else {
+            labels[label.text.toUpperCase()] = label;
+          }
         }
       }
       while (iterator.hasNext() && !iterator.is('\n')) iterator.next(); // go to \n

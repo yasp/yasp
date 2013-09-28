@@ -6,7 +6,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @constructor
    */
   yasp.Parser = function () {
-
+    this.nodes = [ ];
   };
 
   /**
@@ -16,6 +16,8 @@ if (typeof yasp == 'undefined') yasp = { };
    * @returns {*}
    */
   yasp.Parser.prototype.pass = function (assembler, input) {
+    this.nodes = [ ];
+    
     var iterator = new yasp.TokenIterator(assembler, input);
 
     iterator.iterate((function() {
@@ -32,11 +34,12 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     }).bind(this));
 
-    return input;
+    return this.nodes;
   };
 
   /**
-   * This method parses a command (like MOV, PUSH, ...) => generates AST for these commands
+   * This method parses a command (like MOV, PUSH, ...) => generates AST for these commands. if it does not know the command it raises a syntax error.
+   * If the command + parameter definition is not unique parseCommand takes the first hit, so keep this in mind.
    * @param iterator
    * @param opt If this is true, no error is rised if the current token is no command. Default is false.
    */
@@ -47,23 +50,102 @@ if (typeof yasp == 'undefined') yasp = { };
     if ((type = iterator.current().getType()) == yasp.TokenType.COMMAND) {
       var name = iterator.current().text.toUpperCase();
       var command = null;
+      var params = null;
+      var commandToken = iterator.current();
       for (var i = 0; i < yasp.commands.length; i++) {
         if (yasp.commands[i].name.toUpperCase() == name) {
           command = yasp.commands[i];
-          break;
+          var oldPos = iterator.pos;
+          var itsMe = true;
+          var paramPos = 0;
+          var start = true;
+          
+          params = [ ];
+          
+          while (!iterator.is('\n')) {
+            if (!start) {
+              iterator.match(",");
+            }
+            var cur = iterator.current();
+            params.push(cur);
+            
+            var paramType = command.params[paramPos].type;
+            
+            switch (paramType) {
+              case "r_byte":
+                if (cur.getType() != yasp.TokenType.BYTE_REGISTER) {
+                  itsMe = false;
+                }
+                break;
+              case "r_word":
+                if (cur.getType() != yasp.TokenType.WORD_REGISTER) {
+                  itsMe = false;
+                }
+                break;
+              case "l_byte":
+                if (cur.getType() != yasp.TokenType.NUMBER || +cur.text >= Math.pow(2, 8)) {
+                  itsMe = false;
+                }
+                break;
+              case "l_word":
+                if (cur.getType() != yasp.TokenType.NUMBER || +cur.text >= Math.pow(2, 16)) {
+                  itsMe = false;
+                }
+                break;
+              case "pin":
+                if (cur.getType() != yasp.TokenType.NUMBER || +cur.text >= Math.pow(2, 5)) {
+                  itsMe = false;
+                }
+                break;
+              case "address":
+                if (cur.getType() != yasp.TokenType.LABEL || !iterator.assembler.getLabel(cur.text)) {
+                  itsMe = false;
+                }
+                break;
+              default:
+                iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType);
+            }
+            
+            iterator.next();
+            start = false;
+            paramPos++;
+          }
+          
+          if (!itsMe || paramPos != command.params.length) {
+            // nope, its not me
+            iterator.pos = oldPos;
+            command = null;
+          } else {
+            break;
+          }
         }
       }
-      if (!command) iterator.riseSyntaxError("Unknown command " + name);
+      if (!command) {
+        // build parameters
+        var parameters = "";
+        var start = true;
+        while (!iterator.is('\n')) {
+          if (!start) {
+            iterator.match(",");
+            parameters += ", ";
+          }
+          var cur = iterator.current();
+          parameters += cur.getType();
+          iterator.next();
+          start = false;
+        }
+        iterator.riseSyntaxError("Unknown command " + name + "(" + parameters + ")");
+      } else {
+        // build AST
+        var node = new yasp.AstNode(yasp.AstNodeTypes.NODE_COMMAND, commandToken, {
+          command: command,
+          params: params
+        });
+        this.nodes.push(node);
+      }
       iterator.next();
 
-      var start = true;
-      while (!iterator.is('\n')) {
-        if (!start) {
-          iterator.match(",");
-        }
-        iterator.next();
-        start = false;
-      }
+
     } else if (!opt) {
       iterator.riseSyntaxError("Expecting command, got " + type + " instead");
     }
@@ -79,8 +161,14 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var type;
     if ((type = iterator.current().getType()) == yasp.TokenType.LABEL) {
+      var current = iterator.current();
       iterator.next();
       iterator.match(":");
+      
+      var node = new yasp.AstNode(yasp.AstNodeTypes.NODE_LABEL, current, {
+        label: iterator.assembler.getLabel(current.text)
+      });
+      this.nodes.push(node);
 
       this.parseCommand(iterator, true); // optionally there can be a command
     } else if (!opt) {
@@ -115,7 +203,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.AstNode = function (type, token, params) {
     this.type = type;
-    this.token = token;
     this.params = params;
+    this.token = token;
   }
 })();

@@ -61,6 +61,20 @@
     iterator.restore();
     ok(!iterator.hasNext());
   });
+
+  test("ensure tokeniterator iterate working", function() {
+    iterator.iterate(function() { });
+    ok(!iterator.hasNext());
+  });
+
+  test("ensure tokeniterator setting position works", function() {
+    var pos = iterator.pos;
+    iterator.next();
+    iterator.next();
+    iterator.pos = pos;
+    iterator.next();
+    strictEqual(iterator.current().text, "B");
+  })
 })();
 
 (function () {

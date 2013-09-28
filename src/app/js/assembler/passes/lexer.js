@@ -77,8 +77,7 @@ if (typeof yasp == "undefined") yasp = { };
   yasp.TokenType = {
     COMMAND: "command",
     LABEL: "label",
-    BYTE_LITERAL: "byte literal",
-    WORD_LITERAL: "word literal",
+    NUMBER: "number", // pin / byte_literal / word_literal
     BYTE_REGISTER: "byte register",
     WORD_REGISTER: "word register",
     UNKNOWN: "unknown"
@@ -106,11 +105,9 @@ if (typeof yasp == "undefined") yasp = { };
 
     if (!isNaN(name)) {
       // what num?
-      var num = parseInt(this.text);
-      if (num < Math.pow(2, 8)) {
-        return yasp.TokenType.BYTE_LITERAL;
-      } else if (num < Math.pow(2, 16)) {
-        return yasp.TokenType.WORD_LITERAL;
+      var num = +this.text;
+      if (num < Math.pow(2, 16)) {
+        return yasp.TokenType.LITERAL;
       } else {
         return yasp.TokenType.UNKNOWN;
       }
