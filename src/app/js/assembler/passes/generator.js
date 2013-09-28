@@ -21,7 +21,7 @@ if (typeof yasp == 'undefined') yasp = { };
     var labelMachinePosition = { };
     
     // 1 pass: get position in machine code for every Ast Node (for labels)
-    // TODO: Optimize this code (do not call generate and DO NOT call toUint8Array => slow as fuck...)
+    // TODO: Optimize this code (do not call generate and DO NOT call toUint8Array => slow as fuck...), so please if you have time optimize it, its just fucking wrong...
     var pos = 0;
     for (var i = 0; i < input.length; i++) {
       var node = input[i];
@@ -84,8 +84,8 @@ if (typeof yasp == 'undefined') yasp = { };
         
         // params
         for (var i = 0; i < params.length; i++) {
-          var param = params.params[i];
-          var type = yasp.ParamType[commandParam[i].toLowerCase()];
+          var param = params[i].text;
+          var type = yasp.ParamType[commandParam[i].type.toLowerCase()];
           
           writer.append(type.data(param), type.len);
         }
@@ -133,7 +133,7 @@ if (typeof yasp == 'undefined') yasp = { };
     "pin": {
       len: 5,
       check: function(cur, assembler) {
-        return cur.getType() == yasp.TokenType.NUMBER || +cur.text < Math.pow(2, 5);
+        return cur.getType() == yasp.TokenType.NUMBER && +cur.text < Math.pow(2, 5);
       },
       data: function(data) {
         return data;
@@ -142,7 +142,7 @@ if (typeof yasp == 'undefined') yasp = { };
     "address": {
       len: 11,
       check: function(cur, assembler) {
-        return cur.getType() != yasp.TokenType.LABEL || !assembler.getLabel(cur.text);
+        return cur.getType() == yasp.TokenType.LABEL && assembler.getLabel(cur.text);
       },
       data: function(data) {
         return labelMachinePosition[data];
@@ -179,13 +179,14 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.BitWriter.prototype.append = function(data, length) {
     var bits = (+data).toString(2); // convert to binary
-    bits = bits.substr(bits.length - length, length); // if its too long => cut
     
     if (bits.length < length) { // if its too short => add
       var origLen = bits.length;
       for (var i = origLen; i < length; i++) {
         bits = "0" + bits;
       }
+    } else if (bits.length > length) {
+      bits = bits.substr(bits.length - length, length); // if its too long => cut
     }
     this.bits += bits; // append
   }
@@ -197,16 +198,18 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.BitWriter.prototype.toUint8Array = function() {
     var bits = this.bits;
     // normalize bits to 8
-    var length = 8 - this.bits.length % 8;
-    for (var i = 0; i < length; i++) {
-      bits += "0";
+    var overflow = this.bits.length % 8;
+    if (overflow != 0) {
+      for (var i = 0; i < 8 - overflow; i++) {
+        bits += "0";
+      }
     }
     // now create array
     var array = new Uint8Array(bits.length / 8);
     
     // put data into the array
     for (var i = 0; i < array.length; i++) {
-      var block = bits.substr(i, 8);
+      var block = bits.substr(i*8, 8);
       var num = parseInt(block, 2);
       if (isNaN(num)) {
         throw "Block contained not a number "+i;

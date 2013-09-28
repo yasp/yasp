@@ -41,6 +41,47 @@
 
 (function() {
   var assembler, parser, lexer, analyser, generator;
+
+  var convert2binary = function (array) {
+    // method from: http://stackoverflow.com/a/16363518
+    var bitsPerByte = 8;
+    var string = "";
+
+    function repeat(str, num) {
+      if (str.length === 0 || num <= 1) {
+        if (num === 1) {
+          return str;
+        }
+
+        return '';
+      }
+
+      var result = '',
+        pattern = str;
+
+      while (num > 0) {
+        if (num & 1) {
+          result += pattern;
+        }
+
+        num >>= 1;
+        pattern += pattern;
+      }
+
+      return result;
+    }
+
+    function lpad(obj, str, num) {
+      return repeat(str, num - obj.length) + obj;
+    }
+
+    Array.prototype.forEach.call(array, function (element) {
+      string += lpad(element.toString(2), "0", bitsPerByte);
+    });
+
+    return string;
+  }
+  
   
   module("assembler generator", {
     setup: function () {
@@ -65,15 +106,15 @@
   
   QUnit.cases(generator_cases).test("ensure generator generating works", function(params) {
     // arrange
-    var pass1, pass2, pass3, pass4;
+    var pass1, pass2, pass3, pass4, result;
 
     // act
     pass1 = lexer.pass(assembler, params.input);
     pass2 = analyser.pass(assembler, pass1)
     pass3 = parser.pass(assembler, pass2);
     pass4 = generator.pass(assembler, pass3);
-
+    
     // assert
-    equal(params.result, pass4.toString(2));
+    equal(convert2binary(pass4), params.result);
   });
 })();

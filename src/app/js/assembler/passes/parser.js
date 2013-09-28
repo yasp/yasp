@@ -86,9 +86,9 @@ if (typeof yasp == 'undefined') yasp = { };
             var paramType = command.params[paramPos].type;
             var param = yasp.ParamType[paramType.toLowerCase()];
             if (!!param) {
-              itsMe = !param.check(cur, iterator.assembler);
+              itsMe = param.check(cur, iterator.assembler);
             } else {
-                iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType);
+              iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType);
             }
             
             if (iterator.hasNext()) iterator.next();
