@@ -21,7 +21,7 @@
         {input: "", fails: false},
         {input: "MOV MOV MOV", fails: true},
         {input: "ASDF: GOTO ASDF\n\n\nPUSH W0 \n", fails: false},
-        {input: "asdfasdf", fails: true}
+        {input: "asdfasdf", fails: false}
     ];
 
     QUnit.cases(parser_cases).test("ensure parser syntax checking working", function(params) {

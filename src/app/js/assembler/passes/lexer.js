@@ -102,7 +102,6 @@ if (typeof yasp == "undefined") yasp = { };
      */
     yasp.Token.prototype.getType = function() {
         // TODO: optimize this function => cache values and dont iterate through everything
-
         var name = this.text.toUpperCase();
 
         if (!isNaN(name)) {
