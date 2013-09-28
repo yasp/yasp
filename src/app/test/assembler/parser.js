@@ -1,18 +1,18 @@
 (function () {
-  var assemblerMockup;
+  var assembler, parser, lexer, analyser;
 
   module("assembler parser", {
     setup: function () {
-      assemblerMockup = {
-        riseSyntaxError: function () {
-          this.errors = true;
-          throw "Syntax error";
-        },
-        errors: false
-      };
+      assembler = new yasp.Assembler();
+      parser = new yasp.Parser();
+      lexer = new yasp.Lexer();
+      analyser = new yasp.Analyser();
     },
     teardown: function () {
-      assemblerMockup = null;
+      assembler = null;
+      parser = null;
+      lexer = null;
+      analyser = null;
     }
   });
 
@@ -25,15 +25,14 @@
 
   QUnit.cases(parser_cases).test("ensure parser syntax checking working", function (params) {
     // arrange
-    var parser = new yasp.Parser();
-    var lexer = new yasp.Lexer();
-    var pass1, pass2;
+    var pass1, pass2, pass3;
 
     // act
-    pass1 = lexer.pass(assemblerMockup, params.input);
-    pass2 = parser.pass(assemblerMockup, pass1);
+    pass1 = lexer.pass(assembler, params.input);
+    pass2 = analyser.pass(assembler, pass1)
+    pass3 = parser.pass(assembler, pass2);
 
     // assert
-    ok(params.fails ? assemblerMockup.errors : !assemblerMockup.errors);
+    ok(params.fails ? assembler.errors.length > 0 : assembler.errors.length == 0);
   });
 })();

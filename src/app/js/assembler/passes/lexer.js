@@ -107,7 +107,7 @@ if (typeof yasp == "undefined") yasp = { };
       // what num?
       var num = +this.text;
       if (num < Math.pow(2, 16)) {
-        return yasp.TokenType.LITERAL;
+        return yasp.TokenType.NUMBER;
       } else {
         return yasp.TokenType.UNKNOWN;
       }

@@ -105,12 +105,10 @@
     {text: "MOV", type: yasp.TokenType.COMMAND},
     {text: "asdf12_3", type: yasp.TokenType.LABEL},
     {text: "&as??", type: yasp.TokenType.UNKNOWN},
-    {text: "123", type: yasp.TokenType.BYTE_LITERAL},
-    {text: "0xFF", type: yasp.TokenType.BYTE_LITERAL},
-    // {text: "11111111b", type: yasp.TokenType.BYTE_LITERAL}, <- Not implemented yet
-    {text: "1234", type: yasp.TokenType.WORD_LITERAL},
-    {text: "0xFFFF", type: yasp.TokenType.WORD_LITERAL},
-    // {text: "1111111111111111b", type: yasp.TokenType.WORD_LITERAL}, <- Not implemented yet
+    {text: "123", type: yasp.TokenType.NUMBER},
+    {text: "0xFF", type: yasp.TokenType.NUMBER},
+    {text: "1234", type: yasp.TokenType.NUMBER},
+    {text: "0xFFFF", type: yasp.TokenType.NUMBER},
     {text: "b31", type: yasp.TokenType.BYTE_REGISTER},
     {text: "w15", type: yasp.TokenType.WORD_REGISTER}
   ];

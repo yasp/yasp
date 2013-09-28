@@ -19,7 +19,111 @@ yasp.commands = [
         "type": "r_byte"
       },
       {
-        "type": "pin"
+        "type": "l_byte"
+      }
+    ]
+  },
+  {
+    "name": "MOV",
+    "description": "This is an awesome MOV command yolo",
+    "code": [
+      {
+        "value": 42,
+        "length": 8
+      },
+      {
+        "value": 1337,
+        "length": 8
+      }
+    ],
+    "params": [
+      {
+        "type": "r_byte"
+      },
+      {
+        "type": "r_byte"
+      }
+    ]
+  },
+  {
+    "name": "MOV",
+    "description": "This is an awesome MOV command yolo",
+    "code": [
+      {
+        "value": 42,
+        "length": 8
+      },
+      {
+        "value": 1337,
+        "length": 8
+      }
+    ],
+    "params": [
+      {
+        "type": "r_word"
+      },
+      {
+        "type": "l_word"
+      }
+    ]
+  },
+  {
+    "name": "MOV",
+    "description": "This is an awesome MOV command yolo",
+    "code": [
+      {
+        "value": 42,
+        "length": 8
+      },
+      {
+        "value": 1337,
+        "length": 8
+      }
+    ],
+    "params": [
+      {
+        "type": "r_word"
+      },
+      {
+        "type": "r_word"
+      }
+    ]
+  },
+  {
+    "name": "PUSH",
+    "description": "This is an awesome PUSH command yolo",
+    "code": [
+      {
+        "value": 42,
+        "length": 8
+      },
+      {
+        "value": 1337,
+        "length": 8
+      }
+    ],
+    "params": [
+      {
+        "type": "r_word"
+      }
+    ]
+  },
+  {
+    "name": "PUSH",
+    "description": "This is an awesome PUSH command yolo",
+    "code": [
+      {
+        "value": 42,
+        "length": 8
+      },
+      {
+        "value": 1337,
+        "length": 8
+      }
+    ],
+    "params": [
+      {
+        "type": "l_word"
       }
     ]
   },
@@ -39,9 +143,25 @@ yasp.commands = [
     "params": [
       {
         "type": "r_byte"
+      }
+    ]
+  },
+  {
+    "name": "PUSH",
+    "description": "This is an awesome PUSH command yolo",
+    "code": [
+      {
+        "value": 42,
+        "length": 8
       },
       {
-        "type": "pin"
+        "value": 1337,
+        "length": 8
+      }
+    ],
+    "params": [
+      {
+        "type": "l_byte"
       }
     ]
   },
@@ -126,10 +246,7 @@ yasp.commands = [
     ],
     "params": [
       {
-        "type": "r_byte"
-      },
-      {
-        "type": "pin"
+        "type": "address"
       }
     ]
   }

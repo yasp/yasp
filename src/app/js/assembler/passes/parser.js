@@ -52,17 +52,18 @@ if (typeof yasp == 'undefined') yasp = { };
       var command = null;
       var params = null;
       var commandToken = iterator.current();
+      iterator.next();
+      
       for (var i = 0; i < yasp.commands.length; i++) {
         if (yasp.commands[i].name.toUpperCase() == name) {
           command = yasp.commands[i];
           var oldPos = iterator.pos;
           var itsMe = true;
           var paramPos = 0;
-          var start = true;
-          
+          var start = true;          
           params = [ ];
           
-          while (!iterator.is('\n')) {
+          while (!iterator.is('\n') && itsMe) {
             if (!start) {
               iterator.match(",");
             }
@@ -143,9 +144,6 @@ if (typeof yasp == 'undefined') yasp = { };
         });
         this.nodes.push(node);
       }
-      iterator.next();
-
-
     } else if (!opt) {
       iterator.riseSyntaxError("Expecting command, got " + type + " instead");
     }
