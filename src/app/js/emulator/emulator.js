@@ -1,6 +1,9 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  var tickTimeout = 1000;
+  var commandMap = { };
+
   /**
    * Emulator is responsible for running the bytecode from the assembler
    * @constructor
@@ -11,6 +14,11 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.pc = 0;
     this.running = false;
+    this.stepping = false;
+
+    buildCommandMap();
+
+  //  setTimeout(this.tick.bind(this), tickTimeout);
   };
 
   /**
@@ -65,5 +73,154 @@ if (typeof yasp == 'undefined') yasp = { };
 
     return true;
   };
+
+  yasp.Emulator.prototype.tick = function () {
+    if(this.running == false) {
+     // setTimeout(this.tick.bind(this), tickTimeout);
+      return;
+    }
+
+    var ppc = this.pc;
+    var bytes = [ this.rom[ppc++] ];
+    var parts = [ ];
+    var cmd;
+
+    for (var i = 0; i < yasp.commands.length; i++) {
+      var cmd = yasp.commands[i];
+      parts.length = 0;
+
+      for (var j = 0; j < cmd.code.length; j++) {
+        if(typeof cmd.code[j].value == "string")
+          parts.push(cmd.code[j].value.length);
+        else if(!isNaN((+cmd.code[j].value)))
+          parts.push(8);
+      }
+
+      for (var j = 0; j < cmd.params.length; j++) {
+        var len = 0;
+
+        switch (cmd.params[j].type) {
+          case "r_byte":
+          case "r_word":
+          case "pin":
+            len = 5;
+            break;
+          case "l_byte":
+            len = 8;
+            break;
+          case "l_word":
+            len = 16;
+            break;
+          case "address":
+            len = 11;
+            break;
+          default:
+            throw "a";
+        }
+
+        parts.push(len);
+      }
+
+      var neededBytes = 0;
+      for (var j = 0; j < parts.length; j++) {
+        neededBytes += parts[j];
+      }
+      neededBytes = ~~(neededBytes / 8);
+
+      if(neededBytes > bytes.length) {
+        for (var j = bytes.length; j < neededBytes; j++) {
+          bytes.push(this.rom[ppc++]);
+        }
+      }
+
+      yasp.bitutils.extractBits(bytes, parts, parts);
+      console.log("==");
+
+      var matches = true;
+
+      for (var k = 0; k < cmd.code.length; k++) {
+        var cc = cmd.code[k].value;
+        if(typeof cc == "string")
+          cc = parseInt(cc, 2);
+
+        console.log(cc, parts[k]);
+
+        if(cc != parts[k])
+        {
+          matches = false;
+          break;
+        }
+      }
+
+      if(matches) {
+        break;
+      }
+
+      cmd = null;
+    }
+
+    if(cmd == null) {
+      throw "asd";
+    }
+
+    var params = [ ];
+
+    for (var i = 0; i < cmd.params.length; i++) {
+      var param = { value: null, address: null };
+      var part = parts[cmd.code.length + i];
+
+      switch (cmd.params[i].type) {
+        case "r_byte":
+          param.value = 0; // TODO
+          param.address = part;
+          break;
+        case "r_word":
+          param.value = 0; // TODO
+          param.address = part;
+          break;
+        case "l_byte":
+          param.value = part;
+          param.address = null;
+          break;
+        case "l_word":
+          param.value = part;
+          param.address = null;
+          break;
+        case "pin":
+          param.value = part;
+          param.address = null;
+          break;
+        case "address":
+          param.value = part;
+          param.address = null;
+          break;
+      }
+
+      params.push(param);
+    }
+
+    console.log(cmd, params);
+
+    if(!this.stepping) {
+    //  setTimeout(this.tick.bind(this), tickTimeout);
+    }
+  };
+
+  function buildCommandMap() {
+    commandMap = { };
+
+    if(!yasp.commands || !yasp.commands.length)
+      return;
+
+    for (var i = 0; i < yasp.commands.length; i++) {
+      var cmd = yasp.commands[i];
+      var code = cmd.code[0].value;
+
+      if(!(commandMap[code] instanceof Array))
+        commandMap[code] = [ ];
+
+      commandMap[code].push(cmd);
+    }
+  }
 
 })();
