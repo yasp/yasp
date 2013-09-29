@@ -37,11 +37,33 @@ if (typeof yasp == 'undefined') yasp = { };
     for (var i = 0; i < this.passes.length; i++) {
       tmpResult = this.passes[i].pass(this, tmpResult);
     }
-    var result = {
-      bitcode: this.jobs.indexOf('bitcode') != -1 ? tmpResult : null,
-      symbols: this.jobs.indexOf('symbols') != -1 ? this.symbols : null,
-      map: this.jobs.indexOf('map') != -1 ? this.map : null
-    };
+    var result;
+    
+    if (this.errors.length == 0) {
+      result = {
+        bitcode: this.jobs.indexOf('bitcode') != -1 ? tmpResult : null,
+        symbols: this.jobs.indexOf('symbols') != -1 ? this.symbols : null,
+        map: this.jobs.indexOf('map') != -1 ? this.map : null
+      };
+    } else {
+      // assembler errors
+      var errors = [ ];
+      for (var i = 0; i < this.errors.length; i++) {
+        var err = this.errors[i];
+        errors.push({
+          type: err.type,
+          name: "E_ERR",
+          line: err.token.line,
+          char: err.token.char,
+          message: err.msg
+        });
+      }
+      
+      result = {
+        success: false,
+        errors: errors
+      };
+    }
     
     return result;
   };
@@ -54,7 +76,8 @@ if (typeof yasp == 'undefined') yasp = { };
     console.log(msg = ("Syntax error: " + msg + " in line " + token.line + " at character " + token.char));
     this.errors.push({
       token: token,
-      msg: msg
+      msg: msg,
+      type: "error"
     });
 
     throw msg;
