@@ -86,6 +86,8 @@
   module("assembler generator", {
     setup: function () {
       assembler = new yasp.Assembler();
+      assembler.jobs = ['bitcode'];
+      
       parser = new yasp.Parser();
       lexer = new yasp.Lexer();
       analyser = new yasp.Analyser();
@@ -101,12 +103,12 @@
   });
   
   var generator_cases = [
-    {input: "MOV b1, 2", result: "000000000000000100000010"}
+    {input: "MOV b1, 2", result: "000000000000000100000010", map: {0: 0}}
   ];
   
   QUnit.cases(generator_cases).test("ensure generator generating works", function(params) {
     // arrange
-    var pass1, pass2, pass3, pass4, result;
+    var pass1, pass2, pass3, pass4;
 
     // act
     pass1 = lexer.pass(assembler, params.input);
@@ -116,5 +118,20 @@
     
     // assert
     equal(convert2binary(pass4), params.result);
+  });
+
+  QUnit.cases(generator_cases).test("ensure map is generated properly", function(params) {
+    // arrange
+    var pass1, pass2, pass3, pass4, result;
+    assembler.jobs = ['map']
+    
+    // act
+    pass1 = lexer.pass(assembler, params.input);
+    pass2 = analyser.pass(assembler, pass1)
+    pass3 = parser.pass(assembler, pass2);
+    generator.pass(assembler, pass3);
+    
+    // assert
+    deepEqual(assembler.map, params.map);
   });
 })();

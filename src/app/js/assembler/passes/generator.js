@@ -18,32 +18,69 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Generator.prototype.pass = function (assembler, input) {
     this.assembler = assembler;
     
-    var labelMachinePosition = { };
+    if (assembler.jobs.indexOf("bitcode") != -1 || assembler.jobs.indexOf("map") != -1) {
+      var labelMachinePosition = { };
+  
+      // 1 pass: get position in machine code for every Ast Node (for labels)
+      // TODO: Optimize this code (do not call generate and DO NOT call toUint8Array => slow as fuck...), so please if you have time optimize it, its just fucking wrong...
+      var pos = 0;
+      for (var i = 0; i < input.length; i++) {
+        var node = input[i];
+        if (!!node) {
+          this.bitWriter = new yasp.BitWriter();
+          node.machinePosition = pos;
+          node.type.generate.call(node, this);
+          pos += this.bitWriter.toUint8Array().length;
+        }
+      }
+    }
     
-    // 1 pass: get position in machine code for every Ast Node (for labels)
-    // TODO: Optimize this code (do not call generate and DO NOT call toUint8Array => slow as fuck...), so please if you have time optimize it, its just fucking wrong...
-    var pos = 0;
-    for (var i = 0; i < input.length; i++) {
-      var node = input[i];
-      if (!!node) {
-        this.bitWriter = new yasp.BitWriter();
-        node.machinePosition = pos;
-        node.type.generate.call(node, this);
-        pos += this.bitWriter.toUint8Array().length;
+    if (assembler.jobs.indexOf("map") != -1) {
+      // generate map
+      if (assembler.jobs.indexOf('map') != -1) {
+        var map = { };
+        for (var i = 0; i < input.length; i++) {
+          var node = input[i];
+          if (node.type == yasp.AstNodeTypes.NODE_COMMAND) {
+            // put into map if its a command
+            if (!!map[node.token.line]) {
+              throw "Duplicate entry in map";
+            } else {
+              map[node.token.line] = node.machinePosition;
+            }
+          }
+        }
+        assembler.map = map;
       }
     }
+    
+    if (assembler.jobs.indexOf("bitcode") == -1) {
+      return null;
+    } else {
+      // generate map
+      if (assembler.jobs.indexOf('map') != -1) {
+        var map = { };
+        for (var i = 0; i < this.nodes.length; i++) {
+          var node = this.nodes[i];
+          if (node.type == yasp.AstNodeTypes.NODE_COMMAND) {
+            // put into map if its a command
 
-    this.bitWriter = new yasp.BitWriter();
-    // 2 pass: real generation
-    for (var i = 0; i < input.length; i++) {
-      var node = input[i];
-      if (!!node) {
-        node.type.generate.call(node, this);
+          }
+        }
       }
+  
+      this.bitWriter = new yasp.BitWriter();
+      // 2 pass: real generation
+      for (var i = 0; i < input.length; i++) {
+        var node = input[i];
+        if (!!node) {
+          node.type.generate.call(node, this);
+        }
+      }
+      return this.bitWriter.toUint8Array();
     }
-    return this.bitWriter.toUint8Array();
   };
-
+  
   /**
    * What types exist in an AST? The generate functions are all called in the context of the AstNode.
    * @type {{NODE_LABEL: {name: string, generate: Function}, NODE_COMMAND: {name: string, generate: Function}}}

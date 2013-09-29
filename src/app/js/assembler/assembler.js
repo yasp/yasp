@@ -17,7 +17,6 @@ if (typeof yasp == 'undefined') yasp = { };
       defines: [ ],
       instructions: { }
     };
-    this.result = null;
 
     this.passes = [
       new yasp.Lexer(),
@@ -38,8 +37,13 @@ if (typeof yasp == 'undefined') yasp = { };
     for (var i = 0; i < this.passes.length; i++) {
       tmpResult = this.passes[i].pass(this, tmpResult);
     }
-    this.result = tmpResult;
-    return this.result;
+    var result = {
+      bitcode: this.jobs.indexOf('bitcode') != -1 ? tmpResult : null,
+      symbols: this.jobs.indexOf('symbols') != -1 ? this.symbols : null,
+      map: this.jobs.indexOf('map') != -1 ? this.map : null
+    };
+    
+    return result;
   };
 
   /**
