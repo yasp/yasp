@@ -13,7 +13,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.map = { };
     this.symbols = {
       labels: { },
-      usedRegisters: [ ],
+      usedRegisters: { },
       defines: [ ],
       instructions: { }
     };

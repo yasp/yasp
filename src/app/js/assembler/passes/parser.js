@@ -34,6 +34,42 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     }).bind(this));
 
+    // generate symbol table
+    if (assembler.jobs.indexOf("symbol") != -1 && assembler.errors.length == 0) {
+      // labels are already generated in the Analyser
+      // defines will be generated in the PreProcessor
+      // usedRegisters & instructions
+      var registers = { };
+      assembler.symbols.instructions = { };
+      assembler.symbols.usedRegisters = { };
+      for (var i = 0; i < this.nodes.length; i++) {
+        var node = this.nodes[i];
+        if (node.type == yasp.AstNodeTypes.NODE_COMMAND) {
+          var name = node.params.command.name;
+          
+          if (!!assembler.symbols.instructions[name]) {
+            assembler.symbols.instructions[name]++;
+          } else {
+            assembler.symbols.instructions[name] = 1;
+          }
+          
+          // params
+          for (var j = 0; j < node.params.length; j++) {
+            var param = node.params[j];
+            var typ = param.getType();
+            var paramName = param.text.toUpperCase();
+            if (typ == yasp.TokenType.BYTE_REGISTER || typ == yasp.TokenType.WORD_REGISTER) {
+              if (!!assembler.symbols.usedRegisters[paramName]) {
+                assembler.symbols.usedRegisters[paramName]++;
+              } else {
+                assembler.symbols.usedRegisters[paramName] = 1;
+              }
+            }
+          }
+        }
+      }
+    }
+    
     return this.nodes;
   };
 

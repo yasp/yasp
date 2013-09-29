@@ -17,10 +17,40 @@
   });
 
   var parser_cases = [
-    {input: "MOV W0, 100 \n PUSH W0 \n ASDF: GOTO ASDF \n", fails: false },
+    {input: "MOV W0, 100 \n PUSH W0 \n ASDF: GOTO ASDF \n", fails: false, symbols:
+    {
+      "defines": [],
+      "instructions": {
+        "GOTO": 1,
+        "MOV": 1,
+        "PUSH": 1
+      },
+      "labels": {
+        "ASDF": {
+          "char": 1,
+          "line": 2,
+          "text": "ASDF"
+        }
+      },
+      "usedRegisters": {}
+    }},
     {input: "", fails: false},
     {input: "MOV MOV MOV", fails: true},
-    {input: "ASDF: GOTO ASDF\n\n\nPUSH W0 \n", fails: false}
+    {input: "ASDF: GOTO ASDF\n\n\nPUSH W0 \n", fails: false, symbols: {
+      "defines": [],
+      "instructions": {
+        "GOTO": 1,
+        "PUSH": 1
+      },
+      "labels": {
+        "ASDF": {
+          "char": 0,
+          "line": 0,
+          "text": "ASDF"
+        }
+      },
+      "usedRegisters": {}
+    }}
   ];
 
   QUnit.cases(parser_cases).test("ensure parser syntax checking working", function (params) {
@@ -35,4 +65,23 @@
     // assert
     ok(params.fails ? assembler.errors.length > 0 : assembler.errors.length == 0);
   });
+  
+  QUnit.cases(parser_cases).test("ensure parser symbol table working", function(params) {
+    // arrange
+    assembler.jobs = ["symbol"];
+    var pass1, pass2;
+    
+    // act
+    pass1 = lexer.pass(assembler, params.input);
+    pass2 = analyser.pass(assembler, pass1)
+    parser.pass(assembler, pass2);
+    
+    // assert
+    deepEqual(JSON.parse(JSON.stringify(assembler.symbols)), !!params.symbols ? params.symbols : {
+      labels: { },
+      usedRegisters: { },
+      defines: [ ],
+      instructions: { }
+    });
+  })
 })();
