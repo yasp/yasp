@@ -125,7 +125,13 @@ if (typeof yasp == "undefined") yasp = { };
 
     // am i a command?
     for (var i = 0; i < yasp.commands.length; i++) {
-      if (yasp.commands[i].name.toUpperCase() == name) return yasp.TokenType.COMMAND;
+      if (yasp.commands[i].name instanceof Array) {
+        for (var j = 0; j < yasp.commands[i].name.length; j++) {
+          if (yasp.commands[i].name[j].toUpperCase() == name) return yasp.TokenType.COMMAND;
+        }
+      } else {
+        if (yasp.commands[i].name.toUpperCase() == name) return yasp.TokenType.COMMAND;
+      }
     }
 
     // am i a label?

@@ -45,7 +45,7 @@ if (typeof yasp == 'undefined') yasp = { };
       for (var i = 0; i < this.nodes.length; i++) {
         var node = this.nodes[i];
         if (node.type == yasp.AstNodeTypes.NODE_COMMAND) {
-          var name = node.params.command.name;
+          var name = (node.params.command.name instanceof Array) ? node.params.command.name[0] : node.params.command.name;
           
           if (!!assembler.symbols.instructions[name]) {
             assembler.symbols.instructions[name]++;
