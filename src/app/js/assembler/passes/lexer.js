@@ -80,6 +80,7 @@ if (typeof yasp == "undefined") yasp = { };
     NUMBER: "number", // pin / byte_literal / word_literal
     BYTE_REGISTER: "byte register",
     WORD_REGISTER: "word register",
+    DIRECTIVE: "directive",
     UNKNOWN: "unknown"
   };
 
@@ -121,6 +122,17 @@ if (typeof yasp == "undefined") yasp = { };
     // am i a word register
     for (var i = 0; i < validWordRegisters.length; i++) {
       if (validWordRegisters[i] == name) return yasp.TokenType.WORD_REGISTER;
+    }
+    
+    // am i a directive
+    switch (name) {
+      case "DEFINE":
+      case "ORG":
+      case "STRING":
+      case "DB":
+      case "DA":
+      case "DW":
+        return yasp.TokenType.DIRECTIVE;
     }
 
     // am i a command?

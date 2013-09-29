@@ -84,6 +84,15 @@ if (typeof yasp == 'undefined') yasp = { };
    * @type {{NODE_LABEL: {name: string, generate: Function}, NODE_COMMAND: {name: string, generate: Function}}}
    */
   yasp.AstNodeTypes = {
+    NODE_ORG: {
+      name: "org",
+      generate: function(generator) {
+        generator.bitWriter.append("", this.params.len*8);
+      },
+      calculateBitSize: function() {
+        return this.params.len*8;
+      }
+    },
     NODE_LABEL: {
       name: "label",
       generate: function(generator) {

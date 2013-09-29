@@ -19,7 +19,7 @@
   var parser_cases = [
     {input: "MOV W0, 100 \n PUSH W0 \n ASDF: GOTO ASDF \n", fails: false, symbols:
     {
-      "defines": [],
+      "defines": { },
       "instructions": {
         "GOTO": 1,
         "MOV": 1,
@@ -32,20 +32,22 @@
           "text": "ASDF"
         }
       },
-      "usedRegisters": {}
+      "usedRegisters": { }
     }},
     {input: "", fails: false},
     {input: "MOV MOV MOV", fails: true},
-    {input: "ASDF: GOTO ASDF\n\n\nPUSH W0 \n", fails: false, symbols: {
-      "defines": [],
+    {input: "DEFINE importantRegister W0 \n ASDF: GOTO ASDF\n\n\nPUSH importantregister \n", fails: false, symbols: {
+      "defines": {
+        "IMPORTANTREGISTER": "W0"
+      },
       "instructions": {
         "GOTO": 1,
         "PUSH": 1
       },
       "labels": {
         "ASDF": {
-          "char": 0,
-          "line": 0,
+          "char": 1,
+          "line": 1,
           "text": "ASDF"
         }
       },
@@ -80,7 +82,7 @@
     deepEqual(JSON.parse(JSON.stringify(assembler.symbols)), !!params.symbols ? params.symbols : {
       labels: { },
       usedRegisters: { },
-      defines: [ ],
+      defines: { },
       instructions: { }
     });
   })

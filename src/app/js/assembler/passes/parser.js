@@ -7,6 +7,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Parser = function () {
     this.nodes = [ ];
+    this.input = "";
   };
 
   /**
@@ -17,8 +18,9 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Parser.prototype.pass = function (assembler, input) {
     this.nodes = [ ];
+    this.input = input;
     
-    var iterator = new yasp.TokenIterator(assembler, input);
+    var iterator = new yasp.TokenIterator(assembler, this.input);
 
     iterator.iterate((function() {
       var type;
@@ -28,6 +30,9 @@ if (typeof yasp == 'undefined') yasp = { };
           break;
         case yasp.TokenType.LABEL:
           this.parseLabel(iterator);
+          break;
+        case yasp.TokenType.DIRECTIVE:
+          this.parseDirective(iterator);
           break;
         default:
           iterator.riseSyntaxError("Expecting command or label, got " + type + " instead.");
@@ -191,6 +196,55 @@ if (typeof yasp == 'undefined') yasp = { };
       this.parseCommand(iterator, true); // optionally there can be a command
     } else if (!opt) {
       iterator.riseSyntaxError("Expecting label, got " + type + " instead");
+    }
+  };
+
+  /**
+   * This method parses ALL THE directives!
+   * @param iterator
+   */
+  yasp.Parser.prototype.parseDirective = function(iterator) {
+    switch(iterator.current().text.toUpperCase()) {
+      case "DEFINE":
+        // make new DEFINE
+        iterator.next();
+        var from = iterator.current().text.toUpperCase();
+        iterator.next();
+        var to = iterator.current().text.toUpperCase();
+        iterator.next();
+        if (!!iterator.assembler.symbols.defines[from]) {
+          iterator.riseSyntaxError("Duplicate DEFINE '" + from + "'");
+        } else {
+          iterator.assembler.symbols.defines[from] = to;
+        }
+        // replace tokens
+        var replacer = new yasp.TokenIterator(iterator.assembler, this.input);
+        replacer.pos = iterator.pos;
+        while (replacer.hasNext()) {
+          if (replacer.current().text.toUpperCase() == from) {
+            replacer.current().text = to;
+          }
+          replacer.next();
+        }
+        
+        break;
+      case "ORG":
+        var cur = iterator.current();
+        iterator.next();
+        if (iterator.current().getType() != yasp.TokenType.NUMBER) {
+          iterator.riseSyntaxError("Invalid parameter for ORG - can only be numeric :(");
+        }
+        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_ORG, cur, {
+          len: +iterator.current().text
+        }));
+        iterator.next();
+        break;
+      case "STRING":
+      case "DB":
+      case "DA":
+      case "DW":
+        
+        break;
     }
   };
 })();

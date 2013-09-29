@@ -14,14 +14,13 @@ if (typeof yasp == 'undefined') yasp = { };
     this.symbols = {
       labels: { },
       usedRegisters: { },
-      defines: [ ],
+      defines: { },
       instructions: { }
     };
 
     this.passes = [
       new yasp.Lexer(),
       new yasp.Analyser(),
-      new yasp.PreProcessor(),
       new yasp.Parser(),
       new yasp.Generator()
     ];
