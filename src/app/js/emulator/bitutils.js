@@ -51,5 +51,15 @@ if (typeof yasp == 'undefined') yasp = { };
 
     return maps;
   }
+
+  function toBinaryString (i) {
+    var str = i.toString(2);
+    str = pad(str, "8");
+    return str;
+
+    function pad(n, width) {
+      return n.length >= width ? n : new Array(width - n.length + 1).join("0") + n;
+    }
+  }
 })();
 
