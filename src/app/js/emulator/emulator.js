@@ -97,27 +97,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       for (var j = 0; j < cmd.params.length; j++) {
-        var len = 0;
-
-        switch (cmd.params[j].type) {
-          case "r_byte":
-          case "r_word":
-          case "pin":
-            len = 5;
-            break;
-          case "l_byte":
-            len = 8;
-            break;
-          case "l_word":
-            len = 16;
-            break;
-          case "address":
-            len = 11;
-            break;
-          default:
-            throw "a";
-        }
-
+        var len = yasp.ParamType[cmd.params[j].type].len;
         parts.push(len);
       }
 
