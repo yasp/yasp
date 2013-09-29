@@ -1,16 +1,15 @@
-var bitutils = { };
+if (typeof yasp == 'undefined') yasp = { };
 
 (function () {
-  var bitmaps = buildBitmapMap ();
-  var bitCache = {};
+  yasp.bitutils = { };
 
-  bitutils.extractBits = function (bytes, parts) {
+  var bitmaps = buildBitmapMap ();
+
+  yasp.bitutils.extractBits = function (bytes, parts, retn) {
     var pointer = 0;
-    var retn = [ ];
 
     for (var i = 0; i < parts.length; i++) {
-      var ol = parts[i];
-      var l = ol;
+      var l = parts[i];
       var valPointer = l;
       var val = 0;
 
@@ -34,10 +33,8 @@ var bitutils = { };
         pointer += ll;
       }
 
-      retn.push(val);
+      retn[i] = val;
     }
-
-    return retn;
   };
 
   function extractFromByte (byte, p, l) {

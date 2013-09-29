@@ -57,7 +57,8 @@
 
   QUnit.cases(extractBitsData).test("extractBits", function (params) {
     var expected = params.retn;
-    var actual = bitutils.extractBits(params.byte, params.part);
+    var actual = new Array(params.part.length);
+    yasp.bitutils.extractBits(params.byte, params.part, actual);
     deepEqual(actual, expected);
   });
 })();
