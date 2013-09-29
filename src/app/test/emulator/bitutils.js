@@ -61,4 +61,22 @@
     yasp.bitutils.extractBits(params.byte, params.part, actual);
     deepEqual(actual, expected);
   });
+
+  test("extractBits - speed", function () {
+    var retn = new Array(extractBitsData[0].part.length);
+    var byte = extractBitsData[0].byte;
+    var part = extractBitsData[0].part;
+
+    var num = 1000000;
+    var start = +new Date();
+
+    for (var j = 0; j < num; j++) {
+      yasp.bitutils.extractBits(byte, part, retn);
+    }
+
+    var end = +new Date();
+    var dur = (end - start);
+    var hz = (1 / dur) * num;
+    ok(true, ~~(hz / 1000) + "MHz");
+  });
 })();
