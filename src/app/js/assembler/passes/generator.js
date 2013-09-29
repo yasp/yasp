@@ -22,15 +22,13 @@ if (typeof yasp == 'undefined') yasp = { };
       var labelMachinePosition = { };
   
       // 1 pass: get position in machine code for every Ast Node (for labels)
-      // TODO: Optimize this code (do not call generate and DO NOT call toUint8Array => slow as fuck...), so please if you have time optimize it, its just fucking wrong...
       var pos = 0;
       for (var i = 0; i < input.length; i++) {
         var node = input[i];
         if (!!node) {
           this.bitWriter = new yasp.BitWriter();
           node.machinePosition = pos;
-          node.type.generate.call(node, this);
-          pos += this.bitWriter.toUint8Array().length;
+          pos += node.type.calculateBitSize.call(node, this);
         }
       }
     }
@@ -91,6 +89,9 @@ if (typeof yasp == 'undefined') yasp = { };
       generate: function(generator) {
         // update machine position
         labelMachinePosition[this.params.label.text.toUpperCase()] = this.machinePosition;
+      },
+      calculateBitSize: function() {
+        return 0;
       }
     },
     NODE_COMMAND: {
@@ -126,6 +127,30 @@ if (typeof yasp == 'undefined') yasp = { };
           
           writer.append(type.data(param), type.len);
         }
+      },
+      calculateBitSize: function() {
+        var size = 0;
+        var commandCode = this.params.command.code;
+        var commandParam = this.params.command.params;
+        var params = this.params.params;
+
+        for (var i = 0; i < commandCode.length; i++) {
+          var code = commandCode[i];
+          var len;
+          if (typeof code.length == 'undefined') {
+            len = 8;
+          } else {
+            len = code.length;
+          }
+          size += len;
+        }
+
+        // params
+        for (var i = 0; i < params.length; i++) {
+          var type = yasp.ParamType[commandParam[i].type.toLowerCase()];
+          size += type.len;
+        }
+        return size;
       }
     }
   };

@@ -8,6 +8,12 @@ if (typeof yasp == 'undefined') yasp = { };
 
   };
 
+  /**
+   * Analyzes the source code and searches for labels
+   * @param assembler
+   * @param input
+   * @returns {*}
+   */
   yasp.Analyser.prototype.pass = function (assembler, input) {
     var iterator = new yasp.TokenIterator(assembler, input);
     var labels = { };
@@ -31,5 +37,5 @@ if (typeof yasp == 'undefined') yasp = { };
     assembler.symbols.labels = labels;
 
     return input;
-  }
+  };
 })();
