@@ -16,13 +16,7 @@ if (typeof yasp == 'undefined') yasp = { };
       while (l > 0) {
         var pointerInByte = pointer % 8;
         var v;
-        var ll;
-
-        if(Math.floor((pointer + l) / 8) == Math.floor(pointer / 8)) {
-          ll = l;
-        } else {
-          ll = 8 - pointerInByte;
-        }
+        var ll = Math.min(l, 8 - pointerInByte);
 
         v = extractFromByte(bytes[Math.floor(pointer / 8)], pointerInByte, ll);
         valPointer -= ll;
