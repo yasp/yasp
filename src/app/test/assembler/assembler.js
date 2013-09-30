@@ -102,6 +102,24 @@
     ok(result.bitcode && !result.symbols && !result.map);
   });
   
+  test("ensure assembler keeps no state", function() {
+    // arrange
+    var result, params;
+    params = {
+      code: "MOV b0, 42",
+      jobs: ['map']
+    };
+
+    // act
+    assembler.assemble(params);
+    assembler.assemble(params);
+    assembler.assemble(params);
+    var result = assembler.assemble(params);
+
+    // assert
+    ok(!result.bitcode && !result.symbols && result.map);
+  });
+  
   test("ensure assembler generating map", function() {
     // arrange
     var result, params;

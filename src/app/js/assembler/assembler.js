@@ -6,30 +6,43 @@ if (typeof yasp == 'undefined') yasp = { };
    * @constructor
    */
   yasp.Assembler = function () {
-    this.jobs = [ ];
-    this.errors = [ ]; // array containing all the errors that occured while assembling
+    this.jobs = null;
+    this.errors = null; // array containing all the errors that occured while assembling
+    this.map = null;
+    this.symbols = null;
+    this.passes = null;
+    
+    this.reset();
+  };
 
-    // results
-    this.map = { };
-    this.symbols = {
-      labels: { },
-      usedRegisters: { },
-      defines: { },
-      instructions: { }
-    };
-
+  /**
+   * Resets state of Assembler (does assemble() automatically)
+   */
+  yasp.Assembler.prototype.reset = function() {
     this.passes = [
       new yasp.Lexer(),
       new yasp.Analyser(),
       new yasp.Parser(),
       new yasp.Generator()
     ];
-  };
+
+    this.symbols = {
+      labels: { },
+      usedRegisters: { },
+      defines: { },
+      instructions: { }
+    };
+    this.errors = [ ]; // array containing all the errors that occured while assembling
+    this.map = { };
+    this.jobs = [ ];
+  }
 
   /**
    * @function Assembles the files
    */
   yasp.Assembler.prototype.assemble = function (params) {
+    this.reset();
+    
     this.jobs = params.jobs;
     
     try {
