@@ -121,7 +121,7 @@
   test("writeByteRegister", function () {
     var expected = 42;
     emulator.writeByteRegister(1, expected);
-    var actual = emulator.rom[1];
+    var actual = emulator.ram[1];
     strictEqual(expected, actual);
   });
 
@@ -167,8 +167,8 @@
 
     emulator.writeWordRegister(1, 0xAAFF);
 
-    var actual1 = emulator.rom[2];
-    var actual2 = emulator.rom[3];
+    var actual1 = emulator.ram[2];
+    var actual2 = emulator.ram[3];
 
     strictEqual(expected1, actual1);
     strictEqual(expected2, actual2);
@@ -189,8 +189,8 @@
   test("readWordRegister", function () {
     var expected = 0xAAFF;
 
-    emulator.rom[2] = 0xAA;
-    emulator.rom[3] = 0xFF;
+    emulator.ram[2] = 0xAA;
+    emulator.ram[3] = 0xFF;
 
     var actual = emulator.readWordRegister(1);
 

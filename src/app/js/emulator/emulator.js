@@ -85,7 +85,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return 0;
     if(v < 0 || v > 255)
       return 1;
-    this.rom[r] = v;
+    this.ram[r] = v;
     return true;
   };
 
@@ -97,7 +97,7 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.readByteRegister = function (r) {
     if(r < 0 || r > 32)
       return -1;
-    return this.rom[r];
+    return this.ram[r];
   };
 
   /**
@@ -115,8 +115,8 @@ if (typeof yasp == 'undefined') yasp = { };
     var bytes = yasp.bitutils.bytesFromWord(v);
 
     r = r * 2;
-    this.rom[r] = bytes[0];
-    this.rom[r + 1] = bytes[1];
+    this.ram[r] = bytes[0];
+    this.ram[r + 1] = bytes[1];
 
     return true;
   };
@@ -131,8 +131,8 @@ if (typeof yasp == 'undefined') yasp = { };
       return -1;
 
     r = r * 2;
-    var b1 = this.rom[r];
-    var b2 = this.rom[r + 1];
+    var b1 = this.ram[r];
+    var b2 = this.ram[r + 1];
     var w = yasp.bitutils.wordFromBytes(b1, b2);
 
     return w;
