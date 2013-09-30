@@ -31,10 +31,18 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Assembler.prototype.assemble = function (params) {
     this.jobs = params.jobs;
-
-    var tmpResult = params.code;
-    for (var i = 0; i < this.passes.length; i++) {
-      tmpResult = this.passes[i].pass(this, tmpResult);
+    
+    try {
+      var tmpResult = params.code;
+      for (var i = 0; i < this.passes.length; i++) {
+        tmpResult = this.passes[i].pass(this, tmpResult);
+      }
+    } catch (ex) {
+      // houston we have a problem!
+      if (this.errors.length == 0) {
+        // really a problem
+        throw ex;
+      }
     }
     var result;
     

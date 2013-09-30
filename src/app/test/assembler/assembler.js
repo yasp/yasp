@@ -78,5 +78,83 @@
 })();
 
 (function () {
-  // TODO: test assembler end2end
+  var assembler;
+  module("assembler end2end", {
+    setup: function() {
+      assembler = new yasp.Assembler();
+    },
+    teardown: function() {
+      assembler = null;
+    }
+  });
+  test("ensure assembler generating bitcode", function() {
+    // arrange
+    var result, params;
+    params = {
+      code: "MOV b0, 42",
+      jobs: ['bitcode']
+    };
+    
+    // act
+    var result = assembler.assemble(params);
+    
+    // assert
+    ok(result.bitcode && !result.symbols && !result.map);
+  });
+  
+  test("ensure assembler generating map", function() {
+    // arrange
+    var result, params;
+    params = {
+      code: "MOV b0, 42",
+      jobs: ['map']
+    };
+
+    // act
+    var result = assembler.assemble(params);
+
+    // assert
+    ok(!result.bitcode && !result.symbols && result.map);
+  });
+  
+  test("ensure assembler generating symbol table", function() {
+    // arrange
+    var result, params;
+    params = {
+      code: "MOV b0, 42",
+      jobs: ['symbols']
+    };
+
+    // act
+    var result = assembler.assemble(params);
+
+    // assert
+    ok(!result.bitcode && result.symbols && !result.map);
+  })
+  
+  test("ensure assembler returns error", function() {
+    // arrange
+    var result, params;
+    params = {
+      code: "dipfgjoidfgjdoüfgkdpfodpfk b0, 42",
+      jobs: ['bitcode']
+    };
+
+    // act
+    var result = assembler.assemble(params);
+
+    // assert
+    deepEqual(result, {
+      "errors": [
+        {
+          "char": 0,
+          "line": 0,
+          "message": "Syntax error: Expecting command or label, got unknown instead. in line 0 at character 0",
+          "name": "E_ERR",
+          "type": "error"
+        }
+      ],
+      "success": false
+    });
+  });
 })();
