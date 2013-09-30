@@ -54,9 +54,15 @@
     strictEqual(expected, actual);
   });
 
-  test("continue - invalid count type", function () {
+  test("continue - invalid count type (str)", function () {
     var expected = 2;
     var actual = emulator.continue("a");
+    strictEqual(expected, actual);
+  });
+
+  test("continue - invalid count type (bool)", function () {
+    var expected = 2;
+    var actual = emulator.continue(true);
     strictEqual(expected, actual);
   });
 

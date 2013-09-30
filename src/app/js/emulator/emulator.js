@@ -48,7 +48,7 @@ if (typeof yasp == 'undefined') yasp = { };
     if(count == null) {
       this.running = true;
     }
-    else if(!isNaN(+count)) {
+    else if(typeof count == "number") {
       if(count < 0)
         return 0;
       this.running = +count;
