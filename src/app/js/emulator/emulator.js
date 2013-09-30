@@ -107,6 +107,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     var ppc = this.pc;
+    var neededBytes;
     var bytes = [ this.rom[ppc++] ];
     var parts = [ ];
     var cmd;
@@ -127,7 +128,8 @@ if (typeof yasp == 'undefined') yasp = { };
         parts.push(len);
       }
 
-      var neededBytes = 0;
+      neededBytes = 0;
+
       for (var j = 0; j < parts.length; j++) {
         neededBytes += parts[j];
       }
@@ -140,7 +142,6 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       yasp.bitutils.extractBits(bytes, parts, parts);
-      console.log("==");
 
       var matches = true;
 
@@ -148,8 +149,6 @@ if (typeof yasp == 'undefined') yasp = { };
         var cc = cmd.code[k].value;
         if(typeof cc == "string")
           cc = parseInt(cc, 2);
-
-        console.log(cc, parts[k]);
 
         if(cc != parts[k])
         {
@@ -166,8 +165,10 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     if(cmd == null) {
-      throw "asd";
+      throw "Invalid Instruction at " + this.pc;
     }
+
+    this.pc += neededBytes;
 
     var params = [ ];
 
