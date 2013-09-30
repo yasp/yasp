@@ -141,7 +141,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   yasp.Emulator.prototype.tick = function () {
-    if(this.running == false) {
+    if(this.running == false && !this.stepping) {
       setTimeout(this.tick.bind(this), tickTimeout);
       return;
     }

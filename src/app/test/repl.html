@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <title>yasp repl</title>
+
+    <script src="../../lib/js/jquery-1.10.2.min.js"></script>
+    <script src="../js/commands.js"></script>
+    <script src="../js/utils.js"></script>
+</head>
+<body>
+<script src="../js/assembler/assembler.js"></script>
+<script src="../js/assembler/passes/lexer.js"></script>
+<script src="../js/assembler/passes/analyser.js"></script>
+<script src="../js/assembler/passes/parser.js"></script>
+<script src="../js/assembler/passes/generator.js"></script>
+<script src="../js/emulator/bitutils.js"></script>
+<script src="../js/emulator/emulator.js"></script>
+
+Input: <input id="foo">
+<pre id="mem"></pre>
+<script type="text/javascript">
+    var assembler = new yasp.Assembler();
+    var emulator = new yasp.Emulator();
+    emulator.stepping = true;
+
+    $('#foo').bind('keypress', function(e) {
+        if(e.keyCode==13){
+            var code = $('#foo').val();
+            $('#foo').val("");
+            var bitcode = assembler.assemble({ code: code, jobs: ["bitcode"] }).bitcode;
+            emulator.load(bitcode, 0);
+            emulator.pc = 0;
+            emulator.tick();
+
+            var dmp = "";
+
+            for (var i = 0; i < emulator.ram.length; i++) {
+                if(i % 20 == 0)
+                    dmp += "\n";
+                var d = emulator.ram[i].toString(16);
+                if(d.length == 1)
+                    d = "0" + d;
+                dmp += d + " ";
+            }
+
+            $('#mem').text(dmp);
+        }
+    });
+</script>
+</body>
+</html>
