@@ -127,21 +127,73 @@
 
   test("readByteRegister - r < 0", function () {
     var expected = -1;
-    var actual = emulator.readByteRegister(-1, 0);
+    var actual = emulator.readByteRegister(-1);
     strictEqual(expected, actual);
   });
 
   test("readByteRegister - r > 32", function () {
     var expected = -1;
-    var actual = emulator.readByteRegister(33, 0);
+    var actual = emulator.readByteRegister(33);
     strictEqual(expected, actual);
   });
 
-  test("writeByteRegister", function () {
-    var expected = 42;
-    emulator.rom[1] = expected;
-    var actual = emulator.readByteRegister(1);
+  test("writeWordRegister - r < 0", function () {
+    var expected = 0;
+    var actual = emulator.writeWordRegister(-1, 0);
     strictEqual(expected, actual);
   });
 
+  test("writeWordRegister - r > 32", function () {
+    var expected = 0;
+    var actual = emulator.writeWordRegister(33, 0);
+    strictEqual(expected, actual);
+  });
+
+  test("writeWordRegister - v < 0", function () {
+    var expected = 1;
+    var actual = emulator.writeWordRegister(0, -1);
+    strictEqual(expected, actual);
+  });
+
+  test("writeWordRegister - v > 65535", function () {
+    var expected = 1;
+    var actual = emulator.writeWordRegister(0, 65536);
+    strictEqual(expected, actual);
+  });
+
+  test("writeWordRegister", function () {
+    var expected1 = 0xAA;
+    var expected2 = 0xFF;
+
+    emulator.writeWordRegister(1, 0xAAFF);
+
+    var actual1 = emulator.rom[2];
+    var actual2 = emulator.rom[3];
+
+    strictEqual(expected1, actual1);
+    strictEqual(expected2, actual2);
+  });
+
+  test("readWordRegister - r < 0", function () {
+    var expected = -1;
+    var actual = emulator.readWordRegister(-1);
+    strictEqual(expected, actual);
+  });
+
+  test("readWordRegister - r > 32", function () {
+    var expected = -1;
+    var actual = emulator.readWordRegister(33);
+    strictEqual(expected, actual);
+  });
+
+  test("readWordRegister", function () {
+    var expected = 0xAAFF;
+
+    emulator.rom[2] = 0xAA;
+    emulator.rom[3] = 0xFF;
+
+    var actual = emulator.readWordRegister(1);
+
+    strictEqual(expected, actual);
+  });
 })();

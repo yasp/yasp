@@ -100,6 +100,44 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.rom[r];
   };
 
+  /**
+   * @function Writes the given value into the given word register
+   * @param r the word-register to write to
+   * @param v the value to write
+   * @returns {Number|Boolean}
+   */
+  yasp.Emulator.prototype.writeWordRegister = function (r, v) {
+    if(r < 0 || r > 32)
+      return 0;
+    if(v < 0 || v > 65535)
+      return 1;
+
+    var bytes = yasp.bitutils.bytesFromWord(v);
+
+    r = r * 2;
+    this.rom[r] = bytes[0];
+    this.rom[r + 1] = bytes[1];
+
+    return true;
+  };
+
+  /**
+   * @function Reads the given value at the given word
+   * @param r the word-register to read
+   * @returns {Number}
+   */
+  yasp.Emulator.prototype.readWordRegister = function (r) {
+    if(r < 0 || r > 32)
+      return -1;
+
+    r = r * 2;
+    var b1 = this.rom[r];
+    var b2 = this.rom[r + 1];
+    var w = yasp.bitutils.wordFromBytes(b1, b2);
+
+    return w;
+  };
+
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false) {
      // setTimeout(this.tick.bind(this), tickTimeout);
