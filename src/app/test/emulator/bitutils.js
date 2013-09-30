@@ -79,4 +79,24 @@
     var hz = (1 / dur) * num;
     ok(true, ~~(hz / 1000) + "MHz");
   });
+
+  var wordBytesData = [
+    {
+      word: 0x0102,
+      bytes: [ 0x01, 0x02 ]
+    }
+  ];
+
+  QUnit.cases(wordBytesData).test("wordFromBytes", function (params) {
+    var expected = params.word;
+    var actual = yasp.bitutils.wordFromBytes(params.bytes[0], params.bytes[1]);
+    strictEqual(actual, expected);
+  });
+
+  QUnit.cases(wordBytesData).test("bytesFromWord", function (params) {
+    var expected = params.bytes;
+    var actual = yasp.bitutils.bytesFromWord(params.word);
+    deepEqual(actual, expected);
+  });
+
 })();

@@ -41,6 +41,16 @@ if (typeof yasp == 'undefined') yasp = { };
     return val;
   }
 
+  yasp.bitutils.wordFromBytes = function (b1, b2) {
+    return b1 << 8 | b2;
+  };
+
+  yasp.bitutils.bytesFromWord = function (w) {
+    var b1 = w >> 8;
+    var b2 = w & 0xFF;
+    return [b1, b2];
+  };
+
   function buildBitmapMap () {
     var maps = { };
 
