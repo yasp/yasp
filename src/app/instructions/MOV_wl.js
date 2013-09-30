@@ -18,5 +18,7 @@
       "type": "l_word"
     }
   ],
-  "exec": function() {}
+  "exec": function (rword, lword) {
+    this.writeWordRegister(rword.address, lword.value);
+  }
 }

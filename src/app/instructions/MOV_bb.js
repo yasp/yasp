@@ -18,5 +18,7 @@
       "type": "r_byte"
     }
   ],
-  "exec": function() {}
+  "exec": function (rbyte1, rbyte2) {
+    this.writeByteRegister(rbyte1.address, rbyte2.value);
+  }
 }
