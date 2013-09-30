@@ -177,7 +177,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
       switch (cmd.params[i].type) {
         case "r_byte":
-          param.value = 0; // TODO
+          param.value = this.readByteRegister(part);
           param.address = part;
           break;
         case "r_word":
