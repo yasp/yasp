@@ -17,7 +17,9 @@
 <script src="../js/emulator/emulator.js"></script>
 
 Input: <input id="foo">
+<pre id="bitcode"></pre>
 <pre id="mem"></pre>
+
 <script type="text/javascript">
     var assembler = new yasp.Assembler();
     var emulator = new yasp.Emulator();
@@ -32,20 +34,23 @@ Input: <input id="foo">
             emulator.pc = 0;
             emulator.tick();
 
-            var dmp = "";
-
-            for (var i = 0; i < emulator.ram.length; i++) {
-                if(i % 20 == 0)
-                    dmp += "\n";
-                var d = emulator.ram[i].toString(16);
-                if(d.length == 1)
-                    d = "0" + d;
-                dmp += d + " ";
-            }
-
-            $('#mem').text(dmp);
+            $('#mem').text(getDump(emulator.ram, 20));
+            $('#bitcode').text(getDump(bitcode, -1));
         }
     });
+
+    function getDump (data, b) {
+        var dmp = "";
+        for (var i = 0; i < data.length; i++) {
+            if(b != -1 && i % 20 == 0)
+                dmp += "\n";
+            var d = data[i].toString(16);
+            if(d.length == 1)
+                d = "0" + d;
+            dmp += "0x" + d + " ";
+        }
+        return dmp;
+    }
 </script>
 </body>
 </html>
