@@ -36,6 +36,7 @@
     }},
     {input: "", fails: false},
     {input: "MOV MOV MOV", fails: true},
+    {input: "asdfdspsidhgeoighfg", fails: true},
     {input: "DEFINE importantRegister W0 \n ASDF: GOTO ASDF\n\n\nPUSH importantregister \n END asdf yolomolo", fails: false, symbols: {
       "defines": {
         "IMPORTANTREGISTER": "W0"

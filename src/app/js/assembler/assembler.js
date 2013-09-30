@@ -205,6 +205,12 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param func Function that is called at the beginning of each line
    */
   yasp.TokenIterator.prototype.iterate = function(func) {
+    try {
+      if (!this.hasNext()) this.riseSyntaxError("Expecting token.");
+    } catch (ex) {
+      return;
+    }
+    
     while (this.hasNext()) {
       try {
         func();

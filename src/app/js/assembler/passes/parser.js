@@ -21,7 +21,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.input = input;
     
     var iterator = new yasp.TokenIterator(assembler, this.input);
-
+    
     iterator.iterate((function() {
       var type;
       switch (type = iterator.current().getType()) {
