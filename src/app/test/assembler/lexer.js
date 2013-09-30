@@ -54,12 +54,19 @@
         {"text": "jmp", "line": 25, "char": 8},
         {"text": "s", "line": 25, "char": 12},
         {"text": "end", "line": 26, "char": 8},
-        {"text": "\n", "line": 26, "char": 11}
+        {"text": "\n", "line": 26, "char": 11},
+        {"char": 0, "line": 27, "text": "\n"}
       ]
     },
     {
       input: "",
-      output: [ ]
+      output: [
+        {
+          "char": 0,
+          "line": 0,
+          "text": "\n"
+        }
+      ]
     },
     {
       input: "asdf sdds asd asd asd asd\n",
@@ -70,13 +77,23 @@
         {"char": 14, "line": 0, "text": "asd"},
         {"char": 18, "line": 0, "text": "asd"},
         {"char": 22, "line": 0, "text": "asd"},
-        {"char": 25, "line": 0, "text": "\n"}
+        {"char": 25, "line": 0, "text": "\n"},
+        {
+          "char": 0,
+          "line": 1,
+          "text": "\n"
+        }
       ]
     },
     {
       input: "test123",
       output: [
-        { "char": 0, "line": 0, "text": "test123" }
+        { "char": 0, "line": 0, "text": "test123" },
+        {
+          "char": 7,
+          "line": 0,
+          "text": "\n"
+        }
       ]
     },
     {
@@ -95,6 +112,11 @@
         {
           "char": 8,
           "line": 0,
+          "text": "\n"
+        },
+        {
+          "char": 0,
+          "line": 1,
           "text": "\n"
         }
       ]

@@ -68,6 +68,7 @@ if (typeof yasp == "undefined") yasp = { };
       var text = input.substring(lastFound, i);
       this.newToken(new yasp.Token(text, line, char - text.length));
     }
+    this.newToken(new yasp.Token("\n", line, char));
 
     return this.tokens;
   };
