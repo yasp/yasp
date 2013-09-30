@@ -293,6 +293,11 @@ if (typeof yasp == 'undefined') yasp = { };
         }));
         iterator.optNext();
         break;
+      case "END":
+        while(iterator.hasNext()) {
+          iterator.next();
+        }
+        break;
       default:
         if (!opt) iterator.riseSyntaxError("Expecting directive, got "+iterator.current().getType() + " instead");
     }

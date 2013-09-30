@@ -141,6 +141,7 @@ if (typeof yasp == "undefined") yasp = { };
       case "DB":
       case "DA":
       case "DW":
+      case "END":
         return yasp.TokenType.DIRECTIVE;
     }
 
