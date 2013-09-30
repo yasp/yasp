@@ -18,7 +18,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     buildCommandMap();
 
-  //  setTimeout(this.tick.bind(this), tickTimeout);
+    setTimeout(this.tick.bind(this), tickTimeout);
   };
 
   /**
@@ -86,6 +86,7 @@ if (typeof yasp == 'undefined') yasp = { };
     if(v < 0 || v > 255)
       return 1;
     this.ram[r] = v;
+    console.log("b" + r + "=" + v);
     return true;
   };
 
@@ -114,6 +115,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var bytes = yasp.bitutils.bytesFromWord(v);
 
+    console.log("b" + r + "=" + v);
     r = r * 2;
     this.ram[r] = bytes[0];
     this.ram[r + 1] = bytes[1];
@@ -140,7 +142,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false) {
-     // setTimeout(this.tick.bind(this), tickTimeout);
+      setTimeout(this.tick.bind(this), tickTimeout);
       return;
     }
 
@@ -210,6 +212,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var params = [ ];
 
+    var strCmd = cmd.name + " ";
+
     for (var i = 0; i < cmd.params.length; i++) {
       var param = { value: null, address: null };
       var part = parts[cmd.code.length + i];
@@ -218,36 +222,45 @@ if (typeof yasp == 'undefined') yasp = { };
         case "r_byte":
           param.value = this.readByteRegister(part);
           param.address = part;
+          strCmd += "b" + part;
           break;
         case "r_word":
-          param.value = 0; // TODO
+          param.value = this.readWordRegister(part);
           param.address = part;
+          strCmd += "w" + part;
           break;
         case "l_byte":
           param.value = part;
           param.address = null;
+          strCmd += part;
           break;
         case "l_word":
           param.value = part;
           param.address = null;
+          strCmd += part;
           break;
         case "pin":
           param.value = part;
           param.address = null;
+          strCmd += part;
           break;
         case "address":
           param.value = part;
           param.address = null;
+          strCmd += part;
           break;
       }
+
+      strCmd += i == cmd.params.length - 1 ? "" : ",";
 
       params.push(param);
     }
 
-    console.log(cmd, params);
+    console.log(strCmd);
+    cmd.exec.apply(this, params);
 
     if(!this.stepping) {
-    //  setTimeout(this.tick.bind(this), tickTimeout);
+      setTimeout(this.tick.bind(this), tickTimeout);
     }
   };
 
