@@ -89,6 +89,17 @@ if (typeof yasp == 'undefined') yasp = { };
     return true;
   };
 
+  /**
+   * @function Reads the given value at the given byte
+   * @param r the byte-register to read
+   * @returns {Number}
+   */
+  yasp.Emulator.prototype.readByteRegister = function (r) {
+    if(r < 0 || r > 32)
+      return -1;
+    return this.rom[r];
+  };
+
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false) {
      // setTimeout(this.tick.bind(this), tickTimeout);

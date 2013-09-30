@@ -125,4 +125,23 @@
     strictEqual(expected, actual);
   });
 
+  test("readByteRegister - r < 0", function () {
+    var expected = -1;
+    var actual = emulator.readByteRegister(-1, 0);
+    strictEqual(expected, actual);
+  });
+
+  test("readByteRegister - r > 32", function () {
+    var expected = -1;
+    var actual = emulator.readByteRegister(33, 0);
+    strictEqual(expected, actual);
+  });
+
+  test("writeByteRegister", function () {
+    var expected = 42;
+    emulator.rom[1] = expected;
+    var actual = emulator.readByteRegister(1);
+    strictEqual(expected, actual);
+  });
+
 })();
