@@ -94,4 +94,35 @@
     strictEqual(expected, actual);
   });
 
+  test("writeByteRegister - r < 0", function () {
+    var expected = 0;
+    var actual = emulator.writeByteRegister(-1, 0);
+    strictEqual(expected, actual);
+  });
+
+  test("writeByteRegister - r > 32", function () {
+    var expected = 0;
+    var actual = emulator.writeByteRegister(33, 0);
+    strictEqual(expected, actual);
+  });
+
+  test("writeByteRegister - v < 0", function () {
+    var expected = 1;
+    var actual = emulator.writeByteRegister(0, -1);
+    strictEqual(expected, actual);
+  });
+
+  test("writeByteRegister - v > 255", function () {
+    var expected = 1;
+    var actual = emulator.writeByteRegister(0, 256);
+    strictEqual(expected, actual);
+  });
+
+  test("writeByteRegister", function () {
+    var expected = 42;
+    emulator.writeByteRegister(1, expected);
+    var actual = emulator.rom[1];
+    strictEqual(expected, actual);
+  });
+
 })();

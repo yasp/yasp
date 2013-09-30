@@ -74,6 +74,21 @@ if (typeof yasp == 'undefined') yasp = { };
     return true;
   };
 
+  /**
+   * @function Writes the given value into the given byte register
+   * @param r the byte-register to write to
+   * @param v the value to write
+   * @returns {Number|Boolean}
+   */
+  yasp.Emulator.prototype.writeByteRegister = function (r, v) {
+    if(r < 0 || r > 32)
+      return 0;
+    if(v < 0 || v > 255)
+      return 1;
+    this.rom[r] = v;
+    return true;
+  };
+
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false) {
      // setTimeout(this.tick.bind(this), tickTimeout);
