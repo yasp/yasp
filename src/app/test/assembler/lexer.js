@@ -78,6 +78,26 @@
       output: [
         { "char": 0, "line": 0, "text": "test123" }
       ]
+    },
+    {
+      input: "STRING \"HALLO EIN COOLER; STRING \"\n",
+      output: [
+        {
+          "char": 0,
+          "line": 0,
+          "text": "STRING"
+        },
+        {
+          "char": 7,
+          "line": 0,
+          "text": "HALLO EIN COOLER; STRING "
+        },
+        {
+          "char": 8,
+          "line": 0,
+          "text": "\n"
+        }
+      ]
     }
   ];
 

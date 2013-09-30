@@ -7,6 +7,7 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Generator = function () {
     this.bitWriter = null;
     this.assembler = null;
+    this.labelMachinePosition = { };
   };
 
   /**
@@ -17,16 +18,14 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Generator.prototype.pass = function (assembler, input) {
     this.assembler = assembler;
+    this.labelMachinePosition = { };
     
     if (assembler.jobs.indexOf("bitcode") != -1 || assembler.jobs.indexOf("map") != -1) {
-      var labelMachinePosition = { };
-  
       // 1 pass: get position in machine code for every Ast Node (for labels)
       var pos = 0;
       for (var i = 0; i < input.length; i++) {
         var node = input[i];
         if (!!node) {
-          this.bitWriter = new yasp.BitWriter();
           node.machinePosition = pos;
           pos += node.type.calculateBitSize.call(node, this);
         }
@@ -84,6 +83,27 @@ if (typeof yasp == 'undefined') yasp = { };
    * @type {{NODE_LABEL: {name: string, generate: Function}, NODE_COMMAND: {name: string, generate: Function}}}
    */
   yasp.AstNodeTypes = {
+    NODE_DUMP: {
+      name: "dump",
+      generate: function(generator) {
+        if (this.params.data instanceof String) {
+          var str = this.params.data;
+          for (var i = 0; i < str.length; i++) {
+            generator.bitWriter.append(str.charCodeAt(i), 8);
+          }
+          generator.bitWriter.append('\0', 8);
+        } else {
+          generator.bitWriter.append(this.params.data, this.params.len);
+        }
+      },
+      calculateBitSize: function() {
+        if (this.params.data instanceof String) {
+          return this.params.data.length*8 + 8; // data + \0
+        } else {
+          return this.params.len;
+        }
+      }
+    },
     NODE_ORG: {
       name: "org",
       generate: function(generator) {
@@ -97,7 +117,7 @@ if (typeof yasp == 'undefined') yasp = { };
       name: "label",
       generate: function(generator) {
         // update machine position
-        labelMachinePosition[this.params.label.text.toUpperCase()] = this.machinePosition;
+        generator.labelMachinePosition[this.params.label.text.toUpperCase()] = this.machinePosition;
       },
       calculateBitSize: function() {
         return 0;
@@ -134,7 +154,7 @@ if (typeof yasp == 'undefined') yasp = { };
           var param = params[i].text;
           var type = yasp.ParamType[commandParam[i].type.toLowerCase()];
           
-          writer.append(type.data(param), type.len);
+          writer.append(type.data(param, generator), type.len);
         }
       },
       calculateBitSize: function() {
@@ -170,7 +190,7 @@ if (typeof yasp == 'undefined') yasp = { };
       check: function(cur, assembler) {
         return cur.getType() == yasp.TokenType.BYTE_REGISTER;
       },
-      data: function(data) {
+      data: function(data, generator) {
         return +(data.substr(1)); // skip b from b2 for example
       }
     },
@@ -179,7 +199,7 @@ if (typeof yasp == 'undefined') yasp = { };
       check: function(cur, assembler) {
         return cur.getType() == yasp.TokenType.WORD_REGISTER;
       },
-      data: function(data) {
+      data: function(data, generator) {
         return +(data.substr(1)); // skip w from w2 for example
       }
     },
@@ -188,7 +208,7 @@ if (typeof yasp == 'undefined') yasp = { };
       check: function(cur, assembler) {
         return cur.getType() == yasp.TokenType.NUMBER && +cur.text < Math.pow(2, 8);
       },
-      data: function(data) {
+      data: function(data, generator) {
         return data;
       }
     },
@@ -197,7 +217,7 @@ if (typeof yasp == 'undefined') yasp = { };
       check: function(cur, assembler) {
         return cur.getType() == yasp.TokenType.NUMBER && +cur.text < Math.pow(2, 16);
       },
-      data: function(data) {
+      data: function(data, generator) {
         return data;
       }
     },
@@ -206,7 +226,7 @@ if (typeof yasp == 'undefined') yasp = { };
       check: function(cur, assembler) {
         return cur.getType() == yasp.TokenType.NUMBER && +cur.text < Math.pow(2, 5);
       },
-      data: function(data) {
+      data: function(data, generator) {
         return data;
       }
     },
@@ -215,8 +235,8 @@ if (typeof yasp == 'undefined') yasp = { };
       check: function(cur, assembler) {
         return cur.getType() == yasp.TokenType.LABEL && assembler.getLabel(cur.text);
       },
-      data: function(data) {
-        return labelMachinePosition[data];
+      data: function(data, generator) {
+        return generator.labelMachinePosition[data];
       }
     }
   };

@@ -1,9 +1,10 @@
 if (typeof yasp == "undefined") yasp = { };
 
 (function () {
-  var splitter = " \t,\n;:";
+  var splitter = ' \t,\n;:"';
   var deadSplitter = " \t";
   var commentSplitter = ';';
+  var stringSplitter = '"';
 
   var validLabel = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_";
   var validByteRegisters = [];
@@ -42,6 +43,14 @@ if (typeof yasp == "undefined") yasp = { };
 
         if (token == commentSplitter) {
           while (input.charAt(i) != '\n' && i < input.length) i++;
+        } else if (token == stringSplitter) {
+          token = "";
+          i++;
+          while ((input.charAt(i) != '"' && input.charAt(i) != '\n') && i < input.length) {
+            token += input.charAt(i);
+            i++;
+          }
+          this.newToken(new yasp.Token(token, line, char));
         } else {
           this.newToken(new yasp.Token(token, line, char));
         }

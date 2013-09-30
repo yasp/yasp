@@ -104,7 +104,11 @@
   
   var generator_cases = [
     {input: "MOV b1, 2", result: "000000000000000100000010", map: {0: 0}},
-    {input: "ORG 1 \n MOV b1, 2", result: "00000000000000000000000100000010", map: {0: 8}},
+    {input: "ORG 1 \n MOV b1, 2", result: "00000000000000000000000100000010", map: {1: 8}},
+    {input: "DB 42", result: "00101010", map: { }},
+    {input: "DW 1337", result: "0000010100111001", map: { }},
+    {input: "address: DA address", result: "0000000000000000", map: { }},
+    {input: 'STRING "HI"', result: "010010000100100100000000", map: { }}
   ];
   
   QUnit.cases(generator_cases).test("ensure generator generating works", function(params) {
@@ -119,6 +123,7 @@
     
     // assert
     equal(convert2binary(pass4), params.result);
+    equal(assembler.errors.length, 0, "syntax error check");
   });
 
   QUnit.cases(generator_cases).test("ensure map is generated properly", function(params) {
@@ -134,5 +139,6 @@
     
     // assert
     deepEqual(assembler.map, params.map);
+    equal(assembler.errors.length, 0, "syntax error check");
   });
 })();

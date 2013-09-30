@@ -132,7 +132,7 @@ if (typeof yasp == 'undefined') yasp = { };
               iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType);
             }
             
-            if (iterator.hasNext()) iterator.next();
+            iterator.optNext();
             start = false;
             paramPos++;
           }
@@ -192,8 +192,12 @@ if (typeof yasp == 'undefined') yasp = { };
         label: iterator.assembler.getLabel(current.text)
       });
       this.nodes.push(node);
-
-      this.parseCommand(iterator, true); // optionally there can be a command
+      
+      if (iterator.current().getType() == yasp.TokenType.DIRECTIVE) {
+        this.parseDirective(iterator, true)
+      } else {
+        this.parseCommand(iterator, true); // optionally there can be a command
+      }
     } else if (!opt) {
       iterator.riseSyntaxError("Expecting label, got " + type + " instead");
     }
@@ -203,7 +207,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * This method parses ALL THE directives!
    * @param iterator
    */
-  yasp.Parser.prototype.parseDirective = function(iterator) {
+  yasp.Parser.prototype.parseDirective = function(iterator, opt) {
+    if (typeof opt == 'undefined') opt = false;
+    
     switch(iterator.current().text.toUpperCase()) {
       case "DEFINE":
         // make new DEFINE
@@ -211,7 +217,7 @@ if (typeof yasp == 'undefined') yasp = { };
         var from = iterator.current().text.toUpperCase();
         iterator.next();
         var to = iterator.current().text.toUpperCase();
-        iterator.next();
+        iterator.optNext();
         if (!!iterator.assembler.symbols.defines[from]) {
           iterator.riseSyntaxError("Duplicate DEFINE '" + from + "'");
         } else {
@@ -237,14 +243,58 @@ if (typeof yasp == 'undefined') yasp = { };
         this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_ORG, cur, {
           len: +iterator.current().text
         }));
-        iterator.next();
+        iterator.optNext();
         break;
       case "STRING":
-      case "DB":
-      case "DA":
-      case "DW":
+        var cur = iterator.current();
+        iterator.next();
         
+        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+          data: new String(iterator.current().text)
+        }));
+        iterator.optNext();
         break;
+      case "DB":
+        var cur = iterator.current();
+        iterator.next();
+        var val = +iterator.current().text;
+        if (isNaN(val)) iterator.riseSyntaxError("Expecting number.");
+        if (val < 0 || val >= Math.pow(2, 8)) iterator.riseSyntaxError("Invalid number [0,2^8]");
+        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+          data: val,
+          len: 8
+        }));
+        iterator.optNext();
+        break;
+      case "DA":
+        var cur = iterator.current();
+        iterator.next();
+        var val = iterator.current().text;
+        var label;
+        if (!(label = iterator.assembler.getLabel(val))) {
+          iterator.riseSyntaxError("Unknown label "+label);
+        }
+        
+        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+          data: val,
+          len: 16
+        }));
+        iterator.optNext();
+        break;
+      case "DW":
+        var cur = iterator.current();
+        iterator.next();
+        var val = +iterator.current().text;
+        if (isNaN(val)) iterator.riseSyntaxError("Expecting number.");
+        if (val < 0 || val >= Math.pow(2, 16)) iterator.riseSyntaxError("Invalid number [0,2^16]");
+        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+          data: val,
+          len: 16
+        }));
+        iterator.optNext();
+        break;
+      default:
+        if (!opt) iterator.riseSyntaxError("Expecting directive, got "+iterator.current().getType() + " instead");
     }
   };
 })();

@@ -136,6 +136,17 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /**
+   * If there is a next token => next(), otherwise ignore
+   */
+  yasp.TokenIterator.prototype.optNext = function() {
+    if (this.hasNext()) {
+      return this.next();
+    } else {
+      return this.current();
+    }
+  }
+
+  /**
    * Returns the current token
    * @returns {*}
    */
