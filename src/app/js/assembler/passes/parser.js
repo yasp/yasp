@@ -42,7 +42,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // generate symbol table
     if (assembler.jobs.indexOf("symbol") != -1 && assembler.errors.length == 0) {
       // labels are already generated in the Analyser
-      // defines will be generated in the PreProcessor
+      // defines will be generated in parseDirectives
       // usedRegisters & instructions
       var registers = { };
       assembler.symbols.instructions = { };

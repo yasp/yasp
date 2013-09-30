@@ -51,21 +51,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     }
     
-    if (assembler.jobs.indexOf("bitcode") == -1) {
-      return null;
-    } else {
-      // generate map
-      if (assembler.jobs.indexOf('map') != -1) {
-        var map = { };
-        for (var i = 0; i < this.nodes.length; i++) {
-          var node = this.nodes[i];
-          if (node.type == yasp.AstNodeTypes.NODE_COMMAND) {
-            // put into map if its a command
-
-          }
-        }
-      }
-  
+    if (assembler.jobs.indexOf("bitcode") != -1) {
       this.bitWriter = new yasp.BitWriter();
       // 2 pass: real generation
       for (var i = 0; i < input.length; i++) {
@@ -76,6 +62,8 @@ if (typeof yasp == 'undefined') yasp = { };
       }
       return this.bitWriter.toUint8Array();
     }
+    
+    return null;
   };
   
   /**
