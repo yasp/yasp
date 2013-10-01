@@ -3,6 +3,8 @@
 <head>
     <title>yasp repl</title>
 
+    <meta charset="utf-8">
+
     <script src="../../lib/js/jquery-1.10.2.min.js"></script>
     <script src="../js/commands.js"></script>
     <script src="../js/utils.js"></script>
@@ -17,7 +19,7 @@
 <script src="../js/emulator/emulator.js"></script>
 
 Input: <input id="foo">
-<pre id="bitcode"></pre>
+<pre id="bitcode">&nbsp;</pre>
 <pre id="mem"></pre>
 
 <script type="text/javascript">
@@ -25,19 +27,35 @@ Input: <input id="foo">
     var emulator = new yasp.Emulator();
     emulator.stepping = true;
 
+    dumpRam();
+
     $('#foo').bind('keypress', function(e) {
         if(e.keyCode==13){
             var code = $('#foo').val();
             $('#foo').val("");
-            var bitcode = assembler.assemble({ code: code, jobs: ["bitcode"] }).bitcode;
-            emulator.load(bitcode, 0);
-            emulator.pc = 0;
-            emulator.tick();
+            var asm = assembler.assemble({ code: code, jobs: ["bitcode"] });
+            console.log(asm);
 
-            $('#mem').text(getDump(emulator.ram, 20));
-            $('#bitcode').text(getDump(bitcode, -1));
+            if(asm.success != false) {
+                emulator.load(asm.bitcode, 0);
+                emulator.pc = 0;
+                emulator.tick();
+
+                dumpRam();
+                $('#bitcode').text(getDump(asm.bitcode, -1));
+            } else {
+                var error = "";
+                for (var i = 0; i < asm.errors.length; i++) {
+                    error += asm.errors[i].message.replace('\n', '↵');
+                }
+                $('#bitcode').text(error);
+            }
         }
     });
+
+    function dumpRam () {
+        $('#mem').text(getDump(emulator.ram, 20));
+    }
 
     function getDump (data, b) {
         var dmp = "";
