@@ -92,6 +92,7 @@ if (typeof yasp == "undefined") yasp = { };
     BYTE_REGISTER: "byte register",
     WORD_REGISTER: "word register",
     DIRECTIVE: "directive",
+    TOO_BIG_NUMBER: "too big number",
     UNKNOWN_REGISTER: "unknown register",
     UNKNOWN: "unknown"
   };
@@ -122,7 +123,7 @@ if (typeof yasp == "undefined") yasp = { };
       if (num < Math.pow(2, 16)) {
         return yasp.TokenType.NUMBER;
       } else {
-        return yasp.TokenType.UNKNOWN;
+        return yasp.TokenType.TOO_BIG_NUMBER;
       }
     }
 
