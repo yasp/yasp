@@ -116,7 +116,7 @@ if (typeof yasp == "undefined") yasp = { };
     // TODO: optimize this function => cache values and dont iterate through everything
     var name = this.text.toUpperCase();
 
-    if (!isNaN(name)) {
+    if (!isNaN(parseFloat(name)) && isFinite(name)) {
       // what num?
       var num = +this.text;
       if (num < Math.pow(2, 16)) {

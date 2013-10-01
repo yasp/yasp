@@ -162,7 +162,9 @@ if (typeof yasp == 'undefined') yasp = { };
             parameters += ", ";
           }
           var cur = iterator.current();
-          parameters += cur.getType();
+          var typ = cur.getType();
+          if (typ == yasp.TokenType.NUMBER) typ += "[too big?]";
+          parameters += typ;
           iterator.next();
           start = false;
         }
