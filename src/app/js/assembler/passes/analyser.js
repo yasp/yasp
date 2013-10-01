@@ -25,7 +25,7 @@ if (typeof yasp == 'undefined') yasp = { };
         iterator.next();
         if (iterator.is(":")) {
           if (!!labels[label.text.toUpperCase()]) {
-            iterator.riseSyntaxError("Duplicate label "+label.text);
+            iterator.riseSyntaxError("Duplicate label "+label.toString());
           } else {
             labels[label.text.toUpperCase()] = label;
           }

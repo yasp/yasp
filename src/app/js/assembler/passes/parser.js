@@ -35,7 +35,7 @@ if (typeof yasp == 'undefined') yasp = { };
           this.parseDirective(iterator);
           break;
         default:
-          iterator.riseSyntaxError("Expecting command or label, got " + type + " instead.");
+          iterator.riseSyntaxError("Expecting command, directive or label, got " + type + " instead.");
       }
     }).bind(this));
 
@@ -129,7 +129,7 @@ if (typeof yasp == 'undefined') yasp = { };
             if (!!param) {
               itsMe = param.check(cur, iterator.assembler);
             } else {
-              iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType);
+              iterator.riseSyntaxError("Internal error (unknown paramter type " + paramType + ")");
             }
             
             iterator.optNext();
@@ -215,11 +215,12 @@ if (typeof yasp == 'undefined') yasp = { };
         // make new DEFINE
         iterator.next();
         var from = iterator.current().text.toUpperCase();
+        var fromToken = iterator.current();
         iterator.next();
         var to = iterator.current().text.toUpperCase();
         iterator.optNext();
         if (!!iterator.assembler.symbols.defines[from]) {
-          iterator.riseSyntaxError("Duplicate DEFINE '" + from + "'");
+          iterator.riseSyntaxError("Duplicate DEFINE '" + fromToken.toString() + "'");
         } else {
           iterator.assembler.symbols.defines[from] = to;
         }

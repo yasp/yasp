@@ -173,6 +173,7 @@ if (typeof yasp == "undefined") yasp = { };
    * @returns {string}
    */
   yasp.Token.prototype.toString = function () {
-    return "'" + (this.text == '\n' ? "NEWLINE" : this.text) + "'\n";
+    return "'" + (this.text == '\n' ? "↵" : this.text) + "'";
   };
+  
 })();

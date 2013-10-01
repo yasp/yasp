@@ -131,7 +131,7 @@ if (typeof yasp == 'undefined') yasp = { };
     if (this.is(text)) {
       return this.next();
     } else {
-      this.assembler.riseSyntaxError(this, "Unexpected token '" + this.current().text + "', expecting '" + text + "'");
+      this.assembler.riseSyntaxError(this, "Unexpected token " + this.current().toString() + ", expecting '" + text + "'");
     }
   };
 
