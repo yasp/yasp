@@ -118,6 +118,12 @@ if (typeof yasp == 'undefined') yasp = { };
           params = [ ];
           
           while (!(iterator.is('\n') || !iterator.hasNext()) && itsMe) {
+            if (paramPos >= command.params.length) {
+              // too many parameters
+              itsMe = false;
+              break;
+            }
+            
             if (!start) {
               iterator.match(",");
             }
