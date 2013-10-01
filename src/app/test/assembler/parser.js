@@ -27,8 +27,8 @@
       },
       "labels": {
         "ASDF": {
-          "char": 1,
-          "line": 2,
+          "char": 2,
+          "line": 3,
           "text": "ASDF"
         }
       },
@@ -48,8 +48,8 @@
       },
       "labels": {
         "ASDF": {
-          "char": 1,
-          "line": 1,
+          "char": 2,
+          "line": 2,
           "text": "ASDF"
         }
       },

@@ -165,9 +165,9 @@
     deepEqual(result, {
       "errors": [
         {
-          "char": 0,
-          "line": 0,
-          "message": "Syntax error: Expecting command, directive or label, got unknown instead. in line 0 at character 0",
+          "char": 1,
+          "line": 1,
+          "message": "Syntax error: Expecting command, directive or label, got unknown instead. in line 1 at character 1",
           "name": "E_ERR",
           "type": "error"
         }

@@ -15,6 +15,7 @@ if (typeof yasp == "undefined") yasp = { };
   for (var i = 0; i < 16; i++) {
     validWordRegisters.push("W" + i);
   }
+  var validUnknownRegister = /[BW]\d+/;
 
 
   /**
@@ -32,8 +33,8 @@ if (typeof yasp == "undefined") yasp = { };
    */
   yasp.Lexer.prototype.pass = function (assembler, input) {
     var lastFound = 0;
-    var line = 0;
-    var char = 0;
+    var line = 1;
+    var char = 1;
 
     for (var i = 0; i < input.length; i++) {
       var token = input.charAt(i);
@@ -61,14 +62,14 @@ if (typeof yasp == "undefined") yasp = { };
       char++;
       if (input.charAt(i) == '\n') {
         line++;
-        char = 0;
+        char = 1;
       }
     }
     if (lastFound < input.length) {
       var text = input.substring(lastFound, i);
       this.newToken(new yasp.Token(text, line, char - text.length));
     }
-    this.newToken(new yasp.Token("\n", line, char));
+    if (this.tokens.length == 0 || this.tokens[this.tokens.length - 1].text != '\n') this.newToken(new yasp.Token("\n", line, char));
 
     return this.tokens;
   };
@@ -91,6 +92,7 @@ if (typeof yasp == "undefined") yasp = { };
     BYTE_REGISTER: "byte register",
     WORD_REGISTER: "word register",
     DIRECTIVE: "directive",
+    UNKNOWN_REGISTER: "unknown register",
     UNKNOWN: "unknown"
   };
 
@@ -155,6 +157,12 @@ if (typeof yasp == "undefined") yasp = { };
       } else {
         if (yasp.commands[i].name.toUpperCase() == name) return yasp.TokenType.COMMAND;
       }
+    }
+    
+    // am i an unknown register
+    var unknownRegister = validUnknownRegister.exec(name)
+    if (unknownRegister != null && unknownRegister.length > 0) {
+      return yasp.TokenType.UNKNOWN_REGISTER + "[" + name + "]";
     }
 
     // am i a label?

@@ -103,15 +103,15 @@
   });
   
   var generator_cases = [
-    {input: "ORG 1 \n MOV b1, 2", result: "00000000000000000000000100000010", map: {1: 8}},
+    {input: "ORG 1 \n MOV b1, 2", result: "00000000000000000000000100000010", map: {2: 8}},
     {input: "DB 42", result: "00101010", map: { }},
     {input: "DW 1337", result: "0000010100111001", map: { }},
     {input: "address: DA address", result: "0000000000000000", map: { }},
     {input: 'STRING "HI"', result: "010010000100100100000000", map: { }},
-    {input: "MOV b1, 2", result: "000000000000000100000010", map: {0: 0}},
-    {input: "MOV b0, b1", result: "000100000000000000000001", map: { 0: 0 }},
-    {input: "MOV W0, 1337", result: "00100000000000000000010100111001", map: { 0: 0 }},
-    {input: "MOV W0, W1", result: "000100000100000000000001", map: { 0: 0 }}
+    {input: "MOV b1, 2", result: "000000000000000100000010", map: {1: 0}},
+    {input: "MOV b0, b1", result: "000100000000000000000001", map: { 1: 0 }},
+    {input: "MOV W0, 1337", result: "00100000000000000000010100111001", map: { 1: 0 }},
+    {input: "MOV W0, W1", result: "000100000100000000000001", map: { 1: 0 }}
   ];
   
   QUnit.cases(generator_cases).test("ensure generator generating works", function(params) {
