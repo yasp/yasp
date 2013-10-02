@@ -89,10 +89,10 @@ if (typeof yasp == "undefined") yasp = { };
     COMMAND: "command",
     LABEL: "label",
     NUMBER: "number", // pin / byte_literal / word_literal
+    NEGATIVE_NUMBER: "negative number", // -42 for example
     BYTE_REGISTER: "byte register",
     WORD_REGISTER: "word register",
     DIRECTIVE: "directive",
-    TOO_BIG_NUMBER: "too big number",
     UNKNOWN_REGISTER: "unknown register",
     UNKNOWN: "unknown"
   };
@@ -118,12 +118,11 @@ if (typeof yasp == "undefined") yasp = { };
     var name = this.text.toUpperCase();
 
     if (!isNaN(parseFloat(name)) && isFinite(name)) {
-      // what num?
-      var num = +this.text;
-      if (num < Math.pow(2, 16)) {
-        return yasp.TokenType.NUMBER;
+      var num = +name;
+      if (num < 0) {
+        return yasp.TokenType.NEGATIVE_NUMBER;
       } else {
-        return yasp.TokenType.TOO_BIG_NUMBER;
+        return yasp.TokenType.NUMBER;
       }
     }
 

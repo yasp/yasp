@@ -215,7 +215,11 @@ if (typeof yasp == 'undefined') yasp = { };
           } while (this.hasNext() && this.is('\n'));
         }
       } catch (ex) {
-        this.restore(); // error occured => try to make state consistent again
+        if (this.assembler.errors.length > 0) {
+          this.restore(); // error occured => try to make state consistent again
+        } else {
+          throw ex;
+        }
       }
     }
   };

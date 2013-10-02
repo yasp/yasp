@@ -63,7 +63,10 @@
   });
 
   test("ensure tokeniterator iterate working", function() {
-    iterator.iterate(function() { });
+    iterator.iterate(function() {
+      iterator.next();
+      iterator.next();
+    });
     ok(!iterator.hasNext());
   });
 

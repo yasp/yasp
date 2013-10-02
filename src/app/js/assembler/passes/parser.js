@@ -156,6 +156,7 @@ if (typeof yasp == 'undefined') yasp = { };
         // build parameters
         var parameters = "";
         var start = true;
+        var last = null;
         while (!iterator.is('\n')) {
           if (!start) {
             iterator.match(",");
@@ -163,8 +164,14 @@ if (typeof yasp == 'undefined') yasp = { };
           }
           var cur = iterator.current();
           var typ = cur.getType();
-          if (typ == yasp.TokenType.NUMBER) typ += "[too big?]";
+          
+          if (!!last && typ == yasp.TokenType.NUMBER ) {
+            var num = +cur.text;
+            if (num >= Math.pow(2, 8) && last.getType() == yasp.TokenType.BYTE_REGISTER) typ += "[too big for byte register]";
+            if (num >= Math.pow(2, 16) && last.getType() == yasp.TokenType.WORD_REGISTER) typ += "[too big for word register]";
+          }
           parameters += typ;
+          last = cur;
           iterator.next();
           start = false;
         }
