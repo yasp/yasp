@@ -49,14 +49,18 @@
   var elem;
   module("hardware ui", {
     setup: function() {
-      elem = $('body').append('<div></div>');
+      elem = $('<div></div>');
+      elem.css({
+        'width': '80px',
+        'height': '80px'
+      });
     },
     teardown: function() {
       elem.remove();
     }
   });
   
-  test("ensure pushbutton is displayed correctly", function() {
+  test("ensure pushbutton is displayed", function() {
     // arrange
     var hardware;
     
@@ -64,12 +68,40 @@
     hardware = new yasp.Hardware({
       cb: function() { },
       container: elem,
-      type: yasp.HardwareType.PUSHBUTTON
+      type: yasp.HardwareType.PUSHBUTTON,
+      params: {
+        color: 'red',
+        pushcolor: 'rgb(200,0,0)'
+      }
     });
     
     hardware.render();
     
     // assert
-    ok();
+    equal(!hardware.element, false);
+  });
+  
+  test("ensure pushbutton fires event", function() {
+    // arrange
+    var hardware;
+    var fired = false;
+    
+    // act
+    hardware = new yasp.Hardware({
+      cb: function() {
+        fired = true;
+      },
+      container: elem,
+      type: yasp.HardwareType.PUSHBUTTON,
+      params: {
+        color: 'red',
+        pushcolor: 'rgb(200,0,0)'
+      }
+    });
+    hardware.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.PUSH);
+
+    // assert
+    equal(!hardware, false);
+    equal(fired, true);
   });
 })();

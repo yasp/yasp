@@ -8,11 +8,39 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.HardwareType = {
     /**
      * A simple PushButton.
-     * Params: { }
+     * Params: { color: 0xFFF }
      */
     PUSHBUTTON: {
       render: function() {
-        var elem = this.element
+        this.element = $('<div></div>');
+        
+        var darkCol = 'rgb(50,50,50)';
+        var lightCol = 'rgb(200,200,200)';
+        
+        this.element.css({
+          'width': '100%',
+          'height': '100%',
+          'background-color': (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH) ? this.params.pushcolor : this.params.color,
+          'border-left': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? darkCol :  lightCol),
+          'border-top': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? darkCol :  lightCol),
+          'border-right': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? lightCol :  darkCol),
+          'border-bottom': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? lightCol :  darkCol)
+        });
+        
+        this.element.mousedown((function() {
+          this.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.PUSH);
+        }).bind(this));
+        this.element.mouseup((function() {
+          this.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.NO_PUSH);
+        }).bind(this));
+        this.element.mouseleave((function() {
+          this.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.NO_PUSH);
+        }).bind(this));
+        
+        this.element.appendTo(this.container);
+      },
+      initialState: function() {
+        return yasp.HardwareType.PUSHBUTTON.States.NO_PUSH;
       },
       States: {
         PUSH: 1,
@@ -46,7 +74,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * An IO device
    * @param params Consists of:
    * {
-   *   state: The state of this Hardware (yasp.HardwareState.XXX.states.YYY
+   *   state: The state of this Hardware (yasp.HardwareType.XXX.states.YYY
    *   cb: Callback that is executed when the state changes
    *   container: Where should the HTML Element be put in
    *   type: What type is this Hardware (yasp.HardwareType.XXX)
@@ -55,11 +83,11 @@ if (typeof yasp == 'undefined') yasp = { };
    * @constructor
    */
   yasp.Hardware = function(params) {
-    this.state = params.state;
     this.cb = params.cb;
     this.container = params.container;
     this.type = params.type;
     this.params = params.params;
+    this.state = !!params.state ? params.state : this.type.initialState.call(this);
 
     this.element = null; // the jQuery element (is created in .render())
   };
@@ -75,8 +103,7 @@ if (typeof yasp == 'undefined') yasp = { };
   
   yasp.Hardware.prototype.render = function() {
     if (!!this.element) this.element.remove();
-    
-    this.type.render.call(this);
+    if (!!this.container) this.type.render.call(this);
   };
   
 })();

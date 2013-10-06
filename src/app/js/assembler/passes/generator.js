@@ -27,6 +27,9 @@ if (typeof yasp == 'undefined') yasp = { };
         var node = input[i];
         if (!!node) {
           node.machinePosition = pos;
+          if (node.type == yasp.AstNodeTypes.NODE_LABEL) {
+            node.type.generate.call(node, this)
+          }
           pos += node.type.calculateBitSize.call(node, this);
         }
       }
