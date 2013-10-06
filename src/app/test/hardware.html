@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Hardware Test</title>
+
+    <script src="../../lib/js/jquery-1.10.2.min.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/hardware.js"></script>
+    <script>
+        // Hardware
+        $('body').ready(function() {
+            var buttons = [
+                new yasp.Hardware({
+                    cb: function(button) {
+                        $('#button_red_state').text(button.state);
+                    },
+                    container: $('#button_red'),
+                    type: yasp.HardwareType.PUSHBUTTON,
+                    params: {
+                        color: 'rgb(255, 0, 0)',
+                        pushcolor: 'rgb(200, 0, 0)'
+                    }
+                }),
+                new yasp.Hardware({
+                    cb: function(button) {
+                        $('#button_green_state').text(button.state);
+                    },
+                    container: $('#button_green'),
+                    type: yasp.HardwareType.PUSHBUTTON,
+                    params: {
+                        color: 'rgb(0, 255, 0)',
+                        pushcolor: 'rgb(0, 200, 0)'
+                    }
+                }),
+                new yasp.Hardware({
+                    cb: function(button) {
+                        $('#button_blue_state').text(button.state);
+                    },
+                    container: $('#button_blue'),
+                    type: yasp.HardwareType.PUSHBUTTON,
+                    params: {
+                        color: 'rgb(0, 0, 255)',
+                        pushcolor: 'rgb(0, 0, 200)'
+                    }
+                })
+            ];
+        });
+    </script>
+    <style>
+        .pushbutton {
+            width: 40px;
+            height: 40px;
+            margin: 8px;
+        }
+        .pushbutton_desc {
+            width: 500px;
+            float: right;;
+            height: 40px;
+            margin-top: -40px;
+        }
+        
+        .group {
+            width: 600px;
+            height: inherit;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PushButtons</h1>
+    <div class="group">
+        <div id="button_red" class="pushbutton"></div>
+        <div id="button_red_state" class="pushbutton_desc"></div>
+        
+        <div id="button_green" class="pushbutton"></div>
+        <div id="button_green_state" class="pushbutton_desc"></div>
+        
+        <div id="button_blue" class="pushbutton"></div>
+        <div id="button_blue_state" class="pushbutton_desc"></div>
+    </div>
+    
+</body>
+</html>

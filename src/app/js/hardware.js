@@ -87,9 +87,11 @@ if (typeof yasp == 'undefined') yasp = { };
     this.container = params.container;
     this.type = params.type;
     this.params = params.params;
-    this.state = !!params.state ? params.state : this.type.initialState.call(this);
+    this.state = null;
 
     this.element = null; // the jQuery element (is created in .render())
+    
+    this.receiveStateChange(!!params.state ? params.state : this.type.initialState.call(this));
   };
   
   yasp.Hardware.prototype.receiveStateChange = function(state) {
