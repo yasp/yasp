@@ -44,6 +44,46 @@
                     }
                 })
             ];
+            
+            var leds = [
+                new yasp.Hardware({
+                    cb: function(led) {
+                        $('#led_red_state').text(led.state);
+                    },
+                    container: $('#led_red'),
+                    type: yasp.HardwareType.LED,
+                    params: {
+                        onColor: 'rgb(255, 0, 0)',
+                        offColor: 'rgb(150,0,0)'
+                    }
+                }),
+                new yasp.Hardware({
+                    cb: function(led) {
+                        $('#led_green_state').text(led.state);
+                    },
+                    container: $('#led_green'),
+                    type: yasp.HardwareType.LED,
+                    params: {
+                        onColor: 'rgb(0, 255, 0)',
+                        offColor: 'rgb(0,150,0)'
+                    }
+                })
+            ];
+            
+            setInterval(function() {
+                var states = yasp.HardwareType.LED.States;
+                leds[0].receiveStateChange(leds[0].state == states.ON ? states.OFF : states.ON);
+            }, 1000);
+            
+            var ledCounter = 255;
+            var greenLed = function() {
+                var states = yasp.HardwareType.LED.States;
+                leds[1].receiveStateChange(leds[1].state == states.ON ? states.OFF : states.ON);
+                
+                ledCounter--;
+                setTimeout(greenLed, ledCounter);
+            };
+            setTimeout(greenLed, ledCounter);
         });
     </script>
     <style>
@@ -52,11 +92,17 @@
             height: 40px;
             margin: 8px;
         }
-        .pushbutton_desc {
+        .desc {
             width: 500px;
-            float: right;;
+            float: right;
             height: 40px;
-            margin-top: -40px;
+            margin-top: -35px;
+        }
+        
+        .led {
+            width: 30px;
+            height: 30px;
+            margin: 8px;
         }
         
         .group {
@@ -73,14 +119,22 @@
     <h1>PushButtons</h1>
     <div class="group">
         <div id="button_red" class="pushbutton"></div>
-        <div id="button_red_state" class="pushbutton_desc"></div>
+        <div id="button_red_state" class="desc"></div>
         
         <div id="button_green" class="pushbutton"></div>
-        <div id="button_green_state" class="pushbutton_desc"></div>
+        <div id="button_green_state" class="desc"></div>
         
         <div id="button_blue" class="pushbutton"></div>
-        <div id="button_blue_state" class="pushbutton_desc"></div>
+        <div id="button_blue_state" class="desc"></div>
     </div>
     
+    <h1>LED</h1>
+    <div class="group">
+        <div id="led_red" class="led"></div>
+        <div id="led_red_state" class="desc"></div>
+
+        <div id="led_green" class="led"></div>
+        <div id="led_green_state" class="desc"></div>
+    </div>
 </body>
 </html>

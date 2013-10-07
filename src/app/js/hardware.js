@@ -12,32 +12,38 @@ if (typeof yasp == 'undefined') yasp = { };
      */
     PUSHBUTTON: {
       render: function() {
-        this.element = $('<div></div>');
+        var states = yasp.HardwareType.PUSHBUTTON.States;
+        if (!this.element) {
+          this.element = $('<div></div>');
+
+          this.element.mousedown((function() {
+            this.receiveStateChange(states.PUSH);
+          }).bind(this));
+          this.element.mouseup((function() {
+            this.receiveStateChange(states.NO_PUSH);
+          }).bind(this));
+          this.element.mouseleave((function() {
+            this.receiveStateChange(states.NO_PUSH);
+          }).bind(this));
+          
+          this.element.css({
+            'width': '100%',
+            'height': '100%'
+          });
+          
+          this.element.appendTo(this.container);
+        }
         
         var darkCol = 'rgb(50,50,50)';
         var lightCol = 'rgb(200,200,200)';
         
         this.element.css({
-          'width': '100%',
-          'height': '100%',
-          'background-color': (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH) ? this.params.pushcolor : this.params.color,
-          'border-left': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? darkCol :  lightCol),
-          'border-top': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? darkCol :  lightCol),
-          'border-right': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? lightCol :  darkCol),
-          'border-bottom': '3px solid ' + (this.state == yasp.HardwareType.PUSHBUTTON.States.PUSH ? lightCol :  darkCol)
+          'background-color': (this.state == states.PUSH) ? this.params.pushcolor : this.params.color,
+          'border-left': '3px solid ' + (this.state == states.PUSH ? darkCol :  lightCol),
+          'border-top': '3px solid ' + (this.state == states.PUSH ? darkCol :  lightCol),
+          'border-right': '3px solid ' + (this.state == states.PUSH ? lightCol :  darkCol),
+          'border-bottom': '3px solid ' + (this.state == states.PUSH ? lightCol :  darkCol)
         });
-        
-        this.element.mousedown((function() {
-          this.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.PUSH);
-        }).bind(this));
-        this.element.mouseup((function() {
-          this.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.NO_PUSH);
-        }).bind(this));
-        this.element.mouseleave((function() {
-          this.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.NO_PUSH);
-        }).bind(this));
-        
-        this.element.appendTo(this.container);
       },
       initialState: function() {
         return yasp.HardwareType.PUSHBUTTON.States.NO_PUSH;
@@ -49,11 +55,62 @@ if (typeof yasp == 'undefined') yasp = { };
     },
     /**
      * A LED
-     * Params: { color: 0xFFF }
+     * Params: { onColor: 0xFFF, offColor: 0xFFF }
      */
     LED: {
       render: function() {
+        var states = yasp.HardwareType.LED.States;
         
+        if (!this.element) {
+          this.element = $('<canvas></canvas>');
+          this.element.css({
+            'width': '100%',
+            'height': '100%'
+          });
+          
+          this.element.appendTo(this.container);
+        }
+        var width = this.element.width();
+        var height = this.element.height();
+        // fix HTML5 behaviour
+        this.element.attr({
+          "width": width,
+          "height": height
+        });
+        
+        var radius = Math.min(width, height)/2;
+        
+        var obj = this.element.get(0);
+        var ctx = obj.getContext('2d');
+        ctx.clearRect(0,0,width, height); // clear it, baby
+        
+        // draw outer circle
+        ctx.beginPath();
+        ctx.arc(width/2, height/2, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'rgba(10,10,10,0.9)';
+        ctx.fill();
+        
+        // draw main color
+        ctx.beginPath();
+        ctx.arc(width/2, height/2, radius-1, 0, 2 * Math.PI, false);
+        ctx.fillStyle = this.state == states.ON ? this.params.onColor : this.params.offColor; // TODO: PWM
+        ctx.fill();
+        
+        // draw inner circle
+        ctx.beginPath();
+        ctx.arc(width/2, height/2, radius-4, 0, 2 * Math.PI, false);
+        ctx.strokeStyle = 'rgba(20,20,2,0.5)';
+        ctx.stroke();
+        
+        // draw white dot
+        ctx.beginPath();
+        ctx.arc(width/2 + 3, height/2 + 3, radius/6, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fill();
+       
+      },
+      initialState: function() {
+        return yasp.HardwareType.LED.States.OFF;
       },
       States: {
         ON: 1,
@@ -66,6 +123,9 @@ if (typeof yasp == 'undefined') yasp = { };
     POTI: {
       render: function() {
         
+      },
+      initialState: function() {
+        return 0;
       }
     }
   };
@@ -93,7 +153,11 @@ if (typeof yasp == 'undefined') yasp = { };
     
     this.receiveStateChange(!!params.state ? params.state : this.type.initialState.call(this));
   };
-  
+
+  /**
+   * Call this to notify the hardware that the change has changed
+   * @param state
+   */
   yasp.Hardware.prototype.receiveStateChange = function(state) {
     if (this.state != state) {
       this.state = state;
@@ -102,9 +166,12 @@ if (typeof yasp == 'undefined') yasp = { };
       if (!!this.cb) this.cb(this);
     }
   };
-  
+
+  /**
+   * Is internally callen to draw this hardware into the DOM
+   * It is not defined which method the hardware uses to draw: Some use Canvas, others manipulate the DOM directly
+   */
   yasp.Hardware.prototype.render = function() {
-    if (!!this.element) this.element.remove();
     if (!!this.container) this.type.render.call(this);
   };
   

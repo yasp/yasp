@@ -58,7 +58,8 @@
       elem.appendTo($('body'));
     },
     teardown: function() {
-      elem.remove();
+      if (!!elem) elem.remove();
+      elem = null;
     }
   });
   
@@ -101,6 +102,51 @@
       }
     });
     hardware.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.PUSH);
+
+    // assert
+    equal(!hardware, false);
+    equal(fired, true);
+  });
+
+  test("ensure led is displayed", function() {
+    // arrange
+    var hardware;
+
+    // act
+    hardware = new yasp.Hardware({
+      cb: function() { },
+      container: elem,
+      type: yasp.HardwareType.LED,
+      params: {
+        onColor: 'red',
+        offColor: 'blue'
+      }
+    });
+
+    hardware.render();
+
+    // assert
+    equal(!hardware.element, false);
+  });
+
+  test("ensure led fires event", function() {
+    // arrange
+    var hardware;
+    var fired = false;
+
+    // act
+    hardware = new yasp.Hardware({
+      cb: function() {
+        fired = true;
+      },
+      container: elem,
+      type: yasp.HardwareType.LED,
+      params: {
+        onColor: 'red',
+        offColor: 'blue'
+      }
+    });
+    hardware.receiveStateChange(yasp.HardwareType.LED.States.ON);
 
     // assert
     equal(!hardware, false);
