@@ -15,6 +15,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.pc = 0;
     this.running = false;
     this.stepping = false;
+    this.flags = { c: false, z: false };
 
     buildCommandMap();
 
@@ -138,6 +139,28 @@ if (typeof yasp == 'undefined') yasp = { };
     var w = yasp.bitutils.wordFromBytes(b1, b2);
 
     return w;
+  };
+
+  /**
+   * @function Reads the flags
+   * @returns object containing the flag-values
+   */
+  yasp.Emulator.prototype.readFlags = function () {
+    return {
+      c: this.flags.c,
+      z: this.flags.z
+    }
+  };
+
+  /**
+   * @function Write the flags
+   * @param flags the flags to be set
+   */
+  yasp.Emulator.prototype.writeFlags = function (flags) {
+    if(typeof flags.c != "undefined")
+      this.flags.c = flags.c;
+    if(typeof flags.z != "undefined")
+      this.flags.z = flags.z;
   };
 
   yasp.Emulator.prototype.tick = function () {

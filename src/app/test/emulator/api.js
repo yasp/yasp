@@ -202,4 +202,46 @@
 
     strictEqual(expected, actual);
   });
+
+  test("writeFlags - zero", function () {
+    var expected = { z: true, c: false };
+    emulator.writeFlags({ z: true });
+    var actual = emulator.flags;
+    deepEqual(expected, actual);
+  });
+
+  test("writeFlags - carry", function () {
+    var expected = { z: false, c: true };
+    emulator.writeFlags({ c: true });
+    var actual = emulator.flags;
+    deepEqual(expected, actual);
+  });
+
+  test("writeFlags - all", function () {
+    var expected = { z: true, c: true };
+    emulator.writeFlags({ z: true, c: true });
+    var actual = emulator.flags;
+    deepEqual(expected, actual);
+  });
+
+  test("readFlags - zero", function () {
+    var expected = { z: true, c: false };
+    emulator.flags = expected;
+    var actual = emulator.readFlags();
+    deepEqual(expected, actual);
+  });
+
+  test("readFlags - carry", function () {
+    var expected = { z: false, c: true };
+    emulator.flags = expected;
+    var actual = emulator.readFlags();
+    deepEqual(expected, actual);
+  });
+
+  test("readFlags - all", function () {
+    var expected = { z: true, c: true };
+    emulator.flags = expected;
+    var actual = emulator.readFlags();
+    deepEqual(expected, actual);
+  });
 })();

@@ -35,6 +35,24 @@
       ram: new Uint8Array([0xBB, 0xAA, 0x00, 0x00]),
       steps: [ { ram: { 2: 0xBB, 3: 0xAA } } ]
     },
+    {
+      title: "ADD b0,b1",
+      bitcode: new Uint8Array([0x10, 0x04, 0x01]),
+      ram: new Uint8Array([0x01, 0x01]),
+      steps: [ { ram: { 0: 0x02 }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD b0,b1 - carry",
+      bitcode: new Uint8Array([0x10, 0x04, 0x01]),
+      ram: new Uint8Array([0xFF, 0x02]),
+      steps: [ { ram: { 0: 0x01 }, flags: { c: true, z: false } } ]
+    },
+    {
+      title: "ADD b0,b1 - carry & zero",
+      bitcode: new Uint8Array([0x10, 0x04, 0x01]),
+      ram: new Uint8Array([0xFF, 0x01]),
+      steps: [ { ram: { 0: 0x00 }, flags: { c: true, z: true } } ]
+    },
   ];
 
   QUnit.cases(commandTests).test("command", function (params) {
@@ -58,6 +76,16 @@
           var expected = step.ram[addr];
           var actual = emulator.ram[addr];
           strictEqual(actual, expected)
+        }
+      }
+      if(step.flags) {
+        var flags = emulator.readFlags();
+        for (var flag in flags) {
+          if(typeof step.flags[flag] === undefined && flags[flag] === false ||
+             typeof step.flags[flag] !== undefined && flags[flag] == step.flags[flag])
+            ok(true, flag + " flag is " + flags[flag]);
+          else
+            ok(false, flag + " flag is " + flags[flag]);
         }
       }
     }
