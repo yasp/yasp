@@ -53,6 +53,24 @@
       ram: new Uint8Array([0xFF, 0x01]),
       steps: [ { ram: { 0: 0x00 }, flags: { c: true, z: true } } ]
     },
+    {
+      title: "ADD b0,1",
+      bitcode: new Uint8Array([0x00, 0x20, 0x01]),
+      ram: new Uint8Array([0x01]),
+      steps: [ { ram: { 0: 0x02 }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD b0,2 - carry",
+      bitcode: new Uint8Array([0x00, 0x20, 0x02]),
+      ram: new Uint8Array([0xFF]),
+      steps: [ { ram: { 0: 0x01 }, flags: { c: true, z: false } } ]
+    },
+    {
+      title: "ADD b0,1 - carry & zero",
+      bitcode: new Uint8Array([0x00, 0x20, 0x01]),
+      ram: new Uint8Array([0xFF]),
+      steps: [ { ram: { 0: 0x00 }, flags: { c: true, z: true } } ]
+    },
   ];
 
   QUnit.cases(commandTests).test("command", function (params) {
