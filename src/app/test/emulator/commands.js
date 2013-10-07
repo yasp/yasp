@@ -81,13 +81,13 @@
       title: "ADD w0,1 - 2nd byte",
       bitcode: new Uint8Array([0x20, 0x20, 0x00, 0x01]),
       ram: new Uint8Array([0x00, 0x00]),
-      steps: [ { ram: { 0: 0x00, 1: 0x01 }, flags: { c: false, z: false } } ]
+      steps: [ { ram: { 1: 0x01 }, flags: { c: false, z: false } } ]
     },
     {
       title: "ADD w0,1 - 1st byte",
       bitcode: new Uint8Array([0x20, 0x20, 0x01, 0x00]),
       ram: new Uint8Array([0x00, 0x00]),
-      steps: [ { ram: { 0: 0x01, 1: 0x00 }, flags: { c: false, z: false } } ]
+      steps: [ { ram: { 0: 0x01 }, flags: { c: false, z: false } } ]
     },
     {
       title: "ADD w0,2 - carry",
@@ -99,6 +99,36 @@
       title: "ADD w0,1 - carry & zero",
       bitcode: new Uint8Array([0x20, 0x20, 0x00, 0x01]),
       ram: new Uint8Array([0xFF, 0xFF]),
+      steps: [ { ram: { 0: 0x00, 1: 0x00 }, flags: { c: true, z: true } } ]
+    },
+    {
+      title: "ADD w0,w1 - 2nd byte",
+      bitcode: new Uint8Array([0x10, 0x44, 0x01]),
+      ram: new Uint8Array([0x00, 0x01, 0x00, 0x01]),
+      steps: [ { ram: { 1: 0x02 }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD w0,w1 - 1st byte",
+      bitcode: new Uint8Array([0x10, 0x44, 0x01]),
+      ram: new Uint8Array([0x01, 0x00, 0x01, 0x00]),
+      steps: [ { ram: { 0: 0x02 }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD w0,w1",
+      bitcode: new Uint8Array([0x10, 0x44, 0x01]),
+      ram: new Uint8Array([0x0A, 0x10, 0x01, 0xFF]),
+      steps: [ { ram: { 0: 0x0C, 1: 0x0F }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD w0,w1 - carry",
+      bitcode: new Uint8Array([0x10, 0x44, 0x01]),
+      ram: new Uint8Array([0xFF, 0xFF, 0x00, 0x02]),
+      steps: [ { ram: { 0: 0x00, 1: 0x01 }, flags: { c: true, z: false } } ]
+    },
+    {
+      title: "ADD w0,w1 - carry & zero",
+      bitcode: new Uint8Array([0x10, 0x44, 0x01]),
+      ram: new Uint8Array([0xFF, 0xFF, 0x00, 0x01]),
       steps: [ { ram: { 0: 0x00, 1: 0x00 }, flags: { c: true, z: true } } ]
     },
   ];
@@ -123,7 +153,7 @@
           var addr = addrs[j];
           var expected = step.ram[addr];
           var actual = emulator.ram[addr];
-          strictEqual(actual, expected)
+          strictEqual(actual, expected, "byte " + addr + " is " + expected)
         }
       }
       if(step.flags) {
