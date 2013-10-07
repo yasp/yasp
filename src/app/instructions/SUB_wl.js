@@ -12,10 +12,10 @@
   ],
   "params": [
     {
-      "type": "w_byte"
+      "type": "r_word"
     },
     {
-      "type": "l_byte"
+      "type": "l_word"
     }
   ],
   "exec": function (rbyte1, rbyte2) {
