@@ -21,15 +21,23 @@ module.exports = function(grunt) {
         input: "src/app/instructions/",
         output: "src/app/js/commands.js"
       }
+    },
+    watch: {
+      watchcommands: {
+        files: ['src/app/instructions/**/*.js'],
+        tasks: ['doctool:doc']
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-curl');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-doctool');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
   grunt.registerTask('test', [ 'qunit' ]);
   grunt.registerTask('commandsjs', [ 'doctool' ]);
+  grunt.registerTask('watchcommands', [ 'watch' ]);
 };

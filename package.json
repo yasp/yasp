@@ -4,7 +4,8 @@
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-qunit": "~0.2.2",
-    "grunt-doctool": "git+ssh://git@github.com:yasp/doctool.git#0.0.5"
+    "grunt-doctool": "git+ssh://git@github.com:yasp/doctool.git#0.0.5",
+    "grunt-contrib-watch": "~0.5.3"
   },
   "dependencies": {
     "grunt-curl": "~1.1.1"
