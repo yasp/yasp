@@ -71,6 +71,36 @@
       ram: new Uint8Array([0xFF]),
       steps: [ { ram: { 0: 0x00 }, flags: { c: true, z: true } } ]
     },
+    {
+      title: "ADD w0,1",
+      bitcode: new Uint8Array([0x20, 0x20, 0x01, 0x10]),
+      ram: new Uint8Array([0x02, 0xFA]),
+      steps: [ { ram: { 0: 0x04, 1: 0x0A }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD w0,1 - 2nd byte",
+      bitcode: new Uint8Array([0x20, 0x20, 0x00, 0x01]),
+      ram: new Uint8Array([0x00, 0x00]),
+      steps: [ { ram: { 0: 0x00, 1: 0x01 }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD w0,1 - 1st byte",
+      bitcode: new Uint8Array([0x20, 0x20, 0x01, 0x00]),
+      ram: new Uint8Array([0x00, 0x00]),
+      steps: [ { ram: { 0: 0x01, 1: 0x00 }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "ADD w0,2 - carry",
+      bitcode: new Uint8Array([0x20, 0x20, 0x00, 0x02]),
+      ram: new Uint8Array([0xFF, 0xFF]),
+      steps: [ { ram: { 0: 0x00, 1: 0x01 }, flags: { c: true, z: false } } ]
+    },
+    {
+      title: "ADD w0,1 - carry & zero",
+      bitcode: new Uint8Array([0x20, 0x20, 0x00, 0x01]),
+      ram: new Uint8Array([0xFF, 0xFF]),
+      steps: [ { ram: { 0: 0x00, 1: 0x00 }, flags: { c: true, z: true } } ]
+    },
   ];
 
   QUnit.cases(commandTests).test("command", function (params) {
