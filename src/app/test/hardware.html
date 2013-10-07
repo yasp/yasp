@@ -67,9 +67,30 @@
                         onColor: 'rgb(0, 255, 0)',
                         offColor: 'rgb(0,150,0)'
                     }
+                }),
+                new yasp.Hardware({
+                    cb: function(led) {
+                        $('#led_blue_state').text(led.state);
+                    },
+                    container: $('#led_blue'),
+                    type: yasp.HardwareType.LED,
+                    params: {
+                        onColor: 'rgb(0, 0, 255)',
+                        offColor: 'rgb(0,0,255)'
+                    }
                 })
             ];
             
+            var poti = new yasp.Hardware({
+                cb: function(poti) {
+                    $('#poti_state').text(poti.state);
+                },
+                container: $('#poti'),
+                type: yasp.HardwareType.POTI,
+                state: 0
+            });
+            
+            leds[2].receiveStateChange(yasp.HardwareType.LED.States.ON);
             setInterval(function() {
                 var states = yasp.HardwareType.LED.States;
                 leds[0].receiveStateChange(leds[0].state == states.ON ? states.OFF : states.ON);
@@ -116,6 +137,11 @@
             border: 1px solid black;
             padding: 8px;
         }
+        
+        .poti {
+            width: 80px;
+            height: 80px;
+        }
     </style>
 </head>
 <body>
@@ -138,6 +164,15 @@
 
         <div id="led_green" class="led"></div>
         <div id="led_green_state" class="desc"></div>
+
+        <div id="led_blue" class="led"></div>
+        <div id="led_blue_state" class="desc"></div>
+    </div>
+
+    <h1>Potentiometer</h1>
+    <div class="group">
+        <div id="poti" class="poti"></div>
+        <div id="poti_state" class="desc"></div>
     </div>
 </body>
 </html>

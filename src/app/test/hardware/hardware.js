@@ -152,4 +152,43 @@
     equal(!hardware, false);
     equal(fired, true);
   });
+
+  test("ensure poti is displayed", function() {
+    // arrange
+    var hardware;
+
+    // act
+    hardware = new yasp.Hardware({
+      cb: function() { },
+      container: elem,
+      type: yasp.HardwareType.POTI,
+      state: 42
+    });
+
+    hardware.render();
+
+    // assert
+    equal(!hardware.element, false);
+  });
+
+  test("ensure poti fires event", function() {
+    // arrange
+    var hardware;
+    var fired = false;
+
+    // act
+    hardware = new yasp.Hardware({
+      cb: function() {
+        fired = true;
+      },
+      container: elem,
+      type: yasp.HardwareType.POTI,
+      state: 42
+    });
+    hardware.receiveStateChange(44);
+
+    // assert
+    equal(!hardware, false);
+    equal(fired, true);
+  });
 })();
