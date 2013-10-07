@@ -77,7 +77,7 @@ if (typeof yasp == 'undefined') yasp = { };
         });
         
         
-
+        
         if (!this.lighter && this.state == yasp.HardwareType.LED.States.OFF) {
           this.dim = 5;
           this.lighter = null;
@@ -150,12 +150,14 @@ if (typeof yasp == 'undefined') yasp = { };
         ctx.fill();
         
         if (!!this.dim) {
-          this.dim-=.5;
-          requestAnimFrame(this.type.animRender.bind(this));
+          this.dim-=.25;
+          // requestAnimFrame(this.type.animRender.bind(this));
+          setTimeout(this.type.animRender.bind(this), 0);
         }
         if (!!this.lighter) {
-          this.lighter-=.5;
-          requestAnimFrame(this.type.animRender.bind(this));
+          this.lighter-=.25;
+          // requestAnimFrame(this.type.animRender.bind(this));
+          setTimeout(this.type.animRender.bind(this), 0);
         }
       },
       initialState: function() {
