@@ -132,28 +132,52 @@
       steps: [ { ram: { 0: 0x00, 1: 0x00 }, flags: { c: true, z: true } } ]
     },
     {
-      title: "RR b0 ; b0 = 64 - zero not set",
+      title: "RR b0 ; b0 = 64 - zero set",
       bitcode: new Uint8Array([0x40, 0x80]),
       ram: new Uint8Array([0x40]),
-      steps: [ { ram: { 0: 0x20 }, flags: { c: true, z: false } } ]
+      steps: [ { ram: { 0: 0x20 }, flags: { c: false, z: true } } ]
     },
     {
-      title: "RR b0 ; b0 = 66 - zero set",
+      title: "RR b0 ; b0 = 66 - zero not set",
       bitcode: new Uint8Array([0x40, 0x80]),
       ram: new Uint8Array([0x42]),
-      steps: [ { ram: { 0: 0x21 }, flags: { c: true, z: true } } ]
+      steps: [ { ram: { 0: 0x21 }, flags: { c: false, z: false } } ]
     },
     {
-      title: "RR w0 ; w0 = 0xFFAA - zero set",
+      title: "RR w0 ; w0 = 0xFFAA - zero not set",
       bitcode: new Uint8Array([0x60, 0x80]),
       ram: new Uint8Array([0xFF, 0xAA]),
-      steps: [ { ram: { 0: 0x7F, 1: 0xD5 }, flags: { c: true, z: true } } ]
+      steps: [ { ram: { 0: 0x7F, 1: 0xD5 }, flags: { c: false, z: false } } ]
     },
     {
-      title: "RR w0 ; b0 = 0x1FF8 - zero not set",
+      title: "RR w0 ; b0 = 0x1FF8 - zero set",
       bitcode: new Uint8Array([0x60, 0x80]),
       ram: new Uint8Array([0x1F, 0xF8]),
-      steps: [ { ram: { 0: 0x0F, 1: 0xFC }, flags: { c: true, z: false } } ]
+      steps: [ { ram: { 0: 0x0F, 1: 0xFC }, flags: { c: false, z: true } } ]
+    },
+    {
+      title: "RL b0 ; b0 = 64 - zero not set",
+      bitcode: new Uint8Array([0x40, 0xA0]),
+      ram: new Uint8Array([0x40]),
+      steps: [ { ram: { 0: 0x80 }, flags: { c: false, z: false } } ]
+    },
+    {
+      title: "RL b0 ; b0 = 63 - zero set",
+      bitcode: new Uint8Array([0x40, 0xA0]),
+      ram: new Uint8Array([0x3F]),
+      steps: [ { ram: { 0: 0x7E }, flags: { c: false, z: true } } ]
+    },
+    {
+      title: "RL w0 ; b0 = 0xFFAA - zero not set",
+      bitcode: new Uint8Array([0x60, 0xA0]),
+      ram: new Uint8Array([0xFF, 0xAA]),
+      steps: [ { ram: { 0: 0xFF, 1: 0x54 }, flags: { c: true, z: false } } ]
+    },
+    {
+      title: "RL w0 ; b0 = 0x7B10 - zero set",
+      bitcode: new Uint8Array([0x60, 0xA0]),
+      ram: new Uint8Array([0x7B, 0x10]),
+      steps: [ { ram: { 0: 0xF6, 1: 0x20 }, flags: { c: false, z: true } } ]
     },
   ];
 
