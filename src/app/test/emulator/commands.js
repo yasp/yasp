@@ -131,6 +131,30 @@
       ram: new Uint8Array([0xFF, 0xFF, 0x00, 0x01]),
       steps: [ { ram: { 0: 0x00, 1: 0x00 }, flags: { c: true, z: true } } ]
     },
+    {
+      title: "RR b0 ; b0 = 64 - zero not set",
+      bitcode: new Uint8Array([0x40, 0x80]),
+      ram: new Uint8Array([0x40]),
+      steps: [ { ram: { 0: 0x20 }, flags: { c: true, z: false } } ]
+    },
+    {
+      title: "RR b0 ; b0 = 66 - zero set",
+      bitcode: new Uint8Array([0x40, 0x80]),
+      ram: new Uint8Array([0x42]),
+      steps: [ { ram: { 0: 0x21 }, flags: { c: true, z: true } } ]
+    },
+    {
+      title: "RR w0 ; w0 = 0xFFAA - zero set",
+      bitcode: new Uint8Array([0x60, 0x80]),
+      ram: new Uint8Array([0xFF, 0xAA]),
+      steps: [ { ram: { 0: 0x7F, 1: 0xD5 }, flags: { c: true, z: true } } ]
+    },
+    {
+      title: "RR w0 ; b0 = 0x1FF8 - zero not set",
+      bitcode: new Uint8Array([0x60, 0x80]),
+      ram: new Uint8Array([0x1F, 0xF8]),
+      steps: [ { ram: { 0: 0x0F, 1: 0xFC }, flags: { c: true, z: false } } ]
+    },
   ];
 
   QUnit.cases(commandTests).test("command", function (params) {

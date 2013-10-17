@@ -1,10 +1,10 @@
 (function() {
   module("hardware");
-  
+
   test("ensure creating hardware works", function() {
     // arrange
     var hardwareButton, hardwareLED, hardwarePoti;
-    
+
     // act
     hardwareButton = new yasp.Hardware({
       type: yasp.HardwareType.PUSHBUTTON
@@ -18,34 +18,36 @@
     hardwarePoti = new yasp.Hardware({
       type: yasp.HardwareType.POTI
     });
-    
+
     // assert
     notStrictEqual(hardwareButton, null);
     notStrictEqual(hardwareLED, null);
     notStrictEqual(hardwarePoti, null);
     deepEqual(hardwareLED.params, { color: 0xFF0000 });
   });
-  
+
   test("ensure changing state calls callback", function() {
     // arrange
     var hardware;
     var cbCalled = false;
-    
+
     // act
     hardware = new yasp.Hardware({
-      type: yasp.HardwareType.PUSHBUTTON, 
+      type: yasp.HardwareType.PUSHBUTTON,
       cb: function() {
         cbCalled = true;
       }
     });
     hardware.receiveStateChange(yasp.HardwareType.PUSHBUTTON.States.PUSH);
-    
+
     // assert
     notStrictEqual(hardware, null);
     strictEqual(cbCalled, true);
     strictEqual(hardware.state, yasp.HardwareType.PUSHBUTTON.States.PUSH);
   });
-  
+})();
+
+(function() {
   var elem;
   module("hardware ui", {
     setup: function() {
@@ -54,7 +56,7 @@
         'width': '80px',
         'height': '80px'
       });
-      
+
       elem.appendTo($('body'));
     },
     teardown: function() {
@@ -62,11 +64,11 @@
       elem = null;
     }
   });
-  
+
   test("ensure pushbutton is displayed", function() {
     // arrange
     var hardware;
-    
+
     // act
     hardware = new yasp.Hardware({
       cb: function() { },
@@ -77,18 +79,18 @@
         pushcolor: 'rgb(200,0,0)'
       }
     });
-    
+
     hardware.render();
-    
+
     // assert
     equal(!hardware.element, false);
   });
-  
+
   test("ensure pushbutton fires event", function() {
     // arrange
     var hardware;
     var fired = false;
-    
+
     // act
     hardware = new yasp.Hardware({
       cb: function() {
