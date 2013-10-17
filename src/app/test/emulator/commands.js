@@ -179,6 +179,30 @@
       ram: new Uint8Array([0x7B, 0x10]),
       steps: [ { ram: { 0: 0xF6, 1: 0x20 }, flags: { c: false, z: true } } ]
     },
+    {
+      title: "INV b0 ; b0 = 1",
+      bitcode: new Uint8Array([0x40, 0x40]),
+      ram: new Uint8Array([0x01]),
+      steps: [ { ram: { 0: 0xFE }, flags: { c:false, z: false } } ]
+    },
+    {
+      title: "INV b0 ; b0 = 0xFF, zero set",
+      bitcode: new Uint8Array([0x40, 0x40]),
+      ram: new Uint8Array([0xFF]),
+      steps: [ { ram: { 0: 0x00 }, flags: { c:false, z: true } } ]
+    },
+    {
+      title: "INV w0 ; w0 = 1",
+      bitcode: new Uint8Array([0x60, 0x40]),
+      ram: new Uint8Array([0x00, 0x01]),
+      steps: [ { ram: { 0: 0xFF, 1: 0xFE }, flags: { c:false, z: false } } ]
+    },
+    {
+      title: "INV w0 ; b0 = 0xFFFF, zero set",
+      bitcode: new Uint8Array([0x60, 0x40]),
+      ram: new Uint8Array([0xFF, 0xFF]),
+      steps: [ { ram: { 0: 0x00, 1: 0x00 }, flags: { c:false, z: true } } ]
+    },
   ];
 
   QUnit.cases(commandTests).test("command", function (params) {
