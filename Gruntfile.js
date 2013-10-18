@@ -15,7 +15,8 @@ module.exports = function(grunt) {
         'http://code.jquery.com/qunit/qunit-1.12.0.css',
         'https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.min.css',
         'https://raw.github.com/marijnh/CodeMirror/master/lib/codemirror.css',
-        'https://raw.github.com/necolas/normalize.css/master/normalize.css'
+        'https://raw.github.com/necolas/normalize.css/master/normalize.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/lib/codemirror.css'
       ],
       'src/lib/fonts': [
         'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.eot',

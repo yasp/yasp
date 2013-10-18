@@ -12,15 +12,69 @@
     
         <link rel="stylesheet" href="lib/css/normalize.css">
         <link rel="stylesheet" href="lib/css/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/css/codemirror.css">
         <link rel="stylesheet" href="app/css/main.css">
         
 
         <script src="lib/js/jquery-1.10.2.min.js"></script>
         <script src="lib/js/bootstrap.min.js"></script>
+        <script src="lib/js/codemirror.js"></script>
         <script src="app/js/commands.js"></script>
         <script src="app/js/utils.js"></script>
     </head>
     <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 toolbar">
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-play item"></span>Run
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-file item"></span>New
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-floppy-disk item"></span>Save
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-folder-open item"></span>Load
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-info-sign item"></span>Help
+                    </button>
+                    <span class="dropdown pull-right">
+                        <a data-toggle="dropdown" href="#">
+                            <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-align-justify item"></span>Menu <b class="caret"></b>
+                            </button>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="Editor">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-play item"></span>Run</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-file item"></span>New</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-floppy-disk item"></span>Save</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-floppy-open item"></span>Save As</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-folder-open item"></span>Load</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-search item"></span>Find</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-search item"></span>Replace</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-search item"></span>Go To Line</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-info-sign item"></span>Help</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-wrench item"></span>Settings</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-user item"></span>About</a></li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <textarea id="editor">
+        MOV b0, 100
+        MOV b1, 50
+        ADD b0, b1
+END
+</textarea>
         
         <script src="app/js/assembler/assembler.js"></script>
         <script src="app/js/assembler/passes/lexer.js"></script>
