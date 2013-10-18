@@ -67,30 +67,46 @@ if (typeof yasp == 'undefined') yasp = { };
           });
           
           this.element.appendTo(this.container);
-        }
-        var width = this.element.width();
-        var height = this.element.height();
-        // fix HTML5 behaviour
-        this.element.attr({
-          "width": width,
-          "height": height
-        });
-        
-        
-        
-        if (!this.lighter && this.state == yasp.HardwareType.LED.States.OFF) {
-          this.dim = 5;
-          this.lighter = null;
-        } else if (!this.dim && this.state == yasp.HardwareType.LED.States.ON) {
-          this.dim = null;
-          this.lighter = 5;
-        } else {
-          this.dim = null;
-          this.lighter = null;
+
+          var width = this.element.width();
+          var height = this.element.height();
+          // fix HTML5 behaviour
+          this.element.attr({
+            "width": width,
+            "height": height
+          });
+          
+          this.upAnim = this.type.animUpdate.bind(this); // reduce amount of objects created
         }
         
-        // requestAnimFrame(this.type.animRender.bind(this));
-        this.type.animRender.call(this);
+        
+        if (!this.rendering) {
+          if (!!this.interval) clearInterval(this.interval);
+          if (!this.rendering) {
+            this.onCount = 0;
+            this.offCount = 0;
+          }
+          
+          this.rendering = true;
+          this.interval = setInterval(this.upAnim, 0);
+        }
+      },
+      animUpdate: function() {
+        var states = yasp.HardwareType.LED.States;
+        
+        if (this.rendering) {
+          if (this.state == states.ON) {
+            this.onCount++;
+          } else if (this.state == states.OFF) {
+            this.offCount++;
+          }
+          
+          if (this.onCount + this.offCount > 75) {
+            this.type.animRender.bind(this)();
+            this.onCount /= 1.35; // this is needed, to reduce flickering
+            this.offCount /= 1.35;
+          }
+        }
       },
       animRender: function() {
         var states = yasp.HardwareType.LED.States;
@@ -111,31 +127,20 @@ if (typeof yasp == 'undefined') yasp = { };
         ctx.fillStyle = 'rgba(10,10,10,0.9)';
         ctx.fill();
 
-        // draw main color
+        ctx.globalAlpha = this.offCount/(this.onCount + this.offCount);
         ctx.beginPath();
         ctx.arc(width/2, height/2, radius-1, 0, 2 * Math.PI, false);
-        ctx.fillStyle = this.state == states.ON ? this.params.onColor : this.params.offColor;
+        ctx.fillStyle =  this.params.offColor;
+        ctx.fill();
+
+        // draw main color
+        ctx.globalAlpha = this.onCount/(this.onCount + this.offCount);
+        ctx.beginPath();
+        ctx.arc(width/2, height/2, radius-1, 0, 2 * Math.PI, false);
+        ctx.fillStyle =  this.params.onColor;
         ctx.fill();
         
-        // draw dim color
-        if (!!this.dim) {
-          ctx.globalAlpha = this.dim/5;
-          ctx.beginPath();
-          ctx.arc(width/2, height/2, radius-1, 0, 2 * Math.PI, false);
-          ctx.fillStyle = this.params.onColor;
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }
-
-        // draw lighter color
-        if (!!this.lighter) {
-          ctx.globalAlpha = this.lighter/5;
-          ctx.beginPath();
-          ctx.arc(width/2, height/2, radius-1, 0, 2 * Math.PI, false);
-          ctx.fillStyle = this.params.offColor;
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }
+        ctx.globalAlpha = 1;
         
         // draw inner circle
         ctx.beginPath();
@@ -148,17 +153,6 @@ if (typeof yasp == 'undefined') yasp = { };
         ctx.arc(width/2 + 3, height/2 + 3, radius/6, 0, 2 * Math.PI, false);
         ctx.fillStyle = 'rgba(255,255,255,0.5)';
         ctx.fill();
-        
-        if (!!this.dim) {
-          this.dim-=.25;
-          // requestAnimFrame(this.type.animRender.bind(this));
-          setTimeout(this.type.animRender.bind(this), 0);
-        }
-        if (!!this.lighter) {
-          this.lighter-=.25;
-          // requestAnimFrame(this.type.animRender.bind(this));
-          setTimeout(this.type.animRender.bind(this), 0);
-        }
       },
       initialState: function() {
         return yasp.HardwareType.LED.States.OFF;

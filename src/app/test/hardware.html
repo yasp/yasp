@@ -96,16 +96,17 @@
                 leds[0].receiveStateChange(leds[0].state == states.ON ? states.OFF : states.ON);
             }, 1000);
             
-            var ledCounter = 100;
+            var len = 100;
+            var ledCounter = len;
             var greenLedAn = function() {
                 var states = yasp.HardwareType.LED.States;
                 leds[1].receiveStateChange(states.ON);
                 setTimeout(function() {
                     leds[1].receiveStateChange(states.OFF);
                     ledCounter -= .5;
-                    if (ledCounter < 0) ledCounter = 100;
+                    if (ledCounter < 0) ledCounter = len;
                     setTimeout(greenLedAn, ledCounter);
-                }, 100-ledCounter);
+                }, len-ledCounter);
             };
             setTimeout(greenLedAn, ledCounter);
         });
