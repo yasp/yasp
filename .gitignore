@@ -4,9 +4,6 @@
 # IDE
 .idea
 
-# generated css
-src/css/*.css
-
 # Grunt and build
 dest
 node_modules

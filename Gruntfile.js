@@ -7,16 +7,25 @@ module.exports = function(grunt) {
         'http://code.jquery.com/jquery-1.10.2.min.js',
         'http://code.jquery.com/qunit/qunit-1.12.0.js',
         'https://raw.github.com/AStepaniuk/qunit-parameterize/master/qunit-parameterize.js',
-        'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js'
+        'https://raw.github.com/twbs/bootstrap/master/dist/js/bootstrap.min.js',
+        'https://raw.github.com/marijnh/CodeMirror/master/lib/codemirror.js'
         
       ],
       'src/lib/css': [
         'http://code.jquery.com/qunit/qunit-1.12.0.css',
-        'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css'
+        'https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.min.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/lib/codemirror.css',
+        'https://raw.github.com/necolas/normalize.css/master/normalize.css'
+      ],
+      'src/lib/fonts': [
+        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.eot',
+        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.svg',
+        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.ttf',
+        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.woff'
       ]
     },
     qunit: {
-      test: ['src/app/test/*.html']
+      test: ['src/app/test/index.html']
     },
     doctool: {
       doc: {
