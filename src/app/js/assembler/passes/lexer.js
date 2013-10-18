@@ -94,7 +94,8 @@ if (typeof yasp == "undefined") yasp = { };
     WORD_REGISTER: "word register",
     DIRECTIVE: "directive",
     UNKNOWN_REGISTER: "unknown register",
-    UNKNOWN: "unknown"
+    UNKNOWN: "unknown",
+    DELIMITER: "delimiter"
   };
 
   /**
@@ -173,6 +174,12 @@ if (typeof yasp == "undefined") yasp = { };
         break;
       }
     }
+    
+    // am i a delimiter?
+    if (splitter.indexOf(name) != -1) {
+      return yasp.TokenType.DELIMITER;
+    }
+    
     return amILabel ? yasp.TokenType.LABEL : yasp.TokenType.UNKNOWN;
   };
 

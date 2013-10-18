@@ -10,7 +10,8 @@ if (typeof yasp == 'undefined') yasp = { };
       undoDepth: 100,
       autofocus: true,
       indentUnit: 8,
-      tabSize: 8
+      tabSize: 8,
+      indentWithTabs: true
     });
     
   });

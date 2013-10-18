@@ -55,7 +55,6 @@ textarea {
     padding: 0.2em 0;
 }
 
-
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
@@ -75,7 +74,10 @@ textarea {
     font-size: 12px;
 }
 
-
+/* Upper case all instructions */
+span.cm-keyword {
+    text-transform: uppercase !important;
+}
 
 
 
