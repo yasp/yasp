@@ -27,7 +27,7 @@ if (typeof yasp == "undefined") yasp = { };
 
   /**
    * Does the tokenize step
-   * @param assembler The assembler in which it is executed
+   * @param assembler The assembler in which it is executed, this parameter is completely ignored
    * @param input What should be tokenized?
    * @returns {Array}
    */

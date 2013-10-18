@@ -4,7 +4,8 @@ if (typeof yasp == 'undefined') yasp = { };
   $('body').ready(function() {
     // initialize code mirror textarea
     var editor = CodeMirror.fromTextArea($('#editor').get(0), {
-      mode: "javascript",
+      mode: "text/assembler",
+      theme: 'eclipse',
       lineNumbers: true,
       undoDepth: 100,
       autofocus: true,

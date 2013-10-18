@@ -23,6 +23,32 @@ module.exports = function(grunt) {
         'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.svg',
         'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.ttf',
         'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.woff'
+      ],
+      'src/lib/themes': [
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/3024-day.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/3024-night.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/ambiance.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/base16-dark.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/base16-light.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/blackboard.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/cobalt.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/eclipse.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/cobalt.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/elegant.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/midnight.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/monokai.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/neat.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/night.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/paraiso-dark.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/paraiso-light.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/rubyblue.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/solarized.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/the-matrix.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/tomorrow-night-eighties.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/twilight.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/vibrant-ink.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/xq-dark.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/theme/xq-light.css'
       ]
     },
     qunit: {

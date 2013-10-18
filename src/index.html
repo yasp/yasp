@@ -9,13 +9,39 @@
         <title></title>
         <meta name="description" content="yasp is an USB Master emulator that runs completely in the web.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+        
+        <!-- Styles -->
         <link rel="stylesheet" href="lib/css/normalize.css">
         <link rel="stylesheet" href="lib/css/bootstrap.min.css">
-        <link rel="stylesheet" href="lib/css/codemirror.css">
         <link rel="stylesheet" href="app/css/main.css">
+        <link rel="stylesheet" href="lib/css/codemirror.css">
         
+        <!-- Themes -->
+        <link rel="stylesheet" href="lib/themes/3024-day.css">
+        <link rel="stylesheet" href="lib/themes/3024-night.css">
+        <link rel="stylesheet" href="lib/themes/ambiance.css">
+        <link rel="stylesheet" href="lib/themes/base16-dark.css">
+        <link rel="stylesheet" href="lib/themes/base16-light.css">
+        <link rel="stylesheet" href="lib/themes/blackboard.css">
+        <link rel="stylesheet" href="lib/themes/cobalt.css">
+        <link rel="stylesheet" href="lib/themes/eclipse.css">
+        <link rel="stylesheet" href="lib/themes/elegant.css">
+        <link rel="stylesheet" href="lib/themes/midnight.css">
+        <link rel="stylesheet" href="lib/themes/monokai.css">
+        <link rel="stylesheet" href="lib/themes/neat.css">
+        <link rel="stylesheet" href="lib/themes/night.css">
+        <link rel="stylesheet" href="lib/themes/paraiso-dark.css">
+        <link rel="stylesheet" href="lib/themes/paraiso-light.css">
+        <link rel="stylesheet" href="lib/themes/rubyblue.css">
+        <link rel="stylesheet" href="lib/themes/solarized.css">
+        <link rel="stylesheet" href="lib/themes/the-matrix.css">
+        <link rel="stylesheet" href="lib/themes/tomorrow-night-eighties.css">
+        <link rel="stylesheet" href="lib/themes/twilight.css">
+        <link rel="stylesheet" href="lib/themes/vibrant-ink.css">
+        <link rel="stylesheet" href="lib/themes/xq-dark.css">
+        <link rel="stylesheet" href="lib/themes/xq-light.css">
 
+        <!-- Libraries -->
         <script src="lib/js/jquery-1.10.2.min.js"></script>
         <script src="lib/js/bootstrap.min.js"></script>
         <script src="lib/js/codemirror.js"></script>
@@ -69,12 +95,14 @@
             </div>
         </div>
         
-        <textarea id="editor">
+        <div id="editorcontainer">
+        <textarea id="editor" name="code">
         MOV b0, 100
         MOV b1, 50
         ADD b0, b1
 END
 </textarea>
+        </div>
         
         <script src="app/js/assembler/assembler.js"></script>
         <script src="app/js/assembler/passes/lexer.js"></script>
@@ -84,6 +112,7 @@ END
         <script src="app/js/emulator/bitutils.js"></script>
         <script src="app/js/emulator/emulator.js"></script>
         
-        <script src="app/js/editor.js"></script>
+        <script src="app/js/editor/assembler.js"></script>
+        <script src="app/js/editor/editor.js"></script>
     </body>
 </html>
