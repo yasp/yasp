@@ -6,10 +6,13 @@ module.exports = function(grunt) {
       'src/lib/js': [
         'http://code.jquery.com/jquery-1.10.2.min.js',
         'http://code.jquery.com/qunit/qunit-1.12.0.js',
-        'https://raw.github.com/AStepaniuk/qunit-parameterize/master/qunit-parameterize.js'
+        'https://raw.github.com/AStepaniuk/qunit-parameterize/master/qunit-parameterize.js',
+        'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js'
+        
       ],
       'src/lib/css': [
-        'http://code.jquery.com/qunit/qunit-1.12.0.css'
+        'http://code.jquery.com/qunit/qunit-1.12.0.css',
+        'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css'
       ]
     },
     qunit: {
