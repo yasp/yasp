@@ -12,17 +12,21 @@
   TokenName4TokenType[yasp.TokenType.UNKNOWN] = "error";
   TokenName4TokenType[yasp.TokenType.DELIMITER] = "qualifier";
   
-  CodeMirror.defineMode("assembler", function() {
+  CodeMirror.defineMode("assembler", function(config, parserConfig) {
+    var indentUnit = config.indentUnit || config.tabSize || 2
+    
     return {
-      token: function(stream) {
+      createState: function() {
+        return { };
+      },
+      token: function(stream, state) {
         // check if comment
         if (stream.peek() == ';') {
           stream.skipToEnd();
           return "comment";
         } else {
-          var lexer = new yasp.Lexer();
           var line = stream.string, pos = stream.pos;
-          var tokens = lexer.pass({ }, line);
+          var tokens = !!state.tokens ? state.tokens : new yasp.Lexer().pass({ }, line);
           
           // bad code is bad
           for (var i = 0; i < tokens.length; i++) {
@@ -31,11 +35,37 @@
               for (var j = 0; j < t.text.length; j++) {
                 stream.next();
               }
-              return TokenName4TokenType[t.getType()];
+              var type = t.getType();
+              if (type == yasp.TokenType.LABEL) {
+                // does this label really exist?
+                if (!yasp.Editor.symbols.labels[t.text.toUpperCase()]) {
+                  return TokenName4TokenType[yasp.TokenType.UNKNOWN];
+                }
+              }
+              
+              return TokenName4TokenType[type];
             }
           }
           stream.next();
           return "";
+        }
+      },
+      indent: function(state, textAfter) {
+        var tokens = !!state.tokens ? state.tokens : new yasp.Lexer().pass({ }, textAfter);
+        
+        if (tokens.length == 1) return CodeMirror.Pass; // lexer always appends \n
+        var t = tokens[0];
+        if (t.text.toUpperCase() == "END") return 0;
+        
+        switch (t.getType()) {
+          case yasp.TokenType.LABEL:
+            if (tokens.length > 2 && tokens[1].text == ':') {
+              return 0;
+            } else {
+              return indentUnit;
+            }
+          default:
+            return indentUnit;
         }
       }
     };

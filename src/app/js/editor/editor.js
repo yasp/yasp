@@ -1,6 +1,15 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  yasp.Editor = {
+    map: { },
+    symbols: {
+      labels: { },
+      instructions: { },
+      usedRegisters: { }
+    }
+  };
+  
   $('body').ready(function() {
     // initialize code mirror textarea
     var editor = CodeMirror.fromTextArea($('#editor').get(0), {
@@ -14,5 +23,10 @@ if (typeof yasp == 'undefined') yasp = { };
       indentWithTabs: true
     });
     
+    // force intendation everytime something changes
+    editor.on("change", function() {
+      var c = editor.getCursor();
+      if (!!c) editor.indentLine(c.line);
+    });
   });
 })();
