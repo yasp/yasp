@@ -28,5 +28,17 @@ if (typeof yasp == 'undefined') yasp = { };
       var c = editor.getCursor();
       if (!!c) editor.indentLine(c.line);
     });
+    
+    var assembler = yasp.AssemblerCommunicator;
+    
+    // update symbols
+    setTimeout(function() {
+      assembler.sendMessage("assembler", {
+        code: editor.getValue(),
+        jobs: ['symbols', 'map']
+      }, function() {
+        
+      });
+    }, 500);
   });
 })();
