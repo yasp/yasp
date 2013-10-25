@@ -13,6 +13,7 @@ textarea {
 body {
     font-size: 1em;
     line-height: 1.4;
+    height: 100%;
 }
 
 ::-moz-selection {
@@ -55,9 +56,16 @@ textarea {
     padding: 0.2em 0;
 }
 
+html {
+    height: 100%;
+}
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+.CodeMirror {
+    height: 100% !important;
+}
+
 .toolbar {
     
 }
@@ -67,11 +75,14 @@ textarea {
 
 #editor {
     width: 100%;
-    height: 800px;
+    height: 100%;
 }
 
 #editorcontainer {
     font-size: 12px;
+    height: 100%;
+    padding-top: 34px; /* Fix scrollbar bug */
+    margin-top: -30px;
 }
 
 /* Upper case all instructions */

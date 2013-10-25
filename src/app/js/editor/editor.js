@@ -1,6 +1,25 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  yasp.CompileManager = {
+    lastCompile: null,
+    compile: function(content, cb) {
+      if (content != this.lastUpdate) {
+        this.lastUpdate = content;
+        console.log("update");
+        yasp.AssemblerCommunicator.sendMessage("assemble", {
+          code: content,
+          jobs: ['symbols', 'map']
+        }, function(response) {
+          cb(response);
+        });
+      } else {
+        cb(null);
+      }
+    }
+  }
+  yasp.CompileManager.compile = yasp.CompileManager.compile.bind(yasp.CompileManager);
+  
   yasp.Editor = {
     map: { },
     symbols: {
@@ -24,8 +43,17 @@ if (typeof yasp == 'undefined') yasp = { };
       autofocus: true,
       indentUnit: 8,
       tabSize: 8,
-      indentWithTabs: true
+      indentWithTabs: true,
+      fullScreen: true
     });
+    
+    // update height
+    /*setInterval(function() {
+      editor.setSize({
+        height: $('#editorcontainer').height()
+      });
+    }, 500);*/
+    
     
     // force intendation everytime something changes
     editor.on("change", function() {
@@ -35,23 +63,12 @@ if (typeof yasp == 'undefined') yasp = { };
     
     // update symbols
     var UPDATE_DELAY = 500;
-    var update, lastUpdate;
+    var update;
     setTimeout(update = function() {
       var content = editor.getValue();
-      if (content != lastUpdate) {
-        lastUpdate = content;
-        console.log("update");
-        yasp.AssemblerCommunicator.sendMessage("assemble", {
-          code: content,
-          jobs: ['symbols', 'map']
-        }, function() {
-          console.log("FINISH");
-
-          setTimeout(update, UPDATE_DELAY);
-        });
-      } else {
-        setTimeout(update, UPDATE_DELAY);
-      }
+      yasp.CompileManager.compile(content, function(result) {
+        setTimeout(update, UPDATE_DELAY)
+      });
     }, UPDATE_DELAY);
   });
 })();
