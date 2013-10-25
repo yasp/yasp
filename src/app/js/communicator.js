@@ -1,9 +1,6 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  // yasp.EmulatorCommunicator = new yasp.Communicator("emulator/emulator.js");
-  // yasp.AssemblerCommunicator = new yasp.Communicator("assembler/assembler.js");
-  
   /**
    * Responsible for communicating
    * @param path is the path to the specified file
@@ -49,13 +46,14 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param cb
    */
   yasp.Communicator.prototype.sendMessage = function(action, payload, cb) {
+    var id = ++this.id;
     this.worker.postMessage({
       action: action.toUpperCase(),
-      id: ++this.id,
+      id: id,
       payload: payload
     });
     
-    this.openMessages[this.id] = {
+    this.openMessages[id] = {
       callback: cb,
       action: action,
       originalPayload: payload
@@ -133,6 +131,7 @@ if (typeof yasp == 'undefined') yasp = { };
     
     self.addEventListener('message', function(e) {
       e = e.data;
+      console.log("Receive message: "+ e.action+" payload "+ JSON.stringify(e.payload));
       var ready = function(result) {
         self.postMessage({
           action: e.action,

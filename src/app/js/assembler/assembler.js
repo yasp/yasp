@@ -61,6 +61,7 @@ if (typeof yasp == 'undefined') yasp = { };
     
     if (this.errors.length == 0) {
       result = {
+        success: true,
         bitcode: this.jobs.indexOf('bitcode') != -1 ? tmpResult : null,
         symbols: this.jobs.indexOf('symbols') != -1 ? this.symbols : null,
         map: this.jobs.indexOf('map') != -1 ? this.map : null
