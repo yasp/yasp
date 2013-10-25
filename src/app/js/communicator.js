@@ -10,7 +10,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @constructor
    */
   yasp.Communicator = function(path) {
-    if (!Worker) throw "Worker Unsupported";
+    if (!window.Worker) throw "Worker Unsupported";
     
     this.worker = new Worker(path);
     this.listener = { };
@@ -19,7 +19,7 @@ if (typeof yasp == 'undefined') yasp = { };
     
     this.worker.addEventListener("message", (function(event) {
       var data = event.data;
-      if (typeof data.id != 'undefined') {
+      if (!!data.id) {
         if (!this.openMessages[data.id]) {
           throw "Message with ID "+data.id+" does not exist.";
         } else {
@@ -28,11 +28,15 @@ if (typeof yasp == 'undefined') yasp = { };
           // delete
           delete this.openMessages[data.id];
         }
+      } else if (data.action == 'internal_error') {
+        throw "Error ("+data.payload.code+") "+data.payload.msg;
+      } else if (data.action == 'internal_log') {
+        console.log("Communicator Log: "+data.payload);
       } else {
         // broadcast
-        var events = this.listener[event.action];
+        var events = this.listener[data.action];
         for (var i = 0; i < events.length; i++) {
-          events[i]();
+          events[i](data);
         }
       }
     }).bind(this), false);
@@ -46,7 +50,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Communicator.prototype.sendMessage = function(action, payload, cb) {
     this.worker.postMessage({
-      action: action,
+      action: action.toUpperCase(),
       id: ++this.id,
       payload: payload
     });
@@ -64,6 +68,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param cb
    */
   yasp.Communicator.prototype.subscribe = function(event, cb) {
+    event = event.toUpperCase();
     if (!this.listener[event]) this.listener[event] = [ ];
     this.listener[event].push(cb);
   };
@@ -90,5 +95,62 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Communicator.prototype.terminate = function() {
     this.worker.terminate();
+  }
+  
+  yasp.Communicator.UNKNOWN_ACTION = {
+    payload: null,
+    error: {
+      code: 0,
+      msg: "Unknown action"
+    }
+  }
+
+  /**
+   * Responsible in the Web Worker for communicating with the client
+   * @param self The self variable which is set in the web worker enviroment
+   * @param listener The listener. The listener has to call "ready" if the results are available
+   */
+  yasp.CommunicaterBackend = function(self, listener) {
+    console = {
+      log: function(msg) {
+        self.postMessage({
+          action: "internal_log",
+          payload: msg
+        });
+      }
+    };
+    
+    listener = listener.bind(this);
+    
+    this.broadcast = function(action, result) {
+      self.postMessage({
+        action: action,
+        id: null,
+        error: result.error,
+        payload: result.payload
+      });
+    };
+    
+    self.addEventListener('message', function(e) {
+      e = e.data;
+      var ready = function(result) {
+        self.postMessage({
+          action: e.action,
+          id: e.id,
+          error: result.error,
+          payload: result.payload
+        });
+      };
+      listener(e, ready);
+    });
+    self.addEventListener('error', function(e) {
+      self.postMessage({
+        action: 'internal_error',
+        payload: {
+          code: 0,
+          msg: "Worker error " + e.message + " in line " + e.lineno + " in file " + e.filename + "\n"
+        }
+      });
+    });
   }
 })();

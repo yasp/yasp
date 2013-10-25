@@ -10,11 +10,16 @@
     }
   });
   asyncTest("ensure sending message works", function() {
-    comm.sendMessage('test', {
-      testPayload: 42
-    }, function(data) {
-      equal(data.payload.testPayload, 42, "ensure data not corrupted");
+    comm.sendMessage('test', { }, function(data) {
+      equal(data.payload, 42, "ensure data not corrupted");
       start();
-    })
+    });
+  });
+  asyncTest("ensure sending broadcasts works", function() {
+    comm.subscribe("AWESOME_event", function(data) {
+      equal(data.payload, 42, "ensure data not corrupted");
+      start();
+    });
+    comm.sendMessage('broadcast', { });
   });
 })();
