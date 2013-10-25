@@ -1,8 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  yasp.EmulatorCommunicator = new yasp.Communicator("emulator/emulator.js");
-  yasp.AssemblerCommunicator = new yasp.Communicator("assembler/assembler.js");
+  // yasp.EmulatorCommunicator = new yasp.Communicator("emulator/emulator.js");
+  // yasp.AssemblerCommunicator = new yasp.Communicator("assembler/assembler.js");
   
   /**
    * Responsible for communicating
@@ -24,7 +24,7 @@ if (typeof yasp == 'undefined') yasp = { };
           throw "Message with ID "+data.id+" does not exist.";
         } else {
           // call
-          this.openMessages[data.id].callback();
+          if (!!this.openMessages[data.id].callback) this.openMessages[data.id].callback(data);
           // delete
           delete this.openMessages[data.id];
         }
