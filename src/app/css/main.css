@@ -81,8 +81,11 @@ html {
 #editorcontainer {
     font-size: 12px;
     height: 100%;
+    width: 100%;
     padding-top: 34px; /* Fix scrollbar bug */
     margin-top: -30px;
+    
+    float: left;
 }
 
 /* Upper case all instructions */
@@ -90,7 +93,24 @@ span.cm-keyword {
     text-transform: uppercase !important;
 }
 
+#labellist {
+    float: right;
+    
+    width: 150px;
+    height: 100%;
 
+    position: absolute;
+    
+    left: 100%;
+    top: 0px;
+    
+    margin-left: -150px;
+    padding-top: 32px;
+}
+
+#labellist #labelcontent {
+    width: 150px;
+}
 
 
 

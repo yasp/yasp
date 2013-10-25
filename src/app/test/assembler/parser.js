@@ -32,7 +32,9 @@
           "text": "ASDF"
         }
       },
-      "usedRegisters": { }
+      "usedRegisters": {
+        "W0": 2
+      }
     }},
     {input: "", fails: false},
     {input: "MOV MOV MOV", fails: true},
@@ -53,7 +55,9 @@
           "text": "ASDF"
         }
       },
-      "usedRegisters": {}
+      "usedRegisters": {
+        "W0": 1
+      }
     }}
   ];
 
@@ -72,7 +76,7 @@
   
   QUnit.cases(parser_cases).test("ensure parser symbol table working", function(params) {
     // arrange
-    assembler.jobs = ["symbol"];
+    assembler.jobs = ["symbols"];
     var pass1, pass2;
     
     // act

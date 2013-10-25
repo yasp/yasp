@@ -40,7 +40,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }).bind(this));
 
     // generate symbol table
-    if (assembler.jobs.indexOf("symbol") != -1 && assembler.errors.length == 0) {
+    if (assembler.jobs.indexOf("symbols") != -1 && assembler.errors.length == 0) {
       // labels are already generated in the Analyser
       // defines will be generated in parseDirectives
       // usedRegisters & instructions
@@ -59,8 +59,8 @@ if (typeof yasp == 'undefined') yasp = { };
           }
           
           // params
-          for (var j = 0; j < node.params.length; j++) {
-            var param = node.params[j];
+          for (var j = 0; j < node.params.params.length; j++) {
+            var param = node.params.params[j];
             var typ = param.getType();
             var paramName = param.text.toUpperCase();
             if (typ == yasp.TokenType.BYTE_REGISTER || typ == yasp.TokenType.WORD_REGISTER) {

@@ -21,8 +21,8 @@ new yasp.CommunicaterBackend(self, function(data, ready, broadcast) {
       }
       delete result.success; // this is not necessary
       ready({
-        payload: result,
-        error: null
+        payload: payload,
+        error: error
       });
       break;
     default:

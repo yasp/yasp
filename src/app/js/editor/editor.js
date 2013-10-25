@@ -1,6 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  var fireDataReceived;
+  
   yasp.CompileManager = {
     lastCompile: null,
     compile: function(content, cb) {
@@ -11,6 +13,14 @@ if (typeof yasp == 'undefined') yasp = { };
           code: content,
           jobs: ['symbols', 'map']
         }, function(response) {
+          // update yasp.Editor
+          if (!!response.payload) {
+            yasp.Editor.map = response.payload.map;
+            yasp.Editor.symbols = response.payload.symbols;
+            
+            fireDataReceived();
+          }
+          
           cb(response);
         });
       } else {
@@ -26,7 +36,8 @@ if (typeof yasp == 'undefined') yasp = { };
       labels: { },
       instructions: { },
       usedRegisters: { }
-    }
+    },
+    labelText: ""
   };
   
   
@@ -47,13 +58,6 @@ if (typeof yasp == 'undefined') yasp = { };
       fullScreen: true
     });
     
-    // update height
-    /*setInterval(function() {
-      editor.setSize({
-        height: $('#editorcontainer').height()
-      });
-    }, 500);*/
-    
     
     // force intendation everytime something changes
     editor.on("change", function() {
@@ -64,11 +68,24 @@ if (typeof yasp == 'undefined') yasp = { };
     // update symbols
     var UPDATE_DELAY = 500;
     var update;
-    setTimeout(update = function() {
+    (update = function() {
       var content = editor.getValue();
       yasp.CompileManager.compile(content, function(result) {
         setTimeout(update, UPDATE_DELAY)
       });
-    }, UPDATE_DELAY);
+    })();
+    
+    // update label list
+    fireDataReceived = function() {
+      // build new label list text
+      var text = "<ul>";
+      var labels = yasp.Editor.symbols.labels;
+      for (var l in labels) {
+        text += "<li>" + l + "</li>";
+      }
+      text += "</ul>";
+      
+      $('#labelcontent').html(text);
+    };
   });
 })();
