@@ -54,8 +54,7 @@ if (typeof yasp == 'undefined') yasp = { };
       autofocus: true,
       indentUnit: 8,
       tabSize: 8,
-      indentWithTabs: true,
-      fullScreen: true
+      indentWithTabs: true
     });
     
     
@@ -67,10 +66,13 @@ if (typeof yasp == 'undefined') yasp = { };
     
     // update symbols
     var UPDATE_DELAY = 500;
-    var update;
+    var update, first = true;
     (update = function() {
       var content = editor.getValue();
       yasp.CompileManager.compile(content, function(result) {
+        if (first) editor.setValue(content); // force update of existing labels
+        
+        first = false;
         setTimeout(update, UPDATE_DELAY)
       });
     })();
