@@ -170,7 +170,7 @@
         {
           "char": 1,
           "line": 1,
-          "message": "Syntax error: Expecting command, directive or label, got unknown instead. in line 1 at character 1",
+          "message": "Expecting command, directive or label, got unknown instead.",
           "name": "E_ERR",
           "type": "error"
         }

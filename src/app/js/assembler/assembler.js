@@ -94,7 +94,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Assembler.prototype.riseSyntaxError = function (iterator, msg) {
     var token = iterator.current();
-    console.log(msg = ("Syntax error: " + msg + " in line " + token.line + " at character " + token.char));
+    console.log("Syntax error: " + msg + " in line " + token.line + " at character " + token.char);
     this.errors.push({
       token: token,
       msg: msg,
@@ -189,8 +189,13 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.TokenIterator.prototype.restore = function () {
     // restore state => continue until \n is reached, and then skip the \n
-    while (this.hasNext() && !this.is('\n')) this.next();
+    var hasSkipped = false;
+    while (this.hasNext() && !this.is('\n')) {
+      this.next();
+      hasSkipped = true;
+    }
     if (this.hasNext()) this.next();
+    while (this.hasNext() && this.is('\n')) this.next();
   };
 
   /**

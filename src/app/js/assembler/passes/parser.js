@@ -99,7 +99,7 @@ if (typeof yasp == 'undefined') yasp = { };
         var commandName;
         if (yasp.commands[i].name instanceof Array) {
           commandName = yasp.commands[i].name[0];
-          for (var j = 0; j < yasp.commands[i].name; j++) {
+          for (var j = 0; j < yasp.commands[i].name.length; j++) {
             if (yasp.commands[i].name[j].toUpperCase() == name) {
               commandName = yasp.commands[i].name[j];
               break;

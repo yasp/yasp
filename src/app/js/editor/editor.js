@@ -178,7 +178,7 @@ if (typeof yasp == 'undefined') yasp = { };
     (update = function() {
       var content = editor.getValue();
       yasp.CompileManager.compile(content, function(result) {
-        if (first) editor.setValue(content); // force update of existing labels
+        if (first) editor.setValue(content); // force update of existing labels, VERY dirty
         first = false;
         
         setTimeout(update, UPDATE_DELAY)
@@ -210,13 +210,17 @@ if (typeof yasp == 'undefined') yasp = { };
         if (!!curWord) {
           curWord = curWord.toUpperCase();
         } else {
-          curWord = "";
+          if (options.force) {
+            curWord = "";
+          } else {
+            curWord = null;
+          }
         }
         console.log("Current Word: '"+curWord+"'");
         
         var symbols = [ ];
         var osymbols = yasp.Editor.orderedSymbols;
-        for (var i = 0; i < osymbols.length; i++) {
+        for (var i = 0; i < osymbols.length && curWord != null; i++) {
           if ((osymbols[i].indexOf(curWord) == 0 && osymbols[i] != curWord) || curWord.length == 0) {
             symbols.push(osymbols[i]);
           }
@@ -224,19 +228,29 @@ if (typeof yasp == 'undefined') yasp = { };
         
         return {list: symbols, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
       });
-
+      
+      var HINT_DELAY = 1000;
+      
       CodeMirror.commands.autocomplete = function(cm) {
-        CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
-          completeSingle: false,
-          alignWithWord: false,
-          closeOnUnfocus: true
-        });
+        var cursor = editor.getCursor();
+        setTimeout(function() {
+          var newCursor = editor.getCursor();
+          if (cursor && newCursor && cursor.line == newCursor.line && cursor.ch == newCursor.ch) {
+            CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
+              completeSingle: false,
+              alignWithWord: false,
+              closeOnUnfocus: true,
+              force: false
+            });
+          }
+        }, HINT_DELAY);
       };
       CodeMirror.commands.autocompleteforce = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
           completeSingle: true,
           alignWithWord: false,
-          closeOnUnfocus: true
+          closeOnUnfocus: true,
+          force: true
         });
       };
     })();
