@@ -105,9 +105,70 @@ MyLbl:  MOV b0, 100
 END
 </textarea>
         </div>
-        <div id="labellist">
-            
+        <div id="labellist"></div>
+        
+        <div class="modal fade" id="dialog_settings" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form">
+                          <div class="form-group">
+                              <label for="theme_picker">Theme</label>
+                              <select class="form-control" id="theme_picker">
+                                  <option value="3024-day">3024 Day</option>
+                                  <option value="3024-night">3024 Night</option>
+                                  <option value="ambiance">Ambiance</option>
+                                  <option value="base16-dark">Base16 Dark</option>
+                                  <option value="base16-light">Base16 Light</option>
+                                  <option value="blackboard">Blackboard</option>
+                                  <option value="cobalt">Cobalt</option>
+                                  <option value="eclipse">Eclipse</option>
+                                  <option value="elegant">Elegant</option>
+                                  <option value="midnight">Midnight</option>
+                                  <option value="monokai">Monokai</option>
+                                  <option value="neat">Neat</option>
+                                  <option value="night">Night</option>
+                                  <option value="paraiso-dark">Paraiso Dark</option>
+                                  <option value="paraiso-light">Paraiso Light</option>
+                                  <option value="rubyblue">Rubyblue</option>
+                                  <option value="solarized">Solarized</option>
+                                  <option value="the-matrix">The Matrix</option>
+                                  <option value="tomorrow-night-eighties">Tomorrow Night Eighties</option>
+                                  <option value="twilight">Twilight</option>
+                                  <option value="vibrant-ink">Vibrant Ink</option>
+                                  <option value="xq-dark">XQ Dark</option>
+                                  <option value="xq-light">XQ Light</option>
+                              </select>
+                          </div>
+                          <div class="input-group">
+                              <label>Tab Size</label>
+                              
+                          </div>
+                          <div class="input-group">
+                              <label>Automatic Save</label>
+                              
+                          </div>
+                          <div class="input-group">
+                              <label>Code Completion</label>
+                              
+                          </div>
+                          <div class="input-group">
+                              <label>Language</label>
+                              
+                          </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
+        
         
         <script src="app/js/assembler/assembler.js"></script>
         <script src="app/js/assembler/passes/lexer.js"></script>

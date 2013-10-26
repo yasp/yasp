@@ -216,20 +216,20 @@ if (typeof yasp == 'undefined') yasp = { };
       
     };
     
-    $('#labellist').hover(function() {
-      $(this).filter(':not(:animated)').animate({
-        'marginLeft': '-100px',
-        'opacity': '1'
-      }, 'fast');
-    }, function() {
-      $(this).animate({
-        'marginLeft': '-20px',
-        'opacity': '0.5'
-      }, 'fast');
-    });
-    
-    // menu
+    // menu & UI events
     (function() {
+      $('#labellist').hover(function() {
+        $(this).filter(':not(:animated)').animate({
+          'marginLeft': '-100px',
+          'opacity': '1'
+        }, 'fast');
+      }, function() {
+        $(this).animate({
+          'marginLeft': '-20px',
+          'opacity': '0.5'
+        }, 'fast');
+      });
+      
       $('.menu_undo').click(function() {
         editor.undo();
       });
@@ -252,6 +252,16 @@ if (typeof yasp == 'undefined') yasp = { };
             console.log("invalid line");
           }
         });
+      });
+      $('.menu_settings').click(function() {
+        $('#dialog_settings').modal({
+          'keyboard': true
+        });
+        
+        $('#theme_picker').change(function() {
+          console.log("Selected theme "+this.value);
+          editor.setOption("theme", this.value);
+        }).val(editor.getOption("theme"));
       });
     })();
     

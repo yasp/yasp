@@ -33,7 +33,6 @@ module.exports = function(grunt) {
         'https://raw.github.com/marijnh/CodeMirror/master/theme/blackboard.css',
         'https://raw.github.com/marijnh/CodeMirror/master/theme/cobalt.css',
         'https://raw.github.com/marijnh/CodeMirror/master/theme/eclipse.css',
-        'https://raw.github.com/marijnh/CodeMirror/master/theme/cobalt.css',
         'https://raw.github.com/marijnh/CodeMirror/master/theme/elegant.css',
         'https://raw.github.com/marijnh/CodeMirror/master/theme/midnight.css',
         'https://raw.github.com/marijnh/CodeMirror/master/theme/monokai.css',
