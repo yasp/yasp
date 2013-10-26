@@ -95,16 +95,19 @@ span.cm-keyword {
 
 #labellist {
     float: right;
-    
-    width: 150px;
-    
     position: absolute;
     
+    width: 100px;
     left: 100%;
     top: 32px;
     bottom: 0px;
     
-    margin-left: -150px;
+    margin-left: -20px;
+    border-left: 1px solid rgb(220,220,220);
+    
+    background-color: rgb(240,240,240);
+    
+    opacity: 0.5;
 }
 
 
@@ -112,8 +115,28 @@ span.cm-keyword {
     list-style-type: none;
     margin: 0px;
     padding: 0px;
-    text-align: right;
-    padding-right: 12px;
+    
+    padding-top: 4px;
+    font-size: 12px;
+    
+    width: 100px;
+}
+
+#labellist h4 {
+  padding-left: 8px;
+}
+
+#labellist ul li {
+  padding-left: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  
+  border-bottom: 1px solid rgb(220,220,220);
+  word-wrap: break-word;
+}
+
+#labellist ul li:last-child {
+  border-bottom: none;
 }
 
 .CodeMirror-hints {

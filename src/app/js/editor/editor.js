@@ -192,7 +192,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // update label list
     fireDataReceived = function() {
       // build new label list text
-      var text = "<ul>";
+      var text = "<h4>Labels</h4><ul>";
       var labels = yasp.Editor.symbols.labels;
       for (var l in labels) {
         text += "<li><a class='labellink'>" + labels[l].text + "</a></li>";
@@ -215,6 +215,18 @@ if (typeof yasp == 'undefined') yasp = { };
       
     };
     
+    $('#labellist').hover(function() {
+      $(this).filter(':not(:animated)').animate({
+        'marginLeft': '-100px',
+        'opacity': '1'
+      }, 'fast');
+    }, function() {
+      $(this).animate({
+        'marginLeft': '-20px',
+        'opacity': '0.5'
+      }, 'fast');
+    });
+    
     // hinting
     (function() {
       var delimiters = yasp.Lexer.getDelimiters();
@@ -233,6 +245,7 @@ if (typeof yasp == 'undefined') yasp = { };
             curWord = null;
           }
         }
+        
         console.log("Current Word: '"+curWord+"'");
         
         var symbols = [];
