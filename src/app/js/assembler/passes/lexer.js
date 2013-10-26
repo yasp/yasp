@@ -16,13 +16,20 @@ if (typeof yasp == "undefined") yasp = { };
     validWordRegisters.push("W" + i);
   }
   var validUnknownRegister = /[BW]\d+/;
-
-
+  
   /**
    * @class Tokenizes (= Lexer) all the tokens
    */
   yasp.Lexer = function () {
     this.tokens = [];
+  };
+
+  /**
+   * Returns all delimiters as a string
+   * @returns {string}
+   */
+  yasp.Lexer.getDelimiters = function() {
+    return splitter;
   };
 
   /**
@@ -190,5 +197,4 @@ if (typeof yasp == "undefined") yasp = { };
   yasp.Token.prototype.toString = function () {
     return "'" + (this.text == '\n' ? "↵" : this.text) + "'";
   };
-  
 })();

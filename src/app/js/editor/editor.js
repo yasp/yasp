@@ -61,7 +61,16 @@ if (typeof yasp == 'undefined') yasp = { };
     // force intendation everytime something changes
     editor.on("change", function() {
       var c = editor.getCursor();
-      if (!!c) editor.indentLine(c.line);
+      if (!!c) {
+        var content = editor.getLine(c.line);
+        editor.indentLine(c.line);
+        // fix bug introduced in Commit #32d7db0cf78f5ed9dde3450ad885ced98851271b that causes the input to be fucked up...
+        if (editor.getLine(c.line) != content) {
+          c.ch++; // if you ever add multiple levels of intendation this should be changed into somehting more intelligent
+        }
+        editor.setCursor(c);
+        CodeMirror.commands.autocomplete(editor);
+      }
     });
     
     // update symbols
@@ -71,8 +80,8 @@ if (typeof yasp == 'undefined') yasp = { };
       var content = editor.getValue();
       yasp.CompileManager.compile(content, function(result) {
         if (first) editor.setValue(content); // force update of existing labels
-        
         first = false;
+        
         setTimeout(update, UPDATE_DELAY)
       });
     })();
@@ -89,5 +98,22 @@ if (typeof yasp == 'undefined') yasp = { };
       
       $('#labelcontent').html(text);
     };
+    
+    // hinting
+    (function() {
+      var delimiters = yasp.Lexer.getDelimiters();
+      CodeMirror.registerHelper("hint", "assembler", function(editor, options) {
+        var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
+        var start = cur.ch, end = start;
+        while (end < curLine.length && delimiters.indexOf(curLine.charAt(end)) == -1) ++end;
+        while (start && delimiters.indexOf(curLine.charAt(start - 1)) == -1) --start;
+        var curWord = start != end && curLine.slice(start, end);
+        console.log(curWord);
+      });
+
+      CodeMirror.commands.autocomplete = function(cm) {
+        CodeMirror.showHint(cm, CodeMirror.hint.assembler);
+      };
+    })();
   });
 })();

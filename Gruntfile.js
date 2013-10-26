@@ -49,6 +49,10 @@ module.exports = function(grunt) {
         'https://raw.github.com/marijnh/CodeMirror/master/theme/vibrant-ink.css',
         'https://raw.github.com/marijnh/CodeMirror/master/theme/xq-dark.css',
         'https://raw.github.com/marijnh/CodeMirror/master/theme/xq-light.css'
+      ],
+      'src/lib/addon': [
+        'https://raw.github.com/marijnh/CodeMirror/master/addon/hint/show-hint.js',
+        'https://raw.github.com/marijnh/CodeMirror/master/addon/hint/show-hint.css',
       ]
     },
     qunit: {
