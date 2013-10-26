@@ -18,6 +18,32 @@ if (typeof yasp == 'undefined') yasp = { };
             yasp.Editor.map = response.payload.map;
             yasp.Editor.symbols = response.payload.symbols;
             
+            // update orderedSymbols
+            var osymbols = yasp.Editor.orderedSymbols;
+            osymbols.length = 0;
+            var instructions = yasp.Editor.symbols.instructions;
+            for (var k in instructions) {
+              osymbols.push(k);
+            }
+            var labels = yasp.Editor.symbols.labels;
+            for (var k in labels) {
+              osymbols.push(labels[k].text);
+            }
+            var usedRegisters = yasp.Editor.symbols.usedRegisters;
+            for (var k in usedRegisters) {
+              osymbols.push(k);
+            }
+            var defines = yasp.Editor.symbols.defines;
+            for (var k in defines) {
+              osymbols.push(k);
+            }
+            osymbols.sort(function(a, b) {
+              var aCount = yasp.Editor.getIdentifierOccurence(a);
+              var bCount = yasp.Editor.getIdentifierOccurence(b);
+              
+              return bCount - aCount;
+            });
+            
             fireDataReceived();
           }
           
@@ -35,11 +61,17 @@ if (typeof yasp == 'undefined') yasp = { };
     symbols: {
       labels: { },
       instructions: { },
-      usedRegisters: { }
+      usedRegisters: { },
+      defines: { }
     },
-    labelText: ""
+    orderedSymbols: [],
+    labelText: "",
+    getIdentifierOccurence: function(name) {
+      if (!!yasp.Editor.symbols.instructions[name]) return yasp.Editor.symbols.instructions[name];
+      if (!!yasp.Editor.symbols.usedRegisters[name]) return yasp.Editor.symbols.usedRegisters[name];
+      return 0;
+    }
   };
-  
   
   // yasp.EmulatorCommunicator = new yasp.Communicator("emulator/emulator.js");
   yasp.AssemblerCommunicator = new yasp.Communicator("app/js/assembler/assembler_backend.js");
@@ -69,7 +101,10 @@ if (typeof yasp == 'undefined') yasp = { };
           c.ch++; // if you ever add multiple levels of intendation this should be changed into somehting more intelligent
         }
         editor.setCursor(c);
-        CodeMirror.commands.autocomplete(editor);
+        
+        setTimeout(function() { // fixes bug that causes the completition dialog to be immediately closed
+          CodeMirror.commands.autocomplete(editor);
+        }, 0);
       }
     });
     
@@ -108,11 +143,30 @@ if (typeof yasp == 'undefined') yasp = { };
         while (end < curLine.length && delimiters.indexOf(curLine.charAt(end)) == -1) ++end;
         while (start && delimiters.indexOf(curLine.charAt(start - 1)) == -1) --start;
         var curWord = start != end && curLine.slice(start, end);
-        console.log(curWord);
+        if (!!curWord) {
+          curWord = curWord.toUpperCase();
+        } else {
+          curWord = "";
+        }
+        console.log("Current Word: '"+curWord+"'");
+        
+        var symbols = [ ];
+        var osymbols = yasp.Editor.orderedSymbols;
+        for (var i = 0; i < osymbols.length; i++) {
+          if ((osymbols[i].indexOf(curWord) == 0 && osymbols[i] != curWord) || curWord.length == 0) {
+            symbols.push(osymbols[i]);
+          }
+        }
+        
+        return {list: symbols, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
       });
 
       CodeMirror.commands.autocomplete = function(cm) {
-        CodeMirror.showHint(cm, CodeMirror.hint.assembler);
+        CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
+          text: "",
+          completeSingle: false,
+          alignWithWord: false
+        });
       };
     })();
   });
