@@ -112,7 +112,12 @@ span.cm-keyword {
     width: 150px;
 }
 
-
+.CodeMirror-hints {
+    max-height: 100px !important;
+    min-width: 50px !important;
+    overflow-x: auto;
+    overflow-y: auto;
+}
 
 
 

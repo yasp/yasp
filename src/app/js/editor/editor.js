@@ -5,6 +5,8 @@ if (typeof yasp == 'undefined') yasp = { };
   
   yasp.CompileManager = {
     lastCompile: null,
+    commands: null,
+    registers: null,
     compile: function(content, cb) {
       if (content != this.lastUpdate) {
         this.lastUpdate = content;
@@ -43,6 +45,41 @@ if (typeof yasp == 'undefined') yasp = { };
               
               return bCount - aCount;
             });
+            
+            // init commands if uninitialized
+            if (!this.commands) {
+              this.commands = [ ];
+              var added = { }
+              for (var i = 0; i < yasp.commands.length; i++) {
+                var commandName = yasp.commands[i].name;
+                for (var j = 0; j < (commandName instanceof Array ? commandName.length : 1); j++) {
+                  var name = commandName instanceof Array ? commandName[j] : commandName;
+                  if (!added[name] && !yasp.Editor.symbols.instructions[name] && name != null) {
+                    this.commands.push(name);
+                    added[name] = 42;
+                  }
+                }
+              }
+              this.commands.sort();
+            }
+            
+            // add commands
+            var added = { }
+            for (var i = 0; i < this.commands.length; i++) {
+              var name = this.commands[i];
+              if (!added[name] && !yasp.Editor.symbols.instructions[name] && name != null) {
+                osymbols.push(name);
+                added[name] = 42;
+              }
+            }
+            
+            // init registers
+            if (!this.registers) this.registers = yasp.Lexer.getRegisters();
+            
+            // add registers
+            for (var i = 0; i < this.registers.length; i++) {
+              if (!usedRegisters[this.registers[i]]) osymbols.push(this.registers[i]);
+            }
             
             fireDataReceived();
           }
@@ -164,8 +201,10 @@ if (typeof yasp == 'undefined') yasp = { };
       CodeMirror.commands.autocomplete = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
           text: "",
+          displayText: 'suggestions',
           completeSingle: false,
-          alignWithWord: false
+          alignWithWord: false,
+          closeOnUnfocus: true
         });
       };
     })();

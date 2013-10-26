@@ -33,6 +33,13 @@ if (typeof yasp == "undefined") yasp = { };
   };
 
   /**
+   * Returns all registers as an array
+   */
+  yasp.Lexer.getRegisters = function() {
+    return validByteRegisters.slice(0).concat(validWordRegisters);
+  }
+
+  /**
    * Does the tokenize step
    * @param assembler The assembler in which it is executed, this parameter is completely ignored
    * @param input What should be tokenized?
