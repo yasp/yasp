@@ -259,9 +259,11 @@ if (typeof yasp == 'undefined') yasp = { };
         });
         
         $('#theme_picker').change(function() {
-          console.log("Selected theme "+this.value);
           editor.setOption("theme", this.value);
         }).val(editor.getOption("theme"));
+        $('#tab_picker').change(function() {
+          editor.setOption("indentUnit", this.value);
+        }).val(editor.getOption("indentUnit"));
       });
     })();
     

@@ -144,21 +144,31 @@ END
                                   <option value="xq-light">XQ Light</option>
                               </select>
                           </div>
-                          <div class="input-group">
-                              <label>Tab Size</label>
-                              
+                          <div class="form-group">
+                              <label for="tab_picker">Tab Size</label>
+                              <select class="form-control" id="tab_picker">
+                                  <option value="2">2 Spaces</option>
+                                  <option value="4">4 Spaces</option>
+                                  <option value="8">8 Spaces</option>
+                                  <option value="16">16 Spaces</option>
+                              </select>
                           </div>
-                          <div class="input-group">
-                              <label>Automatic Save</label>
-                              
-                          </div>
-                          <div class="input-group">
-                              <label>Code Completion</label>
-                              
-                          </div>
-                          <div class="input-group">
+                          <div class="form-group">
                               <label>Language</label>
-                              
+                               <select class="form-control" id="language_picker">
+                                  <option value="english">English</option>
+                                  <option value="deutsch">Deutsch</option>
+                              </select>
+                          </div>
+                          <div class="checkbox">
+                              <label>
+                                  <input type="checkbox" id="automaticsave_picker"> Automatic Save
+                              </label>
+                          </div>
+                          <div class="checkbox">
+                              <label>
+                                  <input type="checkbox" id="automaticsave_picker"> Code Completion
+                              </label>
                           </div>
                         </form>
                     </div>
