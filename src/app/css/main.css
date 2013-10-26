@@ -102,6 +102,9 @@ span.cm-keyword {
     top: 32px;
     bottom: 0px;
     
+    overflow-y: auto;
+    overflow-x: hidden;
+    
     margin-left: -20px;
     border-left: 1px solid rgb(220,220,220);
     

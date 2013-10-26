@@ -53,6 +53,10 @@
         <link rel="stylesheet" href="lib/addon/show-hint.css">
         <script src="lib/addon/lint.js"></script>
         <link rel="stylesheet" href="lib/addon/lint.css">
+        <script src="lib/addon/searchcursor.js"></script>
+        <script src="lib/addon/search.js"></script>
+        <script src="lib/addon/dialog.js"></script>
+        <link rel="stylesheet" href="lib/addon/dialog.css">
     </head>
     <body>
         <div class="container">
@@ -71,22 +75,22 @@
                             </button>
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="Editor">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-play item"></span>Run</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-arrow-left item"></span>Undo</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-arrow-right item"></span>Redo</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_run"><span class="glyphicon glyphicon-play item"></span>Run</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_undo"><span class="glyphicon glyphicon-arrow-left item"></span>Undo</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_redo"><span class="glyphicon glyphicon-arrow-right item"></span>Redo</a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-file item"></span>New</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-floppy-disk item"></span>Save</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-floppy-open item"></span>Save As</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-folder-open item"></span>Load</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_new"><span class="glyphicon glyphicon-file item"></span>New</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_save"><span class="glyphicon glyphicon-floppy-disk item"></span>Save</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_saveas"><span class="glyphicon glyphicon-floppy-open item"></span>Save As</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_open"><span class="glyphicon glyphicon-folder-open item"></span>Open</a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-search item"></span>Find</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-search item"></span>Replace</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-search item"></span>Go to Line</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_find"><span class="glyphicon glyphicon-search item"></span>Find</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_replace"><span class="glyphicon glyphicon-search item"></span>Replace</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_go2line"><span class="glyphicon glyphicon-search item"></span>Go to Line</a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-info-sign item"></span>Help</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-wrench item"></span>Settings</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-user item"></span>About</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_help"><span class="glyphicon glyphicon-info-sign item"></span>Help</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_settings"><span class="glyphicon glyphicon-wrench item"></span>Settings</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_about"><span class="glyphicon glyphicon-user item"></span>About</a></li>
                         </ul>
                     </span>
                 </div>

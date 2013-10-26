@@ -208,6 +208,7 @@ if (typeof yasp == 'undefined') yasp = { };
           var label = yasp.Editor.symbols.labels[elem.text().toUpperCase()];
           if (!!label) {
             editor.scrollIntoView(CodeMirror.Pos(label.line, label.char), 32);
+            editor.setCursor(CodeMirror.Pos(label.line, label.char));
           } else {
             console.log("Unknown label");
           }
@@ -226,6 +227,33 @@ if (typeof yasp == 'undefined') yasp = { };
         'opacity': '0.5'
       }, 'fast');
     });
+    
+    // menu
+    (function() {
+      $('.menu_undo').click(function() {
+        editor.undo();
+      });
+      $('.menu_redo').click(function() {
+        editor.redo();
+      });
+      $('.menu_find').click(function() {
+        CodeMirror.commands.find(editor);
+      });
+      $('.menu_replace').click(function() {
+        CodeMirror.commands.replace(editor);
+      });
+      $('.menu_go2line').click(function() {
+        editor.openDialog('Go to line: <input type="text" style="width: 10em"/>', function(line) {
+          line = +line-1;
+          if (line >= 0 && line < editor.lineCount()) {
+            editor.scrollIntoView(CodeMirror.Pos(+line, 0), 32);
+            editor.setCursor(CodeMirror.Pos(+line, 0));
+          } else {
+            console.log("invalid line");
+          }
+        });
+      });
+    })();
     
     // hinting
     (function() {
