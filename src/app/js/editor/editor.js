@@ -15,7 +15,7 @@ if (typeof yasp == 'undefined') yasp = { };
           code: content,
           jobs: ['symbols', 'map']
         }, function(response) {
-          // update yasp.Editor
+          yasp.Editor.error = !!response.error ? response.error.errors : null;
           if (!!response.payload) {
             yasp.Editor.map = response.payload.map;
             yasp.Editor.symbols = response.payload.symbols;
@@ -102,6 +102,7 @@ if (typeof yasp == 'undefined') yasp = { };
       defines: { }
     },
     orderedSymbols: [],
+    error: [],
     labelText: "",
     getIdentifierOccurence: function(name) {
       if (!!yasp.Editor.symbols.instructions[name]) return yasp.Editor.symbols.instructions[name];
@@ -114,6 +115,27 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.AssemblerCommunicator = new yasp.Communicator("app/js/assembler/assembler_backend.js");
   
   $('body').ready(function() {
+    // linting
+    (function() {
+      CodeMirror.registerHelper("lint", "assembler", function(text) {
+        var result = [ ];
+        var errs = yasp.Editor.error;
+        if (!!errs) {
+          for (var i = 0; i < errs.length; i++) {
+            var err = errs[i];
+            result.push({
+              from: CodeMirror.Pos(err.line-1, 0),
+              to: CodeMirror.Pos(err.line-1, err.char),
+              message: err.message,
+              severity: err.type
+            });
+          }
+        }
+        
+        return result;
+      });
+    })();
+    
     // initialize code mirror textarea
     var editor = CodeMirror.fromTextArea($('#editor').get(0), {
       mode: "text/assembler",
@@ -123,7 +145,12 @@ if (typeof yasp == 'undefined') yasp = { };
       autofocus: true,
       indentUnit: 8,
       tabSize: 8,
-      indentWithTabs: true
+      indentWithTabs: true,
+      gutters: ["CodeMirror-lint-markers"],
+      lint: true,
+      extraKeys: {
+        "Ctrl-Space": "autocompleteforce"
+      }
     });
     
     
@@ -200,9 +227,14 @@ if (typeof yasp == 'undefined') yasp = { };
 
       CodeMirror.commands.autocomplete = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
-          text: "",
-          displayText: 'suggestions',
           completeSingle: false,
+          alignWithWord: false,
+          closeOnUnfocus: true
+        });
+      };
+      CodeMirror.commands.autocompleteforce = function(cm) {
+        CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
+          completeSingle: true,
           alignWithWord: false,
           closeOnUnfocus: true
         });

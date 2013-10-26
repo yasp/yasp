@@ -53,6 +53,8 @@ module.exports = function(grunt) {
       'src/lib/addon': [
         'https://raw.github.com/marijnh/CodeMirror/master/addon/hint/show-hint.js',
         'https://raw.github.com/marijnh/CodeMirror/master/addon/hint/show-hint.css',
+        'https://raw.github.com/marijnh/CodeMirror/master/addon/lint/lint.js',
+        'https://raw.github.com/marijnh/CodeMirror/master/addon/lint/lint.css'
       ]
     },
     qunit: {
