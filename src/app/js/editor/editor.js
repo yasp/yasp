@@ -1,6 +1,10 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  var UPDATE_DELAY = 500; // time between souce code is parsed
+  var HINT_DELAY = 750; // time between hints are displayed
+  
+  
   var fireDataReceived;
   
   yasp.CompileManager = {
@@ -173,7 +177,7 @@ if (typeof yasp == 'undefined') yasp = { };
     });
     
     // update symbols
-    var UPDATE_DELAY = 500;
+    
     var update, first = true;
     (update = function() {
       var content = editor.getValue();
@@ -191,11 +195,24 @@ if (typeof yasp == 'undefined') yasp = { };
       var text = "<ul>";
       var labels = yasp.Editor.symbols.labels;
       for (var l in labels) {
-        text += "<li>" + l + "</li>";
+        text += "<li><a class='labellink'>" + labels[l].text + "</a></li>";
       }
       text += "</ul>";
       
-      $('#labelcontent').html(text);
+      $('#labellist')
+        .html(text)
+        .find('.labellink')
+        .click(function(e) {
+          var elem = $(this);
+          console.log("Jump to "+elem.text());
+          var label = yasp.Editor.symbols.labels[elem.text().toUpperCase()];
+          if (!!label) {
+            editor.scrollIntoView(CodeMirror.Pos(label.line, label.char), 32);
+          } else {
+            console.log("Unknown label");
+          }
+        });
+      
     };
     
     // hinting
@@ -218,18 +235,17 @@ if (typeof yasp == 'undefined') yasp = { };
         }
         console.log("Current Word: '"+curWord+"'");
         
-        var symbols = [ ];
+        var symbols = [];
+        
         var osymbols = yasp.Editor.orderedSymbols;
         for (var i = 0; i < osymbols.length && curWord != null; i++) {
-          if ((osymbols[i].indexOf(curWord) == 0 && osymbols[i] != curWord) || curWord.length == 0) {
+          if ((osymbols[i].toUpperCase().indexOf(curWord) == 0 && osymbols[i].toUpperCase() != curWord)) {
             symbols.push(osymbols[i]);
           }
         }
         
         return {list: symbols, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
       });
-      
-      var HINT_DELAY = 1000;
       
       CodeMirror.commands.autocomplete = function(cm) {
         var cursor = editor.getCursor();

@@ -76,7 +76,7 @@ if (typeof yasp == 'undefined') yasp = { };
           name: "E_ERR",
           line: err.token.line,
           char: err.token.char,
-          message: err.msg
+          message: err.msg.replace('\n', '↵')
         });
       }
       
@@ -211,6 +211,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param func Function that is called at the beginning of each line
    */
   yasp.TokenIterator.prototype.iterate = function(func) {
+    // if \n skip!!
+    while (this.hasNext() && this.is("\n")) this.next();
+    
     while (this.hasNext()) {
       try {
         func();
