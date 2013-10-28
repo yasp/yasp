@@ -1,6 +1,7 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  var storage = localStorage || { };
   var UPDATE_DELAY = 500; // time between souce code is parsed
   var HINT_DELAY = 750; // time between hints are displayed
   
@@ -141,14 +142,19 @@ if (typeof yasp == 'undefined') yasp = { };
     })();
     
     // initialize code mirror textarea
+    if (!storage['theme']) storage['theme'] = 'eclipse';
+    if (!storage['indentUnit']) storage['indentUnit'] = 8;
+    if (!storage['automatic_save']) storage['automatic_save'] = true;
+    if (!storage['codecompletion']) storage['codecompletion'] = true;
+    
     var editor = CodeMirror.fromTextArea($('#editor').get(0), {
       mode: "text/assembler",
-      theme: 'eclipse',
+      theme: storage['theme'],
       lineNumbers: true,
       undoDepth: 100,
       autofocus: true,
-      indentUnit: 8,
-      tabSize: 8,
+      indentUnit: storage['indentUnit'],
+      tabSize: storage['indentUnit'],
       indentWithTabs: true,
       gutters: ["CodeMirror-lint-markers"],
       lint: true,
@@ -259,11 +265,19 @@ if (typeof yasp == 'undefined') yasp = { };
         });
         
         $('#theme_picker').change(function() {
+          storage['theme'] = this.value;
           editor.setOption("theme", this.value);
         }).val(editor.getOption("theme"));
         $('#tab_picker').change(function() {
+          storage['indentUnit'] = this.value;
           editor.setOption("indentUnit", this.value);
         }).val(editor.getOption("indentUnit"));
+        $('#automaticsave_picker').change(function() {
+          storage['automaticsave'] = this.checked;
+        }).attr('checked', storage['automaticsave']);
+        $('#codecompletion_picker').change(function() {
+          storage['codecompletion'] = this.checked;
+        }).attr('checked', storage['codecompletion']);
       });
     })();
     
@@ -301,18 +315,20 @@ if (typeof yasp == 'undefined') yasp = { };
       });
       
       CodeMirror.commands.autocomplete = function(cm) {
-        var cursor = editor.getCursor();
-        setTimeout(function() {
-          var newCursor = editor.getCursor();
-          if (cursor && newCursor && cursor.line == newCursor.line && cursor.ch == newCursor.ch) {
-            CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
-              completeSingle: false,
-              alignWithWord: false,
-              closeOnUnfocus: true,
-              force: false
-            });
-          }
-        }, HINT_DELAY);
+        if (storage['codecompletion']) {
+          var cursor = editor.getCursor();
+          setTimeout(function() {
+            var newCursor = editor.getCursor();
+            if (cursor && newCursor && cursor.line == newCursor.line && cursor.ch == newCursor.ch) {
+              CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
+                completeSingle: false,
+                alignWithWord: false,
+                closeOnUnfocus: true,
+                force: false
+              });
+            }
+          }, HINT_DELAY);
+        }
       };
       CodeMirror.commands.autocompleteforce = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.assembler, {
