@@ -18,7 +18,8 @@
 <script src="../js/emulator/bitutils.js"></script>
 <script src="../js/emulator/emulator.js"></script>
 
-Input: <input id="foo">
+Input: <input id="foo"><br>
+Times: <input id="times" value="1"> => <span id="timeTakenMs"></span> => <span id="timeTakenHz"></span>
 <pre id="bitcode">&nbsp;</pre>
 <pre id="mem"></pre>
 
@@ -39,7 +40,18 @@ Input: <input id="foo">
             if(asm.success != false) {
                 emulator.load(asm.bitcode, 0);
                 emulator.pc = 0;
-                emulator.tick();
+
+                var times = +$('#times').val() || 1;
+                var start = +new Date();
+
+                for (var i = 0; i < times; i++) {
+                    emulator.tick();
+                }
+
+                var end = +new Date();
+                var taken = end - start;
+                $('#timeTakenMs').text(taken + "ms");
+                $('#timeTakenHz').text(Math.round((1 / (taken / times)) * 10) / 10 + "Hz");
 
                 dumpRam();
                 $('#bitcode').text(getDump(asm.bitcode, -1));
