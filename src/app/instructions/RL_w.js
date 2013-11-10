@@ -18,9 +18,10 @@
   "exec": function (rbyte1) {
     var oldVal = rbyte1.value;
     var newVal = (oldVal << 1) & 0xFFFF;
-    var flags = { c: !!(oldVal &  0x8000), z: !(oldVal &  0x8000)};
+    var c = !!(oldVal &  0x8000);
+    var z = !(oldVal &  0x8000);
   
     this.writeWordRegister(rbyte1.address, newVal);
-    this.writeFlags(flags);
+    this.writeFlags(c, z);
   }
 }

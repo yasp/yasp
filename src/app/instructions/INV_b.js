@@ -15,11 +15,9 @@ a={
     "type": "r_byte"
   }
 ],
+  "checkFlags": { "z": true },
   "exec": function (rbyte1) {
     var newVal = (~rbyte1.value) & 0xFF;
-    var flags = { z: newVal == 0};
-  
     this.writeByteRegister(rbyte1.address, newVal);
-    this.writeFlags(flags);
   }
 }

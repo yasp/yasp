@@ -205,21 +205,21 @@
 
   test("writeFlags - zero", function () {
     var expected = { z: true, c: false };
-    emulator.writeFlags({ z: true });
+    emulator.writeFlags(null, true);
     var actual = emulator.flags;
     deepEqual(expected, actual);
   });
 
   test("writeFlags - carry", function () {
     var expected = { z: false, c: true };
-    emulator.writeFlags({ c: true });
+    emulator.writeFlags(true, null);
     var actual = emulator.flags;
     deepEqual(expected, actual);
   });
 
   test("writeFlags - all", function () {
     var expected = { z: true, c: true };
-    emulator.writeFlags({ z: true, c: true });
+    emulator.writeFlags(true, true);
     var actual = emulator.flags;
     deepEqual(expected, actual);
   });

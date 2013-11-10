@@ -18,17 +18,9 @@
       "type": "r_word"
     }
   ],
+  "checkFlags": { "z": true, "c": true },
   "exec": function (rword1, rword2) {
-    var oldVal = rword1.value;
     var newVal = (rword1.value + rword2.value) & 0xFFFF;
-    var flags = { c: false, z: false };
-
-    if(oldVal > newVal)
-      flags.c = true;
-    if(newVal == 0)
-      flags.z = true;
-
     this.writeWordRegister(rword1.address, newVal);
-    this.writeFlags(flags);
   }
 }

@@ -154,13 +154,14 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /**
    * @function Write the flags
-   * @param flags the flags to be set
+   * @param c the carry flag to be set (or null)
+   * @param z the zero flag to be set (or null)
    */
-  yasp.Emulator.prototype.writeFlags = function (flags) {
-    if(typeof flags.c != "undefined")
-      this.flags.c = flags.c;
-    if(typeof flags.z != "undefined")
-      this.flags.z = flags.z;
+  yasp.Emulator.prototype.writeFlags = function (c, z) {
+    if(c !== null)
+      this.flags.c = c;
+    if(z !== null)
+      this.flags.z = z;
   };
 
   yasp.Emulator.prototype.tick = function () {
@@ -238,7 +239,7 @@ if (typeof yasp == 'undefined') yasp = { };
     var strCmd = cmd.name + " ";
 
     for (var i = 0; i < cmd.params.length; i++) {
-      var param = { value: null, address: null };
+      var param = { type: cmd.params[i].type, value: null, address: null };
       var part = parts[cmd.code.length + i];
 
       switch (cmd.params[i].type) {
@@ -281,6 +282,32 @@ if (typeof yasp == 'undefined') yasp = { };
 
     console.log(strCmd);
     cmd.exec.apply(this, params);
+
+    if(cmd.checkFlags)
+    {
+      var firstP = params[0];
+      var oldVal = firstP.value;
+      var newVal;
+
+      if(firstP.type == "r_byte")
+        newVal = this.readByteRegister(firstP.address);
+      else if(firstP.type == "r_word")
+        newVal = this.readWordRegister(firstP.address);
+
+      var c = null;
+      var z = null;
+
+      if(cmd.checkFlags.c)
+      {
+        c = newVal < oldVal;
+      }
+      if(cmd.checkFlags.z)
+      {
+        z = (newVal === 0);
+      }
+
+      this.writeFlags(c, z);
+    }
 
     if(!this.stepping) {
       setTimeout(this.tick.bind(this), tickTimeout);

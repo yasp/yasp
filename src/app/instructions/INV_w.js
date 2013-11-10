@@ -15,11 +15,9 @@ a={
       "type": "r_word"
     }
   ],
+  "checkFlags": { "z": true },
   "exec": function (rbyte1) {
     var newVal = (~rbyte1.value) & 0xFFFF;
-    var flags = { z: newVal == 0};
-
     this.writeWordRegister(rbyte1.address, newVal);
-    this.writeFlags(flags);
   }
 }

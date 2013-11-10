@@ -18,9 +18,10 @@
   "exec": function (rbyte1) {
     var oldVal = rbyte1.value;
     var newVal = (oldVal >> 1) & 0xFF;
-    var flags = { c: !!(oldVal &  1), z: !(newVal &  1)};
+    var c = !!(oldVal &  1);
+    var z = !(newVal &  1);
 
     this.writeByteRegister(rbyte1.address, newVal);
-    this.writeFlags(flags);
+    this.writeFlags(c, z);
   }
 }
