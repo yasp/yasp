@@ -17,6 +17,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stepping = false;
     this.flags = { c: false, z: false };
 
+    this.commandCache = {};
 
     setTimeout(this.tick.bind(this), tickTimeout);
   };
@@ -36,6 +37,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return 1;
 
     this.rom.set(bitcode, start);
+    this.commandCache = {};
     return true;
   };
 
@@ -171,64 +173,79 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var ppc = this.pc;
     var neededBytes;
-    var bytes = [ this.rom[ppc++] ];
-    var parts = [ ];
+    var parts;
     var cmd;
 
-    for (var i = 0; i < yasp.commands.length; i++) {
-      var cmd = yasp.commands[i];
-      parts.length = 0;
+    var cachedCmd = this.commandCache[this.pc];
 
-      for (var j = 0; j < cmd.code.length; j++) {
-        if(typeof cmd.code[j].value == "string")
-          parts.push(cmd.code[j].value.length);
-        else if(!isNaN((+cmd.code[j].value)))
-          parts.push(8);
-      }
+    if(!cachedCmd)
+    {
+      parts = [ ];
+      var bytes = [ this.rom[ppc++] ];
 
-      for (var j = 0; j < cmd.params.length; j++) {
-        var len = yasp.ParamType[cmd.params[j].type].len;
-        parts.push(len);
-      }
+      for (var i = 0; i < yasp.commands.length; i++) {
+        cmd = yasp.commands[i];
+        parts.length = 0;
 
-      neededBytes = 0;
-
-      for (var j = 0; j < parts.length; j++) {
-        neededBytes += parts[j];
-      }
-      neededBytes = ~~(neededBytes / 8);
-
-      if(neededBytes > bytes.length) {
-        for (var j = bytes.length; j < neededBytes; j++) {
-          bytes.push(this.rom[ppc++]);
+        for (var j = 0; j < cmd.code.length; j++) {
+          if(typeof cmd.code[j].value == "string")
+            parts.push(cmd.code[j].value.length);
+          else if(!isNaN((+cmd.code[j].value)))
+            parts.push(8);
         }
-      }
 
-      yasp.bitutils.extractBits(bytes, parts, parts);
+        for (var j = 0; j < cmd.params.length; j++) {
+          var len = yasp.ParamType[cmd.params[j].type].len;
+          parts.push(len);
+        }
 
-      var matches = true;
+        neededBytes = 0;
 
-      for (var k = 0; k < cmd.code.length; k++) {
-        var cc = cmd.code[k].value;
-        if(typeof cc == "string")
-          cc = parseInt(cc, 2);
+        for (var j = 0; j < parts.length; j++) {
+          neededBytes += parts[j];
+        }
+        neededBytes = ~~(neededBytes / 8);
 
-        if(cc != parts[k])
-        {
-          matches = false;
+        if(neededBytes > bytes.length) {
+          for (var j = bytes.length; j < neededBytes; j++) {
+            bytes.push(this.rom[ppc++]);
+          }
+        }
+
+        yasp.bitutils.extractBits(bytes, parts, parts);
+
+        var matches = true;
+
+        for (var k = 0; k < cmd.code.length; k++) {
+          var cc = cmd.code[k].value;
+          if(typeof cc == "string")
+            cc = parseInt(cc, 2);
+
+          if(cc != parts[k])
+          {
+            matches = false;
+            break;
+          }
+        }
+
+        if(matches) {
           break;
         }
+
+        cmd = null;
       }
 
-      if(matches) {
-        break;
+      if(cmd == null) {
+        throw "Invalid Instruction at " + this.pc;
       }
 
-      cmd = null;
+      this.commandCache[this.pc] = { cmd: cmd, parts: parts, neededBytes: neededBytes };
     }
-
-    if(cmd == null) {
-      throw "Invalid Instruction at " + this.pc;
+    else
+    {
+      cmd = cachedCmd.cmd;
+      neededBytes = cachedCmd.neededBytes;
+      parts = cachedCmd.parts;
     }
 
     this.pc += neededBytes;
