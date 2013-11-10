@@ -39,12 +39,12 @@ Times: <input id="times" value="1"> => <span id="timeTakenMs"></span> => <span i
 
             if(asm.success != false) {
                 emulator.load(asm.bitcode, 0);
-                emulator.pc = 0;
 
                 var times = +$('#times').val() || 1;
                 var start = +new Date();
 
                 for (var i = 0; i < times; i++) {
+                    emulator.pc = 0;
                     emulator.tick();
                 }
 
