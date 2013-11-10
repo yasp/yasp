@@ -15,13 +15,12 @@
       "type": "r_word"
     }
   ],
+  "checkFlags": { "z": true, "c": false },
   "exec": function (rbyte1) {
     var oldVal = rbyte1.value;
     var newVal = (oldVal >> 1) & 0xFFFF;
-    var c = !!(oldVal &  1);
-    var z = !(newVal &  1);
 
     this.writeWordRegister(rbyte1.address, newVal);
-    this.writeFlags(c, z);
+    this.writeFlags(!!(oldVal &  1), null);
   }
 }
