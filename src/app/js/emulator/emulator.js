@@ -304,8 +304,7 @@ if (typeof yasp == 'undefined') yasp = { };
     else if(params.length === 2)
       cmd.exec.call(this, params[0], params[1]);
 
-    if(cmd.checkFlags)
-    {
+    if(cmd.checkFlags) {
       var firstP = params[0];
       var newVal;
 
@@ -316,8 +315,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
       var z = null;
 
-      if(cmd.checkFlags.z)
-      {
+      if(cmd.checkFlags.z) {
         z = (newVal === 0);
       }
 
