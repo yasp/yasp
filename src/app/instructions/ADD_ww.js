@@ -20,7 +20,8 @@
   ],
   "checkFlags": { "z": true, "c": true },
   "exec": function (rword1, rword2) {
-    var newVal = (rword1.value + rword2.value) & 0xFFFF;
-    this.writeWordRegister(rword1.address, newVal);
+    var newVal = rword1.value + rword2.value;
+    this.writeWordRegister(rword1.address, newVal& 0xFFFF);
+    this.writeFlags((newVal > 0xFFFF), null);
   }
 }

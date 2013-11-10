@@ -286,7 +286,6 @@ if (typeof yasp == 'undefined') yasp = { };
     if(cmd.checkFlags)
     {
       var firstP = params[0];
-      var oldVal = firstP.value;
       var newVal;
 
       if(firstP.type == "r_byte")
@@ -294,19 +293,14 @@ if (typeof yasp == 'undefined') yasp = { };
       else if(firstP.type == "r_word")
         newVal = this.readWordRegister(firstP.address);
 
-      var c = null;
       var z = null;
 
-      if(cmd.checkFlags.c)
-      {
-        c = newVal < oldVal;
-      }
       if(cmd.checkFlags.z)
       {
         z = (newVal === 0);
       }
 
-      this.writeFlags(c, z);
+      this.writeFlags(null, z);
     }
 
     if(!this.stepping) {

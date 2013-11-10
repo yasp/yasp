@@ -18,9 +18,10 @@
       "type": "l_byte"
     }
   ],
-  "checkFlags": { "z": true, "c": true },
+  "checkFlags": { "z": true },
   "exec": function (rbyte1, lbyte2) {
-    var newVal = (rbyte1.value + lbyte2.value) & 0xFF;
-    this.writeByteRegister(rbyte1.address, newVal);
+    var newVal = rbyte1.value + lbyte2.value;
+    this.writeByteRegister(rbyte1.address, newVal & 0xFF);
+    this.writeFlags((newVal > 0xFF), null);
   }
 }
