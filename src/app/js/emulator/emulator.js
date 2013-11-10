@@ -3,6 +3,7 @@ if (typeof yasp == 'undefined') yasp = { };
 (function() {
   var tickTimeout = 1000;
   var commandMap = { };
+  var debug = false;
 
   /**
    * Emulator is responsible for running the bytecode from the assembler
@@ -87,7 +88,7 @@ if (typeof yasp == 'undefined') yasp = { };
     if(v < 0 || v > 255)
       return 1;
     this.ram[r] = v;
-    console.log("b" + r + "=" + v);
+    if(debug) console.log("b" + r + "=" + v);
     return true;
   };
 
@@ -116,7 +117,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var bytes = yasp.bitutils.bytesFromWord(v);
 
-    console.log("b" + r + "=" + v);
+    if(debug) console.log("b" + r + "=" + v);
     r = r * 2;
     this.ram[r] = bytes[0];
     this.ram[r + 1] = bytes[1];
@@ -280,7 +281,7 @@ if (typeof yasp == 'undefined') yasp = { };
       params.push(param);
     }
 
-    console.log(strCmd);
+    if(debug) console.log(strCmd);
     cmd.exec.apply(this, params);
 
     if(cmd.checkFlags)
