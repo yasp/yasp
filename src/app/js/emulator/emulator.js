@@ -175,6 +175,7 @@ if (typeof yasp == 'undefined') yasp = { };
     var neededBytes;
     var parts;
     var cmd;
+    var params;
 
     var cachedCmd = this.commandCache[this.pc];
 
@@ -239,74 +240,78 @@ if (typeof yasp == 'undefined') yasp = { };
         throw "Invalid Instruction at " + this.pc;
       }
 
-      this.commandCache[this.pc] = { cmd: cmd, parts: parts, neededBytes: neededBytes };
+      params = [ ];
+
+      for (var i = 0; i < cmd.params.length; i++) {
+        var param = { type: cmd.params[i].type, value: null, address: null };
+        var part = parts[cmd.code.length + i];
+
+        switch (cmd.params[i].type) {
+          case "r_byte":
+            param.address = part;
+            break;
+          case "r_word":
+            param.address = part;
+            break;
+          case "l_byte":
+            param.value = part;
+            param.address = null;
+            break;
+          case "l_word":
+            param.value = part;
+            param.address = null;
+            break;
+          case "pin":
+            param.value = part;
+            param.address = null;
+            break;
+          case "address":
+            param.value = part;
+            param.address = null;
+            break;
+        }
+
+        params.push(param);
+      }
+
+      this.commandCache[this.pc] = { cmd: cmd, neededBytes: neededBytes, params: params };
     }
     else
     {
       cmd = cachedCmd.cmd;
       neededBytes = cachedCmd.neededBytes;
-      parts = cachedCmd.parts;
+      params = cachedCmd.params;
+    }
+
+    for (var i = 0; i < params.length; i++) {
+      var param = params[i];
+      switch (param.type) {
+        case "r_byte":
+          param.value = this.readByteRegister(param.address);
+          break;
+        case "r_word":
+          param.value = this.readWordRegister(param.address);
+          break;
+      }
     }
 
     this.pc += neededBytes;
 
-    var params = [ ];
-
-    var strCmd = cmd.name + " ";
-
-    for (var i = 0; i < cmd.params.length; i++) {
-      var param = { type: cmd.params[i].type, value: null, address: null };
-      var part = parts[cmd.code.length + i];
-
-      switch (cmd.params[i].type) {
-        case "r_byte":
-          param.value = this.readByteRegister(part);
-          param.address = part;
-          strCmd += "b" + part;
-          break;
-        case "r_word":
-          param.value = this.readWordRegister(part);
-          param.address = part;
-          strCmd += "w" + part;
-          break;
-        case "l_byte":
-          param.value = part;
-          param.address = null;
-          strCmd += part;
-          break;
-        case "l_word":
-          param.value = part;
-          param.address = null;
-          strCmd += part;
-          break;
-        case "pin":
-          param.value = part;
-          param.address = null;
-          strCmd += part;
-          break;
-        case "address":
-          param.value = part;
-          param.address = null;
-          strCmd += part;
-          break;
-      }
-
-      strCmd += i == cmd.params.length - 1 ? "" : ",";
-
-      params.push(param);
-    }
-
-    if(debug) console.log(strCmd);
-    cmd.exec.apply(this, params);
+    if(params.length === 0)
+      cmd.exec.call(this);
+    else if(params.length === 1)
+      cmd.exec.call(this, params[0]);
+    else if(params.length === 2)
+      cmd.exec.call(this, params[0], params[1]);
 
     if(cmd.checkFlags)
     {
       var firstP = params[0];
       var newVal;
 
-      if(firstP.type == "r_byte")
+      if(firstP.type === "r_byte")
         newVal = this.readByteRegister(firstP.address);
-      else if(firstP.type == "r_word")
+      else if(firstP.type === "r_word")
         newVal = this.readWordRegister(firstP.address);
 
       var z = null;
