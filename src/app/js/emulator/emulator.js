@@ -2,7 +2,6 @@ if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
   var tickTimeout = 1000;
-  var commandMap = { };
   var debug = false;
 
   /**
@@ -18,7 +17,6 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stepping = false;
     this.flags = { c: false, z: false };
 
-    buildCommandMap();
 
     setTimeout(this.tick.bind(this), tickTimeout);
   };
@@ -308,22 +306,4 @@ if (typeof yasp == 'undefined') yasp = { };
       setTimeout(this.tick.bind(this), tickTimeout);
     }
   };
-
-  function buildCommandMap() {
-    commandMap = { };
-
-    if(!yasp.commands || !yasp.commands.length)
-      return;
-
-    for (var i = 0; i < yasp.commands.length; i++) {
-      var cmd = yasp.commands[i];
-      var code = cmd.code[0].value;
-
-      if(!(commandMap[code] instanceof Array))
-        commandMap[code] = [ ];
-
-      commandMap[code].push(cmd);
-    }
-  }
-
 })();
