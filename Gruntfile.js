@@ -75,6 +75,15 @@ module.exports = function(grunt) {
         files: ['src/app/instructions/**/*.js'],
         tasks: ['doctool:doc']
       }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 8082,
+          base: 'src',
+          keepalive: true
+        }
+      }
     }
   });
 
@@ -82,10 +91,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-doctool');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
   grunt.registerTask('test', [ 'qunit' ]);
   grunt.registerTask('commandsjs', [ 'doctool' ]);
   grunt.registerTask('watchcommands', [ 'watch' ]);
+  grunt.registerTask('http', [ 'connect' ]);
 };
