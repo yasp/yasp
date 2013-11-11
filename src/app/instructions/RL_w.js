@@ -15,7 +15,6 @@
     "type": "r_word"
   }
 ],
-  "checkFlags": { "z": true, "c": false },
   "exec": function (rbyte1) {
     var oldVal = rbyte1.value;
     var newVal = (oldVal << 1) & 0xFFFF;
