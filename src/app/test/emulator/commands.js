@@ -376,6 +376,48 @@
     }
   ]);
 
+  // OR b,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "OR b0,67", // 01000011
+      setup: { reg: { "b0": "01010101" } },
+      steps: { reg: { "b0": "01010111" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "OR b0,0",
+      setup: { reg: { "b0": "00000000" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // OR w,w
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "OR w0,w1",
+      setup: { reg: { "w0": "01010101 10101010", "w1": "01000011 11000010" } },
+      steps: { reg: { "w0": "01010111 11101010" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "OR w0,w1",
+      setup: { reg: { "w0": "00000000 00000000", "w1": "00000000 00000000" } },
+      steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // OR w,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "OR w0,17346", // 01000011 11000010
+      setup: { reg: { "w0": "01010101 10101010" } },
+      steps: { reg: { "w0": "01010111 11101010" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "OR w0,0",
+      setup: { reg: { "w0": "00000000 00000000" } },
+      steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
