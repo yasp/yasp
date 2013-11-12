@@ -18,6 +18,10 @@
       "type": "l_word"
     }
   ],
-  "exec": function (rbyte1, rbyte2) {
+  "checkFlags": { "z": true },
+  "exec": function (rword1, lword2) {
+    var newVal = rword1.value - lword2.value;
+    this.writeWordRegister(rword1.address, newVal& 0xFFFF);
+    this.writeFlags((newVal < 0), null);
   }
 }

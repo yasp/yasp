@@ -134,6 +134,82 @@
     }
   ]);
 
+  // SUB b,b
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "SUB b0,b1",
+      setup: { reg: { "b0": 2, "b1": 1 } },
+      steps: { reg: { "b0": 1 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "SUB b0,b1",
+      setup: { reg: { "b0": 1, "b1": 2 } },
+      steps: { reg: { "b0": 255 }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "SUB b0,b1",
+      setup: { reg: { "b0": 1, "b1": 1 } },
+      steps: { reg: { "b0": 0 }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // SUB b,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "SUB b0,1",
+      setup: { reg: { "b0": 2 } },
+      steps: { reg: { "b0": 1 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "SUB b0,2",
+      setup: { reg: { "b0": 1 } },
+      steps: { reg: { "b0": 255 }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "SUB b0,1",
+      setup: { reg: { "b0": 1 } },
+      steps: { reg: { "b0": 0 }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // SUB w,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "SUB w0,1",
+      setup: { reg: { "w0": 0xFF00 } },
+      steps: { reg: { "w0": 0xFEFF }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "SUB w0,1",
+      setup: { reg: { "w0": 0x0000 } },
+      steps: { reg: { "w0": 0xFFFF }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "SUB w0,0x0F01",
+      setup: { reg: { "w0": 0x0F01 } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // SUB w,w
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "SUB w0,w1",
+      setup: { reg: { "w0": 0xFF00, "w1": 0x0001 } },
+      steps: { reg: { "w0": 0xFEFF }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "SUB w0,w1",
+      setup: { reg: { "w0": 0x0000, "w1": 0x0001 } },
+      steps: { reg: { "w0": 0xFFFF }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "SUB w0,w1",
+      setup: { reg: { "w0": 0x0F01, "w1": 0x0F01 } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: false, z: true } }
+    }
+  ]);
+
   // RR
   commandTestData = commandTestData.concat([
     {
