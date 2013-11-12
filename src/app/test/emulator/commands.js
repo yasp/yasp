@@ -300,6 +300,44 @@
     }
   ]);
 
+  // DEC b
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "DEC b0",
+      setup: { reg: { "b0": 0x02 } },
+      steps: { reg: { "b0": 0x01 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "DEC b0",
+      setup: { reg: { "b0": 0x01 } },
+      steps: { reg: { "b0": 0x00 }, flags: { c: false, z: true } }
+    },
+    {
+      cmd: "DEC b0",
+      setup: { reg: { "b0": 0x00 } },
+      steps: { reg: { "b0": 0xFF }, flags: { c: true, z: false } }
+    }
+  ]);
+
+  // DEC w
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "DEC w0",
+      setup: { reg: { "w0": 0xFF00 } },
+      steps: { reg: { "w0": 0xFEFF }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "DEC w0",
+      setup: { reg: { "w0": 0x0001 } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: false, z: true } }
+    },
+    {
+      cmd: "DEC w0",
+      setup: { reg: { "w0": 0x0000 } },
+      steps: { reg: { "w0": 0xFFFF }, flags: { c: true, z: false } }
+    }
+  ]);
+
   // INV-Commands
   commandTestData = commandTestData.concat([
     {
