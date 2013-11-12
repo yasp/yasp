@@ -276,34 +276,33 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       this.commandCache[this.pc] = { cmd: cmd, neededBytes: neededBytes, params: params };
-    }
-    else
-    {
+    } else {
       cmd = cachedCmd.cmd;
       neededBytes = cachedCmd.neededBytes;
       params = cachedCmd.params;
     }
 
-    for (var i = 0; i < params.length; i++) {
-      var param = params[i];
-      switch (param.type) {
-        case "r_byte":
-          param.value = this.readByteRegister(param.address);
-          break;
-        case "r_word":
-          param.value = this.readWordRegister(param.address);
-          break;
-      }
-    }
-
     this.pc += neededBytes;
 
-    if(params.length === 0)
+    if(params.length === 0) {
       cmd.exec.call(this);
-    else if(params.length === 1)
-      cmd.exec.call(this, params[0]);
-    else if(params.length === 2)
-      cmd.exec.call(this, params[0], params[1]);
+    } else {
+      if(params[0].type == "r_byte")
+        params[0].value = this.readByteRegister(params[0].address);
+      else if(params[0].type == "r_word")
+        params[0].value = this.readWordRegister(params[0].address);
+
+      if(params.length === 2) {
+        if(params[1].type == "r_byte")
+          params[1].value = this.readByteRegister(params[1].address);
+        else if(params[1].type == "r_word")
+          params[1].value = this.readWordRegister(params[1].address);
+
+        cmd.exec.call(this, params[0], params[1]);
+      } else {
+        cmd.exec.call(this, params[0]);
+      }
+    }
 
     if(cmd.checkFlags) {
       var firstP = params[0];
