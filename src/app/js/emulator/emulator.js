@@ -8,18 +8,19 @@ if (typeof yasp == 'undefined') yasp = { };
    * Emulator is responsible for running the bytecode from the assembler
    * @constructor
    */
-  yasp.Emulator = function() {
+  yasp.Emulator = function(stepping) {
     this.rom = new Uint8Array(512);
     this.ram = new Uint8Array(512);
 
     this.pc = 0;
     this.running = false;
-    this.stepping = false;
+    this.stepping = !!stepping;
     this.flags = { c: false, z: false };
 
     this.commandCache = {};
 
-    setTimeout(this.tick.bind(this), tickTimeout);
+    if(!stepping)
+      setTimeout(this.tick.bind(this), tickTimeout);
   };
 
   /**

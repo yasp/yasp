@@ -18,68 +18,61 @@
 <script src="../js/emulator/bitutils.js"></script>
 <script src="../js/emulator/emulator.js"></script>
 
-Input: <input id="foo"><br>
-Times: <input id="times" value="1"> => <span id="timeTakenMs"></span> => <span id="timeTakenHz"></span>
+<script src="./repl.js"></script>
+
+Input: <input id="code" value="MOV b0,b1"><br>
+<button id="benchmark">Benchmark</button> => <span id="timeTakenHz">0 Hz</span>
 <pre id="bitcode">&nbsp;</pre>
 <pre id="mem"></pre>
 
 <script type="text/javascript">
-    var assembler = new yasp.Assembler();
-    var emulator = new yasp.Emulator();
-    emulator.stepping = true;
+    var repl = new yasp.Repl();
 
     dumpRam();
 
-    $('#foo').bind('keypress', function(e) {
+    $('#code').bind('keypress', function(e) {
         if(e.keyCode==13){
-            var code = $('#foo').val();
-            $('#foo').val("");
-            var asm = assembler.assemble({ code: code, jobs: ["bitcode"] });
-            console.log(asm);
+            var result = repl.execute(getCode());
 
-            if(asm.success != false) {
-                emulator.load(asm.bitcode, 0);
+            dumpRam();
 
-                var times = +$('#times').val() || 1;
-                var start = +new Date();
-
-                for (var i = 0; i < times; i++) {
-                    emulator.pc = 0;
-                    emulator.tick();
-                }
-
-                var end = +new Date();
-                var taken = end - start;
-                $('#timeTakenMs').text(taken + "ms");
-                $('#timeTakenHz').text(Math.round((1 / (taken / times)) * 10) / 10 + "Hz");
-
-                dumpRam();
-                $('#bitcode').text(getDump(asm.bitcode, -1));
+            if(result.error == null) {
+                $('#bitcode').text(yasp.Repl.getDumpFromArray(result.bitcode, -1));
             } else {
-                var error = "";
-                for (var i = 0; i < asm.errors.length; i++) {
-                    error += asm.errors[i].message.replace('\n', '↵');
-                }
+                var error = getPrettyAsmError(result.error.errors);
                 $('#bitcode').text(error);
             }
+
+            clearCode();
         }
     });
 
-    function dumpRam () {
-        $('#mem').text(getDump(emulator.ram, 20));
+    $('#benchmark').click(function (e) {
+        $('#timeTakenHz').text("working..");
+        setTimeout(function () {
+            var result = repl.benchmark(getCode(), 5000000);
+            $('#timeTakenHz').text(Math.round(result.hz * 10) / 10 + " Hz");
+        }, 0)
+    });
+
+    function getPrettyAsmError (errors) {
+        var error = "";
+        for (var i = 0; i < errors.length; i++) {
+            error += errors[i].message.replace('\n', '↵');
+        }
+        return error;
     }
 
-    function getDump (data, b) {
-        var dmp = "";
-        for (var i = 0; i < data.length; i++) {
-            if(b != -1 && i % 20 == 0)
-                dmp += "\n";
-            var d = data[i].toString(16);
-            if(d.length == 1)
-                d = "0" + d;
-            dmp += "0x" + d + " ";
-        }
-        return dmp;
+    function getCode () {
+        return $('#code').val();
+    }
+
+    function clearCode () {
+        $('#code').val("");
+    }
+
+    function dumpRam () {
+        $('#mem').text(repl.getRamDump());
     }
 </script>
 </body>
