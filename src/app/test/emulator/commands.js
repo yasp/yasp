@@ -468,7 +468,7 @@
       steps: { reg: { "w0": "01000001 10000010" }, flags: { c: false, z: false } }
     },
     {
-      cmd: "AND w0,1",
+      cmd: "AND w0,514", //  00000010 00000010
       setup: { reg: { "w0": "00000100 00010000" } },
       steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
     }
