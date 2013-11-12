@@ -474,6 +474,62 @@
     }
   ]);
 
+  // XOR b,b
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "XOR b0,b1",
+      setup: { reg: { "b0": "01010101", "b1": "01000011" } },
+      steps: { reg: { "b0": "00010110" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "XOR b0,b1",
+      setup: { reg: { "b0": "11000000", "b1": "11000000" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // XOR b,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "XOR b0,67", //   01000011
+      setup: { reg: { "b0": "01010101" } },
+      steps: { reg: { "b0": "00010110" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "XOR b0,3",
+      setup: { reg: { "b0": "00000011" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // XOR w,w
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "XOR w0,w1",
+      setup: { reg: { "w0": "01010101 10101010", "w1": "01000011 11000010" } },
+      steps: { reg: { "w0": "00010110 01101000" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "XOR w0,w1",
+      setup: { reg: { "w0": "00100000 00000100", "w1": "00100000 00000100" } },
+      steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
+    }
+  ]);
+
+  // XOR w,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "XOR w0,17346", //01000011 11000010
+      setup: { reg: { "w0": "01010101 10101010" } },
+      steps: { reg: { "w0": "00010110 01101000" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "XOR w0,514",  // 00000010 00000010
+      setup: { reg: { "w0": "00000010 00000010" } },
+      steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
