@@ -272,6 +272,34 @@
     }
   ]);
 
+  // INC b
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "INC b0",
+      setup: { reg: { "b0": 0x00 } },
+      steps: { reg: { "b0": 0x01 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "INC b0",
+      setup: { reg: { "b0": 0xFF } },
+      steps: { reg: { "b0": 0x00 }, flags: { c: true, z: true } }
+    }
+  ]);
+
+  // INC w
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "INC w0",
+      setup: { reg: { "w0": 0x0FFF } },
+      steps: { reg: { "w0": 0x1000 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "INC w0",
+      setup: { reg: { "w0": 0xFFFF } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: true, z: true } }
+    }
+  ]);
+
   // INV-Commands
   commandTestData = commandTestData.concat([
     {
