@@ -18,10 +18,10 @@
       "type": "r_word"
     }
   ],
-  "checkFlags": { "z": true, "c": true },
+  "checkFlags": { "z": true },
   "exec": function (rword1, rword2) {
     var newVal = rword1.value + rword2.value;
-    this.writeWordRegister(rword1.address, newVal& 0xFFFF);
+    this.writeWordRegister(rword1.address, newVal & 0xFFFF);
     this.writeFlags((newVal > 0xFFFF), null);
   }
 }

@@ -1,6 +1,6 @@
 (function () {
   var emulator;
-  var assembler = new yasp.Assembler();;
+  var assembler = new yasp.Assembler();
 
   module("emulator commands", {
     setup: function () {
@@ -380,10 +380,10 @@
         alert("Step-RAM-Checking is not yet implemented")
       }
       if(step.rom) {
-        alert("Step-RAM-Checking is not yet implemented")
+        alert("Step-ROM-Checking is not yet implemented")
       }
       if(step.pin) {
-        alert("Step-RAM-Checking is not yet implemented")
+        alert("Step-PIN-Checking is not yet implemented")
       }
     }
 
