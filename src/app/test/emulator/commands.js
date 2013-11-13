@@ -542,6 +542,102 @@
     }
   ]);
 
+  // CMP b,b
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "CMP b0,b1 ;equal",
+      setup: { reg: { "b0": 1, "b1": 1 } },
+      steps: { flags: { c: false, z: true } }
+    },
+    {
+      cmd: "CMP b0,b1 ;1st bigger",
+      setup: { reg: { "b0": 1, "b1": 0 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP b0,b1 ;2nd bigger",
+      setup: { reg: { "b0": 0, "b1": 1 } },
+      steps: { flags: { c: true, z: false } }
+    }
+  ]);
+
+  // CMP b,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "CMP b0,1 ;equal",
+      setup: { reg: { "b0": 1 } },
+      steps: { flags: { c: false, z: true } }
+    },
+    {
+      cmd: "CMP b0,0 ;1st bigger",
+      setup: { reg: { "b0": 1 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP b0,1 ;2nd bigger",
+      setup: { reg: { "b0": 0 } },
+      steps: { flags: { c: true, z: false } }
+    }
+  ]);
+
+  // CMP w,w
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "CMP w0,w1 ;equal",
+      setup: { reg: { "w0": 0x0001, "w1": 0x0001 } },
+      steps: { flags: { c: false, z: true } }
+    },
+    {
+      cmd: "CMP w0,w1 ;1st bigger",
+      setup: { reg: { "w0": 0xAB00, "w1": 0xAA00 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP w0,w1 ;1st bigger",
+      setup: { reg: { "w0": 0x0001, "w1": 0x0000 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP w0,w1 ;2nd bigger",
+      setup: { reg: { "w0": 0xAA00, "w1": 0xAB00 } },
+      steps: { flags: { c: true, z: false } }
+    },
+    {
+      cmd: "CMP w0,w1 ;2nd bigger",
+      setup: { reg: { "w0": 0x0000, "w1": 0x0001 } },
+      steps: { flags: { c: true, z: false } }
+    }
+  ]);
+
+  // CMP w,l
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "CMP w0,0x0001 ;equal",
+      setup: { reg: { "w0": 0x0001 } },
+      steps: { flags: { c: false, z: true } }
+    },
+    {
+      cmd: "CMP w0,0xAA00 ;1st bigger",
+      setup: { reg: { "w0": 0xAB00 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP w0,0x0000 ;1st bigger",
+      setup: { reg: { "w0": 0x0001 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP w0,0xAB00 ;2nd bigger",
+      setup: { reg: { "w0": 0xAA00 } },
+      steps: { flags: { c: true, z: false } }
+    },
+    {
+      cmd: "CMP w0,0x0001 ;2nd bigger",
+      setup: { reg: { "w0": 0x0000 } },
+      steps: { flags: { c: true, z: false } }
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
