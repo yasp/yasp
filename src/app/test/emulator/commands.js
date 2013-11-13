@@ -652,6 +652,25 @@
     }
   ]);
 
+  // DIV
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "DIV w0,w1",
+      setup: { reg: { "w0": 0x00FA, "w1": 0xFF02 } },
+      steps: { reg: { "w0": 0x7D } }
+    },
+    {
+      cmd: "DIV w0,w1",
+      setup: { reg: { "w0": 0xFF10, "w1": 0xFF02 } },
+      steps: { reg: { "w0": 0x7F88 } }
+    },
+    {
+      cmd: "DIV w0,w1",
+      setup: { reg: { "w0": 0x000F, "w1": 0xFF02 } },
+      steps: { reg: { "w0": 0x0007 } }
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
