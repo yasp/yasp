@@ -638,6 +638,20 @@
     }
   ]);
 
+  // MUL
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "MUL w0,w1",
+      setup: { reg: { "w0": 0xFF10, "w1": 0xFF02 } },
+      steps: { reg: { "w0": 0x0020 } }
+    },
+    {
+      cmd: "MUL w0,w1",
+      setup: { reg: { "w0": 0x00FF, "w1": 0x00FF } },
+      steps: { reg: { "w0": 0xFE01 } }
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
