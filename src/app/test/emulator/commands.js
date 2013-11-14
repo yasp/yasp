@@ -730,6 +730,17 @@
     }
   ]);
 
+  // JMP
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "JMP lbl\nDB 0xFF\nlbl:",
+      setup: { },
+      steps: [
+        { reg: { "pc": 3 } }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 

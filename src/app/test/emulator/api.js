@@ -304,4 +304,17 @@
     strictEqual(actual2, expected1, "2nd pop");
     strictEqual(actual1, expected2, "1st pop");
   });
+
+  test("writePC", function () {
+    var expected = 255;
+    emulator.writePC(expected);
+    strictEqual(emulator.pc, expected);
+  });
+
+  test("readPC", function () {
+    var expected = 255;
+    emulator.pc = expected;
+    var actual = emulator.readPC();
+    strictEqual(actual, expected);
+  });
 })();

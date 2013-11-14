@@ -209,6 +209,22 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.stack[this.sp--];
   };
 
+  /**
+   * @function sets the program counter
+   * @param pc the new value to set
+   */
+  yasp.Emulator.prototype.writePC = function (pc) {
+    this.pc = pc;
+  };
+
+  /**
+   * @function gets the program counter
+   * @returns number the current value of the program counter
+   */
+  yasp.Emulator.prototype.readPC = function () {
+    return this.pc;
+  };
+
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false && !this.stepping) {
       setTimeout(this.tick.bind(this), tickTimeout);

@@ -11,5 +11,7 @@
       "type": "address"
     }
   ],
-  "exec": function() {}
+  "exec": function(addr) {
+    this.writePC(addr.value);
+  }
 }
