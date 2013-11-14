@@ -20,11 +20,22 @@
         cmd: "MOV b0,b1",
         setup: { reg: { "b2": 1 } },
         steps: [
-          { reg: { "w0": 1, "b1": "00000001" } },
+          { reg: { }, stack: { 0: 0xFF } },
           { ram: { 0x42: 1 }, pin: { .. to be defined .. } },
           { rom: { 0x00: 0 }, flag: { c: false, z: true } }
         ]
       }
+
+    Checkable / setable registers:
+      b0 to b31 - byte registers
+      w0 to b31 - word registers
+      pc        - programm counter
+      sp        - stack pointer
+
+    Possible value-formats: (reg, ram, rom, stack)
+      hex - 0xFF       - normal JS number literal
+      dec - 255        - normal JS number literal
+      bin - "1111 111" - binary format, written as string, spaces allowed
 
     Minimal example:
       {
@@ -731,16 +742,22 @@
             continue;
           }
 
-          var n = +r.substr(1);
+          if(r == "pc") {
+            actual = emulator.pc;
+          } else if (r == "sp") {
+            actual = emulator.sp;
+          } else {
+            var n = +r.substr(1);
 
-          if(r.charAt(0) === "b")
-            actual = emulator.readByteRegister(n);
-          else if (r.charAt(0) === "w")
-            actual = emulator.readWordRegister(n);
-          else
-          {
-            ok(false, "Invalid test: step-register " + r + " does not exist.");
-            continue;
+            if(r.charAt(0) === "b")
+              actual = emulator.readByteRegister(n);
+            else if (r.charAt(0) === "w")
+              actual = emulator.readWordRegister(n);
+            else
+            {
+              ok(false, "Invalid test: step-register " + r + " does not exist.");
+              continue;
+            }
           }
 
           strictEqual(actual, expected, "register " + r + " is " + expected);
