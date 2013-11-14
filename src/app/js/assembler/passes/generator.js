@@ -227,7 +227,12 @@ if (typeof yasp == 'undefined') yasp = { };
         return cur.getType() == yasp.TokenType.LABEL && assembler.getLabel(cur.text);
       },
       data: function(data, generator) {
-        return generator.labelMachinePosition[data];
+        var result = generator.labelMachinePosition[data.toUpperCase()];
+        if (!isNaN(result) ) {
+          return result;
+        } else {
+          throw "Unknown label in generator";
+        }
       }
     }
   };
