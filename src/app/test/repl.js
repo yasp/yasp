@@ -45,20 +45,21 @@
 
   yasp.Repl.prototype.benchmark = function (code, times) {
     var asmResult = this.assemble(code);
+    var ttimes = times;
 
     if(asmResult.error != null)
       return asmResult;
 
     this.emulator.load(asmResult.bitcode, 0);
 
-    var start = +new Date();
+    var start = window.performance.now();
 
-    for (var i = 0; i < times; i++) {
+    while(ttimes--) {
       this.emulator.pc = 0;
       this.emulator.tick();
     }
 
-    var end = +new Date();
+    var end = window.performance.now();
     var taken = end - start;
 
     return {
