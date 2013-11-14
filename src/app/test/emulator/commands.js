@@ -696,6 +696,20 @@
     }
   ]);
 
+  // POP
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "POP b0",
+      setup: { reg: { "sp": 0 }, stack: [0xFA] },
+      steps: { reg: { "b0": 0xFA } }
+    },
+    {
+      cmd: "POP w0",
+      setup: { reg: { "sp": 1 }, stack: [0xFB, 0xFA] },
+      steps: { reg: { "w0": 0xFAFB } }
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
@@ -740,6 +754,9 @@
             }
           }
         }
+      }
+      if(setup.stack) {
+        emulator.stack = setup.stack;
       }
     }
 
