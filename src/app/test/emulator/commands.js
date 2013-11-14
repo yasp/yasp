@@ -4,8 +4,8 @@
 
   module("emulator commands", {
     setup: function () {
-      emulator = new yasp.Emulator();
-      emulator.stepping = true;
+      emulator = new yasp.Emulator(true);
+      emulator.continue();
       assembler = new yasp.Assembler();
     },
     teardown: function () {
@@ -18,11 +18,11 @@
     Test-Format:
       {
         cmd: "MOV b0,b1",
-        setup: { reg: { "b2": 1 } },
+        setup: { reg: { }, flags: { }, stack: { } },
         steps: [
           { reg: { }, stack: { 0: 0xFF } },
           { ram: { 0x42: 1 }, pin: { .. to be defined .. } },
-          { rom: { 0x00: 0 }, flag: { c: false, z: true } }
+          { rom: { 0x00: 0 }, flags: { c: false, z: true } }
         ]
       }
 
@@ -788,6 +788,12 @@
       }
       if(setup.stack) {
         emulator.stack = setup.stack;
+      }
+      if(setup.flags) {
+        if(setup.flags.z)
+          emulator.flags.z = true;
+        if(setup.flags.c)
+          emulator.flags.c = true;
       }
     }
 
