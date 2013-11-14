@@ -35,10 +35,10 @@ Input: <input id="code" value="MOV b0,b1"><br>
             var result = repl.execute(getCode());
 
             dumpRam();
-
-            if(result.error == null) {
+            if(result.bitcode)
                 $('#bitcode').text(yasp.Repl.getDumpFromArray(result.bitcode, -1));
-            } else {
+
+            if(result.error !== null) {
                 var error = getPrettyAsmError(result.error.errors);
                 $('#bitcode').text(error);
             }

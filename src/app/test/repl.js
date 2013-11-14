@@ -14,7 +14,14 @@
 
     this.emulator.load(asmResult.bitcode, 0);
     this.emulator.pc = 0;
-    this.emulator.tick();
+    try {
+      this.emulator.tick();
+    } catch (err) {
+      return {
+        error: err,
+        bitcode: asmResult.bitcode
+      };
+    }
 
     return {
       error: null,
