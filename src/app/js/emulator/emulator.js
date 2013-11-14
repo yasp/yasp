@@ -158,6 +158,22 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /**
+   * @function Reads the carry flag
+   * @returns boolean true if the carry flag is set, otherwise false
+   */
+  yasp.Emulator.prototype.isCarryFlagSet = function () {
+    return this.flags.c;
+  };
+
+  /**
+   * @function Reads the zero flag
+   * @returns boolean true if the zero flag is set, otherwise false
+   */
+  yasp.Emulator.prototype.isZeroFlagSet = function () {
+    return this.flags.z;
+  };
+
+  /**
    * @function Write the flags
    * @param c the carry flag to be set (or null)
    * @param z the zero flag to be set (or null)

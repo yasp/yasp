@@ -245,6 +245,20 @@
     deepEqual(expected, actual);
   });
 
+  test("isCarryFlagSet", function () {
+    var expected = { z: false, c: true };
+    emulator.flags = expected;
+    var actual = emulator.isCarryFlagSet();
+    deepEqual(expected.c, actual);
+  });
+
+  test("isZeroFlagSet", function () {
+    var expected = { z: true, c: false };
+    emulator.flags = expected;
+    var actual = emulator.isZeroFlagSet();
+    deepEqual(expected.z, actual);
+  });
+
   test("pushByte", function () {
     emulator.pushByte(0xFA);
     strictEqual(emulator.sp, 0, "SP incremented");
