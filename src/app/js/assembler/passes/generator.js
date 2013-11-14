@@ -108,7 +108,7 @@ if (typeof yasp == 'undefined') yasp = { };
       name: "label",
       generate: function(generator) {
         // update machine position
-        generator.labelMachinePosition[this.params.label.text.toUpperCase()] = this.machinePosition;
+        generator.labelMachinePosition[this.params.label.text.toUpperCase()] = ~~(this.machinePosition / 8);
       },
       calculateBitSize: function() {
         return 0;
