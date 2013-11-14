@@ -112,7 +112,7 @@
     {input: "MOV b0, b1", result: "000100000000000000000001", map: { 1: 0 }},
     {input: "MOV W0, 1337", result: "00100000000000000000010100111001", map: { 1: 0 }},
     {input: "MOV W0, W1", result: "000100000100000000000001", map: { 1: 0 }},
-    {input: "lbl: JMP lbl", result: "000101100000000000000000", map: { 1: 0 }}
+    {input: "lbl: JMP lbl", result: "1011000000000000", map: { 1: 0 }}
   ];
   
   QUnit.cases(generator_cases).test("ensure generator generating works", function(params) {

@@ -124,17 +124,14 @@ if (typeof yasp == 'undefined') yasp = { };
         
         for (var i = 0; i < commandCode.length; i++) {
           var code = commandCode[i];
-          var data;
+          var data, len;
+          
           if (typeof code.value == "string") {
             data = +parseInt(code.value, 2);
+            len = code.value.length;
           } else {
             data = +code.value;
-          }
-          var len;
-          if (typeof code.length == 'undefined') {
             len = 8;
-          } else {
-            len = code.length;
           }
           
           writer.append(data, len);
