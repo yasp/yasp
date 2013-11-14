@@ -710,10 +710,30 @@
     }
   ]);
 
+  // Stack
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "PUSH b0\nPOP b1",
+      setup: { reg: { "b0": 0xFA } },
+      steps: [
+        {},
+        { reg: { "b1": 0xFA } }
+      ]
+    },
+    {
+      cmd: "PUSH w0\nPOP w1",
+      setup: { reg: { "w0": 0xFAFB } },
+      steps: [
+        {},
+        { reg: { "w1": 0xFAFB } }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
-    test.title = test.cmd;
+    test.title = test.cmd.replace('\n', ' / ');
     test.asm = assembler.assemble({ code: test.cmd, jobs: ["bitcode"] });
   }
 
