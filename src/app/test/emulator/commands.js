@@ -795,6 +795,24 @@
     }
   ]);
 
+  // JNC
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "JNC lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { c: false } },
+      steps: [
+        { reg: { "pc": 3 } }
+      ]
+    },
+    {
+      cmd: "JNC lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { c: true } },
+      steps: [
+        { reg: { "pc": 2 } }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
