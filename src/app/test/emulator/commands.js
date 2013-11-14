@@ -741,6 +741,24 @@
     }
   ]);
 
+  // JZ
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "JZ lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { z: false } },
+      steps: [
+        { reg: { "pc": 2 } }
+      ]
+    },
+    {
+      cmd: "JZ lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { z: true } },
+      steps: [
+        { reg: { "pc": 3 } }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
