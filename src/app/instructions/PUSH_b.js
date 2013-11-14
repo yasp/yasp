@@ -15,5 +15,7 @@
       "type": "r_byte"
     }
   ],
-  "exec": function() {}
+  "exec": function(rbyte) {
+    this.pushByte(rbyte.value);
+  }
 }

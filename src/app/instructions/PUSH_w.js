@@ -15,5 +15,7 @@
       "type": "r_word"
     }
   ],
-  "exec": function() {}
+  "exec": function(rword) {
+    this.pushWord(rword.value);
+  }
 }

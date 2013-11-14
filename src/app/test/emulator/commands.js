@@ -682,6 +682,20 @@
     }
   ]);
 
+  // PUSH
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "PUSH b0",
+      setup: { reg: { "b0": 0xFA } },
+      steps: { reg: { "sp": 0 }, stack: { 0: 0xFA } }
+    },
+    {
+      cmd: "PUSH w0",
+      setup: { reg: { "w0": 0xFAFB } },
+      steps: { reg: { "sp": 1 }, stack: { 0: 0xFB, 1: 0xFA } }
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
@@ -709,14 +723,22 @@
             continue;
           }
 
-          var n = +r.substr(1);
+          if(r == "pc") {
+            emulator.pc = val;
+          } else if (r == "sp") {
+            emulator.sp = val;
+          } else {
+            var n = +r.substr(1);
 
-          if(r.charAt(0) === "b")
-            emulator.writeByteRegister(n, val);
-          else if (r.charAt(0) === "w")
-            emulator.writeWordRegister(n, val);
-          else
-            ok(false, "Invalid test: setup-register " + r + " does not exist.");
+            if(r.charAt(0) === "b")
+              emulator.writeByteRegister(n, val);
+            else if (r.charAt(0) === "w")
+              emulator.writeWordRegister(n, val);
+            else
+            {
+              ok(false, "Invalid test: setup-register " + r + " does not exist.");
+            }
+          }
         }
       }
     }
@@ -789,6 +811,14 @@
       }
       if(step.pin) {
         alert("Step-PIN-Checking is not yet implemented")
+      }
+      if(step.stack) {
+        for (var r in step.stack) {
+          var expected = parseRegValue(step.stack[r]);
+          var actual = emulator.stack[r];
+
+          strictEqual(actual, expected, "stack-entry " + r + " is " + expected);
+        }
       }
     }
 
