@@ -12,6 +12,9 @@ if (typeof yasp == 'undefined') yasp = { };
     this.rom = new Uint8Array(512);
     this.ram = new Uint8Array(512);
 
+    this.stack = new Uint8Array(16);
+    this.sp = -1;
+
     this.pc = 0;
     this.running = false;
     this.stepping = !!stepping;
@@ -164,6 +167,46 @@ if (typeof yasp == 'undefined') yasp = { };
       this.flags.c = c;
     if(z !== null)
       this.flags.z = z;
+  };
+
+  /**
+   * @function splits the given word into two bytes and pushes them onto the stack
+   * @param v to word to push onto the stack
+   * @see Emulator#popWord
+   */
+  yasp.Emulator.prototype.pushWord = function (v) {
+    var bytes = yasp.bitutils.bytesFromWord(v);
+    this.pushByte(bytes[1]);
+    this.pushByte(bytes[0]);
+  };
+
+  /**
+   * @function pushes one byte onto the stack
+   * @param v the byte to push onto the stack
+   * @see Emulator#popByte
+   */
+  yasp.Emulator.prototype.pushByte = function (v) {
+    this.stack[++this.sp] = v;
+  };
+
+  /**
+   * @function gets two bytes from the stack, combines and removes them
+   * @returns a word from the top of stack
+   * @see Emulator#pushWord
+   */
+  yasp.Emulator.prototype.popWord = function () {
+    var b1 = this.popByte();
+    var b2 = this.popByte();
+    return yasp.bitutils.wordFromBytes(b1, b2);
+  };
+
+  /**
+   * @function gets one byte from the stack and removed it
+   * @returns a byte from the top of stack
+   * @see Emulator#pushByte
+   */
+  yasp.Emulator.prototype.popByte = function () {
+    return this.stack[this.sp--];
   };
 
   yasp.Emulator.prototype.tick = function () {

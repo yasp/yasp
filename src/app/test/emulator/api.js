@@ -244,4 +244,64 @@
     var actual = emulator.readFlags();
     deepEqual(expected, actual);
   });
+
+  test("pushByte", function () {
+    emulator.pushByte(0xFA);
+    strictEqual(emulator.sp, 0, "SP incremented");
+    strictEqual(emulator.stack[0], 0xFA, "Value saved");
+  });
+
+  test("popByte", function () {
+    emulator.sp = 0;
+    emulator.stack = [ 0xFA ];
+
+    var actual = emulator.popByte();
+
+    strictEqual(emulator.sp, -1, "SP decremented");
+    strictEqual(actual, 0xFA);
+  });
+
+  test("byte stack", function () {
+    var expected1 = 0xFA;
+    var expected2 = 0xFB;
+
+    emulator.pushByte(expected1);
+    emulator.pushByte(expected2);
+
+    var actual1 = emulator.popByte();
+    var actual2 = emulator.popByte();
+
+    strictEqual(actual2, expected1, "2nd pop");
+    strictEqual(actual1, expected2, "1st pop");
+  });
+
+  test("pushWord", function () {
+    emulator.pushWord(0xFAFB);
+    strictEqual(emulator.stack[0], 0xFB, "byte 2 saved");
+    strictEqual(emulator.stack[1], 0xFA, "byte 1 saved");
+  });
+
+  test("popWord", function () {
+    emulator.sp = 1;
+    emulator.stack = [ 0xFB, 0xFA ];
+
+    var actual = emulator.popWord();
+
+    strictEqual(emulator.sp, -1, "SP decremented");
+    strictEqual(actual, 0xFAFB);
+  });
+
+  test("word stack", function () {
+    var expected1 = 0xF1F2;
+    var expected2 = 0xFBFB;
+
+    emulator.pushWord(expected1);
+    emulator.pushWord(expected2);
+
+    var actual1 = emulator.popWord();
+    var actual2 = emulator.popWord();
+
+    strictEqual(actual2, expected1, "2nd pop");
+    strictEqual(actual1, expected2, "1st pop");
+  });
 })();
