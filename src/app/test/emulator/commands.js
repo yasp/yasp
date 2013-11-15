@@ -813,6 +813,35 @@
     }
   ]);
 
+  // WRITERAM
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "WRITERAM w0,b2",
+      setup: { reg: { "w0": 0xFF, "b2": 0xFA } },
+      steps: [
+        { ram: { 0xFF: 0xFA } }
+      ]
+    },
+    {
+      cmd: "WRITERAM w0,b2",
+      setup: { ram: new Uint8Array(160), reg: { "w0": 0xFFFF, "b2": 0xFA } },
+      steps: [
+        { flags: { "c": true, "z": false } }
+      ]
+    }
+  ]);
+
+  // READRAM
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "READRAM b2,w0",
+      setup: { reg: { "w0": 0x03, "b3": 0xFA } },
+      steps: [
+        { reg: { "b2": 0xFA } }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
@@ -930,7 +959,12 @@
         }
       }
       if(step.ram) {
-        alert("Step-RAM-Checking is not yet implemented")
+        for (var r in step.ram) {
+          var expected = parseRegValue(step.ram[r]);
+          var actual = emulator.ram[r];
+
+          strictEqual(actual, expected, "ram-byte " + r + " is " + expected);
+        }
       }
       if(step.rom) {
         alert("Step-ROM-Checking is not yet implemented")
