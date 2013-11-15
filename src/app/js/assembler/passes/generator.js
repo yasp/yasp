@@ -8,6 +8,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.bitWriter = null;
     this.assembler = null;
     this.labelMachinePosition = { };
+    this.linkPos = 0; // position during linking
   };
 
   /**
@@ -22,15 +23,15 @@ if (typeof yasp == 'undefined') yasp = { };
     
     if (assembler.jobs.indexOf("bitcode") != -1 || assembler.jobs.indexOf("map") != -1) {
       // 1 pass: get position in machine code for every Ast Node (for labels)
-      var pos = 0;
+      this.linkPos = 0;
       for (var i = 0; i < input.length; i++) {
         var node = input[i];
         if (!!node) {
-          node.machinePosition = pos;
+          node.machinePosition = ~~(this.linkPos / 8);
           if (node.type == yasp.AstNodeTypes.NODE_LABEL) {
             node.type.generate.call(node, this)
           }
-          pos += node.type.calculateBitSize.call(node, this);
+          this.linkPos += node.type.calculateBitSize.call(node, this);
         }
       }
     }
@@ -98,17 +99,18 @@ if (typeof yasp == 'undefined') yasp = { };
     NODE_ORG: {
       name: "org",
       generate: function(generator) {
-        generator.bitWriter.append("", this.params.len*8);
+        generator.bitWriter.jumpTo(this.params.len*8);
       },
       calculateBitSize: function() {
-        return this.params.len*8;
+        this.linkPos = this.params.len*8;
+        return 0;
       }
     },
     NODE_LABEL: {
       name: "label",
       generate: function(generator) {
         // update machine position
-        generator.labelMachinePosition[this.params.label.text.toUpperCase()] = ~~(this.machinePosition / 8);
+        generator.labelMachinePosition[this.params.label.text.toUpperCase()] = this.machinePosition;
       },
       calculateBitSize: function() {
         return 0;
@@ -154,10 +156,10 @@ if (typeof yasp == 'undefined') yasp = { };
         for (var i = 0; i < commandCode.length; i++) {
           var code = commandCode[i];
           var len;
-          if (typeof code.length == 'undefined') {
-            len = 8;
+          if (typeof code.value == "string") {
+            len = code.value.length;
           } else {
-            len = code.length;
+            len = 8;
           }
           size += len;
         }
@@ -254,7 +256,8 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.BitWriter = function() {
     this.bits = "";
-  }
+    this.pointer = 0;
+  };
 
   /**
    * Appends data to the array
@@ -272,8 +275,16 @@ if (typeof yasp == 'undefined') yasp = { };
     } else if (bits.length > length) {
       bits = bits.substr(bits.length - length, length); // if its too long => cut
     }
-    this.bits += bits; // append
-  }
+    
+    // check if really appending
+    if (this.bits.length == this.pointer) {
+      this.bits += bits; // append
+    } else {
+      this.bits = this.bits.substr(0, this.pointer) + bits + ((this.bits.length > (this.pointer + bits.length)) ? this.bits.substr(this.pointer + bits.length) : ""); // replace
+    }
+    
+    this.pointer += bits.length;
+  };
 
   /**
    * Returns the Uint8Array representation of the data
@@ -304,5 +315,21 @@ if (typeof yasp == 'undefined') yasp = { };
     
     // finish \o/
     return array;
-  }
+  };
+  
+  /**
+   * Jumps to a specific positon in the bitcode
+   * If the position does not exist yet, it is created
+   * @param pos Position where it jumps to
+   */
+  yasp.BitWriter.prototype.jumpTo = function(pos) {
+    // does this position already exists?
+    if (pos >= this.bits.length) {
+      var l = this.bits.length;
+      for (var i = 0; i <= (pos - l); i++) {
+        this.bits += "0";
+      }
+    }
+    this.pointer = pos;
+  };
 })();

@@ -37,6 +37,40 @@
     // assert
     strictEqual(array[0], 0xF0);
   });
+  
+  test("ensure bitwriter jumpto works", function() {
+    // arrange
+    var writer = new yasp.BitWriter();
+    var array;
+
+    // act
+    writer.append(0xFF, 8);
+    writer.jumpTo(4);
+    writer.append(0x00, 4);
+    
+    array = writer.toUint8Array();
+
+    // assert
+    strictEqual(array[0], 0xF0);
+  });
+  
+  test("ensure bitwriter jumpto works into the void", function() {
+    // arrange
+    var writer = new yasp.BitWriter();
+    var array;
+
+    // act
+    writer.append(0xFF, 8);
+    writer.jumpTo(16);
+    writer.append(0xFF, 8);
+    
+    array = writer.toUint8Array();
+
+    // assert
+    strictEqual(array[0], 0xFF);
+    strictEqual(array[1], 0x00);
+    strictEqual(array[2], 0xFF);
+  });
 })();
 
 (function() {
@@ -103,7 +137,7 @@
   });
   
   var generator_cases = [
-    {input: "ORG 1 \n MOV b1, 2", result: "00000000000000000000000100000010", map: {2: 8}},
+    {input: "ORG 1 \n MOV b1, 2", result: "00000000000000000000000100000010", map: {2: 0}},
     {input: "DB 42", result: "00101010", map: { }},
     {input: "DW 1337", result: "0000010100111001", map: { }},
     {input: "address: DA address", result: "0000000000000000", map: { }},
@@ -114,6 +148,7 @@
     {input: "MOV W0, W1", result: "000100000100000000000001", map: { 1: 0 }},
     {input: "lbl: JMP lbl", result: "1011000000000000", map: { 1: 0 }},
     {input: "JMP lbl \n DB 255 \n lbl:", result: "101100000000001111111111", map: { 1: 0 }},
+    // {input: "MOV b0, b1 \n ORG 0 \n MOV b1, b0", result: "101100000000001111111111", map: { 1: 0, 3: 3 }},
   ];
   
   QUnit.cases(generator_cases).test("ensure generator generating works", function(params) {
