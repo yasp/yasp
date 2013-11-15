@@ -410,7 +410,7 @@ if (typeof yasp == 'undefined') yasp = { };
     if(cmd.checkFlags !== undefined && p0 !== undefined) {
       var newVal;
 
-      if(p0.type.isRByte === true)
+      if(p0.isRByte === true)
         newVal = this.readByteRegister(p0.address);
       else if(p0.isRWord === true)
         newVal = this.readWordRegister(p0.address);
