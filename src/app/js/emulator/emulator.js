@@ -277,10 +277,9 @@ if (typeof yasp == 'undefined') yasp = { };
     var cmd;
     var params;
 
-    var cachedCmd = this.commandCache[this.pc];
+    var cachedCmd = this.commandCache[ppc];
 
-    if(!cachedCmd)
-    {
+    if(!cachedCmd) {
       parts = [ ];
       var bytes = [ this.rom[ppc++] ];
 
@@ -349,9 +348,11 @@ if (typeof yasp == 'undefined') yasp = { };
         switch (cmd.params[i].type) {
           case "r_byte":
             param.address = part;
+            param.isRByte = true;
             break;
           case "r_word":
             param.address = part;
+            param.isRWord = true;
             break;
           case "l_byte":
             param.value = part;
@@ -383,38 +384,40 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.pc += neededBytes;
 
+    var p0 = params[0];
+
     if(params.length === 0) {
       cmd.exec.call(this);
     } else {
-      if(params[0].type == "r_byte")
-        params[0].value = this.readByteRegister(params[0].address);
-      else if(params[0].type == "r_word")
-        params[0].value = this.readWordRegister(params[0].address);
+      if(p0.isRByte === true)
+        p0.value = this.readByteRegister(p0.address);
+      else if(p0.isRWord === true)
+        p0.value = this.readWordRegister(p0.address);
 
       if(params.length === 2) {
-        if(params[1].type == "r_byte")
-          params[1].value = this.readByteRegister(params[1].address);
-        else if(params[1].type == "r_word")
-          params[1].value = this.readWordRegister(params[1].address);
+        var p1 = params[1];
+        if(p1.isRByte === true)
+          p1.value = this.readByteRegister(p1.address);
+        else if(p1.isRWord === true)
+          p1.value = this.readWordRegister(p1.address);
 
-        cmd.exec.call(this, params[0], params[1]);
+        cmd.exec.call(this, p0, p1);
       } else {
-        cmd.exec.call(this, params[0]);
+        cmd.exec.call(this, p0);
       }
     }
 
-    if(cmd.checkFlags) {
-      var firstP = params[0];
+    if(cmd.checkFlags !== undefined && p0 !== undefined) {
       var newVal;
 
-      if(firstP.type === "r_byte")
-        newVal = this.readByteRegister(firstP.address);
-      else if(firstP.type === "r_word")
-        newVal = this.readWordRegister(firstP.address);
+      if(p0.type.isRByte === true)
+        newVal = this.readByteRegister(p0.address);
+      else if(p0.isRWord === true)
+        newVal = this.readWordRegister(p0.address);
 
       var z = null;
 
-      if(cmd.checkFlags.z) {
+      if(cmd.checkFlags.z !== undefined) {
         z = (newVal === 0);
       }
 
