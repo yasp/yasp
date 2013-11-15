@@ -331,4 +331,17 @@
     var actual = emulator.readPC();
     strictEqual(actual, expected);
   });
+
+  test("writeRAM", function () {
+    var expected = 241;
+    emulator.writeRAM(100, expected);
+    strictEqual(emulator.ram[100], expected);
+  });
+
+  test("readRAM", function () {
+    var expected = 241;
+    emulator.ram[100] = expected;
+    var actual = emulator.readRAM(100);
+    strictEqual(actual, expected);
+  });
 })();

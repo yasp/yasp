@@ -241,6 +241,30 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.pc;
   };
 
+  /**
+   * @function writes one byte to the ram
+   * @param o the position to write the byte to
+   * @param v the byte to write
+   * @returns number 0 is success, 1 if o was out of bounds
+   */
+  yasp.Emulator.prototype.writeRAM = function (o, v) {
+    if(o < 0 || o >= this.ram.length)
+      return 1;
+    this.ram[o] = v;
+    return 0;
+  };
+
+  /**
+   * @function reads one byte from the ram
+   * @param o the position to write the byte to
+   * @returns number the read byte, or 0 if o was out of bounds
+   */
+  yasp.Emulator.prototype.readRAM = function (o) {
+    if(o < 0 || o >= this.ram.length)
+      return 0;
+    return this.ram[o];
+  };
+
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false && !this.stepping) {
       setTimeout(this.tick.bind(this), tickTimeout);
