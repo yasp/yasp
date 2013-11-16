@@ -405,4 +405,17 @@
     var actual = emulator.setIO(0, 255);
     strictEqual(actual, expected);
   });
+
+  test("getIO - unknown pin", function () {
+    var expected = null;
+    var actual = emulator.getIO(10000);
+    strictEqual(actual, expected);
+  });
+
+  test("getIO - unknown pin", function () {
+    var expected = true;
+    emulator.pins = { 0: { mode: "in", state: expected } };
+    var actual = emulator.getIO(0);
+    strictEqual(actual, expected);
+  });
 })();

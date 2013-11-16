@@ -283,6 +283,19 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /**
+   * @function gets the state of a pin
+   * @returns number or boolean depending on the pin-type, false if the pin does not exist
+   */
+  yasp.Emulator.prototype.getIO = function (p) {
+    var pin = this.pins[p];
+
+    if(pin === undefined)
+      return null;
+
+    return pin.state;
+  };
+
+  /**
    * @function reads one byte from the ram
    * @param o the position to write the byte to
    * @returns number the read byte, or 0 if o was out of bounds
