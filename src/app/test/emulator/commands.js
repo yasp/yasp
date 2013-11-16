@@ -846,7 +846,7 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "HIGH 0",
-      setup: { },
+      setup: { pin: { 0: false } },
       steps: [
         { pin: { 0: true } }
       ]
@@ -901,6 +901,11 @@
       }
       if(setup.stack) {
         emulator.stack = setup.stack;
+      }
+      if(setup.pin) {
+        for (var p in setup.pin) {
+          emulator.setIO(p, setup.pin[p]);
+        }
       }
       if(setup.flags) {
         if(setup.flags.z)
