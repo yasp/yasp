@@ -841,6 +841,17 @@
       ]
     }
   ]);
+
+  // HIGH
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "HIGH 0",
+      setup: { },
+      steps: [
+        { pin: { 0: true } }
+      ]
+    }
+  ]);
   
 
   for (var i = 0; i < commandTestData.length; i++) {

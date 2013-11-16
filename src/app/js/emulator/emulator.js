@@ -18,7 +18,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.pins = {
       "0": {
         type: "gpio",
-        state: true,
+        state: false,
         mode: "out"
       }
     };
@@ -404,8 +404,8 @@ if (typeof yasp == 'undefined') yasp = { };
             param.address = null;
             break;
           case "pin":
-            param.value = part;
-            param.address = null;
+            param.address = part;
+            param.isPin = true;
             break;
           case "address":
             param.value = part;
@@ -434,6 +434,8 @@ if (typeof yasp == 'undefined') yasp = { };
         p0.value = this.readByteRegister(p0.address);
       else if(p0.isRWord === true)
         p0.value = this.readWordRegister(p0.address);
+      else if(p0.isPin === true)
+        p0.value = this.getIO(p0.address);
 
       if(params.length === 2) {
         var p1 = params[1];
