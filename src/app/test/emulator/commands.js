@@ -852,6 +852,17 @@
       ]
     }
   ]);
+
+  // LOW
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "LOW 0",
+      setup: { pin: { 0: true } },
+      steps: [
+        { pin: { 0: false } }
+      ]
+    }
+  ]);
   
 
   for (var i = 0; i < commandTestData.length; i++) {
