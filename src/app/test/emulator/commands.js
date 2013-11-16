@@ -875,6 +875,24 @@
     }
   ]);
   
+  // PIN
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "PIN 3",
+      setup: { pin: { 3: true } },
+      steps: [
+        { flags: { z: false, c: false } }
+      ]
+    },
+    {
+      cmd: "PIN 3",
+      setup: { pin: { 3: false } },
+      steps: [
+        { flags: { z: true, c: false } }
+      ]
+    }
+  ]);
+
 
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
