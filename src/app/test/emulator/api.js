@@ -384,25 +384,25 @@
 
   test("setIO - state = true", function () {
     var expected = 0;
-    var actual = emulator.setIO(0, true);
+    var actual = emulator.setIO(3, true);
     strictEqual(actual, expected);
   });
 
   test("setIO - state = false", function () {
     var expected = 0;
-    var actual = emulator.setIO(0, false);
+    var actual = emulator.setIO(3, false);
     strictEqual(actual, expected);
   });
 
   test("setIO - state = 0", function () {
     var expected = 0;
-    var actual = emulator.setIO(0, 0);
+    var actual = emulator.setIO(3, 0);
     strictEqual(actual, expected);
   });
 
   test("setIO - state = 255", function () {
     var expected = 0;
-    var actual = emulator.setIO(0, 255);
+    var actual = emulator.setIO(3, 255);
     strictEqual(actual, expected);
   });
 

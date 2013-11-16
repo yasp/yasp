@@ -845,10 +845,10 @@
   // HIGH
   commandTestData = commandTestData.concat([
     {
-      cmd: "HIGH 0",
-      setup: { pin: { 0: false } },
+      cmd: "HIGH 3",
+      setup: { pin: { 3: false } },
       steps: [
-        { pin: { 0: true } }
+        { pin: { 3: true } }
       ]
     }
   ]);
@@ -856,10 +856,10 @@
   // LOW
   commandTestData = commandTestData.concat([
     {
-      cmd: "LOW 0",
-      setup: { pin: { 0: true } },
+      cmd: "LOW 3",
+      setup: { pin: { 3: true } },
       steps: [
-        { pin: { 0: false } }
+        { pin: { 3: false } }
       ]
     }
   ]);
