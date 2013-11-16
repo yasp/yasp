@@ -344,4 +344,65 @@
     var actual = emulator.readRAM(100);
     strictEqual(actual, expected);
   });
+
+  test("setIO - unknown pin", function () {
+    var expected = 1;
+    var actual = emulator.setIO(1000, true);
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - set an input pin", function () {
+    var expected = 2;
+    emulator.pins = { 0: { mode: "in" } };
+    var actual = emulator.setIO(0, true);
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - invalid state, string", function () {
+    var expected = 3;
+    var actual = emulator.setIO(0, "12");
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - invalid state, obj", function () {
+    var expected = 3;
+    var actual = emulator.setIO(0, {});
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - invalid state, int, too big", function () {
+    var expected = 3;
+    var actual = emulator.setIO(0, 300);
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - invalid state, int, too small", function () {
+    var expected = 3;
+    var actual = emulator.setIO(0, -5);
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - state = true", function () {
+    var expected = 0;
+    var actual = emulator.setIO(0, true);
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - state = false", function () {
+    var expected = 0;
+    var actual = emulator.setIO(0, false);
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - state = 0", function () {
+    var expected = 0;
+    var actual = emulator.setIO(0, 0);
+    strictEqual(actual, expected);
+  });
+
+  test("setIO - state = 255", function () {
+    var expected = 0;
+    var actual = emulator.setIO(0, 255);
+    strictEqual(actual, expected);
+  });
 })();

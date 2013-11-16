@@ -15,6 +15,14 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack = new Uint8Array(16);
     this.sp = -1;
 
+    this.pins = {
+      "0": {
+        type: "gpio",
+        state: true,
+        mode: "out"
+      }
+    };
+
     this.pc = 0;
     this.running = false;
     this.stepping = !!stepping;
@@ -251,6 +259,26 @@ if (typeof yasp == 'undefined') yasp = { };
     if(o < 0 || o >= this.ram.length)
       return 1;
     this.ram[o] = v;
+    return 0;
+  };
+
+  /**
+   * @function sets the state of a pin
+   * @param p pin-number
+   * @param s new state to set
+   * @returns number 0 if success, 1 if the pin does not exist, 2 if the pin is an input pin, 3 if s is invalid
+   */
+  yasp.Emulator.prototype.setIO = function (p, s) {
+    var pin = this.pins[p];
+
+    if(s !== false && s !== true && (typeof s !== "number" || (s < 0 || s > 255)))
+      return 3;
+    if(pin === undefined)
+      return 1;
+    if(pin.mode === "in")
+      return 2;
+
+    pin.state = s;
     return 0;
   };
 
