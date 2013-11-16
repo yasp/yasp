@@ -971,7 +971,12 @@
         alert("Step-ROM-Checking is not yet implemented")
       }
       if(step.pin) {
-        alert("Step-PIN-Checking is not yet implemented")
+        for (var p in step.pin) {
+          var expected = step.pin[p];
+          var actual = emulator.getIO(p);
+
+          strictEqual(actual, expected, "pin " + p + " is " + expected);
+        }
       }
       if(step.stack) {
         for (var r in step.stack) {
