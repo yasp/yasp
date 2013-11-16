@@ -863,6 +863,17 @@
       ]
     }
   ]);
+
+  // TOGGLE
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "TOGGLE 3",
+      setup: { pin: { 3: true } },
+      steps: [
+        { pin: { 3: false } }
+      ]
+    }
+  ]);
   
 
   for (var i = 0; i < commandTestData.length; i++) {
