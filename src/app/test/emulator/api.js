@@ -412,7 +412,7 @@
     strictEqual(actual, expected);
   });
 
-  test("getIO - unknown pin", function () {
+  test("getIO", function () {
     var expected = true;
     emulator.pins = { 0: { mode: "in", state: expected } };
     var actual = emulator.getIO(0);
