@@ -49,7 +49,7 @@
 
     var dataTable = $('#result').dataTable( {
         "bPaginate": false,
-        "aaSorting": [[ 2, "desc" ]],
+      //  "aaSorting": [[ 2, "desc" ]],
         "bAutoWidth": false,
         "aoColumnDefs": [
             { "sClass": "alignRight", sWidth: '30px', "aTargets": [ 2 ] }
@@ -121,17 +121,6 @@
     }
 
     testNextCmd();
-</script>
-
-<script type="text/javascript">
-
-    $('#benchmark').click(function (e) {
-        $('#timeTakenHz').text("working..");
-        setTimeout(function () {
-            var result = repl.benchmark(getCode(), 5000000);
-            $('#timeTakenHz').text(Math.round(result.hz * 10) / 10 + " Hz");
-        }, 0)
-    });
 </script>
 </body>
 </html>
