@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+    <title>yasp benchmark</title>
+
+    <meta charset="utf-8">
+
+    <script src="../../lib/js/jquery-1.10.2.min.js"></script>
+    <script src="../js/commands.js"></script>
+    <script src="../js/utils.js"></script>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
+
+    <style type="text/css">
+        .alignRight { text-align: right; }
+
+        #resultWrapper {
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<script src="../js/assembler/assembler.js"></script>
+<script src="../js/assembler/passes/lexer.js"></script>
+<script src="../js/assembler/passes/analyser.js"></script>
+<script src="../js/assembler/passes/parser.js"></script>
+<script src="../js/assembler/passes/generator.js"></script>
+<script src="../js/emulator/bitutils.js"></script>
+<script src="../js/emulator/emulator.js"></script>
+
+<script src="./repl.js"></script>
+
+<h2>yasp-Benchmark</h2>
+<div id="resultWrapper">
+    <table id="result">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Command</th>
+            <th>Hz</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/javascript">
+    var repl = new yasp.Repl();
+
+    var dataTable = $('#result').dataTable( {
+        "bPaginate": false,
+        "aaSorting": [[ 2, "desc" ]],
+        "bAutoWidth": false,
+        "aoColumnDefs": [
+            { "sClass": "alignRight", sWidth: '30px', "aTargets": [ 2 ] }
+        ]
+    } );
+
+    function randomInt(max) {
+        return ~~(Math.random() * max);
+    }
+
+    var testCases = [];
+
+    for (var i = 0; i < yasp.commands.length; i++) {
+        var cmd = yasp.commands[i];
+        var name = (cmd.name instanceof Array ? cmd.name[0] : cmd.name);
+        var str = name + " ";
+        var humanCmd = name + " ";
+
+        for (var j = 0; j < cmd.params.length; j++) {
+            var param = cmd.params[j];
+
+            switch (param.type) {
+                case "r_word":
+                    str += "w" + randomInt(16);
+                    break;
+                case "l_word":
+                    str += randomInt(0xFFFF);
+                    break;
+                case "r_byte":
+                    str += "b" + randomInt(32);
+                    break;
+                case "l_byte":
+                    str += randomInt(0xFF);
+                    break;
+                case "pin":
+                    str += randomInt(10);
+                    break;
+                case "address":
+                    str = "lbl: " + str + "lbl";
+                    break;
+            }
+
+            if(j != cmd.params.length - 1){
+                str += ", ";
+            }
+        }
+
+        testCases.push({
+            name: name,
+            cmd: str
+        });
+    }
+
+    var jj = 0;
+
+    function testNextCmd() {
+        var cmd = testCases[jj];
+        var result = repl.benchmark(cmd.cmd, 2500000);
+        var hz = Math.round(result.hz);
+
+        dataTable.fnAddData( [ cmd.name, cmd.cmd, hz ] );
+
+        jj++;
+
+        if(jj < testCases.length)
+            setTimeout(arguments.callee, 10);
+        else
+            $('h2').css('color', 'green');
+    }
+
+    testNextCmd();
+</script>
+
+<script type="text/javascript">
+
+    $('#benchmark').click(function (e) {
+        $('#timeTakenHz').text("working..");
+        setTimeout(function () {
+            var result = repl.benchmark(getCode(), 5000000);
+            $('#timeTakenHz').text(Math.round(result.hz * 10) / 10 + " Hz");
+        }, 0)
+    });
+</script>
+</body>
+</html>
