@@ -32,8 +32,8 @@
 <script src="./repl.js"></script>
 
 Input: <input id="code" value="MOV b0,b1"><br>
-<button id="benchmark">Benchmark</button> => <span id="timeTakenHz">0 Hz</span>
-<pre id="bitcode">&nbsp;</pre>
+<button id="benchmark">Benchmark</button> => <span id="timeTakenHz">0 Hz</span><br><br>
+<pre id="bitcode">&nbsp;</pre><br>
 <div class="row">
     <pre id="regs" class="col"></pre>
     <pre id="pins" class="col"></pre>
@@ -50,7 +50,7 @@ Input: <input id="code" value="MOV b0,b1"><br>
 
             dumpRam();
             if(result.bitcode)
-                $('#bitcode').text(yasp.Repl.getDumpFromArray(result.bitcode, -1));
+                $('#bitcode').text("Bitcode: " + yasp.Repl.getDumpFromArray(result.bitcode, -1));
 
             if(result.error !== null) {
                 var error = getPrettyAsmError(result.error.errors);
