@@ -161,13 +161,10 @@ if (typeof yasp == 'undefined') yasp = { };
     if(v < 0 || v > 65535)
       return 1;
 
-    var bytes = yasp.bitutils.bytesFromWord(v);
-
     if(debug) console.log("b" + r + "=" + v);
-    r = r * 2;
-    this.ram[r] = bytes[0];
-    this.ram[r + 1] = bytes[1];
 
+    r = r * 2;
+    yasp.bitutils.bytesFromWord(v, this.ram, r);
     return true;
   };
 

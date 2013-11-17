@@ -95,7 +95,8 @@
 
   QUnit.cases(wordBytesData).test("bytesFromWord", function (params) {
     var expected = params.bytes;
-    var actual = yasp.bitutils.bytesFromWord(params.word);
+    var actual = [0,0];
+    yasp.bitutils.bytesFromWord(params.word, actual, 0);
     deepEqual(actual, expected);
   });
 
