@@ -144,7 +144,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @returns {Number}
    */
   yasp.Emulator.prototype.readByteRegister = function (r) {
-    if(r < 0 || r > 32)
+    if(r < 0 || r > 31)
       return -1;
     return this.ram[r];
   };
