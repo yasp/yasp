@@ -230,9 +230,8 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see Emulator#popWord
    */
   yasp.Emulator.prototype.pushWord = function (v) {
-    var bytes = yasp.bitutils.bytesFromWord(v);
-    this.pushByte(bytes[1]);
-    this.pushByte(bytes[0]);
+    this.stack[++this.sp] = v & 0xFF;
+    this.stack[++this.sp] = v >> 8;
   };
 
   /**
@@ -250,17 +249,17 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see Emulator#pushWord
    */
   yasp.Emulator.prototype.popWord = function () {
-    var b1 = this.popByte();
-    var b2 = this.popByte();
-    return yasp.bitutils.wordFromBytes(b1, b2);
+    return yasp.bitutils.wordFromBytes(this.popByte(), this.popByte());
   };
 
   /**
    * @function gets one byte from the stack and removed it
-   * @returns a byte from the top of stack
+   * @returns a byte from the top of stack or 0 if the stack is empty
    * @see Emulator#pushByte
    */
   yasp.Emulator.prototype.popByte = function () {
+    if(this.sp === -1)
+      return 0;
     return this.stack[this.sp--];
   };
 
