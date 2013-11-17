@@ -15,47 +15,51 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack = new Uint8Array(16);
     this.sp = -1;
 
-    this.pins = {
-      // Buttons
-      "1": {
+    this.pins = [
+      undefined,
+      {
         type: "gpio",
         state: false,
         mode: "in"
       },
-      "2": {
+      {
         type: "gpio",
         state: false,
         mode: "in"
       },
       // LEDs
-      "3": {
+      {
         type: "gpio",
         state: false,
         mode: "out"
       },
-      "4": {
+      {
         type: "gpio",
         state: false,
         mode: "out"
       },
-      "5": {
+      {
         type: "gpio",
         state: false,
         mode: "out"
       },
+      undefined,
+      undefined,
+      undefined,
+      undefined,
       // ADC0
-      "10": {
+      {
         type: "adc",
         state: false,
         mode: "in"
       },
       // ADC1
-      "11": {
+      {
         type: "adc",
         state: false,
         mode: "in"
       }
-    };
+    ];
 
     this.pc = 0;
     this.running = false;
