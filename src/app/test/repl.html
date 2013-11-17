@@ -5,6 +5,17 @@
 
     <meta charset="utf-8">
 
+    <style type="text/css">
+        .row > .col {
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 15px;
+            padding-right: 15px;
+            min-width: 200px;
+            border-right: solid black 5px;
+        }
+    </style>
+
     <script src="../../lib/js/jquery-1.10.2.min.js"></script>
     <script src="../js/commands.js"></script>
     <script src="../js/utils.js"></script>
@@ -23,7 +34,10 @@
 Input: <input id="code" value="MOV b0,b1"><br>
 <button id="benchmark">Benchmark</button> => <span id="timeTakenHz">0 Hz</span>
 <pre id="bitcode">&nbsp;</pre>
-<pre id="mem"></pre>
+<div class="row">
+    <pre id="regs" class="col"></pre>
+    <pre id="pins" class="col"></pre>
+</div>
 
 <script type="text/javascript">
     var repl = new yasp.Repl();
@@ -72,7 +86,8 @@ Input: <input id="code" value="MOV b0,b1"><br>
     }
 
     function dumpRam () {
-        $('#mem').text(repl.getRamDump());
+        $('#regs').text(repl.getRegisterDump());
+        $('#pins').text("Pins:\n\n" + repl.getPinDump());
     }
 </script>
 </body>

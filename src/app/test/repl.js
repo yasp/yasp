@@ -1,5 +1,4 @@
 (function () {
-  // 1537
   var assembler = new yasp.Assembler();
 
   yasp.Repl = function () {
@@ -78,6 +77,59 @@
 
   yasp.Repl.prototype.getRamDump = function () {
     return yasp.Repl.getDumpFromArray (this.emulator.ram, 20);
+  };
+
+  yasp.Repl.prototype.getRegisterDump = function () {
+    var regs = "";
+
+    var getSingleDump = function (type, num) {
+      var val = (type == "w" ? this.emulator.readWordRegister(num) : this.emulator.readByteRegister(num));
+      var vv = val.toString(16).toUpperCase();
+      vv = pad(vv, type == "w" ? 4 : 2);
+      vv = "0x" + vv;
+      return (num < 10 ? " " : "") + type + num + " = " + vv;
+
+      function pad(n, width, z) {
+        z = z || '0';
+        n = n + '';
+        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+      }
+    }.bind(this);
+
+    regs += "Flags: z=" + this.emulator.flags.z + "\n";
+    regs += "       c=" + this.emulator.flags.c;
+    regs += "\n\nRegisters:\n\n";
+
+    for (var i = 0; i < 32; i++) {
+
+      if(i < 16) {
+        regs += getSingleDump("b", i * 2);
+        regs += "\n";
+        regs += getSingleDump("b", i * 2 + 1) + "  " + getSingleDump("w", i);
+        regs += "\n";
+      } else {
+        regs += getSingleDump("w", i);
+      }
+
+      regs += "\n";
+    }
+
+    return regs;
+  };
+
+  yasp.Repl.prototype.getPinDump = function () {
+    var pins = "";
+
+    for (var p in this.emulator.pins) {
+      var pin = this.emulator.pins[p];
+      pins += (p < 10 ? " " : "") + "P" + p;
+      pins += "  state = " + pin.state + "\n";
+      pins += "     type  = " + pin.type + "\n";
+      pins += "     mode  = " + pin.mode + "\n";
+      pins += "\n";
+    }
+
+    return pins;
   };
 
   yasp.Repl.prototype.getRomDump = function () {
