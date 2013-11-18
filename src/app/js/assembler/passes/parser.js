@@ -170,6 +170,12 @@ if (typeof yasp == 'undefined') yasp = { };
             if (num >= Math.pow(2, 8) && last.getType() == yasp.TokenType.BYTE_REGISTER) typ += "[too big for byte register]";
             if (num >= Math.pow(2, 16) && last.getType() == yasp.TokenType.WORD_REGISTER) typ += "[too big for word register]";
           }
+          
+          // unknown label?
+          if (typ == yasp.TokenType.LABEL && !iterator.assembler.getLabel(cur.text)) {
+            typ += "[unknown label address]"; // shit
+          }
+          
           parameters += typ;
           last = cur;
           iterator.next();

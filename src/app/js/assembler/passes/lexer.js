@@ -12,7 +12,7 @@ if (typeof yasp == "undefined") yasp = { };
     validByteRegisters.push("B" + i);
   }
   var validWordRegisters = [];
-  for (var i = 0; i < 16; i++) {
+  for (var i = 0; i < 32; i++) {
     validWordRegisters.push("W" + i);
   }
   var validUnknownRegister = /[BW]\d+/;

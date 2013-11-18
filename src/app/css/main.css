@@ -56,8 +56,11 @@ textarea {
     padding: 0.2em 0;
 }
 
-html {
+html, body {
     height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    position: fixed;
 }
 /* ==========================================================================
    Author's custom styles
@@ -88,6 +91,10 @@ html {
     float: left;
 }
 
+.presentation {
+    display: none;
+}
+
 /* Upper case all instructions */
 span.cm-keyword {
     text-transform: uppercase !important;
@@ -111,6 +118,8 @@ span.cm-keyword {
     background-color: rgb(240,240,240);
     
     opacity: 0.5;
+    
+    z-index: 10000;
 }
 
 
