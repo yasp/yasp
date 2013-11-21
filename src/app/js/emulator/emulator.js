@@ -477,6 +477,8 @@ if (typeof yasp == 'undefined') yasp = { };
           p1.value = this.readByteRegister(p1.address);
         else if(p1.isRWord === true)
           p1.value = this.readWordRegister(p1.address);
+        else if(p1.isPin === true)
+          p1.value = this.getIO(p1.address);
 
         cmd.exec.call(this, p0, p1);
       } else {
