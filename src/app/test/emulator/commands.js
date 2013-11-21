@@ -959,15 +959,17 @@
 
     if(!test.title)
       test.title = test.cmd.replace('\n', ' / ');
-    test.asm = assembler.assemble({ code: test.cmd, jobs: ["bitcode"] });
   }
 
   QUnit.cases(commandTestData).test("command", function (params) {
-    if(params.asm.success === false)
-      return ok(false, "Assembler failed");
+    var asm = assembler.assemble({ code: params.cmd, jobs: ["bitcode"] });
+    ok(asm.success, "Assembler");
+
+    if(!asm.success)
+      return;
 
     emulator.pc = 0;
-    emulator.load(params.asm.bitcode, 0);
+    emulator.load(asm.bitcode, 0);
 
     var setup = params.setup;
 
