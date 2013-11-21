@@ -418,4 +418,22 @@
     var actual = emulator.getIO(0);
     strictEqual(actual, expected);
   });
+
+  test("setInterruptMask", function () {
+    var expected = [
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true
+    ];
+    emulator.setInterruptMask(236);
+    var actual = emulator.interruptMask;
+    deepEqual(actual, expected);
+  });
+
+
 })();

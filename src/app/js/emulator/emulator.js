@@ -15,6 +15,23 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack = new Uint8Array(16);
     this.sp = -1;
 
+    // bits of interrupt-mask
+    // set by ENABLE, DISABLE
+    this.interruptMask = [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ];
+
+    // set by interrupt-sources (e.g. pins)
+    // checked in tick()
+    this.interruptToServe = -1;
+
     this.pins = [
       undefined,
       {
@@ -312,6 +329,10 @@ if (typeof yasp == 'undefined') yasp = { };
     if(pin.mode === "in")
       return 2;
 
+    if(s === true) {
+      this.triggerInterrupt(p);
+    }
+
     pin.state = s;
     return 0;
   };
@@ -340,10 +361,48 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.ram[o];
   };
 
+  /**
+   * @function triggers an interrupt for the next tick
+   * @param i the interrupt to trigger
+   * @returns boolean true if the interrupt is going to served, false otherwise (depends on the active interrupt-mask)
+   */
+  yasp.Emulator.prototype.triggerInterrupt = function (i) {
+    if(this.interruptMask[i] === false)
+      return false;
+    this.interruptToServe = i;
+    return true;
+  };
+
+  /**
+   * @function returns to byte to jump to for a given interrupt
+   * @param i the interrupt
+   */
+  yasp.Emulator.prototype.getInterruptAddress = function (i) {
+    i = 0x100 + (i * 2);
+    return yasp.bitutils.wordFromBytes(this.rom[i], this.rom[i + 1]);
+  };
+
+  /**
+   * @function sets the interrupt-mask
+   * @param mask mask to set
+   */
+  yasp.Emulator.prototype.setInterruptMask = function (mask) {
+    for (var i = 0; i < 8; i++) {
+      this.interruptMask[i] = (mask & 1) === 1;
+      mask = mask >> 1;
+    }
+  };
+
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false && !this.stepping) {
       setTimeout(this.tick.bind(this), tickTimeout);
       return;
+    }
+
+    if(this.interruptToServe !== -1) {
+      this.pushWord(this.pc); // for RETI
+      this.pc = this.getInterruptAddress(this.interruptToServe);
+      this.interruptToServe = -1;
     }
 
     var ppc = this.pc;
