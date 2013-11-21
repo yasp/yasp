@@ -15,6 +15,8 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack = new Uint8Array(16);
     this.sp = -1;
 
+    this.waitTicks = 0;
+
     // bits of interrupt-mask
     // set by ENABLE, DISABLE
     this.interruptMask = [
@@ -393,8 +395,22 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
+  /**
+   * @function waits for a given time
+   * @param ticks number of ticks to wait
+   */
+  yasp.Emulator.prototype.wait = function (ticks) {
+    this.waitTicks += ticks;
+  };
+
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false && !this.stepping) {
+      setTimeout(this.tick.bind(this), tickTimeout);
+      return;
+    }
+
+    if(this.waitTicks !== 0) {
+      this.waitTicks--;
       setTimeout(this.tick.bind(this), tickTimeout);
       return;
     }

@@ -3,7 +3,7 @@
 
   module("emulator api", {
     setup: function () {
-      emulator = new yasp.Emulator();
+      emulator = new yasp.Emulator(true);
     },
     teardown: function () {
       emulator = null;
@@ -435,5 +435,17 @@
     deepEqual(actual, expected);
   });
 
+  test("wait", function () {
+    var expected = 50;
+    emulator.wait(expected);
+    strictEqual(emulator.waitTicks, expected);
+  });
+
+  test("wait - tick", function () {
+    var expected = 49;
+    emulator.wait(expected + 1);
+    emulator.tick();
+    strictEqual(emulator.waitTicks, expected);
+  });
 
 })();
