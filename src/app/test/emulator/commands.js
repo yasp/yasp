@@ -893,11 +893,61 @@
     }
   ]);
 
+  // RETI
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "RETI",
+      setup: { reg: { "sp": 1 }, stack: [ 0x42, 0x41 ] },
+      steps: [
+        { reg: { "pc": 0x4142 } }
+      ]
+    }
+  ]);
+
+  // ENABLE
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "ENABLE 42",
+      setup: { },
+      steps: [
+        { interruptMask: [ false, true, false, true, false, true, false, false ] }
+      ]
+    }
+  ]);
+
+  // DISABLE
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "DISABLE",
+      setup: { interruptMask: [ true, true, true, true, true, true, true, true ] },
+      steps: [
+        { interruptMask: [ false, false, false, false, false, false, false, false ] }
+      ]
+    }
+  ]);
+
+  // Interrupt-Test
+  commandTestData = commandTestData.concat([
+    {
+      title: "Interrupt",
+      cmd: "MOV b0,1",
+      setup: {
+        interruptMask: [ false, true, false, false, false, false, false, false ],
+        rom: { 0x102: 0x00, 0x103: 66 }
+      },
+      steps: [
+        { "triggerInterrupt": 1 },
+        { "reg": { "pc": 69 } } // not 66 because there is 0x00 0x00 0x00 at that address which is MOV b0,0
+      ]
+    }
+  ]);
+
 
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
-    test.title = test.cmd.replace('\n', ' / ');
+    if(!test.title)
+      test.title = test.cmd.replace('\n', ' / ');
     test.asm = assembler.assemble({ code: test.cmd, jobs: ["bitcode"] });
   }
 
@@ -946,6 +996,14 @@
         for (var p in setup.pin) {
           emulator.setIO(p, setup.pin[p]);
         }
+      }
+      if(setup.rom) {
+        for (var a in setup.rom) {
+          emulator.rom[a] = setup.rom[a];
+        }
+      }
+      if(setup.interruptMask) {
+        emulator.interruptMask = setup.interruptMask;
       }
       if(setup.flags) {
         if(setup.flags.z)
@@ -1026,6 +1084,9 @@
       if(step.rom) {
         alert("Step-ROM-Checking is not yet implemented")
       }
+      if(step.interruptMask) {
+        deepEqual(emulator.interruptMask, step.interruptMask);
+      }
       if(step.pin) {
         for (var p in step.pin) {
           var expected = step.pin[p];
@@ -1033,6 +1094,9 @@
 
           strictEqual(actual, expected, "pin " + p + " is " + expected);
         }
+      }
+      if(step.triggerInterrupt) {
+        emulator.triggerInterrupt(step.triggerInterrupt);
       }
       if(step.stack) {
         for (var r in step.stack) {
