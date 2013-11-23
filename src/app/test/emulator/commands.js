@@ -989,6 +989,21 @@
     }
   ]);
 
+  // CALL/RET
+  commandTestData = commandTestData.concat([
+    {
+      title: "CALL/RET",
+      cmd: "CALL lbl\n"
+         + "DB 255\n"
+         + "lbl:"
+         + "RET",
+      setup: { },
+      steps: [
+        { reg: { "pc": 3, "sp": 1 }, stack: [ 0x02, 0x00 ]  },
+        { reg: { "pc": 2, "sp": -1 } }
+      ]
+    }
+  ]);
 
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
