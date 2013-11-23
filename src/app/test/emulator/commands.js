@@ -999,7 +999,7 @@
 
   QUnit.cases(commandTestData).test("command", function (params) {
     var asm = assembler.assemble({ code: params.cmd, jobs: ["bitcode"] });
-    ok(asm.success, "Assembler");
+    ok(asm.success, "Assembling works");
 
     if(!asm.success)
       return;
@@ -1069,6 +1069,7 @@
 
     for (var i = 0; i < params.steps.length; i++) {
       var step = params.steps[i];
+      var stepPrefix = "Step " + (i+1) + ": ";
 
       emulator.tick();
 
@@ -1079,7 +1080,7 @@
 
           if(r.length < 2)
           {
-            ok(false, "Invalid test: step-register " + r);
+            ok(false, stepPrefix + "Invalid test: step-register " + r);
             continue;
           }
 
@@ -1096,12 +1097,12 @@
               actual = emulator.readWordRegister(n);
             else
             {
-              ok(false, "Invalid test: step-register " + r + " does not exist.");
+              ok(false, stepPrefix + "Invalid test: step-register " + r + " does not exist.");
               continue;
             }
           }
 
-          strictEqual(actual, expected, "register " + r + " is " + expected);
+          strictEqual(actual, expected, stepPrefix + "register " + r + " is " + expected);
         }
       }
       if(step.flags) {
@@ -1113,7 +1114,7 @@
             longname = "carry";
           if(flag == "z")
             longname = "zero";
-          var msg = longname + " flag is " + (step.flags[flag] === true ? "set" : "not set");
+          var msg = stepPrefix +longname + " flag is " + (step.flags[flag] === true ? "set" : "not set");
 
           if(typeof step.flags[flag] === undefined && flags[flag] === false ||
              typeof step.flags[flag] !== undefined && flags[flag] == step.flags[flag])
@@ -1127,11 +1128,11 @@
           var expected = parseRegValue(step.ram[r]);
           var actual = emulator.ram[r];
 
-          strictEqual(actual, expected, "ram-byte " + r + " is " + expected);
+          strictEqual(actual, expected, stepPrefix + "ram-byte " + r + " is " + expected);
         }
       }
       if(step.rom) {
-        alert("Step-ROM-Checking is not yet implemented")
+        alert(stepPrefix +"Step-ROM-Checking is not yet implemented")
       }
       if(step.interruptMask) {
         deepEqual(emulator.interruptMask, step.interruptMask);
@@ -1141,7 +1142,7 @@
           var expected = step.pin[p];
           var actual = emulator.getIO(p);
 
-          strictEqual(actual, expected, "pin " + p + " is " + expected);
+          strictEqual(actual, expected, stepPrefix + "pin " + p + " is " + expected);
         }
       }
       if(step.triggerInterrupt) {
@@ -1152,7 +1153,7 @@
           var expected = parseRegValue(step.stack[r]);
           var actual = emulator.stack[r];
 
-          strictEqual(actual, expected, "stack-entry " + r + " is " + expected);
+          strictEqual(actual, expected, stepPrefix + "stack-entry " + r + " is " + expected);
         }
       }
       if(step.waitTicks !== undefined) {
