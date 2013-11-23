@@ -953,6 +953,42 @@
     }
   ]);
 
+  // PAUSE/DELAY register
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "PAUSE w0",
+      setup: { reg: { "w0": 0xFAFB } },
+      steps: [
+        { waitTicks: 0xFAFB }
+      ]
+    },
+    {
+      cmd: "DELAY w0",
+      setup: { reg: { "w0": 0xFBFA } },
+      steps: [
+        { waitTicks: 0xFBFA }
+      ]
+    }
+  ]);
+
+  // PAUSE/DELAY literal
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "PAUSE 0xFAFB",
+      setup: { },
+      steps: [
+        { waitTicks: 0xFAFB }
+      ]
+    },
+    {
+      cmd: "DELAY 0xFBFA",
+      setup: { },
+      steps: [
+        { waitTicks: 0xFBFA }
+      ]
+    }
+  ]);
+
 
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
@@ -1118,6 +1154,9 @@
 
           strictEqual(actual, expected, "stack-entry " + r + " is " + expected);
         }
+      }
+      if(step.waitTicks !== undefined) {
+        strictEqual(emulator.waitTicks, step.waitTicks);
       }
     }
 
