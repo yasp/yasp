@@ -94,6 +94,9 @@ if (typeof yasp == 'undefined') yasp = { };
       var params = null;
       var commandToken = iterator.current();
       iterator.next();
+      if (iterator.is(":")) {
+        iterator.riseSyntaxError("Command cannot be a label.");
+      }
       
       for (var i = 0; i < yasp.commands.length; i++) {
         var commandName;

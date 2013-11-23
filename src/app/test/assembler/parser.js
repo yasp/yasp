@@ -40,6 +40,7 @@
     {input: "MOV MOV MOV", fails: true},
     {input: "MOV B0, B1, B3", fails: true},
     {input: "asdfdspsidhgeoighfg", fails: true},
+    {input: "sub:", fails: true},
     {input: "DEFINE importantRegister W0 \n ASDF: GOTO ASDF\n\n\nPUSH importantregister \n END asdf yolomolo", fails: false, symbols: {
       "defines": {
         "IMPORTANTREGISTER": "W0"
