@@ -1005,6 +1005,17 @@
     }
   ]);
 
+  // JMPI
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "JMPI w0",
+      setup: { reg: { "w0": 0xFAFB } },
+      steps: [
+        { reg: { "pc": 0xFAFB } }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
