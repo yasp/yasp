@@ -1,5 +1,5 @@
 {
-  "name": [ "RETI", "RET" ],
+  "name": [ "RETI", "RET", "RETURN" ],
   "description": "",
   "code": [
     {
