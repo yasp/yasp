@@ -1,6 +1,19 @@
 {
   "name": "RR",
-  "description": "This instruction shifts the bytes in the byte register by 1 bit to the right into the carry bit. The zero bit is set according to the lowest significant bit.",
+  "doc": {
+    "de": {
+      "description": "Shiftet das register um ein Bit nach rechts in das Carry-Flag, z.B.: 10000000 => 01000000",
+      "flags": {
+        "c": "wird gesetzt wenn das niederwertigste Bit des Wertes 1 war"
+      }
+    },
+    "en": {
+      "description": "Shifts the register by one bit to the right into the carry bit, e.g. 10000000 => 01000000",
+      "flags": {
+        "c": "is set if the least-significant bit of the value was 1"
+      }
+    }
+  },
   "code": [
     {
       "value": 0x40

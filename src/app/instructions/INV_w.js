@@ -1,6 +1,19 @@
-a={
+{
   "name": "INV",
-  "description": "Calculates the 1's complement on the specified word register. If the result equals 0 the zero bit is set.",
+  "doc": {
+    "de": {
+      "description": "Berechnet das Einser-Kompliment des angegebenen registers.",
+      "flags": {
+        "z": "wird gesetzt wenn das Ergebnis 0 ist"
+      }
+    },
+    "en": {
+      "description": "Calculates the 1's complement of the specified register.",
+      "flags": {
+        "z": "is set if the result is 0"
+      }
+    }
+  },
   "code": [
     {
       "value": 0x60
