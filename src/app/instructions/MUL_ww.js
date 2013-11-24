@@ -1,6 +1,17 @@
 {
   "name": "MUL",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Multipliziert die beiden niederwertigen bytes der register.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Multiplies the two least significant bytes of the registers.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x10

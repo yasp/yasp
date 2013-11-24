@@ -1,6 +1,17 @@
 {
   "name": "DIV",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Dividiert den Wert des ersten Registers durch das niederwertige Byte des zweiten Registers.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Divides the value of the first Register with the least significant byte of the second register.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x10

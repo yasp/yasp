@@ -1,6 +1,17 @@
 {
   "name": "CLR",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Setzt den Wert des Registers auf 0x0000.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Sets the value of the register to 0x0000",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x60
