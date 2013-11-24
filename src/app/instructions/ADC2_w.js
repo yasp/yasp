@@ -1,6 +1,17 @@
 {
   "name": "ADC2",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Liest einen analogen Wert von dem Pin 12 in das register.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Reads an analogue value from pin 12 into the given register.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x90

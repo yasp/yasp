@@ -2,7 +2,7 @@
   "name": "PIN",
   "doc": {
     "de": {
-      "description": "Ließt einen digitalen Wert von dem gegebenen Pin. low/aus z=1; high/an z=0",
+      "description": "Liest einen digitalen Wert von dem gegebenen Pin. low/aus z=1; high/an z=0",
       "flags": {
         "z": ""
       }

@@ -2,7 +2,7 @@
   "name": "POT",
   "doc": {
     "de": {
-      "description": "Ließt einen analogen Wert von dem gegebenen Pin.",
+      "description": "Liest einen analogen Wert von dem gegebenen Pin.",
       "flags": {
       }
     },
