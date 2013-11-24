@@ -23,6 +23,7 @@
   ],
   "params": [
     {
+      "valueNeeded": false,
       "type": "pin"
     }
   ],

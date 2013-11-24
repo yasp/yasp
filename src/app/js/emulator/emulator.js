@@ -502,6 +502,8 @@ if (typeof yasp == 'undefined') yasp = { };
         var param = { type: cmd.params[i].type, value: null, address: null };
         var part = parts[cmd.code.length + i];
 
+        param.valueNeeded = (cmd.params[i].valueNeeded !== false);
+
         switch (cmd.params[i].type) {
           case "r_byte":
             param.address = part;
@@ -546,21 +548,25 @@ if (typeof yasp == 'undefined') yasp = { };
     if(params.length === 0) {
       cmd.exec.call(this);
     } else {
-      if(p0.isRByte === true)
-        p0.value = this.readByteRegister(p0.address);
-      else if(p0.isRWord === true)
-        p0.value = this.readWordRegister(p0.address);
-      else if(p0.isPin === true)
-        p0.value = this.getIO(p0.address);
+      if(p0.valueNeeded) {
+        if(p0.isRByte === true)
+          p0.value = this.readByteRegister(p0.address);
+        else if(p0.isRWord === true)
+          p0.value = this.readWordRegister(p0.address);
+        else if(p0.isPin === true)
+          p0.value = this.getIO(p0.address);
+      }
 
       if(params.length === 2) {
         var p1 = params[1];
-        if(p1.isRByte === true)
-          p1.value = this.readByteRegister(p1.address);
-        else if(p1.isRWord === true)
-          p1.value = this.readWordRegister(p1.address);
-        else if(p1.isPin === true)
-          p1.value = this.getIO(p1.address);
+        if(p1.valueNeeded) {
+          if(p1.isRByte === true)
+            p1.value = this.readByteRegister(p1.address);
+          else if(p1.isRWord === true)
+            p1.value = this.readWordRegister(p1.address);
+          else if(p1.isPin === true)
+            p1.value = this.getIO(p1.address);
+        }
 
         cmd.exec.call(this, p0, p1);
       } else {
