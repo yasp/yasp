@@ -69,13 +69,19 @@ if (typeof yasp == 'undefined') yasp = { };
       // ADC0
       {
         type: "adc",
-        state: false,
+        state: 0,
         mode: "in"
       },
       // ADC1
       {
         type: "adc",
-        state: false,
+        state: 0,
+        mode: "in"
+      },
+      // ADC2
+      {
+        type: "adc",
+        state: 0,
         mode: "in"
       }
     ];

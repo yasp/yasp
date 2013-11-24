@@ -1027,6 +1027,31 @@
     }
   ]);
 
+  // ADC0/1/2
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "ADC0 w1",
+      setup: { pin: { 10: 0xFAAB } },
+      steps: [
+        { reg: { "w1": 0xFAAB } }
+      ]
+    },
+    {
+      cmd: "ADC1 w1",
+      setup: { pin: { 11: 0xFAAB } },
+      steps: [
+        { reg: { "w1": 0xFAAB } }
+      ]
+    },
+    {
+      cmd: "ADC2 w1",
+      setup: { pin: { 12: 0xFAAB } },
+      steps: [
+        { reg: { "w1": 0xFAAB } }
+      ]
+    },
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
