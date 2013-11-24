@@ -1,6 +1,17 @@
 {
   "name": "JZ",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Springt zum gegebenen Label wenn das Zero-Flag gesetzt ist.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Jumps to the given label only when the zero-flag is set.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": "11100"
