@@ -1,6 +1,17 @@
 {
   "name": "HIGH",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Setzt den Pin auf den high- bzw. an-Zustand.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Puts the pin into the high- or on-state.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0xA0

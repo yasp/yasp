@@ -1,6 +1,17 @@
 {
   "name": "LOW",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Setzt den Pin auf den low- bzw. aus-Zustand.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Puts the pin into the low- or off-state.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0xA0

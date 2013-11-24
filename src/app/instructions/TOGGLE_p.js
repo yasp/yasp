@@ -1,6 +1,17 @@
 {
   "name": "TOGGLE",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Invertiert den digitalen Wert eines Ausgangs-Pins.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Inverts the digital value of an output-pin.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0xA0

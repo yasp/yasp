@@ -1,6 +1,17 @@
 {
   "name": "POT",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Ließt einen analogen Wert von dem gegebenen Pin.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Reads an analogue value from the given pin.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x10
