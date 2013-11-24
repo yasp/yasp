@@ -1,6 +1,17 @@
 {
   "name": "POP",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Nimmt die zwei obersten Byte vom Stack und schreibt sie in das register. Das erste Byte wird zum niederwertigsten Byte des Words.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Takes the top two bytes from the stack and writes them into the register. The first byte becomes the least significant byte in the word.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x60

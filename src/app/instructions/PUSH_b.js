@@ -1,6 +1,17 @@
 {
   "name": "PUSH",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Pusht ein byte auf den Stack.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Pushes one byte onto the stack.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x40
