@@ -1016,6 +1016,17 @@
     }
   ]);
 
+  // POT
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "POT 10,w0",
+      setup: { pin: { 10: 0xFAAB } },
+      steps: [
+        { reg: { "w0": 0xFAAB } }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
@@ -1069,7 +1080,7 @@
       }
       if(setup.pin) {
         for (var p in setup.pin) {
-          emulator.setIO(p, setup.pin[p]);
+          emulator.setIO(p, setup.pin[p], true);
         }
       }
       if(setup.rom) {
