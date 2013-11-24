@@ -5,7 +5,7 @@
       "description": "Zieht 1 vom Wert des Registers ab. Wenn der Wert 0x00 ist, ist das Ergebnis 0xFFFF.",
       "flags": {
         "z": "wird gesetzt wenn das Ergebnis 0 ist",
-        "c": "wird gesetzt wenn das der Wert 0 war"
+        "c": "wird gesetzt wenn der Wert 0 war"
       }
     },
     "en": {
