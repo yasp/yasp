@@ -1,6 +1,19 @@
 {
   "name": "XOR",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Wendet den binären Exklusiv-Oder-Operator auf die Werte der Register an.",
+      "flags": {
+        "z": "wird gesetzt wenn das Ergebnis 0 ist"
+      }
+    },
+    "en": {
+      "description": "Calucates the binary exclusive-or of the values of both registers.",
+      "flags": {
+        "z": "is set if the result is 0"
+      }
+    }
+  },
   "code": [
     {
       "value": 0x10

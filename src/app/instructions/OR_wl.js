@@ -1,6 +1,19 @@
 {
   "name": "OR",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Wendet den binären ODER-Operator auf den Wert des Registers und den zweiten Parameter an.",
+      "flags": {
+        "z": "wird gesetzt wenn das Ergebnis 0 ist"
+      }
+    },
+    "en": {
+      "description": "Calucates the binary OR of the value of the register and the even literal value.",
+      "flags": {
+        "z": "is set if the result is 0"
+      }
+    }
+  },
   "code": [
     {
       "value": 0x20
