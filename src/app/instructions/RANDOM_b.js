@@ -1,6 +1,17 @@
 {
   "name": "RANDOM",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Schreibt einen zufälligen Wert in das Register.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Writes a random value into the register.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x50
