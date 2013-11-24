@@ -1,6 +1,17 @@
 {
   "name": "DISABLE",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Deaktiviert alle interrupts",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Disables all interrupts",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": "00111010",

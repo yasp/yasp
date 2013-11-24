@@ -1,6 +1,17 @@
 {
   "name": ["GOTO", "JMP"],
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Springt zum gegebenen Label.",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Jumps to the given label.",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": "10110"
