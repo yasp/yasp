@@ -516,10 +516,12 @@ if (typeof yasp == 'undefined') yasp = { };
           case "l_byte":
             param.value = part;
             param.address = null;
+            param.valueNeeded = false;
             break;
           case "l_word":
             param.value = part;
             param.address = null;
+            param.valueNeeded = false;
             break;
           case "pin":
             param.address = part;
@@ -528,6 +530,7 @@ if (typeof yasp == 'undefined') yasp = { };
           case "address":
             param.value = part;
             param.address = null;
+            param.valueNeeded = false;
             break;
         }
 

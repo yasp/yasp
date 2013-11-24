@@ -65,6 +65,10 @@
     for (var i = 0; i < yasp.commands.length; i++) {
         var cmd = yasp.commands[i];
         var name = (cmd.name instanceof Array ? cmd.name[0] : cmd.name);
+
+        if(name == "DELAY")
+            continue;
+
         var str = name + " ";
         var humanCmd = name + " ";
 
