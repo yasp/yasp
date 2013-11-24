@@ -319,16 +319,17 @@ if (typeof yasp == 'undefined') yasp = { };
    * @function sets the state of a pin
    * @param p pin-number
    * @param s new state to set
+   * @param outside true if the pin was set by the environment
    * @returns number 0 if success, 1 if the pin does not exist, 2 if the pin is an input pin, 3 if s is invalid
    */
-  yasp.Emulator.prototype.setIO = function (p, s) {
+  yasp.Emulator.prototype.setIO = function (p, s, outside) {
     var pin = this.pins[p];
 
-    if(s !== false && s !== true && (typeof s !== "number" || (s < 0 || s > 255)))
+    if(s !== false && s !== true && (typeof s !== "number" || (s < 0 || s > 65535)))
       return 3;
     if(pin === undefined)
       return 1;
-    if(pin.mode === "in")
+    if(pin.mode === "in" && outside !== true)
       return 2;
 
     if(s === true) {

@@ -358,6 +358,14 @@
     strictEqual(actual, expected);
   });
 
+  test("setIO - set an input pin from outside", function () {
+    var expected = 0;
+    emulator.pins = { 0: { mode: "in" } };
+    var actual = emulator.setIO(0, true, true);
+    strictEqual(actual, expected);
+    strictEqual(emulator.pins[0].state, true);
+  });
+
   test("setIO - invalid state, string", function () {
     var expected = 3;
     var actual = emulator.setIO(0, "12");
@@ -372,7 +380,7 @@
 
   test("setIO - invalid state, int, too big", function () {
     var expected = 3;
-    var actual = emulator.setIO(0, 300);
+    var actual = emulator.setIO(0, 65536);
     strictEqual(actual, expected);
   });
 
@@ -386,24 +394,28 @@
     var expected = 0;
     var actual = emulator.setIO(3, true);
     strictEqual(actual, expected);
+    strictEqual(emulator.pins[3].state, true);
   });
 
   test("setIO - state = false", function () {
     var expected = 0;
     var actual = emulator.setIO(3, false);
     strictEqual(actual, expected);
+    strictEqual(emulator.pins[3].state, false);
   });
 
-  test("setIO - state = 0", function () {
+  test("setIO - state = min", function () {
     var expected = 0;
     var actual = emulator.setIO(3, 0);
     strictEqual(actual, expected);
+    strictEqual(emulator.pins[3].state, 0);
   });
 
-  test("setIO - state = 255", function () {
+  test("setIO - state = max", function () {
     var expected = 0;
-    var actual = emulator.setIO(3, 255);
+    var actual = emulator.setIO(3, 65535);
     strictEqual(actual, expected);
+    strictEqual(emulator.pins[3].state, 65535);
   });
 
   test("getIO - unknown pin", function () {
