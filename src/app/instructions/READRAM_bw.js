@@ -1,6 +1,19 @@
 {
   "name": "READRAM",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Liest den Wert im RAM an der Adresse des Word-Registers in das Byte-Register.",
+      "flags": {
+        "c": "wird gesetzt wenn die Adresse außerhalb des RAMs liegt"
+      }
+    },
+    "en": {
+      "description": "Reads the value in RAM at the address of the word-register into the byte-register.",
+      "flags": {
+        "c": "is set if the address is outside the bounds of the RAM"
+      }
+    }
+  },
   "code": [
     {
       "value": 0x10

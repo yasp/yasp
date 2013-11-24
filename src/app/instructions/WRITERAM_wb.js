@@ -1,6 +1,19 @@
 {
   "name": "WRITERAM",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Schreibt den Wert des Byte-Registers in den RAM an die adresse des Word-Registers.",
+      "flags": {
+        "c": "wird gesetzt wenn die Adresse außerhalb des RAMs liegt"
+      }
+    },
+    "en": {
+      "description": "Writes the value of the byte-register into the RAM at the address of the word-register.",
+      "flags": {
+        "c": "is set if the address is outside the bounds of the RAM"
+      }
+    }
+  },
   "code": [
     {
       "value": 0x10
