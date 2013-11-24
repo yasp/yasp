@@ -1,6 +1,21 @@
 {
   "name": "CMP",
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Vergleicht zwei Werte.",
+      "flags": {
+        "z": "wird gesetzt wenn die Werte gleich sind",
+        "c": "wird gesetzt wenn der zweite Wert größer ist als der erste.",
+      }
+    },
+    "en": {
+      "description": "Compares two values.",
+      "flags": {
+        "z": "is set if the values are equal",
+        "c": "is set if the second value is greater than the first value",
+      }
+    }
+  },
   "code": [
     {
       "value": 0x00

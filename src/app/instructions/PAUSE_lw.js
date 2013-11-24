@@ -1,6 +1,17 @@
 {
   "name": ["DELAY", "PAUSE"],
-  "description": "",
+  "doc": {
+    "de": {
+      "description": "Wartet die angegebene Zeit, z.B.: 1000 = 15ms, 60000 = 900ms",
+      "flags": {
+      }
+    },
+    "en": {
+      "description": "Waits a given time, e.g.: 1000 = 15ms, 60000 = 900ms",
+      "flags": {
+      }
+    }
+  },
   "code": [
     {
       "value": 0x30
