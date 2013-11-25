@@ -105,10 +105,10 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /**
    * Responsible in the Web Worker for communicating with the client
-   * @param self The self variable which is set in the web worker enviroment
-   * @param listener The listener. The listener has to call "ready" if the results are available
+   * @param self The self variable which is set in the web worker environment
+   * @param listener The listener has to call "ready" if the results are available
    */
-  yasp.CommunicaterBackend = function(self, listener) {
+  yasp.CommunicatorBackend = function(self, listener) {
     console = {
       log: function(msg) {
         self.postMessage({

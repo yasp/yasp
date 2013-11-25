@@ -2,7 +2,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
 importScripts('../../js/communicator.js');
 
-new yasp.CommunicaterBackend(self, function(data, ready, broadcast) {
+new yasp.CommunicatorBackend(self, function(data, ready, broadcast) {
   switch (data.action) {
     case "TEST":
       // some fancy calculation
