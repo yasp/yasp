@@ -26,6 +26,7 @@
       "type": "pin"
     },
     {
+      "valueNeeded": false,
       "type": "r_word"
     }
   ],
