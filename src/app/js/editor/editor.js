@@ -279,6 +279,11 @@ if (typeof yasp == 'undefined') yasp = { };
           storage['codecompletion'] = this.checked;
         }).attr('checked', storage['codecompletion']);
       });
+      $('.menu_about').click(function() {
+        $('#dialog_about').modal({
+          'keyboard': true
+        });
+      });
     })();
     
     // hinting

@@ -107,6 +107,50 @@ END
         </div>
         <div id="labellist" class="presentation"></div>
         
+        <div class="modal fade" id="dialog_about" tabindex="-1" role="dialog" aria-labeledby="aboutlabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">About</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p align="center">
+                            <img src="app/img/logo.png" width="274" height="183" alt="Logo"/>
+                        </p>
+                        <p>
+                            <i>yasp</i> is a fully functional web-based USB-Master development environment. It features an integrated development enviroment, binary compatible emulator, cutting-edge Debugger and highly sophisticated assembler. The development suit aims to make learning assembler programming easy and accessible for everyone.
+                        </p>
+                        <h6>Version</h6>
+                        <ul>
+                            <li>0.6 BETA</li>
+                        </ul>
+                        <h6>Team</h6>
+                        <ul>
+                            <li><a href="http://luto.at/" target="_blank">Michael Lutonsky</a></li>
+                            <li><a href="http://programming-with-design.at/" target="_blank">Robert Fischer</a></li>
+                        </ul>
+                        <h6>Special thanks</h6>
+                        <p>
+                            <ul>
+                                <li>Dipl.- Ing. Robert Jelinek</li>
+                                <li>Dipl.- Ing. Joachim Grüneis</li>
+                                <li>HTLBVA Spengergasse</li>
+                            </ul>
+                        </p>
+                        <h6>Copyright</h6>
+                        <ul>
+                            <li>© 2013 Michael Lutonsky, Robert Fischer</li>
+                        </ul>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="dialog_settings" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -116,60 +160,65 @@ END
                     </div>
                     <div class="modal-body">
                         <form role="form">
-                          <div class="form-group">
-                              <label for="theme_picker">Theme</label>
-                              <select class="form-control" id="theme_picker">
-                                  <option value="3024-day">3024 Day</option>
-                                  <option value="3024-night">3024 Night</option>
-                                  <option value="ambiance">Ambiance</option>
-                                  <option value="base16-dark">Base16 Dark</option>
-                                  <option value="base16-light">Base16 Light</option>
-                                  <option value="blackboard">Blackboard</option>
-                                  <option value="cobalt">Cobalt</option>
-                                  <option value="eclipse">Eclipse</option>
-                                  <option value="elegant">Elegant</option>
-                                  <option value="midnight">Midnight</option>
-                                  <option value="monokai">Monokai</option>
-                                  <option value="neat">Neat</option>
-                                  <option value="night">Night</option>
-                                  <option value="paraiso-dark">Paraiso Dark</option>
-                                  <option value="paraiso-light">Paraiso Light</option>
-                                  <option value="rubyblue">Rubyblue</option>
-                                  <option value="solarized">Solarized</option>
-                                  <option value="the-matrix">The Matrix</option>
-                                  <option value="tomorrow-night-eighties">Tomorrow Night Eighties</option>
-                                  <option value="twilight">Twilight</option>
-                                  <option value="vibrant-ink">Vibrant Ink</option>
-                                  <option value="xq-dark">XQ Dark</option>
-                                  <option value="xq-light">XQ Light</option>
-                              </select>
-                          </div>
-                          <div class="form-group">
-                              <label for="tab_picker">Tab Size</label>
-                              <select class="form-control" id="tab_picker">
-                                  <option value="2">2 Spaces</option>
-                                  <option value="4">4 Spaces</option>
-                                  <option value="8">8 Spaces</option>
-                                  <option value="16">16 Spaces</option>
-                              </select>
-                          </div>
-                          <div class="form-group">
-                              <label>Language</label>
-                               <select class="form-control" id="language_picker">
-                                  <option value="english">English</option>
-                                  <option value="deutsch">Deutsch</option>
-                              </select>
-                          </div>
-                          <div class="checkbox">
-                              <label>
-                                  <input type="checkbox" id="automaticsave_picker"> Automatic Save
-                              </label>
-                          </div>
-                          <div class="checkbox">
-                              <label>
-                                  <input type="checkbox" id="codecompletion_picker"> Code Completion
-                              </label>
-                          </div>
+                            <div class="form-group">
+                                <label for="theme_picker">Theme</label>
+                                <select class="form-control" id="theme_picker">
+                                    <option value="3024-day">3024 Day</option>
+                                    <option value="3024-night">3024 Night</option>
+                                    <option value="ambiance">Ambiance</option>
+                                    <option value="base16-dark">Base16 Dark</option>
+                                    <option value="base16-light">Base16 Light</option>
+                                    <option value="blackboard">Blackboard</option>
+                                    <option value="cobalt">Cobalt</option>
+                                    <option value="eclipse">Eclipse</option>
+                                    <option value="elegant">Elegant</option>
+                                    <option value="midnight">Midnight</option>
+                                    <option value="monokai">Monokai</option>
+                                    <option value="neat">Neat</option>
+                                    <option value="night">Night</option>
+                                    <option value="paraiso-dark">Paraiso Dark</option>
+                                    <option value="paraiso-light">Paraiso Light</option>
+                                    <option value="rubyblue">Rubyblue</option>
+                                    <option value="solarized">Solarized</option>
+                                    <option value="the-matrix">The Matrix</option>
+                                    <option value="tomorrow-night-eighties">Tomorrow Night Eighties</option>
+                                    <option value="twilight">Twilight</option>
+                                    <option value="vibrant-ink">Vibrant Ink</option>
+                                    <option value="xq-dark">XQ Dark</option>
+                                    <option value="xq-light">XQ Light</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tab_picker">Tab Size</label>
+                                <select class="form-control" id="tab_picker">
+                                    <option value="2">2 Spaces</option>
+                                    <option value="4">4 Spaces</option>
+                                    <option value="8">8 Spaces</option>
+                                    <option value="16">16 Spaces</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Language</label>
+                                <select class="form-control" id="language_picker">
+                                    <option value="english">English</option>
+                                    <option value="deutsch">Deutsch</option>
+                                </select>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="automaticsave_picker"> Automatic Save
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="codecompletion_picker"> Code Completion
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="labellist_picker"> Label list
+                                </label>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -178,8 +227,8 @@ END
                 </div>
             </div>
         </div>
-        
-        
+
+
         <script src="app/js/assembler/assembler.js"></script>
         <script src="app/js/assembler/passes/lexer.js"></script>
         <script src="app/js/assembler/passes/analyser.js"></script>

@@ -92,7 +92,7 @@ html, body {
 }
 
 .presentation {
-    display: none;
+    /* display: none; */
 }
 
 /* Upper case all instructions */
@@ -120,6 +120,10 @@ span.cm-keyword {
     opacity: 0.5;
     
     z-index: 10000;
+}
+/* Fix z-index bug with labellist */
+.modal {
+    z-index: 100000;
 }
 
 
