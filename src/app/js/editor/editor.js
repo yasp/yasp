@@ -141,12 +141,15 @@ if (typeof yasp == 'undefined') yasp = { };
       });
     })();
     
-    // initialize code mirror textarea
-    if (!storage['theme']) storage['theme'] = 'eclipse';
-    if (!storage['indentUnit']) storage['indentUnit'] = 8;
-    if (!storage['automatic_save']) storage['automatic_save'] = true;
-    if (!storage['codecompletion']) storage['codecompletion'] = true;
     
+    if (typeof storage['theme'] == 'undefined')           storage['theme'] = 'eclipse';
+    if (typeof storage['indentUnit'] == 'undefined')      storage['indentUnit'] = "8"; // localStorage saves as string
+    if (typeof storage['automaticsave'] == 'undefined')  storage['automaticsave'] = "true";
+    if (typeof storage['codecompletion'] == 'undefined')  storage['codecompletion'] = "true";
+    if (typeof storage['language'] == 'undefined')        storage['language'] = "English";
+    if (typeof storage['labellist'] == 'undefined')       storage['labellist'] = "true";
+
+    // initialize code mirror textarea
     var editor = CodeMirror.fromTextArea($('#editor').get(0), {
       mode: "text/assembler",
       theme: storage['theme'],
@@ -162,7 +165,6 @@ if (typeof yasp == 'undefined') yasp = { };
         "Ctrl-Space": "autocompleteforce"
       }
     });
-    
     
     // force intendation everytime something changes
     editor.on("change", function() {
@@ -183,7 +185,6 @@ if (typeof yasp == 'undefined') yasp = { };
     });
     
     // update symbols
-    
     var update, first = true;
     (update = function() {
       var content = editor.getValue();
@@ -222,8 +223,22 @@ if (typeof yasp == 'undefined') yasp = { };
       
     };
     
+    var updateLabelListVisiblity = function() {
+      var mode;
+      if (storage['labellist'] == "false") { // hide label list if deactivated
+        mode = "none";
+      } else {
+        mode = "block";
+      }
+      $('#labellist').css({
+        'display': mode
+      });
+    };
+    
     // menu & UI events
     (function() {
+      updateLabelListVisiblity();
+      
       $('#labellist').hover(function() {
         $(this).filter(':not(:animated)').animate({
           'marginLeft': '-100px',
@@ -268,16 +283,31 @@ if (typeof yasp == 'undefined') yasp = { };
           storage['theme'] = this.value;
           editor.setOption("theme", this.value);
         }).val(editor.getOption("theme"));
+        
         $('#tab_picker').change(function() {
           storage['indentUnit'] = this.value;
-          editor.setOption("indentUnit", this.value);
-        }).val(editor.getOption("indentUnit"));
+          editor.setOption("indentUnit", +this.value);
+          editor.setOption("tabSize", +this.value);
+        }).val(+editor.getOption("indentUnit"));
+
+        $('#language_picker').change(function() {
+          storage['language'] = this.value;
+          editor.setOption("language", this.value);
+        }).val(storage['language']);
+        
         $('#automaticsave_picker').change(function() {
           storage['automaticsave'] = this.checked;
-        }).attr('checked', storage['automaticsave']);
+        }).attr('checked', storage['automaticsave'] == "true" ? true : false);
+        
         $('#codecompletion_picker').change(function() {
           storage['codecompletion'] = this.checked;
-        }).attr('checked', storage['codecompletion']);
+        }).attr('checked', storage['codecompletion'] == "true" ? true : false);
+
+        $('#labellist_picker').change(function() {
+          storage['labellist'] = this.checked;
+          updateLabelListVisiblity();
+        }).attr('checked', storage['labellist'] == "true" ? true : false);
+
       });
       $('.menu_about').click(function() {
         $('#dialog_about').modal({
@@ -320,7 +350,7 @@ if (typeof yasp == 'undefined') yasp = { };
       });
       
       CodeMirror.commands.autocomplete = function(cm) {
-        if (storage['codecompletion']) {
+        if (storage['codecompletion'] == "true") {
           var cursor = editor.getCursor();
           setTimeout(function() {
             var newCursor = editor.getCursor();
