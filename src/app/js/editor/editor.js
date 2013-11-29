@@ -116,7 +116,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
   
-  // yasp.EmulatorCommunicator = new yasp.Communicator("emulator/emulator.js");
+  yasp.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
   yasp.AssemblerCommunicator = new yasp.Communicator("app/js/assembler/assembler_backend.js");
   
   $('body').ready(function() {
