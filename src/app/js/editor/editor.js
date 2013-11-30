@@ -149,22 +149,43 @@ if (typeof yasp == 'undefined') yasp = { };
     if (typeof storage['language'] == 'undefined')        storage['language'] = "English";
     if (typeof storage['labellist'] == 'undefined')       storage['labellist'] = "true";
 
-    // initialize code mirror textarea
-    var editor = CodeMirror.fromTextArea($('#editor').get(0), {
-      mode: "text/assembler",
-      theme: storage['theme'],
-      lineNumbers: true,
-      undoDepth: 100,
-      autofocus: true,
-      indentUnit: storage['indentUnit'],
-      tabSize: storage['indentUnit'],
-      indentWithTabs: true,
-      gutters: ["CodeMirror-lint-markers"],
-      lint: true,
-      extraKeys: {
-        "Ctrl-Space": "autocompleteforce"
+    // initialize code mirror textarea and keeps track of every editor textarrea
+    var EditorManager = function() {
+      this.editors = [ ];
+      
+    };
+    EditorManager.prototype.apply = function(func) {
+      for (var i = 0; i < this.editors.length; i++) {
+        func(this.editors[i]);
       }
-    });
+    };
+    EditorManager.prototype.create = function(domElement) {
+      var editor = CodeMirror.fromTextArea(domElement, {
+        mode: "text/assembler",
+        theme: storage['theme'],
+        lineNumbers: true,
+        undoDepth: 100,
+        autofocus: true,
+        indentUnit: storage['indentUnit'],
+        tabSize: storage['indentUnit'],
+        indentWithTabs: true,
+        gutters: ["CodeMirror-lint-markers"],
+        lint: true,
+        extraKeys: {
+          "Ctrl-Space": "autocompleteforce"
+        }
+      });
+      this.editors.push(editor);
+      return editor;
+    }
+    var editorManager = new EditorManager();
+    
+    var editor = editorManager.create($('#editor').get(0));
+    var debuggerEditor = editorManager.create($('#debugger_editor').get(0));
+    debuggerEditor.swapDoc(editor.linkedDoc({
+      sharedHist: true
+    }));
+    debuggerEditor.setOption('readOnly', true);
     
     // force intendation everytime something changes
     editor.on("change", function() {
@@ -281,18 +302,24 @@ if (typeof yasp == 'undefined') yasp = { };
         
         $('#theme_picker').change(function() {
           storage['theme'] = this.value;
-          editor.setOption("theme", this.value);
+          editorManager.apply((function(e) {
+            e.setOption("theme", this.value);
+          }).bind(this));
         }).val(editor.getOption("theme"));
         
         $('#tab_picker').change(function() {
           storage['indentUnit'] = this.value;
-          editor.setOption("indentUnit", +this.value);
-          editor.setOption("tabSize", +this.value);
+          editorManager.apply((function(e) {
+            e.setOption("indentUnit", +this.value);
+            e.setOption("tabSize", +this.value);
+          }).bind(this));
         }).val(+editor.getOption("indentUnit"));
 
         $('#language_picker').change(function() {
           storage['language'] = this.value;
-          editor.setOption("language", this.value);
+          editorManager.apply((function(e) {
+            e.setOption("language", this.value);
+          }).bind(this));
         }).val(storage['language']);
         
         $('#automaticsave_picker').change(function() {
@@ -313,6 +340,13 @@ if (typeof yasp == 'undefined') yasp = { };
         $('#dialog_about').modal({
           'keyboard': true
         });
+      });
+      
+      $('.menu_run').click(function() {
+        $('#dialog_debugger').modal({
+          'keyboard': true
+        });
+        
       });
     })();
     

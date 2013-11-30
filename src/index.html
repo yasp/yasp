@@ -62,10 +62,10 @@
         <div class="container presentation">
             <div class="row">
                 <div class="col-md-12 toolbar">
-                    <button type="button" class="btn btn-default btn-sm">
+                    <button type="button" class="btn btn-default btn-sm menu_run">
                         <span class="glyphicon glyphicon-play item"></span>Run
                     </button>
-                    <button type="button" class="btn btn-default btn-sm">
+                    <button type="button" class="btn btn-default btn-sm menu_help">
                         <span class="glyphicon glyphicon-info-sign item"></span>Help
                     </button>
                     <span class="dropdown pull-right">
@@ -107,6 +107,7 @@ END
         </div>
         <div id="labellist" class="presentation"></div>
         
+        <!-- About Dialog -->
         <div class="modal fade" id="dialog_about" tabindex="-1" role="dialog" aria-labeledby="aboutlabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -119,7 +120,7 @@ END
                             <img src="app/img/logo.png" width="274" height="183" alt="Logo"/>
                         </p>
                         <p>
-                            <i>yasp</i> is a fully functional web-based USB-Master development environment. It features an integrated development enviroment, binary compatible emulator, cutting-edge Debugger and highly sophisticated assembler. The development suit aims to make learning assembler programming easy and accessible for everyone.
+                            <i>yasp</i> is a fully functional web-based USB-Master development environment. It features an integrated development environment, binary compatible emulator, cutting-edge Debugger and highly sophisticated assembler. The development suit aims to make learning assembler programming easy and accessible for everyone.
                         </p>
                         <h6>Version</h6>
                         <ul>
@@ -151,6 +152,62 @@ END
             </div>
         </div>
 
+        <!-- Debugger Dialog -->
+        <div class="modal fade" id="dialog_debugger" tabindex="-1" role="dialog" aria-labelledby="debuggerlabel" aria-hidden="true">
+            <div class="modal-dialog fullscreen">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Debugger</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12 container">
+                            <button type="button" class="btn btn-default btn-xs">
+                                Step
+                            </button>
+                            <button type="button" class="btn btn-default btn-xs">
+                                Step Over
+                            </button>
+                            <button type="button" class="btn btn-default btn-xs">
+                                Step Out
+                            </button>
+                            <button type="button" class="btn btn-default btn-xs">
+                                Step Back
+                            </button>
+                            <button type="button" class="btn btn-default btn-xs">
+                                Break
+                            </button>
+                            <button type="button" class="btn btn-default btn-xs">
+                                Continue
+                            </button>
+                        </div>
+                        <table id="debugger_table" border="1">
+                            <tr>
+                                <td rowspan="2">
+                                    <textarea id="debugger_editor" name="code">
+                                        
+                                    </textarea>
+                                </td>
+                                <td>
+                                    Debugging Functionality
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Hardware
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Settings Dialog -->
         <div class="modal fade" id="dialog_settings" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
