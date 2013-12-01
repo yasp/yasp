@@ -185,7 +185,7 @@ if (typeof yasp == 'undefined') yasp = { };
     debuggerEditor.swapDoc(editor.linkedDoc({
       sharedHist: true
     }));
-    debuggerEditor.setOption('readOnly', true);
+    debuggerEditor.setOption('readOnly', "nocursor");
     
     // force intendation everytime something changes
     editor.on("change", function() {
@@ -342,11 +342,19 @@ if (typeof yasp == 'undefined') yasp = { };
         });
       });
       
+      var updateInterval;
       $('.menu_run').click(function() {
         $('#dialog_debugger').modal({
           'keyboard': true
         });
-        
+        updateInterval || (updateInterval = setInterval(function() {
+          var height = $('#dialog_debugger .modal-content').height();
+          $('#debugger_table').css({
+            "height": (height-200)+"px"
+          });
+
+          debuggerEditor.refresh();
+        }, 10)); // weird hack for CodeMirror & size adjustment
       });
     })();
     

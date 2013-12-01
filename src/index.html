@@ -155,12 +155,12 @@ END
         <!-- Debugger Dialog -->
         <div class="modal fade" id="dialog_debugger" tabindex="-1" role="dialog" aria-labelledby="debuggerlabel" aria-hidden="true">
             <div class="modal-dialog fullscreen">
-                <div class="modal-content">
+                <div class="modal-content fullscreen">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Debugger</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body debuggerbody">
                         <div class="col-md-12 container">
                             <button type="button" class="btn btn-default btn-xs">
                                 Step
@@ -183,17 +183,17 @@ END
                         </div>
                         <table id="debugger_table" border="1">
                             <tr>
-                                <td rowspan="2">
+                                <td rowspan="2" class="width50">
                                     <textarea id="debugger_editor" name="code">
                                         
                                     </textarea>
                                 </td>
-                                <td>
+                                <td class="width50">
                                     Debugging Functionality
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td class="width50">
                                     Hardware
                                 </td>
                             </tr>
