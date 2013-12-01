@@ -139,16 +139,9 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /**
    * @function Stops the execution
-   * @returns {Number|Boolean}
    */
   yasp.Emulator.prototype.break = function () {
-    if(this.running == false) {
-      return 0;
-    }
-
     this.running = false;
-
-    return true;
   };
 
   /**

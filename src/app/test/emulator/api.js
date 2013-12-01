@@ -94,12 +94,6 @@
     strictEqual(expected, actual);
   });
 
-  test("break", function () {
-    var expected = 0;
-    var actual = emulator.break();
-    strictEqual(expected, actual);
-  });
-
   test("writeByteRegister - r < 0", function () {
     var expected = 0;
     var actual = emulator.writeByteRegister(-1, 0);

@@ -12,6 +12,13 @@ new yasp.CommunicatorBackend(self, function(data, ready, broadcast) {
         error: retn === true ? null : { code: retn }
       });
       break;
+    case "BREAK":
+      emulator.break();
+      ready({
+        payload: {},
+        error: null
+      });
+      break;
     default:
       ready(yasp.Communicator.UNKNOWN_ACTION);
   }

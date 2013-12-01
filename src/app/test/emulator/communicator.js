@@ -34,6 +34,13 @@
       payload: { start: 0, bitcode: new Uint8Array() },
       expectedPayload: {},
       expectedError: null
+    },
+    {
+      title: "",
+      action: "BREAK",
+      payload: {},
+      expectedPayload: {},
+      expectedError: null
     }
   ];
 
