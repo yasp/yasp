@@ -155,6 +155,10 @@ span.cm-keyword {
   border-bottom: none;
 }
 
+.CodeMirror {
+    font-size: 125%;
+}
+
 .CodeMirror-hints {
     max-height: 100px !important;
     min-width: 50px !important;

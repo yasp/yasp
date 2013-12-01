@@ -154,6 +154,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.editors = [ ];
       
     };
+    
     EditorManager.prototype.apply = function(func) {
       for (var i = 0; i < this.editors.length; i++) {
         func(this.editors[i]);
@@ -169,12 +170,29 @@ if (typeof yasp == 'undefined') yasp = { };
         indentUnit: storage['indentUnit'],
         tabSize: storage['indentUnit'],
         indentWithTabs: true,
-        gutters: ["CodeMirror-lint-markers"],
+        gutters: ["CodeMirror-lint-markers", "breakpoints"],
         lint: true,
         extraKeys: {
           "Ctrl-Space": "autocompleteforce"
         }
       });
+      editor.on("gutterClick", (function(cm, n) {
+        this.apply(function(cm) {
+          var info = cm.lineInfo(n);
+          cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : (function() {
+            var marker = $(document.createElement('div'));
+            marker.css({
+              "color": '#FF0000',
+              "font-size": "125%",
+              "position": "relative",
+              "top": "-2px",
+              "left": "-2px"
+            });
+            marker.text("●");
+            return marker.get(0);
+          })());
+        });
+      }).bind(this));
       this.editors.push(editor);
       return editor;
     }
