@@ -287,6 +287,15 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Hardware = function(params) {
     this.cb = params.cb;
     this.container = params.container;
+    if (!!this.container) this.container.css({
+      '-moz-user-select': 'none', // gotta love vendor prefixes
+      '-khtml-user-select': 'none',
+      '-webkit-user-select': 'none',
+      '-o-user-select': 'none',
+      '-ms-select': 'none',
+      'user-select': 'none'
+    });
+    
     this.type = params.type;
     this.params = params.params;
     this.state = null;

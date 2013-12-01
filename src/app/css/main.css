@@ -169,6 +169,9 @@ span.cm-keyword {
 #debugger_table {
     width: 100%;
 }
+#debugger_table td {
+    vertical-align: top;
+}
 
 .fullscreen {
     width: 100%;
@@ -180,6 +183,15 @@ span.cm-keyword {
 
 .width50 {
     width: 50%;
+}
+
+/* Hardware \o/ */
+.hw_but {
+    width: 40px;
+    height: 40px;
+    margin: 8px;
+    
+    float: left;
 }
 
 /* ==========================================================================

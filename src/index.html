@@ -47,6 +47,7 @@
         <script src="lib/js/codemirror.js"></script>
         <script src="app/js/commands.js"></script>
         <script src="app/js/utils.js"></script>
+        <script src="app/js/hardware.js"></script>
         
         <!-- CodeMirror AddOns -->
         <script src="lib/addon/show-hint.js"></script>
@@ -194,7 +195,12 @@ END
                             </tr>
                             <tr>
                                 <td class="width50">
-                                    Hardware
+                                    <div id="hw_poti" class="hw_poti"></div>
+                                    <div id="hw_but_black" class="hw_but"></div>
+                                    <div id="hw_but_red" class="hw_but"></div>
+                                    <div id="hw_led_green" class="hw_led"></div>
+                                    <div id="hw_led_yellow" class="hw_led"></div>
+                                    <div id="hw_led_red" class="hw_led"></div>
                                 </td>
                             </tr>
                         </table>
@@ -299,5 +305,6 @@ END
         
         <script src="app/js/editor/assembler.js"></script>
         <script src="app/js/editor/editor.js"></script>
+        <script src="app/js/editor/debugger.js"></script>
     </body>
 </html>

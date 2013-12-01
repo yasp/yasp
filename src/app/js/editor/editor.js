@@ -1,7 +1,80 @@
 if (typeof yasp == 'undefined') yasp = { };
 
+yasp.Storage = localStorage || { };
+
 (function() {
-  var storage = localStorage || { };
+  /**
+   * Initialize code mirror textarea and keeps track of every editor textarrea
+   * @constructor
+   */
+  var EditorManager = function() {
+    this.editors = [ ];
+    this.editorContext = null;
+  };
+
+  /**
+   * Calls a function for every editor associated with the EditorManager
+   * @param func
+   */
+  EditorManager.prototype.apply = function(func) {
+    for (var i = 0; i < this.editors.length; i++) {
+      func(this.editors[i]);
+    }
+  };
+
+  /**
+   * Sets the context (this is where the breakpoints are saved for example)
+   * @param context
+   */
+  EditorManager.prototype.setContext = function(context) {
+    this.editorContext = context;
+  };
+  
+  /**
+   * Creates an editor instance
+   * @param domElement
+   * @returns {*}
+   */
+  EditorManager.prototype.create = function(domElement) {
+    var editor = CodeMirror.fromTextArea(domElement, {
+      mode: "text/assembler",
+      theme: yasp.Storage['theme'],
+      lineNumbers: true,
+      undoDepth: 100,
+      autofocus: true,
+      indentUnit: yasp.Storage['indentUnit'],
+      tabSize: yasp.Storage['indentUnit'],
+      indentWithTabs: true,
+      gutters: ["CodeMirror-lint-markers", "breakpoints"],
+      lint: true,
+      extraKeys: {
+        "Ctrl-Space": "autocompleteforce"
+      }
+    });
+    editor.on("gutterClick", (function(cm, n) {
+      this.apply((function(cm) {
+        var info = cm.lineInfo(n);
+        cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : (function() {
+          var marker = $(document.createElement('div'));
+          marker.css({
+            "color": '#FF0000',
+            "font-size": "125%",
+            "position": "relative",
+            "top": "-2px",
+            "left": "-2px"
+          });
+          marker.text("●");
+          return marker.get(0);
+        })());
+      }).bind(this));
+    }).bind(this));
+    this.editors.push(editor);
+    return editor;
+  };
+  yasp.EditorManager = new EditorManager();
+})();
+
+(function() {
   var UPDATE_DELAY = 500; // time between souce code is parsed
   var HINT_DELAY = 750; // time between hints are displayed
   
@@ -106,9 +179,10 @@ if (typeof yasp == 'undefined') yasp = { };
       usedRegisters: { },
       defines: { }
     },
-    orderedSymbols: [],
-    error: [],
+    orderedSymbols: [ ],
+    error: [ ],
     labelText: "",
+    breakpoints: [ ],
     getIdentifierOccurence: function(name) {
       if (!!yasp.Editor.symbols.instructions[name]) return yasp.Editor.symbols.instructions[name];
       if (!!yasp.Editor.symbols.usedRegisters[name]) return yasp.Editor.symbols.usedRegisters[name];
@@ -142,68 +216,15 @@ if (typeof yasp == 'undefined') yasp = { };
     })();
     
     
-    if (typeof storage['theme'] == 'undefined')           storage['theme'] = 'eclipse';
-    if (typeof storage['indentUnit'] == 'undefined')      storage['indentUnit'] = "8"; // localStorage saves as string
-    if (typeof storage['automaticsave'] == 'undefined')  storage['automaticsave'] = "true";
-    if (typeof storage['codecompletion'] == 'undefined')  storage['codecompletion'] = "true";
-    if (typeof storage['language'] == 'undefined')        storage['language'] = "English";
-    if (typeof storage['labellist'] == 'undefined')       storage['labellist'] = "true";
-
-    // initialize code mirror textarea and keeps track of every editor textarrea
-    var EditorManager = function() {
-      this.editors = [ ];
-      
-    };
+    if (typeof yasp.Storage['theme'] == 'undefined')           yasp.Storage['theme'] = 'eclipse';
+    if (typeof yasp.Storage['indentUnit'] == 'undefined')      yasp.Storage['indentUnit'] = "8"; // localStorage saves as string
+    if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "true";
+    if (typeof yasp.Storage['codecompletion'] == 'undefined')  yasp.Storage['codecompletion'] = "true";
+    if (typeof yasp.Storage['language'] == 'undefined')        yasp.Storage['language'] = "English";
+    if (typeof yasp.Storage['labellist'] == 'undefined')       yasp.Storage['labellist'] = "true";
     
-    EditorManager.prototype.apply = function(func) {
-      for (var i = 0; i < this.editors.length; i++) {
-        func(this.editors[i]);
-      }
-    };
-    EditorManager.prototype.create = function(domElement) {
-      var editor = CodeMirror.fromTextArea(domElement, {
-        mode: "text/assembler",
-        theme: storage['theme'],
-        lineNumbers: true,
-        undoDepth: 100,
-        autofocus: true,
-        indentUnit: storage['indentUnit'],
-        tabSize: storage['indentUnit'],
-        indentWithTabs: true,
-        gutters: ["CodeMirror-lint-markers", "breakpoints"],
-        lint: true,
-        extraKeys: {
-          "Ctrl-Space": "autocompleteforce"
-        }
-      });
-      editor.on("gutterClick", (function(cm, n) {
-        this.apply(function(cm) {
-          var info = cm.lineInfo(n);
-          cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : (function() {
-            var marker = $(document.createElement('div'));
-            marker.css({
-              "color": '#FF0000',
-              "font-size": "125%",
-              "position": "relative",
-              "top": "-2px",
-              "left": "-2px"
-            });
-            marker.text("●");
-            return marker.get(0);
-          })());
-        });
-      }).bind(this));
-      this.editors.push(editor);
-      return editor;
-    }
-    var editorManager = new EditorManager();
-    
-    var editor = editorManager.create($('#editor').get(0));
-    var debuggerEditor = editorManager.create($('#debugger_editor').get(0));
-    debuggerEditor.swapDoc(editor.linkedDoc({
-      sharedHist: true
-    }));
-    debuggerEditor.setOption('readOnly', "nocursor");
+    yasp.EditorManager.setContext(yasp.Editor);
+    var editor = yasp.EditorManager.create($('#editor').get(0));
     
     // force intendation everytime something changes
     editor.on("change", function() {
@@ -264,7 +285,7 @@ if (typeof yasp == 'undefined') yasp = { };
     
     var updateLabelListVisiblity = function() {
       var mode;
-      if (storage['labellist'] == "false") { // hide label list if deactivated
+      if (yasp.Storage['labellist'] == "false") { // hide label list if deactivated
         mode = "none";
       } else {
         mode = "block";
@@ -319,39 +340,39 @@ if (typeof yasp == 'undefined') yasp = { };
         });
         
         $('#theme_picker').change(function() {
-          storage['theme'] = this.value;
-          editorManager.apply((function(e) {
+          yasp.Storage['theme'] = this.value;
+          yasp.EditorManager.apply((function(e) {
             e.setOption("theme", this.value);
           }).bind(this));
         }).val(editor.getOption("theme"));
         
         $('#tab_picker').change(function() {
-          storage['indentUnit'] = this.value;
-          editorManager.apply((function(e) {
+          yasp.Storage['indentUnit'] = this.value;
+          yasp.EditorManager.apply((function(e) {
             e.setOption("indentUnit", +this.value);
             e.setOption("tabSize", +this.value);
           }).bind(this));
         }).val(+editor.getOption("indentUnit"));
 
         $('#language_picker').change(function() {
-          storage['language'] = this.value;
-          editorManager.apply((function(e) {
+          yasp.Storage['language'] = this.value;
+          yasp.EditorManager.apply((function(e) {
             e.setOption("language", this.value);
           }).bind(this));
-        }).val(storage['language']);
+        }).val(yasp.Storage['language']);
         
         $('#automaticsave_picker').change(function() {
-          storage['automaticsave'] = this.checked;
-        }).attr('checked', storage['automaticsave'] == "true" ? true : false);
+          yasp.Storage['automaticsave'] = this.checked;
+        }).attr('checked', yasp.Storage['automaticsave'] == "true" ? true : false);
         
         $('#codecompletion_picker').change(function() {
-          storage['codecompletion'] = this.checked;
-        }).attr('checked', storage['codecompletion'] == "true" ? true : false);
+          yasp.Storage['codecompletion'] = this.checked;
+        }).attr('checked', yasp.Storage['codecompletion'] == "true" ? true : false);
 
         $('#labellist_picker').change(function() {
-          storage['labellist'] = this.checked;
+          yasp.Storage['labellist'] = this.checked;
           updateLabelListVisiblity();
-        }).attr('checked', storage['labellist'] == "true" ? true : false);
+        }).attr('checked', yasp.Storage['labellist'] == "true" ? true : false);
 
       });
       $('.menu_about').click(function() {
@@ -360,19 +381,8 @@ if (typeof yasp == 'undefined') yasp = { };
         });
       });
       
-      var updateInterval;
       $('.menu_run').click(function() {
-        $('#dialog_debugger').modal({
-          'keyboard': true
-        });
-        updateInterval || (updateInterval = setInterval(function() {
-          var height = $('#dialog_debugger .modal-content').height();
-          $('#debugger_table').css({
-            "height": (height-200)+"px"
-          });
-
-          debuggerEditor.refresh();
-        }, 10)); // weird hack for CodeMirror & size adjustment
+        yasp.Debugger.show();
       });
     })();
     
@@ -410,7 +420,7 @@ if (typeof yasp == 'undefined') yasp = { };
       });
       
       CodeMirror.commands.autocomplete = function(cm) {
-        if (storage['codecompletion'] == "true") {
+        if (yasp.Storage['codecompletion'] == "true") {
           var cursor = editor.getCursor();
           setTimeout(function() {
             var newCursor = editor.getCursor();
