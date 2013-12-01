@@ -55,13 +55,13 @@
   });
 
   test("continue - invalid count type (str)", function () {
-    var expected = 2;
+    var expected = 1;
     var actual = emulator.continue("a");
     strictEqual(expected, actual);
   });
 
   test("continue - invalid count type (bool)", function () {
-    var expected = 2;
+    var expected = 1;
     var actual = emulator.continue(true);
     strictEqual(expected, actual);
   });
@@ -81,7 +81,7 @@
 
   test("continue - count = 1", function () {
     var expected = 1;
-    emulator.continue(1);
+    emulator.continue(expected);
     var actual = emulator.running;
     strictEqual(expected, actual);
   });

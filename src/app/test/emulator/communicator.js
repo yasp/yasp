@@ -41,6 +41,27 @@
       payload: {},
       expectedPayload: {},
       expectedError: null
+    },
+    {
+      title: "no count",
+      action: "CONTINUE",
+      payload: { },
+      expectedPayload: {},
+      expectedError: null
+    },
+    {
+      title: "int count",
+      action: "CONTINUE",
+      payload: { count: 1 },
+      expectedPayload: {},
+      expectedError: null
+    },
+    {
+      title: "null count",
+      action: "CONTINUE",
+      payload: { count: null },
+      expectedPayload: {},
+      expectedError: null
     }
   ];
 

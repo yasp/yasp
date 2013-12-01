@@ -12,6 +12,13 @@ new yasp.CommunicatorBackend(self, function(data, ready, broadcast) {
         error: retn === true ? null : { code: retn }
       });
       break;
+    case "CONTINUE":
+      var retn = emulator.continue(data.count);
+      ready({
+        payload: {},
+        error: retn === true ? null : { code: retn }
+      });
+      break;
     case "BREAK":
       emulator.break();
       ready({

@@ -131,7 +131,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.running = +count;
     }
     else {
-      return 2;
+      return 1;
     }
 
     return true;
