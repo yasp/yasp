@@ -384,6 +384,12 @@ yasp.Storage = localStorage || { };
       $('.menu_run').click(function() {
         yasp.Debugger.show();
       });
+      
+      $('.menu_help').click(function() {
+        $('#dialog_help').modal({
+          'keyboard': true
+        });
+      });
     })();
     
     // hinting

@@ -68,6 +68,11 @@ module.exports = function(grunt) {
         converter: "commandsjs",
         input: "src/app/instructions/",
         output: "src/app/js/commands.js"
+      },
+      gendoc: {
+        converter: "htmlsimple",
+        input: "src/app/instructions/",
+        output: "src/app/help/help.html"
       }
     },
     watch: {

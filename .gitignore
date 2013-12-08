@@ -8,6 +8,7 @@
 dest
 node_modules
 src/app/js/commands.js
+src/app/help/help.html
 
 # Libs
 src/lib
