@@ -234,7 +234,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return {
       c: this.flags.c,
       z: this.flags.z
-    }
+    };
   };
 
   /**
@@ -399,7 +399,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param i the interrupt
    */
   yasp.Emulator.prototype.getInterruptAddress = function (i) {
-    i = 0x100 + (i * 2);
+    i = 0x100 + (i * 2); // interrupt table starts at 0x100, each entry is 2 bytes long
     return yasp.bitutils.wordFromBytes(this.rom[i], this.rom[i + 1]);
   };
 
