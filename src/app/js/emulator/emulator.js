@@ -124,13 +124,11 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.continue = function (count) {
     if(count == null) {
       this.running = true;
-    }
-    else if(typeof count == "number") {
+    } else if(typeof count == "number") {
       if(count < 0)
         return 0;
       this.running = +count;
-    }
-    else {
+    } else {
       return 1;
     }
 
