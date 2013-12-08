@@ -109,15 +109,17 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.EmulatorCommunicator.sendMessage("BREAK", { });
       });
       
-      updateInterval || (updateInterval = setInterval(function() {
+      var updateFunc;
+      updateInterval || (updateInterval = setInterval(updateFunc = function() {
         var height = $('#dialog_debugger .modal-content').height();
         $('#debugger_table').css({
           "height": (height-200)+"px"
         });
 
         debuggerEditor.refresh();
-      }, 10)); // weird hack for CodeMirror & size adjustment
+      }, 250)); // weird hack for CodeMirror & size adjustment
       
+      setTimeout(updateFunc, 10);
     }
   };
 })();
