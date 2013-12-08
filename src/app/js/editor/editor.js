@@ -91,12 +91,13 @@ yasp.Storage = localStorage || { };
         console.log("update");
         yasp.AssemblerCommunicator.sendMessage("assemble", {
           code: content,
-          jobs: ['symbols', 'map']
+          jobs: ['symbols', 'map', 'ast']
         }, function(response) {
           yasp.Editor.error = !!response.error ? response.error.errors : null;
           if (!!response.payload) {
             yasp.Editor.map = response.payload.map;
             yasp.Editor.symbols = response.payload.symbols;
+            yasp.Editor.ast = response.payload.ast;
             
             // update orderedSymbols
             var osymbols = yasp.Editor.orderedSymbols;
@@ -183,6 +184,7 @@ yasp.Storage = localStorage || { };
     error: [ ],
     labelText: "",
     breakpoints: [ ],
+    ast: [ ],
     getIdentifierOccurence: function(name) {
       if (!!yasp.Editor.symbols.instructions[name]) return yasp.Editor.symbols.instructions[name];
       if (!!yasp.Editor.symbols.usedRegisters[name]) return yasp.Editor.symbols.usedRegisters[name];
@@ -222,6 +224,7 @@ yasp.Storage = localStorage || { };
     if (typeof yasp.Storage['codecompletion'] == 'undefined')  yasp.Storage['codecompletion'] = "true";
     if (typeof yasp.Storage['language'] == 'undefined')        yasp.Storage['language'] = "English";
     if (typeof yasp.Storage['labellist'] == 'undefined')       yasp.Storage['labellist'] = "true";
+    if (typeof yasp.Storage['help'] == 'undefined')       yasp.Storage['help'] = "true";
     
     yasp.EditorManager.setContext(yasp.Editor);
     var editor = yasp.EditorManager.create($('#editor').get(0));
@@ -373,7 +376,10 @@ yasp.Storage = localStorage || { };
           yasp.Storage['labellist'] = this.checked;
           updateLabelListVisiblity();
         }).attr('checked', yasp.Storage['labellist'] == "true" ? true : false);
-
+        
+        $('#help_picker').change(function() {
+          yasp.Storage['help'] = this.checked;
+        }).attr('checked', yasp.Storage['help'] == "true" ? true : false);
       });
       $('.menu_about').click(function() {
         $('#dialog_about').modal({
@@ -386,11 +392,105 @@ yasp.Storage = localStorage || { };
       });
       
       $('.menu_help').click(function() {
+        switch(yasp.Storage["language"].toLowerCase()) {
+          case "english":
+            $('.help_en').css({'display': 'block'});
+            $('.help_de').css({'display': 'none'});
+            break;
+          case "deutsch":
+            $('.help_en').css({'display': 'none'});
+            $('.help_de').css({'display': 'block'});
+            break;
+        }
         $('#dialog_help').modal({
           'keyboard': true
         });
       });
     })();
+    
+    // load help data
+    $.ajax('app/help/help.html').done(function(responseText) {
+      $('#help_container').html(responseText);
+    }).fail(function() {
+      console.log("failed to load help");
+    });
+    
+    // update help rendering parameters
+    var quickdoc = null;
+    setInterval(function() {
+      var c = editor.getCursor();
+      var found = false;
+      var changed = false;
+      var height = 0;
+      if (!!c &&  (!yasp.Editor.error || yasp.Editor.error.length == 0) && yasp.Storage['help'] == "true") {
+        for (var i = 0; i < yasp.Editor.ast.length; i++) {
+          var entry = yasp.Editor.ast[i];
+          if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
+            var command = entry.params.command;
+            var desc = yasp.Language.getSpecificLanguage(command.doc);
+            
+            var cmdStr = command.name.toUpperCase()+" ";
+            for (var j = 0; j < command.params.length; j++) {
+              if (j > 0) cmdStr += ", ";
+              
+              var param = command.params[j];
+              switch (param.type) {
+                case "r_byte":
+                  cmdStr += "Byte Register";
+                  break;
+                case "r_word":
+                  cmdStr += "Word Register";
+                  break;
+                case "l_byte":
+                  cmdStr += "Byte Literal";
+                  break;
+                case "l_word":
+                  cmdStr += "Word Literal";
+                  break;
+                case "pin":
+                  cmdStr += "Pin";
+                  break;
+                case "address":
+                  cmdStr += "Label";
+                  break;
+                default:
+                  cmdStr += type.type;
+              }
+            }
+            
+            $('#help_quick .command').html("<b>"+cmdStr+"</b>");
+            
+            $('#help_quick .desc').html(desc.description);
+            
+            if (!!desc.flags) {
+              var state = "";
+              state += !!desc.flags.c ? ("Carry Bit: " + desc.flags.c + "<br />") : "";
+              state += !!desc.flags.z ? ("Zero Bit: " + desc.flags.z) : "";
+              
+              if (state.length > 0) state = "<p>" + state + "</p>";
+              
+              $('#help_quick .state').html(state);
+            }
+            
+            height = $('#help_quick .helpquick_container').height() + 16;
+            if (quickdoc != desc) changed = true;
+            quickdoc = desc;
+            
+            found = true;
+          }
+        }
+      }
+      if (!found && !!quickdoc) {
+        changed = true;
+        quickdoc = null;
+      }
+
+      if (changed) {
+        $('#help_quick').animate({
+          height: height + "px"
+        }, "fast");
+      }
+    }, 500);
     
     // hinting
     (function() {

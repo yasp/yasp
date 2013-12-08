@@ -51,6 +51,7 @@
         <script src="app/js/hardware/led.js"></script>
         <script src="app/js/hardware/poti.js"></script>
         <script src="app/js/hardware/pushbutton.js"></script>
+        <script src="app/js/localization.js"></script>
         
         <!-- CodeMirror AddOns -->
         <script src="lib/addon/show-hint.js"></script>
@@ -223,7 +224,7 @@ END
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Help</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="help_container">
                         
                     </div>
                     <div class="modal-footer">
@@ -304,6 +305,11 @@ END
                                     <input type="checkbox" id="labellist_picker"> Label list
                                 </label>
                             </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="help_picker"> Show help
+                                </label>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -312,7 +318,14 @@ END
                 </div>
             </div>
         </div>
-
+        
+        <div id="help_quick">
+            <div class="helpquick_container">
+                <p class="command"></p>
+                <p class="desc"></p>
+                <p class="state"></p>
+            </div>
+        </div>
 
         <script src="app/js/assembler/assembler.js"></script>
         <script src="app/js/assembler/passes/lexer.js"></script>

@@ -75,6 +75,11 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     }
     
+    // set AST
+    if (assembler.jobs.indexOf("ast") != -1) {
+      assembler.ast = JSON.parse(JSON.stringify(this.nodes));
+    }
+    
     return this.nodes;
   };
 

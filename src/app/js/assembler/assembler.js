@@ -34,6 +34,7 @@ if (typeof yasp == 'undefined') yasp = { };
     };
     this.errors = [ ]; // array containing all the errors that occured while assembling
     this.map = { };
+    this.ast = { }; // containing the AST that the generator uses to create the bitcode
     this.jobs = [ ];
   }
 
@@ -64,7 +65,8 @@ if (typeof yasp == 'undefined') yasp = { };
         success: true,
         bitcode: this.jobs.indexOf('bitcode') != -1 ? tmpResult : null,
         symbols: this.jobs.indexOf('symbols') != -1 ? this.symbols : null,
-        map: this.jobs.indexOf('map') != -1 ? this.map : null
+        map: this.jobs.indexOf('map') != -1 ? this.map : null,
+        ast: this.jobs.indexOf('ast') != -1 ? this.ast : null
       };
     } else {
       // assembler errors

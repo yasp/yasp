@@ -173,12 +173,41 @@ span.cm-keyword {
     vertical-align: top;
 }
 
+
 .fullscreen {
     width: 100%;
     height: 100%;
     margin: 0;
     top: 0;
     left: 0;
+}
+
+#help_container h1 {
+    font-size: 20px;
+}
+
+#help_container h2 {
+    font-size: 14px;
+}
+
+#help_quick {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 0px;
+    
+    max-height: 100px;
+    border-top: 1px solid rgb(220,220,220);
+    background-color: rgb(240,240,240);
+    
+    z-index: 10100;
+    
+    font-size: 120%;
+}
+
+#help_quick .helpquick_container {
+    padding: 8px;
 }
 
 .width50 {
