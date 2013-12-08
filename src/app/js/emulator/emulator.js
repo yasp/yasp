@@ -140,7 +140,7 @@ if (typeof yasp == 'undefined') yasp = { };
   /**
    * @function Stops the execution
    */
-  yasp.Emulator.prototype.break = function () {
+  yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
   };
 

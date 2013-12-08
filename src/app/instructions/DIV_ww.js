@@ -30,6 +30,11 @@
     }
   ],
   "exec": function (rword1, rword2) {
+    if(rword2.value === 0) {
+      this.break("divide_by_zero");
+      return;
+    }
+
     var newVal = ~~(rword1.value / (rword2.value & 0xFF));
     this.writeWordRegister(rword1.address, newVal);
   }
