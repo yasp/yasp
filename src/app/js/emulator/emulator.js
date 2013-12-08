@@ -223,11 +223,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return -1;
 
     r = r * 2;
-    var b1 = this.ram[r];
-    var b2 = this.ram[r + 1];
-    var w = yasp.bitutils.wordFromBytes(b1, b2);
-
-    return w;
+    return yasp.bitutils.wordFromBytes(this.ram[r], this.ram[r + 1]);
   };
 
   /**
