@@ -91,13 +91,14 @@ yasp.Storage = localStorage || { };
         console.log("update");
         yasp.AssemblerCommunicator.sendMessage("assemble", {
           code: content,
-          jobs: ['symbols', 'map', 'ast']
+          jobs: ['symbols', 'map', 'ast', 'bitcode']
         }, function(response) {
           yasp.Editor.error = !!response.error ? response.error.errors : null;
           if (!!response.payload) {
             yasp.Editor.map = response.payload.map;
             yasp.Editor.symbols = response.payload.symbols;
             yasp.Editor.ast = response.payload.ast;
+            yasp.Editor.bitcode = response.payload.bitcode;
             
             // update orderedSymbols
             var osymbols = yasp.Editor.orderedSymbols;
@@ -185,6 +186,7 @@ yasp.Storage = localStorage || { };
     labelText: "",
     breakpoints: [ ],
     ast: [ ],
+    bitcode: new Uint8Array(),
     getIdentifierOccurence: function(name) {
       if (!!yasp.Editor.symbols.instructions[name]) return yasp.Editor.symbols.instructions[name];
       if (!!yasp.Editor.symbols.usedRegisters[name]) return yasp.Editor.symbols.usedRegisters[name];
@@ -388,7 +390,15 @@ yasp.Storage = localStorage || { };
       });
       
       $('.menu_run').click(function() {
-        yasp.Debugger.show();
+        // compile
+        yasp.CompileManager.compile(editor.getValue(), function(data) {
+          if (!yasp.Editor.error || yasp.Editor.error.length == 0) {
+            yasp.Debugger.show(); // open debugger
+          } else {
+            console.log("Invalid code");
+            // TODO implement proper error dialog
+          }
+        });
       });
       
       $('.menu_help').click(function() {

@@ -77,12 +77,26 @@ if (typeof yasp == 'undefined') yasp = { };
   });
   
   
-  
   yasp.Debugger = {
     show: function() {
       $('#dialog_debugger').modal({
         'keyboard': true
+      }).on('shown.bs.modal', function() {
+        // load code into emulator
+        yasp.EmulatorCommunicator.sendMessage("LOAD", {
+          bitcode: yasp.Editor.bitcode,
+          start: 0
+        }, function() {
+          yasp.EmulatorCommunicator.sendMessage("CONTINUE", {
+            count: null
+          });
+        });
+        
+      }).on('hidden.bs.modal', function() {
+        // stop execution
+        yasp.EmulatorCommunicator.sendMessage("BREAK", { });
       });
+      
       updateInterval || (updateInterval = setInterval(function() {
         var height = $('#dialog_debugger .modal-content').height();
         $('#debugger_table').css({
@@ -91,6 +105,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
         debuggerEditor.refresh();
       }, 10)); // weird hack for CodeMirror & size adjustment
+      
     }
   };
 })();

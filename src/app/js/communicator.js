@@ -32,8 +32,10 @@ if (typeof yasp == 'undefined') yasp = { };
       } else {
         // broadcast
         var events = this.listener[data.action];
-        for (var i = 0; i < events.length; i++) {
-          events[i](data);
+        if (!!events) { // check if any subscriber
+          for (var i = 0; i < events.length; i++) {
+            events[i](data);
+          }
         }
       }
     }).bind(this), false);
