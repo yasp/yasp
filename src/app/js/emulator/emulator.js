@@ -93,8 +93,30 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.commandCache = {};
 
+    this.noop = function () {};
+    this.events = {
+      'CONTINUED': this.noop,
+      'BREAK': this.noop,
+      'LOADED': this.noop,
+      'IO_CHANGED': this.noop
+    };
+
     if(!stepping)
       setTimeout(this.tick.bind(this), tickTimeout);
+  };
+
+  /**
+   * @function Registers the callback for an event. It is not possible to register multiple callbacks for one event for performance reasons.
+   * @param evt the event name
+   * @param func the event callback
+   */
+  yasp.Emulator.registerCallback = function (evt, func) {
+    if(typeof func == "function") {
+      events[evt] = func;
+      return true;
+    } else {
+      return false;
+    }
   };
 
   /**
@@ -113,6 +135,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.rom.set(bitcode, start);
     this.commandCache = {};
+    this.events.LOADED(start, bitcode.length);
     return true;
   };
 
@@ -132,6 +155,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return 1;
     }
 
+    this.events.CONTINUED();
     return true;
   };
 
@@ -140,6 +164,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
+    this.events.BREAK(reason);
   };
 
   /**
