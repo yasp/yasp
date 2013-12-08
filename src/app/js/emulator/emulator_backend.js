@@ -3,7 +3,7 @@ importScripts('../communicator.js', '../commands.js', '../assembler/passes/gener
 
 var emulator = new yasp.Emulator();
 
-new yasp.CommunicatorBackend(self, function(data, ready, broadcast) {
+new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
     case "LOAD":
       var retn = emulator.load(data.payload.bitcode, data.payload.start);

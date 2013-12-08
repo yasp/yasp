@@ -3,7 +3,7 @@ importScripts('../communicator.js', '../commands.js', '../utils.js', 'passes/ana
 
 var assembler = new yasp.Assembler();
 
-new yasp.CommunicatorBackend(self, function(data, ready, broadcast) {
+new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
     case "ASSEMBLE":
       console.log("ASSEMBLE "+data.payload.code);
