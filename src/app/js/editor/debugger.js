@@ -33,6 +33,47 @@ if (typeof yasp == 'undefined') yasp = { };
         pushcolor: 'rgb(60,60,60)'
       }
     });
+
+    hw_led_green = new yasp.Hardware({
+      cb: function(button) { },
+      container: $('#hw_led_green'),
+      type: yasp.HardwareType.LED,
+      params: {
+        onColor: 'rgb(0,255,0)',
+        offColor: 'rgb(0,60,0)'
+      }
+    });
+
+    hw_led_yellow = new yasp.Hardware({
+      cb: function(button) { },
+      container: $('#hw_led_yellow'),
+      type: yasp.HardwareType.LED,
+      params: {
+        onColor: 'rgb(255,255,0)',
+        offColor: 'rgb(60,60,0)'
+      }
+    });
+
+    hw_led_red = new yasp.Hardware({
+      cb: function(button) { },
+      container: $('#hw_led_red'),
+      type: yasp.HardwareType.LED,
+      params: {
+        onColor: 'rgb(255,0,0)',
+        offColor: 'rgb(60,0,0)'
+      }
+    });
+    
+    hw_led_green.receiveStateChange(yasp.HardwareType.LED.States.OFF);
+    hw_led_red.receiveStateChange(yasp.HardwareType.LED.States.OFF);
+    hw_led_yellow.receiveStateChange(yasp.HardwareType.LED.States.OFF);
+    
+    hw_poti = new yasp.Hardware({
+      cb: function(button) { },
+      container: $('#hw_poti'),
+      type: yasp.HardwareType.POTI,
+      params: 0
+    });
   });
   
   

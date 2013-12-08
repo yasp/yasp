@@ -110,9 +110,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param evt the event name
    * @param func the event callback
    */
-  yasp.Emulator.registerCallback = function (evt, func) {
+  yasp.Emulator.prototype.registerCallback = function (evt, func) {
     if(typeof func == "function") {
-      events[evt] = func;
+      this.events[evt] = func;
       return true;
     } else {
       return false;
