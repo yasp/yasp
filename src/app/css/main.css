@@ -223,20 +223,22 @@ span.cm-keyword {
     height: 40px;
     margin: 8px;
     
-    float: left;
+    box-sizing: content-box !important;
 }
 
 .hw_led {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     margin: 8px;
 
-    float: left;
+    box-sizing: content-box !important;
 }
 
 .hw_poti {
     width: 80px;
     height: 80px;
+
+    box-sizing: content-box !important;
 }
 
 /* ==========================================================================

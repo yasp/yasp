@@ -16,18 +16,18 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
         });
 
         this.element.appendTo(this.container);
-
-        var width = this.element.width();
-        var height = this.element.height();
-        // fix HTML5 behaviour
-        this.element.attr({
-          "width": width,
-          "height": height
-        });
-
+        
         this.upAnim = this.type.animUpdate.bind(this); // reduce amount of objects created
       }
 
+      // fix HTML5 behaviour
+      var width = this.element.width();
+      var height = this.element.height();
+      
+      this.element.attr({
+        "width": width,
+        "height": height
+      });
 
       if (!this.rendering) {
         if (!!this.interval) clearInterval(this.interval);

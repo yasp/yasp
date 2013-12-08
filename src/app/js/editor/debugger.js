@@ -6,6 +6,8 @@ if (typeof yasp == 'undefined') yasp = { };
   var hw_led_green, hw_led_yellow, hw_led_red;
   var hw_but_black, hw_but_red;
   
+  var hardware = [ ];
+  
   $('body').ready(function() {
     debuggerEditor = yasp.EditorManager.create($('#debugger_editor').get(0));
     debuggerEditor.swapDoc(yasp.EditorManager.editors[0].linkedDoc({
@@ -23,6 +25,7 @@ if (typeof yasp == 'undefined') yasp = { };
         pushcolor: 'rgb(180,0,0)'
       }
     });
+    hardware.push(hw_but_red);
 
     hw_but_black = new yasp.Hardware({
       cb: function(button) { },
@@ -33,6 +36,7 @@ if (typeof yasp == 'undefined') yasp = { };
         pushcolor: 'rgb(60,60,60)'
       }
     });
+    hardware.push(hw_but_black);
 
     hw_led_green = new yasp.Hardware({
       cb: function(button) { },
@@ -43,7 +47,8 @@ if (typeof yasp == 'undefined') yasp = { };
         offColor: 'rgb(0,60,0)'
       }
     });
-
+    hardware.push(hw_led_green);
+    
     hw_led_yellow = new yasp.Hardware({
       cb: function(button) { },
       container: $('#hw_led_yellow'),
@@ -53,7 +58,8 @@ if (typeof yasp == 'undefined') yasp = { };
         offColor: 'rgb(60,60,0)'
       }
     });
-
+    hardware.push(hw_led_yellow);
+    
     hw_led_red = new yasp.Hardware({
       cb: function(button) { },
       container: $('#hw_led_red'),
@@ -63,6 +69,7 @@ if (typeof yasp == 'undefined') yasp = { };
         offColor: 'rgb(60,0,0)'
       }
     });
+    hardware.push(hw_led_red)
     
     hw_led_green.receiveStateChange(yasp.HardwareType.LED.States.OFF);
     hw_led_red.receiveStateChange(yasp.HardwareType.LED.States.OFF);
@@ -82,6 +89,11 @@ if (typeof yasp == 'undefined') yasp = { };
       $('#dialog_debugger').modal({
         'keyboard': true
       }).on('shown.bs.modal', function() {
+        // redraw hardware
+        for (var i = 0; i < hardware.length; i++) {
+          hardware[i].render();
+        }
+        
         // load code into emulator
         yasp.EmulatorCommunicator.sendMessage("LOAD", {
           bitcode: yasp.Editor.bitcode,

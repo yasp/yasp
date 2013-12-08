@@ -51,7 +51,6 @@ if (typeof yasp == 'undefined') yasp = { };
   /**
    * Is internally callen to draw this hardware into the DOM
    * It is not defined which method the hardware uses to draw: Some use Canvas, others manipulate the DOM directly.
-   * Do not call this on your own - only receiveStateChange may use this.
    */
   yasp.Hardware.prototype.render = function() {
     if (!!this.container) this.type.render.call(this);
