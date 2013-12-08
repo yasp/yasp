@@ -20,7 +20,7 @@ new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "BREAK":
-      emulator.break();
+      emulator.break("break");
       ready({
         payload: {},
         error: null
