@@ -260,9 +260,15 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.writeFlags = function (c, z) {
     if(c !== null)
+    {
+      if(debug) console.log("c=" + c);
       this.flags.c = c;
+    }
     if(z !== null)
+    {
+      if(debug) console.log("z=" + z);
       this.flags.z = z;
+    }
   };
 
   /**
@@ -271,6 +277,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see Emulator#popWord
    */
   yasp.Emulator.prototype.pushWord = function (v) {
+    if(debug) console.log("push word: " + v);
     this.stack[++this.sp] = v & 0xFF;
     this.stack[++this.sp] = v >> 8;
   };
@@ -281,6 +288,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see Emulator#popByte
    */
   yasp.Emulator.prototype.pushByte = function (v) {
+    if(debug) console.log("push byte: " + v);
     this.stack[++this.sp] = v;
   };
 
@@ -309,6 +317,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param pc the new value to set
    */
   yasp.Emulator.prototype.writePC = function (pc) {
+    if(debug) console.log("pc=" + pc);
     this.pc = pc;
   };
 
@@ -354,6 +363,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.triggerInterrupt(p);
     }
 
+    if(debug) console.log("p" + p + "=" + s);
     pin.state = s;
     return 0;
   };
