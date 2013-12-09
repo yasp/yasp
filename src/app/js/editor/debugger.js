@@ -3,10 +3,6 @@ if (typeof yasp == 'undefined') yasp = { };
 (function() {
   var updateInterval;
   var debuggerEditor;
-  var hw_led_green, hw_led_yellow, hw_led_red;
-  var hw_but_black, hw_but_red;
-  
-  var hardware = [ ];
   
   $('body').ready(function() {
     debuggerEditor = yasp.EditorManager.create($('#debugger_editor').get(0));

@@ -437,8 +437,18 @@ yasp.Storage = localStorage || { };
           if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
             var command = entry.params.command;
             var desc = yasp.Language.getSpecificLanguage(command.doc);
-            
-            var cmdStr = command.name.toUpperCase()+" ";
+
+            var cmdStr = "";
+            if (command.name instanceof Array) {
+              var names = command.name;
+              for (var j = 0; j < names.length; j++) {
+                if (j > 0) cmdStr += " | ";
+                cmdStr += names[j].toUpperCase();
+              }
+              cmdStr += " ";
+            } else {
+              cmdStr = command.name.toUpperCase()+" ";
+            }
             for (var j = 0; j < command.params.length; j++) {
               if (j > 0) cmdStr += ", ";
               
