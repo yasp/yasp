@@ -566,7 +566,7 @@ if (typeof yasp == 'undefined') yasp = { };
       params = cachedCmd.params;
     }
 
-    this.pc += neededBytes;
+    this.writePC(this.pc + neededBytes);
 
     var p0 = params[0];
 
