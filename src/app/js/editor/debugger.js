@@ -16,7 +16,6 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Debugger = {
     show: function() {
       if (!!yasp.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
-      
       yasp.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
       
       $('#dialog_debugger').modal({
@@ -38,11 +37,18 @@ if (typeof yasp == 'undefined') yasp = { };
         
       }).on('hidden.bs.modal', function() {
         // stop execution
-        yasp.EmulatorCommunicator.sendMessage("BREAK", { });
-        yasp.EmulatorCommunicator.terminate();
-        yasp.EmulatorCommunicator = null;
+        if (!yasp.EmulatorCommunicator) {
+          yasp.EmulatorCommunicator.sendMessage("BREAK", { });
+          yasp.EmulatorCommunicator.terminate();
+          yasp.EmulatorCommunicator = null;
+        }
+          
+        if (!!updateInterval) {
+          clearInterval(updateInterval);
+          updateInterval = null;
+        }
       });
-      
+
       var updateFunc;
       updateInterval || (updateInterval = setInterval(updateFunc = function() {
         var height = $('#dialog_debugger .modal-content').height();
