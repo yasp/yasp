@@ -21,6 +21,17 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.BreadBoard.prototype.build = function () {
     this.container.empty();
 
+    this.communicator.subscribe('IO_CHANGED',
+      (function (data) {
+        var payload = data.payload;
+
+        for (var i = 0; i < this.type.hardware.length; i++) {
+          if(this.type.hardware[i].pin === payload.pin)
+            this.hardware[i].receiveStateChange(payload.state);
+        }
+      }).bind(this)
+    );
+
     var $innerContainer = $('<div>');
     $innerContainer.css('position', 'relative');
     this.container.append($innerContainer);

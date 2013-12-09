@@ -23,7 +23,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           onColor: 'rgb(255,0,0)',
           offColor: 'rgb(60,0,0)'
         },
-        pin: 0,
+        pin: 10,
         appearance: {
           top: "5px",
           left: "137px",
@@ -37,7 +37,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           onColor: 'rgb(0,255,0)',
           offColor: 'rgb(0,60,0)'
         },
-        pin: 0,
+        pin: 3,
         appearance: {
           top: "170px",
           left: "175px",
@@ -51,7 +51,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           onColor: 'rgb(255,255,0)',
           offColor: 'rgb(60,60,0)'
         },
-        pin: 0,
+        pin: 4,
         appearance: {
           top: "170px",
           left: "210px",
@@ -65,7 +65,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           onColor: 'rgb(255,0,0)',
           offColor: 'rgb(60,0,0)'
         },
-        pin: 0,
+        pin: 5,
         appearance: {
           top: "170px",
           left: "245px",
@@ -79,7 +79,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           color: 'rgb(100,100,100)',
           pushcolor: 'rgb(60,60,60)'
         },
-        pin: 0,
+        pin: 1,
         appearance: {
           top: "208px",
           left: "185px",
@@ -93,7 +93,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           color: 'rgb(255,0,0)',
           pushcolor: 'rgb(180,0,0)'
         },
-        pin: 0,
+        pin: 2,
         appearance: {
           top: "208px",
           left: "243px",
