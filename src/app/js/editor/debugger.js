@@ -14,9 +14,6 @@ if (typeof yasp == 'undefined') yasp = { };
       sharedHist: true
     }));
     debuggerEditor.setOption('readOnly', "nocursor");
-
-    breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
-    breadboard.build();
   });
   
   
@@ -29,7 +26,8 @@ if (typeof yasp == 'undefined') yasp = { };
       $('#dialog_debugger').modal({
         'keyboard': true
       }).on('shown.bs.modal', function() {
-        // redraw hardware
+        var breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
+        breadboard.build();
         breadboard.render();
         
         // load code into emulator
