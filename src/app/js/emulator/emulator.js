@@ -1,7 +1,7 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  var tickTimeout = 1000;
+  var tickTimeout = 10;
   var debug = false;
 
   /**
@@ -430,7 +430,8 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param ticks number of ticks to wait
    */
   yasp.Emulator.prototype.wait = function (ticks) {
-    this.waitTicks += ticks;
+    var ms = ticks * 0.015;
+    this.waitTicks = ms / tickTimeout;
   };
 
   yasp.Emulator.prototype.tick = function () {
