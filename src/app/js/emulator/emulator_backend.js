@@ -41,3 +41,15 @@ emulator.registerCallback('LOADED', function (start, length) {
 emulator.registerCallback('CONTINUED', function () {
   communicator.broadcast('CONTINUED', { });
 });
+
+emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
+  communicator.broadcast('IO_CHANGED', {
+    payload: {
+      "pin": pin,
+      "type": type,
+      "mode": mode,
+      "state": state
+    },
+    error: null
+  });
+});

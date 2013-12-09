@@ -365,6 +365,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(debug) console.log("p" + p + "=" + s);
     pin.state = s;
+    this.events.IO_CHANGED(p, s, pin.mode, pin.type);
     return 0;
   };
 
