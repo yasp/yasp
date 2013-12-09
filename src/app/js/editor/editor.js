@@ -194,7 +194,6 @@ yasp.Storage = localStorage || { };
     }
   };
   
-  yasp.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
   yasp.AssemblerCommunicator = new yasp.Communicator("app/js/assembler/assembler_backend.js");
   
   $('body').ready(function() {
