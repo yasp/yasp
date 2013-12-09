@@ -31,15 +31,26 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
 });
 
 emulator.registerCallback('BREAK', function (reason) {
-  communicator.broadcast('BREAK', { reason: reason });
+  communicator.broadcast('BREAK', {
+    payload: {
+      reason: reason
+    },
+    error: null
+  });
 });
 
 emulator.registerCallback('LOADED', function (start, length) {
-  communicator.broadcast('LOADED', { start: start, length: length });
+  communicator.broadcast('LOADED', {
+    payload: {
+      start: start,
+      length: length
+    },
+    error: null
+  });
 });
 
 emulator.registerCallback('CONTINUED', function () {
-  communicator.broadcast('CONTINUED', { });
+  communicator.broadcast('CONTINUED', { payload: null, error: null });
 });
 
 emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
