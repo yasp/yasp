@@ -217,30 +217,6 @@ span.cm-keyword {
     width: 50%;
 }
 
-/* Hardware \o/ */
-.hw_but {
-    width: 40px;
-    height: 40px;
-    margin: 8px;
-    
-    box-sizing: content-box !important;
-}
-
-.hw_led {
-    width: 30px;
-    height: 30px;
-    margin: 8px;
-
-    box-sizing: content-box !important;
-}
-
-.hw_poti {
-    width: 80px;
-    height: 80px;
-
-    box-sizing: content-box !important;
-}
-
 /* ==========================================================================
    Media Queries
    ========================================================================== */
