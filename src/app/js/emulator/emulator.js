@@ -431,7 +431,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.wait = function (ticks) {
     var ms = ticks * 0.015;
-    this.waitTicks = ms / tickTimeout;
+    this.waitTicks = ~~(ms / tickTimeout);
   };
 
   yasp.Emulator.prototype.tick = function () {
