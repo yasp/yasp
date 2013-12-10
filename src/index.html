@@ -106,9 +106,26 @@
         
         <div id="editorcontainer">
         <textarea id="editor" name="code">
-MyLbl:  MOV b0, 100
-        MOV b1, 50
+; Toggle the green LED and increment a byte-register by at a time.
+; Additionally the yellow LED is switched once an overflow occurs.
+
+; ---- INIT
+        MOV b0, 0x00
+        MOV b1, 0x20
+
+
+; ---- Blink green and increment b0 by b1
+MyLbl:
         ADD b0, b1
+        JC carry
+        TOGGLE 3
+        PAUSE 30000
+        JMP MyLbl
+
+; ---- Switch yellow
+carry:
+        TOGGLE 4
+        JMP MyLbl
 END
 </textarea>
         </div>
