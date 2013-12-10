@@ -25,6 +25,30 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         error: null
       });
       break;
+    case "SET_STATE":
+      if(data.payload.io) {
+        for (var i = 0; i < data.payload.io.length; i++) {
+          var io = data.payload.io[i];
+
+          if(io.pin === undefined)
+            continue;
+
+          var pin = emulator.pins[io.pin];
+
+          if(io.type)
+            pin.type = io.type;
+          if(io.mode)
+            pin.mode = io.mode;
+          if(io.state !== undefined)
+            emulator.setIO(io.pin, io.state, true);
+        }
+      }
+
+      ready({
+        payload: {},
+        error: null
+      });
+      break;
     default:
       ready(yasp.Communicator.UNKNOWN_ACTION);
   }
