@@ -46,7 +46,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
     },
     States: {
       PUSH: 1,
-        NO_PUSH: 0
+      NO_PUSH: 0
     }
   };
 })();
