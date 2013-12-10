@@ -25,7 +25,7 @@ if (typeof yasp == 'undefined') yasp = { };
       var payload = data.payload;
 
       for (var i = 0; i < this.type.hardware.length; i++) {
-        if(this.type.hardware[i].pin === payload.pin)
+        if(this.type.hardware[i].pin === payload.pin && this.type.hardware[i].type === "LED")
           this.hardware[i].receiveStateChange(payload.state);
       }
     }).bind(this);
@@ -79,15 +79,16 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var hardware = new yasp.Hardware({
       cb: (function(hw) {
-        if(definition.type === "POTI" || definition.type === "PUSHBUTTON")
-        this.communicator.sendMessage("SET_STATE", {
-          io: [
-            {
-              pin: definition.pin,
-              state: hw.state
-            }
-          ]
-        });
+        if(definition.type === "POTI" || definition.type === "PUSHBUTTON") {
+          this.communicator.sendMessage("SET_STATE", {
+            io: [
+              {
+                pin: definition.pin,
+                state: hw.state
+              }
+            ]
+          });
+        }
       }).bind(this),
       container: $wrapper,
       type: yasp.HardwareType[definition.type],
