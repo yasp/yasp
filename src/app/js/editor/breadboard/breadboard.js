@@ -21,16 +21,16 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.BreadBoard.prototype.build = function () {
     this.container.empty();
 
-    this.communicator.subscribe('IO_CHANGED',
-      (function (data) {
-        var payload = data.payload;
+    this.ioChangedCb = (function (data) {
+      var payload = data.payload;
 
-        for (var i = 0; i < this.type.hardware.length; i++) {
-          if(this.type.hardware[i].pin === payload.pin)
-            this.hardware[i].receiveStateChange(payload.state);
-        }
-      }).bind(this)
-    );
+      for (var i = 0; i < this.type.hardware.length; i++) {
+        if(this.type.hardware[i].pin === payload.pin)
+          this.hardware[i].receiveStateChange(payload.state);
+      }
+    }).bind(this);
+
+    this.communicator.subscribe('IO_CHANGED', this.ioChangedCb);
 
     var $innerContainer = $('<div>');
     $innerContainer.css('position', 'relative');
@@ -78,7 +78,17 @@ if (typeof yasp == 'undefined') yasp = { };
       $wrapper.css('width', appear.width);
 
     var hardware = new yasp.Hardware({
-      cb: function(button) { },
+      cb: (function(hw) {
+        if(definition.type === "POTI" || definition.type === "PUSHBUTTON")
+        this.communicator.sendMessage("SET_STATE", {
+          io: [
+            {
+              pin: definition.pin,
+              state: hw.state
+            }
+          ]
+        });
+      }).bind(this),
       container: $wrapper,
       type: yasp.HardwareType[definition.type],
       params: definition.params
@@ -102,6 +112,6 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.BreadBoard.prototype.destroy = function () {
     this.container.empty();
-
+    this.communicator.unsubscribe('IO_CHANGED', this.ioChangedCb);
   };
 })();
