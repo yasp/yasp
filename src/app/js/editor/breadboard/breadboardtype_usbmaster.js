@@ -23,7 +23,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           onColor: 'rgb(255,0,0)',
           offColor: 'rgb(60,0,0)'
         },
-        pin: 10,
+        pin: 11,
         appearance: {
           top: "5px",
           left: "137px",
