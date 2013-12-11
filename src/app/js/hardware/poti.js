@@ -4,7 +4,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 (function () {
   /**
    * A potentiometer
-   * The state Object is a value from 0-359 describing the currenct angle
+   * The state Object is a value from 0-255 describing the current angle
    */
   yasp.HardwareType["POTI"] = {
     render: function() {
@@ -27,6 +27,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
             var angle = Math.atan2((origy - y), (origx - x));
             angle = Math.floor(angle*(180/Math.PI)+180)
+            angle = (angle/359)*255;
 
             this.receiveStateChange(angle);
           }
@@ -52,7 +53,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       var innerRadius = maxRadius-20;
       var numTeeth = maxRadius/2;
       var color = "rgb(190,190,190)";
-      var rad = this.state*(Math.PI/180);
+      var rad = (this.state/255)*359*(Math.PI/180);
 
       var obj = this.element.get(0);
       var ctx = obj.getContext('2d');
