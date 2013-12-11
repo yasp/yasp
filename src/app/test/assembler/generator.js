@@ -140,7 +140,7 @@
     {input: "ORG 1 \n MOV b1, 2", result: "00000000000000000000000100000010", map: {2: 0}},
     {input: "DB 42", result: "00101010", map: { }},
     {input: "DW 1337", result: "0000010100111001", map: { }},
-    {input: "address: DA address", result: "0000000000000000", map: { }},
+    {input: "ORG 10 \n address: DA address", result: "00000000", map: { }},
     {input: 'STRING "HI"', result: "010010000100100100000000", map: { }},
     {input: "MOV b1, 2", result: "000000000000000100000010", map: {1: 0}},
     {input: "MOV b0, b1", result: "000100000000000000000001", map: { 1: 0 }},

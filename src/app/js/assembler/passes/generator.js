@@ -79,17 +79,24 @@ if (typeof yasp == 'undefined') yasp = { };
       name: "dump",
       generate: function(generator) {
         if (this.params.data instanceof String) {
-          var str = this.params.data;
-          for (var i = 0; i < str.length; i++) {
-            generator.bitWriter.append(str.charCodeAt(i), 8);
+          if (!!this.params.len) {
+            // label address
+            var labelToken = generator.assembler.getLabel(this.params.data);
+            
+            generator.bitWriter.append(generator.labelMachinePosition[labelToken.text.toUpperCase()], this.params.len);
+          } else {
+            var str = this.params.data;
+            for (var i = 0; i < str.length; i++) {
+              generator.bitWriter.append(str.charCodeAt(i), 8);
+            }
+            generator.bitWriter.append('\0', 8);
           }
-          generator.bitWriter.append('\0', 8);
         } else {
           generator.bitWriter.append(this.params.data, this.params.len);
         }
       },
       calculateBitSize: function() {
-        if (this.params.data instanceof String) {
+        if (this.params.data instanceof String && !this.params.len) {
           return this.params.data.length*8 + 8; // data + \0
         } else {
           return this.params.len;
@@ -101,9 +108,9 @@ if (typeof yasp == 'undefined') yasp = { };
       generate: function(generator) {
         generator.bitWriter.jumpTo(this.params.len*8);
       },
-      calculateBitSize: function() {
-        this.linkPos = this.params.len*8;
-        return 0;
+      calculateBitSize: function(generator) {
+        generator.linkPos = 0;
+        return this.params.len*8;
       }
     },
     NODE_LABEL: {

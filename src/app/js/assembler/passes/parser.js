@@ -306,7 +306,7 @@ if (typeof yasp == 'undefined') yasp = { };
         }
         
         this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
-          data: val,
+          data: new String(val),
           len: 16
         }));
         iterator.optNext();
