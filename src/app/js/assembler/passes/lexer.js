@@ -58,6 +58,7 @@ if (typeof yasp == "undefined") yasp = { };
 
         if (token == commentSplitter) {
           while (input.charAt(i) != '\n' && i < input.length) i++;
+          i--;
         } else if (token == stringSplitter) {
           token = "";
           i++;
