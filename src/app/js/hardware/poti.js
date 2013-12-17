@@ -16,8 +16,18 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
         });
 
         var handler;
+        var isDown = false;
+        this.element.mousedown(function () {
+          isDown = true;
+        });
+        this.element.mouseup(function () {
+          isDown = false;
+        });
+        this.element.mouseleave(function () {
+          isDown = false;
+        });
         this.element.mousemove(handler = (function(evt) {
-          if (evt.which == 1) {
+          if (isDown) {
             var parentOffset = this.element.parent().offset();
             var x = evt.pageX - parentOffset.left;
             var y = evt.pageY - parentOffset.top;
