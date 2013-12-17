@@ -1,7 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  var tickTimeout = 10;
+  var tickTimeout = 1;
+  var ticksPerTick = 5;
   var debug = false;
 
   /**
@@ -475,7 +476,8 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.wait = function (ticks) {
     var ms = ticks * 0.015;
-    this.waitTicks = ~~(ms / tickTimeout);
+    var timePerTick = tickTimeout / ticksPerTick;
+    this.waitTicks = ~~(ms / timePerTick);
   };
 
   yasp.Emulator.prototype.tick = function () {
@@ -483,6 +485,9 @@ if (typeof yasp == 'undefined') yasp = { };
       setTimeout(this.tick.bind(this), tickTimeout);
       return;
     }
+    
+    for(var jj = 0; jj < ticksPerTick; i++) {
+
     this.ticks++;
 
     if(this.waitTicks !== 0) {
@@ -665,6 +670,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(!this.stepping) {
       setTimeout(this.tick.bind(this), tickTimeout);
+    }
+
     }
   };
 })();
