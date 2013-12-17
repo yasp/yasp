@@ -27,20 +27,12 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
         "height": height
       });
 
-      var states = yasp.HardwareType.LED.States;
-
       var radius = Math.min(width, height)/2;
 
       var obj = this.element.get(0);
       var ctx = obj.getContext('2d');
 
-      var alpha = 0;
-
-      if (this.state == states.ON) {
-        alpha = 1;
-      } else if (this.state == states.OFF) {
-        alpha = 0;
-      }
+      var alpha = Math.min(1, Math.max(0, this.state)); // only values between 1 and 0
 
       ctx.clearRect(0,0,width, height); // clear it, baby
 
@@ -78,11 +70,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       ctx.fill();
     },
     initialState: function() {
-      return yasp.HardwareType.LED.States.OFF;
-    },
-    States: {
-      ON: 1,
-      OFF: 0
+      return 0;
     }
   };
 })();
