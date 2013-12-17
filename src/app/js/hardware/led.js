@@ -16,8 +16,6 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
         });
 
         this.element.appendTo(this.container);
-        
-        this.upAnim = this.type.animUpdate.bind(this); // reduce amount of objects created
       }
 
       // fix HTML5 behaviour
@@ -29,44 +27,20 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
         "height": height
       });
 
-      if (!this.rendering) {
-        if (!!this.interval) clearInterval(this.interval);
-        if (!this.rendering) {
-          this.onCount = 0;
-          this.offCount = 0;
-        }
-
-        this.rendering = true;
-        this.interval = setInterval(this.upAnim, 0);
-      }
-    },
-    animUpdate: function() {
       var states = yasp.HardwareType.LED.States;
-
-      if (this.rendering) {
-        if (this.state == states.ON) {
-          this.onCount++;
-        } else if (this.state == states.OFF) {
-          this.offCount++;
-        }
-
-        if (this.onCount + this.offCount > 75) {
-          this.type.animRender.bind(this)();
-          this.onCount /= 1.35; // this is needed, to reduce flickering
-          this.offCount /= 1.35;
-        }
-      }
-    },
-    animRender: function() {
-      var states = yasp.HardwareType.LED.States;
-
-      var width = this.element.width();
-      var height = this.element.height();
 
       var radius = Math.min(width, height)/2;
 
       var obj = this.element.get(0);
       var ctx = obj.getContext('2d');
+
+      var alpha = 0;
+
+      if (this.state == states.ON) {
+        alpha = 1;
+      } else if (this.state == states.OFF) {
+        alpha = 0;
+      }
 
       ctx.clearRect(0,0,width, height); // clear it, baby
 
@@ -76,14 +50,14 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       ctx.fillStyle = 'rgba(10,10,10,0.9)';
       ctx.fill();
 
-      ctx.globalAlpha = this.offCount/(this.onCount + this.offCount);
+      ctx.globalAlpha = alpha;
       ctx.beginPath();
       ctx.arc(width/2, height/2, radius-1, 0, 2 * Math.PI, false);
       ctx.fillStyle =  this.params.offColor;
       ctx.fill();
 
       // draw main color
-      ctx.globalAlpha = this.onCount/(this.onCount + this.offCount);
+      ctx.globalAlpha = alpha;
       ctx.beginPath();
       ctx.arc(width/2, height/2, radius-1, 0, 2 * Math.PI, false);
       ctx.fillStyle =  this.params.onColor;
