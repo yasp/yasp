@@ -28,6 +28,6 @@
     }
   ],
   "exec": function (pin) {
-    this.setIO(pin.address, true);
+    this.setIO(pin.address, 1);
   }
 }
