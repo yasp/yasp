@@ -15,6 +15,8 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack = new Uint8Array(16);
     this.sp = -1;
 
+    this.ticks = 0;
+
     this.waitTicks = 0;
 
     // bits of interrupt-mask
@@ -382,7 +384,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param s state which has been set
    */
   yasp.Emulator.prototype.updatePwm = function (p, pin, s) {
-    var now = +new Date();
+    var now = this.ticks;
 
     if(s === 1) {
       if(!this.pwmStatus[p]) {
@@ -481,6 +483,7 @@ if (typeof yasp == 'undefined') yasp = { };
       setTimeout(this.tick.bind(this), tickTimeout);
       return;
     }
+    this.ticks++;
 
     if(this.waitTicks !== 0) {
       this.waitTicks--;
