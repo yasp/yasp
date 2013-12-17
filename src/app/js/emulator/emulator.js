@@ -86,6 +86,8 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     ];
 
+    this.pwmStatus = {};
+
     this.pc = 0;
     this.running = false;
     this.stepping = !!stepping;
@@ -365,8 +367,48 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(debug) console.log("p" + p + "=" + s);
     pin.state = s;
-    this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+
+    if(outside !== true) {
+      this.updatePwm(p, pin, s);
+    }
+
     return 0;
+  };
+
+  /**
+   * @function helper function to handle PWM
+   * @param p pin-number
+   * @param pin pin instance
+   * @param s state which has been set
+   */
+  yasp.Emulator.prototype.updatePwm = function (p, pin, s) {
+    var now = +new Date();
+
+    if(s === 1) {
+      if(!this.pwmStatus[p]) {
+        this.pwmStatus[p] = {
+          timeOn: now
+        };
+      } else if(!this.pwmStatus[p].timeOff) {
+        this.events.IO_CHANGED(p, 1, pin.mode, pin.type);
+      } else {
+        var ss = this.pwmStatus[p];
+        var tOn = ss.timeOff - ss.timeOn;
+        var tOff = now - ss.timeOff;
+        var total = tOn + tOff;
+
+        var x = tOn / total;
+        this.events.IO_CHANGED(p, x, pin.mode, pin.type);
+
+        this.pwmStatus[p] = null;
+      }
+    } else if(s === 0) {
+      if(!this.pwmStatus[p]) {
+        // ???
+      } else {
+        this.pwmStatus[p].timeOff = now;
+      }
+    }
   };
 
   /**
