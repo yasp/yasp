@@ -393,8 +393,6 @@ if (typeof yasp == 'undefined') yasp = { };
         this.pwmStatus[p] = {
           timeOn: now
         };
-      } else if(!this.pwmStatus[p].timeOff) {
-        this.events.IO_CHANGED(p, 1, pin.mode, pin.type);
       } else {
         var ss = this.pwmStatus[p];
         var tOn = ss.timeOff - ss.timeOn;
@@ -407,21 +405,24 @@ if (typeof yasp == 'undefined') yasp = { };
 
         this.pwmStatus[p] = null;
       }
-    } else if(s === 0) {
-      if(!this.pwmStatus[p]) {
-        // ???
-      } else {
-        this.pwmStatus[p].timeOff = now;
-      }
+    } else if(s === 0 && this.pwmStatus[p]) {
+      this.pwmStatus[p].timeOff = now;
     }
 
-    if(this.pwmTimeouts[p])
-      clearTimeout(this.pwmTimeouts[p]);
+    if(this.pwmTimeouts[p]) {
+      if(this.pwmTimeouts[p].state === s)
+        return;
+      clearTimeout(this.pwmTimeouts[p].timeoutId);
+      this.pwmTimeouts[p] = null;
+    }
 
-    this.pwmTimeouts[p] = setTimeout(function () {
-      this.events.IO_CHANGED(p, s, pin.mode, pin.type);
-      this.pwmStatus[p] = null;
-    }.bind(this), 100);
+    this.pwmTimeouts[p] =  {
+      state: s,
+      timeoutId: setTimeout(function () {
+        this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+        this.pwmStatus[p] = null;
+      }.bind(this), 100)
+    };
   };
 
   /**
