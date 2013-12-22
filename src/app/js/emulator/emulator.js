@@ -484,8 +484,8 @@ if (typeof yasp == 'undefined') yasp = { };
       setTimeout(this.tick.bind(this), tickTimeout);
       return;
     }
-    
-    for(var jj = 0; jj < ticksPerTick; i++) {
+
+    for(var jj = 0; jj < ticksPerTick; jj++) {
 
     this.ticks++;
 
@@ -668,11 +668,10 @@ if (typeof yasp == 'undefined') yasp = { };
 
       this.writeFlags(null, z);
     }
+    }
 
     if(!this.stepping) {
       setTimeout(this.tick.bind(this), tickTimeout);
-    }
-
     }
   };
 })();
