@@ -18,7 +18,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.ticks = 0;
 
-    this.waitTicks = 0;
+    this.waitTime = 0;
 
     // bits of interrupt-mask
     // set by ENABLE, DISABLE
@@ -476,8 +476,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.wait = function (ticks) {
     var ms = ticks * 0.015;
-    var timePerTick = tickTimeout / ticksPerTick;
-    this.waitTicks = ~~(ms / timePerTick);
+    this.waitTime = ms;
   };
 
   yasp.Emulator.prototype.tick = function () {
@@ -490,9 +489,11 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.ticks++;
 
-    if(this.waitTicks !== 0) {
-      this.waitTicks--;
-      setTimeout(this.tick.bind(this), tickTimeout);
+    if(this.waitTime !== 0) {
+      setTimeout(this.tick.bind(this), this.waitTime);
+      var timePerTick = tickTimeout / ticksPerTick;
+      this.ticks += (this.waitTime / timePerTick);
+      this.waitTime = 0;
       return;
     }
 
