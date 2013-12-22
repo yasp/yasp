@@ -90,6 +90,7 @@ if (typeof yasp == 'undefined') yasp = { };
     ];
 
     this.pwmStatus = {};
+    this.pwmTimeouts = {};
 
     this.pc = 0;
     this.running = false;
@@ -402,6 +403,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
         var x = tOn / total;
         this.events.IO_CHANGED(p, x, pin.mode, pin.type);
+        clearTimeout(this.pwmTimeouts[p]);
 
         this.pwmStatus[p] = null;
       }
@@ -412,6 +414,14 @@ if (typeof yasp == 'undefined') yasp = { };
         this.pwmStatus[p].timeOff = now;
       }
     }
+
+    if(this.pwmTimeouts[p])
+      clearTimeout(this.pwmTimeouts[p]);
+
+    this.pwmTimeouts[p] = setTimeout(function () {
+      this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+      this.pwmStatus[p] = null;
+    }.bind(this), 100);
   };
 
   /**
