@@ -1027,6 +1027,18 @@
     }
   ]);
 
+  // LA
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "MOV b0,0\nlbl: LA w0,lbl",
+      setup: {},
+      steps: [
+        { }, // MOV
+        { reg: { "w0": 0x0003 } }
+      ]
+    }
+  ]);
+
   // ADC0/1/2
   commandTestData = commandTestData.concat([
     {
