@@ -62,7 +62,7 @@
                 }),
                 new yasp.Hardware({
                     cb: function(led) {
-                        $('#led_green_state').text(led.state+" "+ledCounter);
+                        $('#led_green_state').text(led.state+" "+ledVal);
                     },
                     container: $('#led_green'),
                     type: yasp.HardwareType.LED,
@@ -93,25 +93,21 @@
                 state: 0
             });
             
-            leds[2].receiveStateChange(yasp.HardwareType.LED.States.ON);
+            leds[2].receiveStateChange(1);
             setInterval(function() {
                 var states = yasp.HardwareType.LED.States;
-                leds[0].receiveStateChange(leds[0].state == states.ON ? states.OFF : states.ON);
+                leds[0].receiveStateChange(!leds[0].state);
             }, 1000);
             
-            var len = 100;
-            var ledCounter = len;
+            var ledVal = 1;
+            var dir = 0.05;
             var greenLedAn = function() {
-                var states = yasp.HardwareType.LED.States;
-                leds[1].receiveStateChange(states.ON);
-                setTimeout(function() {
-                    leds[1].receiveStateChange(states.OFF);
-                    ledCounter -= .5;
-                    if (ledCounter < 0) ledCounter = len;
-                    setTimeout(greenLedAn, ledCounter);
-                }, len-ledCounter);
+                leds[1].receiveStateChange(ledVal);
+                ledVal += dir;
+                if(ledVal > 1 || ledVal < 0)
+                    dir *= -1;
             };
-            setTimeout(greenLedAn, ledCounter);
+            setInterval(greenLedAn, 50);
         });
     </script>
     <style>

@@ -1,7 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  var tickTimeout = 10;
+  var tickTimeout = 1;
+  var ticksPerTick = 5;
   var debug = false;
 
   /**
@@ -15,7 +16,9 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack = new Uint8Array(16);
     this.sp = -1;
 
-    this.waitTicks = 0;
+    this.ticks = 0;
+
+    this.waitTime = 0;
 
     // bits of interrupt-mask
     // set by ENABLE, DISABLE
@@ -85,6 +88,9 @@ if (typeof yasp == 'undefined') yasp = { };
         mode: "in"
       }
     ];
+
+    this.pwmStatus = {};
+    this.pwmTimeouts = {};
 
     this.pc = 0;
     this.running = false;
@@ -352,21 +358,71 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.setIO = function (p, s, outside) {
     var pin = this.pins[p];
 
-    if(s !== false && s !== true && (typeof s !== "number" || (s < 0 || s > 65535)))
+    if(typeof s !== "number" || (s < 0 || s > 65535))
       return 3;
     if(pin === undefined)
       return 1;
     if(pin.mode === "in" && outside !== true)
       return 2;
 
-    if(s === true || s === 1) {
+    if(s === 1) {
       this.triggerInterrupt(p);
     }
 
     if(debug) console.log("p" + p + "=" + s);
     pin.state = s;
-    this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+
+    if(outside !== true) {
+      this.updatePwm(p, pin, s);
+    }
+
     return 0;
+  };
+
+  /**
+   * @function helper function to handle PWM
+   * @param p pin-number
+   * @param pin pin instance
+   * @param s state which has been set
+   */
+  yasp.Emulator.prototype.updatePwm = function (p, pin, s) {
+    var now = this.ticks;
+
+    if(s === 1) {
+      if(!this.pwmStatus[p]) {
+        this.pwmStatus[p] = {
+          timeOn: now
+        };
+      } else {
+        var ss = this.pwmStatus[p];
+        var tOn = ss.timeOff - ss.timeOn;
+        var tOff = now - ss.timeOff;
+        var total = tOn + tOff;
+
+        var x = tOn / total;
+        this.events.IO_CHANGED(p, x, pin.mode, pin.type);
+        clearTimeout(this.pwmTimeouts[p]);
+
+        this.pwmStatus[p] = null;
+      }
+    } else if(s === 0 && this.pwmStatus[p]) {
+      this.pwmStatus[p].timeOff = now;
+    }
+
+    if(this.pwmTimeouts[p]) {
+      if(this.pwmTimeouts[p].state === s)
+        return;
+      clearTimeout(this.pwmTimeouts[p].timeoutId);
+      this.pwmTimeouts[p] = null;
+    }
+
+    this.pwmTimeouts[p] =  {
+      state: s,
+      timeoutId: setTimeout(function () {
+        this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+        this.pwmStatus[p] = null;
+      }.bind(this), 100)
+    };
   };
 
   /**
@@ -431,7 +487,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.wait = function (ticks) {
     var ms = ticks * 0.015;
-    this.waitTicks = ~~(ms / tickTimeout);
+    this.waitTime = ms;
   };
 
   yasp.Emulator.prototype.tick = function () {
@@ -440,9 +496,15 @@ if (typeof yasp == 'undefined') yasp = { };
       return;
     }
 
-    if(this.waitTicks !== 0) {
-      this.waitTicks--;
-      setTimeout(this.tick.bind(this), tickTimeout);
+    for(var jj = 0; jj < ticksPerTick; jj++) {
+
+    this.ticks++;
+
+    if(this.waitTime !== 0) {
+      setTimeout(this.tick.bind(this), this.waitTime);
+      var timePerTick = tickTimeout / ticksPerTick;
+      this.ticks += (this.waitTime / timePerTick);
+      this.waitTime = 0;
       return;
     }
 
@@ -616,6 +678,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       this.writeFlags(null, z);
+    }
     }
 
     if(!this.stepping) {

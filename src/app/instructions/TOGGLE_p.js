@@ -27,6 +27,6 @@
     }
   ],
   "exec": function (pin) {
-    this.setIO(pin.address, !pin.value);
+    this.setIO(pin.address, pin.value === 1 ? 0 : 1);
   }
 }
