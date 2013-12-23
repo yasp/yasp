@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>yasp</title>
         <meta name="description" content="yasp is an USB Master emulator that runs completely in the web.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
@@ -75,13 +75,11 @@
                     <button type="button" class="btn btn-default btn-sm menu_help">
                         <span class="glyphicon glyphicon-info-sign item"></span>Help
                     </button>
-                    <span class="dropdown pull-right">
-                        <a data-toggle="dropdown" href="#">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-align-justify item"></span>Menu <b class="caret"></b>
-                            </button>
+                    <div class="dropdown pull-right">
+                        <a data-toggle="dropdown" href="#" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-align-justify item"></span>Menu <b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="Editor">
+                        <ul class="dropdown-menu" role="menu">
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_run"><span class="glyphicon glyphicon-play item"></span>Run</a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_undo"><span class="glyphicon glyphicon-arrow-left item"></span>Undo</a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_redo"><span class="glyphicon glyphicon-arrow-right item"></span>Redo</a></li>
@@ -99,7 +97,7 @@
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_settings"><span class="glyphicon glyphicon-wrench item"></span>Settings</a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_about"><span class="glyphicon glyphicon-user item"></span>About</a></li>
                         </ul>
-                    </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,7 +130,7 @@ END
         <div id="labellist" class="presentation"></div>
         
         <!-- About Dialog -->
-        <div class="modal fade" id="dialog_about" tabindex="-1" role="dialog" aria-labeledby="aboutlabel" aria-hidden="true">
+        <div class="modal fade" id="dialog_about" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -140,11 +138,14 @@ END
                         <h4 class="modal-title">About</h4>
                     </div>
                     <div class="modal-body">
-                        <p align="center">
+                        <p style="text-align: center">
                             <img src="app/img/logo.png" width="274" height="183" alt="Logo"/>
                         </p>
                         <p>
-                            <i>yasp</i> is a fully functional web-based USB-Master development environment. It features an integrated development environment, binary compatible emulator, cutting-edge Debugger and highly sophisticated assembler. The development suit aims to make learning assembler programming easy and accessible for everyone.
+                            <i>yasp</i> is a fully functional web-based USB-Master development environment.
+                            It features an integrated development environment, binary compatible emulator,
+                            cutting-edge Debugger and highly sophisticated assembler. The development suit
+                            aims to make learning assembler programming easy and accessible for everyone.
                         </p>
                         <h6>Version</h6>
                         <ul>
@@ -156,18 +157,15 @@ END
                             <li><a href="http://programming-with-design.at/" target="_blank">Robert Fischer</a></li>
                         </ul>
                         <h6>Special thanks</h6>
-                        <p>
-                            <ul>
-                                <li>Dipl.- Ing. Robert Jelinek</li>
-                                <li>Dipl.- Ing. Joachim Grüneis</li>
-                                <li>HTLBVA Spengergasse</li>
-                            </ul>
-                        </p>
+                        <ul>
+                            <li>Dipl.- Ing. Robert Jelinek</li>
+                            <li>Dipl.- Ing. Joachim Grüneis</li>
+                            <li>HTLBVA Spengergasse</li>
+                        </ul>
                         <h6>Copyright</h6>
                         <ul>
                             <li>© 2013 Michael Lutonsky, Robert Fischer</li>
                         </ul>
-                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -177,7 +175,7 @@ END
         </div>
 
         <!-- Debugger Dialog -->
-        <div class="modal fade" id="dialog_debugger" tabindex="-1" role="dialog" aria-labelledby="debuggerlabel" aria-hidden="true">
+        <div class="modal fade" id="dialog_debugger" tabindex="-1" role="dialog">
             <div class="modal-dialog fullscreen">
                 <div class="modal-content fullscreen">
                     <div class="modal-header">
@@ -230,7 +228,7 @@ END
         </div>
         
         <!-- Help Dialog -->
-        <div class="modal fade" id="dialog_help" tabindex="-1" role="dialog" aria-labeledby="helplabel" aria-hidden="true">
+        <div class="modal fade" id="dialog_help" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -249,7 +247,7 @@ END
         
         
         <!-- Settings Dialog -->
-        <div class="modal fade" id="dialog_settings" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
+        <div class="modal fade" id="dialog_settings" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
