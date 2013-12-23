@@ -7,4 +7,31 @@ if (typeof yasp == 'undefined') yasp = { };
       name = "en";
     return name;
   };
+
+  yasp.l10n.getTranslation = function (key) {
+    var lang = yasp.l10n.getLangName();
+    var str = yasp.l10n.lang[lang][key];
+    if(!str) {
+      console.log("l10n: could not find string for " + key);
+      str = "";
+    }
+    return str;
+  };
+
+  yasp.l10n.translateDocument = function () {
+    var $elements = $('[data-l10n]');
+    for (var i = 0; i < $elements.length; i++) {
+      var $element = $elements[i];
+      yasp.l10n.translateSingleDomElement($element);
+    }
+  };
+
+  yasp.l10n.translateSingleDomElement = function (element) {
+    var $element = $(element);
+    var key = $element.attr('data-l10n');
+    if(key) {
+      var str = yasp.l10n.getTranslation(key);
+      $element.text(str);
+    }
+  };
 })();

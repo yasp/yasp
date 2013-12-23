@@ -4,6 +4,6 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
 
 (function() {
   yasp.l10n.lang.de = {
-
+    "about.title": "About"
   };
 })();

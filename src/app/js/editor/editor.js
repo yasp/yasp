@@ -80,6 +80,8 @@ yasp.Storage = localStorage || { };
   
   
   var fireDataReceived;
+
+  yasp.l10n.translateDocument();
   
   yasp.CompileManager = {
     lastCompile: null,
