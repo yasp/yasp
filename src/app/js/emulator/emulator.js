@@ -41,28 +41,28 @@ if (typeof yasp == 'undefined') yasp = { };
       undefined,
       {
         type: "gpio",
-        state: false,
+        state: 0,
         mode: "in"
       },
       {
         type: "gpio",
-        state: false,
+        state: 0,
         mode: "in"
       },
       // LEDs
       {
         type: "gpio",
-        state: false,
+        state: 0,
         mode: "out"
       },
       {
         type: "gpio",
-        state: false,
+        state: 0,
         mode: "out"
       },
       {
         type: "gpio",
-        state: false,
+        state: 0,
         mode: "out"
       },
       undefined,
