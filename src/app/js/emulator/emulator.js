@@ -212,7 +212,7 @@ if (typeof yasp == 'undefined') yasp = { };
     if(v < 0 || v > 65535)
       return 1;
 
-    if(debug) console.log("b" + r + "=" + v);
+    if(debug) console.log("w" + r + "=" + v);
 
     r = r * 2;
     yasp.bitutils.bytesFromWord(v, this.ram, r);
@@ -369,7 +369,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.triggerInterrupt(p);
     }
 
-    if(debug) console.log("p" + p + "=" + s);
+    if(debug) console.log("p" + p + "=" + s + " (outside: " + (!!outside) + ")");
     pin.state = s;
 
     if(outside !== true) {
@@ -457,6 +457,7 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.triggerInterrupt = function (i) {
     if(this.interruptMask[i] === false)
       return false;
+    if(debug) console.log("interrupt triggered: " + i);
     this.interruptToServe = i;
     return true;
   };
@@ -487,6 +488,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.wait = function (ticks) {
     var ms = ticks * 0.015;
+    if(debug) console.log("wait " + ms + "ms");
     this.waitTime = ms;
   };
 
@@ -509,6 +511,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     if(this.interruptToServe !== -1) {
+      if(debug) console.log("interrupt jumped: " + this.interruptToServe);
       this.pushWord(this.pc); // for RETI
       this.pc = this.getInterruptAddress(this.interruptToServe);
       this.interruptToServe = -1;
@@ -519,6 +522,7 @@ if (typeof yasp == 'undefined') yasp = { };
     var parts;
     var cmd;
     var params;
+    var debugStr;
 
     var cachedCmd = this.commandCache[ppc];
 
@@ -584,6 +588,16 @@ if (typeof yasp == 'undefined') yasp = { };
 
       params = [ ];
 
+      debugStr = "";
+
+      if(cmd.name instanceof Array) {
+        debugStr = cmd.name[0];
+      } else {
+        debugStr = cmd.name;
+      }
+
+      debugStr += " ";
+
       for (var i = 0; i < cmd.params.length; i++) {
         var param = { type: cmd.params[i].type, value: null, address: null };
         var part = parts[cmd.code.length + i];
@@ -594,43 +608,55 @@ if (typeof yasp == 'undefined') yasp = { };
           case "r_byte":
             param.address = part;
             param.isRByte = true;
+            debugStr += "b" + part;
             break;
           case "r_word":
             param.address = part;
             param.isRWord = true;
+            debugStr += "w" + part;
             break;
           case "l_byte":
             param.value = part;
             param.address = null;
             param.valueNeeded = false;
+            debugStr += part;
             break;
           case "l_word":
             param.value = part;
             param.address = null;
             param.valueNeeded = false;
+            debugStr += part;
             break;
           case "pin":
             param.address = part;
             param.isPin = true;
+            debugStr += part;
             break;
           case "address":
             param.value = part;
             param.address = null;
             param.valueNeeded = false;
+            debugStr += "0x" + part.toString(16);
             break;
         }
 
         params.push(param);
+        debugStr += ", ";
       }
 
-      this.commandCache[this.pc] = { cmd: cmd, neededBytes: neededBytes, params: params };
+      debugStr = debugStr.substr(0, debugStr.length - 2);
+
+      this.commandCache[this.pc] = { cmd: cmd, debugStr: debugStr, neededBytes: neededBytes, params: params };
     } else {
       cmd = cachedCmd.cmd;
+      debugStr = cachedCmd.debugStr;
       neededBytes = cachedCmd.neededBytes;
       params = cachedCmd.params;
     }
 
     this.writePC(this.pc + neededBytes);
+
+    if(debug) console.log(debugStr);
 
     var p0 = params[0];
 
