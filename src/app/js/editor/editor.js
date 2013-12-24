@@ -80,6 +80,8 @@ yasp.Storage = localStorage || { };
   
   
   var fireDataReceived;
+
+  yasp.l10n.translateDocument();
   
   yasp.CompileManager = {
     lastCompile: null,
@@ -401,12 +403,12 @@ yasp.Storage = localStorage || { };
       });
       
       $('.menu_help').click(function() {
-        switch(yasp.Storage["language"].toLowerCase()) {
-          case "english":
+        switch(yasp.l10n.getLangName()) {
+          case "en":
             $('.help_en').css({'display': 'block'});
             $('.help_de').css({'display': 'none'});
             break;
-          case "deutsch":
+          case "de":
             $('.help_en').css({'display': 'none'});
             $('.help_de').css({'display': 'block'});
             break;
@@ -436,7 +438,7 @@ yasp.Storage = localStorage || { };
           var entry = yasp.Editor.ast[i];
           if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
             var command = entry.params.command;
-            var desc = yasp.Language.getSpecificLanguage(command.doc);
+            var desc = command.doc[yasp.l10n.getLangName()];
 
             var cmdStr = "";
             if (command.name instanceof Array) {

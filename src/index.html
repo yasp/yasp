@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>yasp</title>
+        <title data-l10n="title"></title>
         <meta name="description" content="yasp is an USB Master emulator that runs completely in the web.">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
@@ -53,6 +53,8 @@
         <script src="app/js/hardware/pushbutton.js"></script>
         <script src="app/js/editor/breadboard/breadboard.js"></script>
         <script src="app/js/editor/breadboard/breadboardtype_usbmaster.js"></script>
+        <script src="app/langs/en.js"></script>
+        <script src="app/langs/de.js"></script>
         <script src="app/js/localization.js"></script>
         
         <!-- CodeMirror AddOns -->
@@ -70,32 +72,32 @@
             <div class="row">
                 <div class="col-md-12 toolbar">
                     <button type="button" class="btn btn-default btn-sm menu_run">
-                        <span class="glyphicon glyphicon-play item"></span>Run
+                        <span class="glyphicon glyphicon-play item"></span><span data-l10n="editor.toolbar.run"></span>
                     </button>
                     <button type="button" class="btn btn-default btn-sm menu_help">
-                        <span class="glyphicon glyphicon-info-sign item"></span>Help
+                        <span class="glyphicon glyphicon-info-sign item"></span><span data-l10n="editor.toolbar.help"></span>
                     </button>
                     <div class="dropdown pull-right">
                         <a data-toggle="dropdown" href="#" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-align-justify item"></span>Menu <b class="caret"></b>
+                            <span class="glyphicon glyphicon-align-justify item"></span><span data-l10n="editor.toolbar.menu"></span> <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_run"><span class="glyphicon glyphicon-play item"></span>Run</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_undo"><span class="glyphicon glyphicon-arrow-left item"></span>Undo</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_redo"><span class="glyphicon glyphicon-arrow-right item"></span>Redo</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_run"><span class="glyphicon glyphicon-play item"></span><span data-l10n="editor.toolbar.menu.run"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_undo"><span class="glyphicon glyphicon-arrow-left item"></span><span data-l10n="editor.toolbar.menu.undo"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_redo"><span class="glyphicon glyphicon-arrow-right item"></span><span data-l10n="editor.toolbar.menu.redo"></span></a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_new"><span class="glyphicon glyphicon-file item"></span>New</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_save"><span class="glyphicon glyphicon-floppy-disk item"></span>Save</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_saveas"><span class="glyphicon glyphicon-floppy-open item"></span>Save As</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_open"><span class="glyphicon glyphicon-folder-open item"></span>Open</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_new"><span class="glyphicon glyphicon-file item"></span><span data-l10n="editor.toolbar.menu.new"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_save"><span class="glyphicon glyphicon-floppy-disk item"></span><span data-l10n="editor.toolbar.menu.save"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_saveas"><span class="glyphicon glyphicon-floppy-open item"></span><span data-l10n="editor.toolbar.menu.saveAs"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_open"><span class="glyphicon glyphicon-folder-open item"></span><span data-l10n="editor.toolbar.menu.open"></span></a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_find"><span class="glyphicon glyphicon-search item"></span>Find</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_replace"><span class="glyphicon glyphicon-search item"></span>Replace</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_go2line"><span class="glyphicon glyphicon-search item"></span>Go to Line</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_find"><span class="glyphicon glyphicon-search item"></span><span data-l10n="editor.toolbar.menu.find"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_replace"><span class="glyphicon glyphicon-search item"></span><span data-l10n="editor.toolbar.menu.replace"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_go2line"><span class="glyphicon glyphicon-search item"></span><span data-l10n="editor.toolbar.menu.goToLine"></span></a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_help"><span class="glyphicon glyphicon-info-sign item"></span>Help</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_settings"><span class="glyphicon glyphicon-wrench item"></span>Settings</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_about"><span class="glyphicon glyphicon-user item"></span>About</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_help"><span class="glyphicon glyphicon-info-sign item"></span><span data-l10n="editor.toolbar.menu.help"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_settings"><span class="glyphicon glyphicon-wrench item"></span><span data-l10n="editor.toolbar.menu.settings"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_about"><span class="glyphicon glyphicon-user item"></span><span data-l10n="editor.toolbar.menu.about"></span></a></li>
                         </ul>
                     </div>
                 </div>
@@ -135,37 +137,31 @@ END
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">About</h4>
+                        <h4 class="modal-title" data-l10n="editor.about.title"></h4>
                     </div>
                     <div class="modal-body">
                         <p style="text-align: center">
                             <img src="app/img/logo.png" width="274" height="183" alt="Logo"/>
                         </p>
-                        <p>
-                            <i>yasp</i> is a fully functional web-based USB-Master development environment.
-                            It features an integrated development environment, binary compatible emulator,
-                            cutting-edge Debugger and highly sophisticated assembler. The development suit
-                            aims to make learning assembler programming easy and accessible for everyone.
+                        <p data-l10n="editor.about.description">
                         </p>
-                        <h6>Version</h6>
+                        <h6 data-l10n="editor.about.version"></h6>
                         <ul>
                             <li>0.6 BETA</li>
                         </ul>
-                        <h6>Team</h6>
+                        <h6 data-l10n="editor.about.team"></h6>
                         <ul>
                             <li><a href="http://luto.at/" target="_blank">Michael Lutonsky</a></li>
                             <li><a href="http://programming-with-design.at/" target="_blank">Robert Fischer</a></li>
                         </ul>
-                        <h6>Special thanks</h6>
+                        <h6 data-l10n="editor.about.specialthanks"></h6>
                         <ul>
                             <li>Dipl.- Ing. Robert Jelinek</li>
                             <li>Dipl.- Ing. Joachim Grüneis</li>
                             <li>HTLBVA Spengergasse</li>
                         </ul>
-                        <h6>Copyright</h6>
-                        <ul>
-                            <li>© 2013 Michael Lutonsky, Robert Fischer</li>
-                        </ul>
+                        <br>
+                        <p>&copy; 2013, 2014 Michael Lutonsky, Robert Fischer</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -180,35 +176,22 @@ END
                 <div class="modal-content fullscreen">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Debugger</h4>
+                        <h4 class="modal-title" data-l10n="debugger.title"></h4>
                     </div>
                     <div class="modal-body debuggerbody">
                         <div class="col-md-12 container">
-                            <button type="button" class="btn btn-default btn-xs">
-                                Step
-                            </button>
-                            <button type="button" class="btn btn-default btn-xs">
-                                Step Over
-                            </button>
-                            <button type="button" class="btn btn-default btn-xs">
-                                Step Out
-                            </button>
-                            <button type="button" class="btn btn-default btn-xs">
-                                Step Back
-                            </button>
-                            <button type="button" class="btn btn-default btn-xs">
-                                Break
-                            </button>
-                            <button type="button" class="btn btn-default btn-xs">
-                                Continue
-                            </button>
+                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.step"></button>
+                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOver"></button>
+                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
+                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOut"></button>
+                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
+                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.break"></button>
+                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.continue"></button>
                         </div>
                         <table id="debugger_table" border="1">
                             <tr>
                                 <td rowspan="2" class="width50">
-                                    <textarea id="debugger_editor" name="code">
-                                        
-                                    </textarea>
+                                    <textarea id="debugger_editor" name="code"></textarea>
                                 </td>
                                 <td class="width50">
                                     Debugging Functionality
@@ -221,7 +204,7 @@ END
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="debugger.close"></button>
                     </div>
                 </div>
             </div>
@@ -233,13 +216,12 @@ END
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Help</h4>
+                        <h4 class="modal-title" data-l10n="help.title"></h4>
                     </div>
                     <div class="modal-body" id="help_container">
-                        
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="help.close"></button>
                     </div>
                 </div>
             </div>
@@ -252,12 +234,12 @@ END
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Settings</h4>
+                        <h4 class="modal-title" data-l10n="settings.title"></h4>
                     </div>
                     <div class="modal-body">
                         <form role="form">
                             <div class="form-group">
-                                <label for="theme_picker">Theme</label>
+                                <label for="theme_picker" data-l10n="settings.theme"></label>
                                 <select class="form-control" id="theme_picker">
                                     <option value="3024-day">3024 Day</option>
                                     <option value="3024-night">3024 Night</option>
@@ -285,46 +267,42 @@ END
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="tab_picker">Tab Size</label>
+                                <label for="tab_picker" data-l10n="settings.tabSize"></label>
                                 <select class="form-control" id="tab_picker">
-                                    <option value="2">2 Spaces</option>
-                                    <option value="4">4 Spaces</option>
-                                    <option value="8">8 Spaces</option>
-                                    <option value="16">16 Spaces</option>
-                                    <option value="32">32 Spaces</option>
+                                    <option value="2" data-l10n="settings.tabSize.spaces" data-l10n-p0="2"></option>
+                                    <option value="4" data-l10n="settings.tabSize.spaces" data-l10n-p0="4"></option>
+                                    <option value="8" data-l10n="settings.tabSize.spaces" data-l10n-p0="8"></option>
+                                    <option value="16" data-l10n="settings.tabSize.spaces" data-l10n-p0="16"></option>
+                                    <option value="32" data-l10n="settings.tabSize.spaces" data-l10n-p0="32"></option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Language</label>
+                                <label data-l10n="settings.language"></label>
                                 <select class="form-control" id="language_picker">
-                                    <option value="english">English</option>
-                                    <option value="deutsch">Deutsch</option>
+                                    <option value="en">English</option>
+                                    <option value="de">Deutsch</option>
                                 </select>
                             </div>
                             <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="automaticsave_picker"> Automatic Save
-                                </label>
+                                <input type="checkbox" id="automaticsave_picker">
+                                <label  data-l10n="settings.autoSave" for="automaticsave_picker"></label>
                             </div>
                             <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="codecompletion_picker"> Code Completion
-                                </label>
+                                <input type="checkbox" id="codecompletion_picker">
+                                <label  data-l10n="settings.codeCompletion" for="codecompletion_picker"></label>
                             </div>
                             <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="labellist_picker"> Label list
-                                </label>
+                                <input type="checkbox" id="labellist_picker">
+                                <label  data-l10n="settings.showLabelList" for="labellist_picker"></label>
                             </div>
                             <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="help_picker"> Show help
-                                </label>
+                                <input type="checkbox" id="help_picker">
+                                <label  data-l10n="settings.showHelp" for="help_picker"></label>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="settings.close"></button>
                     </div>
                 </div>
             </div>
