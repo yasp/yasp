@@ -531,7 +531,7 @@ if (typeof yasp == 'undefined') yasp = { };
     var p0 = ccmd.params[0];
 
     if(ccmd.params.length === 0) {
-      c.exec.call(this);
+      cmd.exec.call(this);
     } else {
       if(p0.valueNeeded) {
         if(p0.isRByte === true)
