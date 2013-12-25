@@ -45,17 +45,6 @@
         <script src="lib/js/jquery-1.10.2.min.js"></script>
         <script src="lib/js/bootstrap.min.js"></script>
         <script src="lib/js/codemirror.js"></script>
-        <script src="app/js/commands.js"></script>
-        <script src="app/js/utils.js"></script>
-        <script src="app/js/hardware/hardware.js"></script>
-        <script src="app/js/hardware/led.js"></script>
-        <script src="app/js/hardware/poti.js"></script>
-        <script src="app/js/hardware/pushbutton.js"></script>
-        <script src="app/js/editor/breadboard/breadboard.js"></script>
-        <script src="app/js/editor/breadboard/breadboardtype_usbmaster.js"></script>
-        <script src="app/langs/en.js"></script>
-        <script src="app/langs/de.js"></script>
-        <script src="app/js/localization.js"></script>
         
         <!-- CodeMirror AddOns -->
         <script src="lib/addon/show-hint.js"></script>
@@ -316,18 +305,38 @@ END
             </div>
         </div>
 
+        <!-- yasp files -->
+        <script src="app/js/utils.js"></script>
+        <script src="app/js/communicator.js"></script>
+        <script src="app/js/commands.js"></script>
+
+        <!-- l10n -->
+        <script src="app/langs/en.js"></script>
+        <script src="app/langs/de.js"></script>
+        <script src="app/js/localization.js"></script>
+
+        <!-- assembler  -->
         <script src="app/js/assembler/assembler.js"></script>
         <script src="app/js/assembler/passes/lexer.js"></script>
         <script src="app/js/assembler/passes/analyser.js"></script>
         <script src="app/js/assembler/passes/parser.js"></script>
         <script src="app/js/assembler/passes/generator.js"></script>
-        <script src="app/js/emulator/bitutils.js"></script>
-        <script src="app/js/emulator/emulator.js"></script>
-        <script src="app/js/communicator.js"></script>
-        
-        
+
+        <!-- editor  -->
         <script src="app/js/editor/assemblerMode.js"></script>
         <script src="app/js/editor/editor.js"></script>
+
+        <!-- debugger -->
         <script src="app/js/editor/debugger.js"></script>
+
+        <!-- hardware -->
+        <script src="app/js/hardware/hardware.js"></script>
+        <script src="app/js/hardware/led.js"></script>
+        <script src="app/js/hardware/poti.js"></script>
+        <script src="app/js/hardware/pushbutton.js"></script>
+
+        <!-- breadboard -->
+        <script src="app/js/editor/breadboard/breadboard.js"></script>
+        <script src="app/js/editor/breadboard/breadboardtype_usbmaster.js"></script>
     </body>
 </html>
