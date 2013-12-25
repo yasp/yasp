@@ -10,15 +10,23 @@ if (typeof yasp == 'undefined') yasp = { };
    * @constructor
    */
   yasp.Emulator = function(stepping) {
-    this.rom = new Uint8Array(512);
-    this.ram = new Uint8Array(512);
+    this.rom = new Uint8Array(512); // bitcode
+    this.ram = new Uint8Array(512); // registers
+    this.flags = { c: false, z: false };
+
+    this.commandCache = {}; // parsed commands
 
     this.stack = new Uint8Array(16);
     this.sp = -1;
 
-    this.ticks = 0;
+    this.pc = 0;
 
-    this.waitTime = 0;
+    this.running = false;
+    this.stepping = stepping === true;
+
+    this.ticks = 0; // tick-counter (used for PWM)
+
+    this.waitTime = 0; // time to wait in ms
 
     // bits of interrupt-mask
     // set by ENABLE, DISABLE
@@ -37,68 +45,63 @@ if (typeof yasp == 'undefined') yasp = { };
     // checked in tick()
     this.interruptToServe = -1;
 
-    this.pins = [
-      undefined,
-      {
-        type: "gpio",
-        state: 0,
-        mode: "in"
-      },
-      {
-        type: "gpio",
-        state: 0,
-        mode: "in"
-      },
-      // LEDs
-      {
-        type: "gpio",
-        state: 0,
-        mode: "out"
-      },
-      {
-        type: "gpio",
-        state: 0,
-        mode: "out"
-      },
-      {
-        type: "gpio",
-        state: 0,
-        mode: "out"
-      },
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      // ADC0
-      {
-        type: "adc",
-        state: 0,
-        mode: "in"
-      },
-      // ADC1
-      {
-        type: "adc",
-        state: 0,
-        mode: "in"
-      },
-      // ADC2
-      {
-        type: "adc",
-        state: 0,
-        mode: "in"
-      }
-    ];
-
+    // status (waiting for high or low) and timeout-ids for PWM
     this.pwmStatus = {};
     this.pwmTimeouts = {};
 
-    this.pc = 0;
-    this.running = false;
-    this.stepping = !!stepping;
-    this.flags = { c: false, z: false };
+    // pin definitions (see setIO, getIO and interrupts)
+    this.pins = [];
+    this.pins[0] = null;
+    this.pins[1] = {
+        type: "gpio",
+        state: 0,
+        mode: "in"
+      };
+    this.pins[2] = {
+        type: "gpio",
+        state: 0,
+        mode: "in"
+      };
+    // LEDs
+    this.pins[3] =  {
+        type: "gpio",
+        state: 0,
+        mode: "out"
+      };
+    this.pins[4] =  {
+        type: "gpio",
+        state: 0,
+        mode: "out"
+      };
+    this.pins[5] = {
+        type: "gpio",
+        state: 0,
+        mode: "out"
+      };
+    this.pins[6] = null;
+    this.pins[7] = null;
+    this.pins[8] = null;
+    this.pins[9] = null;
+    // ADC0
+    this.pins[10] = {
+        type: "adc",
+        state: 0,
+        mode: "in"
+      };
+    // ADC1
+    this.pins[11] = {
+        type: "adc",
+        state: 0,
+        mode: "in"
+      };
+    // ADC2
+    this.pins[12] = {
+        type: "adc",
+        state: 0,
+        mode: "in"
+      };
 
-    this.commandCache = {};
-
+    // events
     this.noop = function () {};
     this.events = {
       'CONTINUED': this.noop,
@@ -107,7 +110,7 @@ if (typeof yasp == 'undefined') yasp = { };
       'IO_CHANGED': this.noop
     };
 
-    if(!stepping)
+    if(stepping === true)
       setTimeout(this.tick.bind(this), tickTimeout);
   };
 
