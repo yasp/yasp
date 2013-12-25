@@ -1,5 +1,5 @@
 if (typeof yasp == 'undefined') yasp = { };
-importScripts('../communicator.js', '../commands.js', '../assembler/passes/generator.js', 'bitutils.js', 'emulator.js');
+importScripts('../communicator.js', '../commands.js', '../assembler/passes/generator.js', 'bitutils.js', 'disasm.js', 'emulator.js');
 
 var emulator = new yasp.Emulator();
 var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
