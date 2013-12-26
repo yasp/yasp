@@ -54,8 +54,14 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.language": "Language",
     "settings.autoSave": "Automatic save",
     "settings.codeCompletion": "Code completion",
-    "settings.showLabelList": "Show label list",
-    "settings.showHelp": "Show help",
+    "settings.help": "Help",
+    "settings.help.hide": "never show",
+    "settings.help.slide": "show if needed",
+    "settings.help.fix": "always show",
+    "settings.labellist": "Label list",
+    "settings.labellist.hide": "never show",
+    "settings.labellist.slide": "show if needed",
+    "settings.labellist.fix": "always show",
     "settings.close": "close",
   };
 })();
