@@ -103,6 +103,14 @@ span.cm-keyword {
     float: left;
 }
 
+#editorcontainer.quickHelpFixed {
+    height: calc(100% - 99px);
+}
+
+#editorcontainer.labelListFixed {
+    width: calc(100% - 99px);
+}
+
 #labellist {
     float: right;
     position: absolute;
@@ -123,6 +131,15 @@ span.cm-keyword {
     opacity: 0.5;
     
     z-index: 10000;
+}
+
+#labellist.hidden {
+    display: none;
+}
+
+#labellist.fixed {
+    margin-left: -100px !important;
+    opacity: 1;
 }
 
 /* Fix z-index bug with labellist */
@@ -197,6 +214,10 @@ span.cm-keyword {
     z-index: 10100;
     
     font-size: 120%;
+}
+
+#help_quick.fixed {
+    height: 100px !important;
 }
 
 #help_quick .helpquick_container {

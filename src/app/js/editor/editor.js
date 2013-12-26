@@ -226,8 +226,13 @@ yasp.Storage = localStorage || { };
     if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "true";
     if (typeof yasp.Storage['codecompletion'] == 'undefined')  yasp.Storage['codecompletion'] = "true";
     if (typeof yasp.Storage['language'] == 'undefined')        yasp.Storage['language'] = "English";
-    if (typeof yasp.Storage['labellist'] == 'undefined')       yasp.Storage['labellist'] = "true";
-    if (typeof yasp.Storage['help'] == 'undefined')       yasp.Storage['help'] = "true";
+    if (typeof yasp.Storage['labellist'] == 'undefined')       yasp.Storage['labellist'] = "slide";
+    if (typeof yasp.Storage['help'] == 'undefined')       yasp.Storage['help'] = "slide";
+
+    if(yasp.Storage['labellist'] == "true" || yasp.Storage['labellist'] == "false")
+      yasp.Storage['labellist'] = "slide";
+    if(yasp.Storage['help'] == "true" || yasp.Storage['help'] == "false")
+      yasp.Storage['help'] = "slide";
     
     yasp.EditorManager.setContext(yasp.Editor);
     var editor = yasp.EditorManager.create($('#editor').get(0));
@@ -288,28 +293,49 @@ yasp.Storage = localStorage || { };
         });
       
     };
+
+    var updateHelpQuickVisiblity = function () {
+      var $helpqick = $('#help_quick');
+
+      $helpqick.removeClass("fixed");
+      $('#editorcontainer').removeClass("quickHelpFixed");
+
+      if(yasp.Storage['help'] == 'fix') {
+        $helpqick.addClass("fixed");
+        $('#editorcontainer').addClass("quickHelpFixed");
+      }
+    };
     
     var updateLabelListVisiblity = function() {
-      var mode;
-      if (yasp.Storage['labellist'] == "false") { // hide label list if deactivated
-        mode = "none";
-      } else {
-        mode = "block";
+      var $labellist = $('#labellist');
+
+      $labellist.removeClass("hidden");
+      $labellist.removeClass("fixed");
+      $('#editorcontainer').removeClass("labelListFixed");
+
+      if (yasp.Storage['labellist'] == "hide") {
+        $labellist.addClass("hidden");
+      } else if(yasp.Storage["labellist"] == "slide") {
+        // standard mode
+      } else if(yasp.Storage["labellist"] == "fix") {
+        $labellist.addClass("fixed");
+        $('#editorcontainer').addClass("labelListFixed");
       }
-      $('#labellist').css({
-        'display': mode
-      });
     };
     
     // menu & UI events
     (function() {
+      updateHelpQuickVisiblity();
       updateLabelListVisiblity();
       
       $('#labellist').hover(function() {
-        $(this).filter(':not(:animated)').animate({
-          'marginLeft': '-100px',
-          'opacity': '1'
-        }, 'fast');
+        if(yasp.Storage["labellist"] == "slide") {
+
+          $(this).filter(':not(:animated)').animate({
+            'marginLeft': '-100px',
+            'opacity': '1'
+          }, 'fast');
+        }
       }, function() {
         $(this).animate({
           'marginLeft': '-20px',
@@ -376,13 +402,14 @@ yasp.Storage = localStorage || { };
         }).attr('checked', yasp.Storage['codecompletion'] == "true" ? true : false);
 
         $('#labellist_picker').change(function() {
-          yasp.Storage['labellist'] = this.checked;
+          yasp.Storage['labellist'] = this.value;
           updateLabelListVisiblity();
-        }).attr('checked', yasp.Storage['labellist'] == "true" ? true : false);
+        }).val(yasp.Storage['labellist']);
         
         $('#help_picker').change(function() {
-          yasp.Storage['help'] = this.checked;
-        }).attr('checked', yasp.Storage['help'] == "true" ? true : false);
+          yasp.Storage['help'] = this.value;
+          updateHelpQuickVisiblity();
+        }).val(yasp.Storage['help']);
       });
       $('.menu_about').click(function() {
         $('#dialog_about').modal({
@@ -433,7 +460,7 @@ yasp.Storage = localStorage || { };
       var found = false;
       var changed = false;
       var height = 0;
-      if (!!c &&  (!yasp.Editor.error || yasp.Editor.error.length == 0) && yasp.Storage['help'] == "true") {
+      if (!!c &&  (!yasp.Editor.error || yasp.Editor.error.length == 0) && yasp.Storage['help'] != "hide") {
         for (var i = 0; i < yasp.Editor.ast.length; i++) {
           var entry = yasp.Editor.ast[i];
           if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
@@ -506,10 +533,18 @@ yasp.Storage = localStorage || { };
         quickdoc = null;
       }
 
+      if(!found) {
+        $('#help_quick .command').html("");
+        $('#help_quick .desc').html("");
+        $('#help_quick .state').html("");
+      }
+
       if (changed) {
-        $('#help_quick').animate({
-          height: height + "px"
-        }, "fast");
+        if(yasp.Storage['help'] == "slide") {
+          $('#help_quick').animate({
+            height: height + "px"
+          }, "fast");
+        }
       }
     }, 500);
     

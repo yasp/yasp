@@ -280,13 +280,21 @@ END
                                 <input type="checkbox" id="codecompletion_picker">
                                 <label  data-l10n="settings.codeCompletion" for="codecompletion_picker"></label>
                             </div>
-                            <div class="checkbox">
-                                <input type="checkbox" id="labellist_picker">
-                                <label  data-l10n="settings.showLabelList" for="labellist_picker"></label>
+                            <div class="form-group">
+                                <label data-l10n="settings.labellist"></label>
+                                <select class="form-control" id="labellist_picker">
+                                    <option value="hide" data-l10n="settings.labellist.hide"></option>
+                                    <option value="slide" data-l10n="settings.labellist.slide"></option>
+                                    <option value="fix" data-l10n="settings.labellist.fix"></option>
+                                </select>
                             </div>
-                            <div class="checkbox">
-                                <input type="checkbox" id="help_picker">
-                                <label  data-l10n="settings.showHelp" for="help_picker"></label>
+                            <div class="form-group">
+                                <label data-l10n="settings.help"></label>
+                                <select class="form-control" id="help_picker">
+                                    <option value="hide" data-l10n="settings.help.hide"></option>
+                                    <option value="slide" data-l10n="settings.help.slide"></option>
+                                    <option value="fix" data-l10n="settings.help.fix"></option>
+                                </select>
                             </div>
                         </form>
                     </div>
