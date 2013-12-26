@@ -8,7 +8,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
       "en": "USB-Master"
     },
     description: {
-      "de": "Breadboard, das aussieht wie das USB-Master",
+      "de": "Breadboard, das aussieht wie der USB-Master",
       "en": "Breadboard which mimics the USB-Masters look"
     },
     image: {
