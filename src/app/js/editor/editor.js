@@ -388,6 +388,7 @@ yasp.Storage = localStorage || { };
 
         $('#language_picker').change(function() {
           yasp.Storage['language'] = this.value;
+          yasp.l10n.translateDocument();
           yasp.EditorManager.apply((function(e) {
             e.setOption("language", this.value);
           }).bind(this));
