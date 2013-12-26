@@ -1,0 +1,155 @@
+/* === Code Mirror === */
+.CodeMirror {
+    height: 100% !important;
+    font-size: 125%;
+}
+
+.CodeMirror-hints {
+    max-height: 100px !important;
+    min-width: 50px !important;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+/* Upper case all instructions */
+span.cm-keyword {
+    text-transform: uppercase !important;
+}
+
+/* === Code Mirror Wrappers === */
+#editor {
+    width: 100%;
+    height: 100%;
+}
+
+#editorcontainer {
+    font-size: 12px;
+    height: 100%;
+    width: 100%;
+    padding-top: 34px; /* Fix scrollbar bug */
+    margin-top: -30px;
+
+    float: left;
+}
+
+#editorcontainer.quickHelpFixed {
+    height: calc(100% - 99px);
+}
+
+#editorcontainer.labelListFixed {
+    width: calc(100% - 99px);
+}
+
+/* === Labellist === */
+#labellist {
+    float: right;
+    position: absolute;
+
+    width: 100px;
+    left: 100%;
+    top: 32px;
+    bottom: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    margin-left: -20px;
+    border-left: 1px solid rgb(220,220,220);
+
+    background-color: rgb(240,240,240);
+
+    opacity: 0.5;
+
+    z-index: 10000;
+}
+
+#labellist.hidden {
+    display: none;
+}
+
+#labellist.fixed {
+    margin-left: -100px !important;
+    opacity: 1;
+}
+
+#labellist ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 4px 0 0;
+    font-size: 12px;
+
+    width: 100px;
+}
+
+#labellist h4 {
+    padding-left: 8px;
+}
+
+#labellist ul li {
+    padding-left: 12px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    border-bottom: 1px solid rgb(220,220,220);
+    word-wrap: break-word;
+}
+
+#labellist ul li:last-child {
+    border-bottom: none;
+}
+
+/* === help modal === */
+#help_container h1 {
+    font-size: 20px;
+}
+
+#help_container h2 {
+    font-size: 14px;
+}
+
+/* === quickhelp === */
+#help_quick {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+
+    max-height: 100px;
+    border-top: 1px solid rgb(220,220,220);
+    background-color: rgb(240,240,240);
+
+    z-index: 10100;
+
+    font-size: 120%;
+}
+
+#help_quick.fixed {
+    height: 100px !important;
+}
+
+#help_quick .helpquick_container {
+    padding: 8px;
+}
+
+/* === other styles === */
+.toolbar .item {
+    padding-right: 20px;
+}
+
+.fullscreen {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    top: 0;
+    left: 0;
+}
+
+/* Fix z-index bug with labellist */
+.modal {
+    z-index: 100000;
+}
+
+.modal-backdrop {
+    z-index: 10500;
+}

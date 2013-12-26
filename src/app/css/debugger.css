@@ -1,0 +1,9 @@
+#debugger_table {
+    width: 100%;
+}
+#debugger_table td {
+    vertical-align: top;
+}
+.width50 {
+    width: 50%;
+}
