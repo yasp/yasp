@@ -110,7 +110,7 @@ if (typeof yasp == 'undefined') yasp = { };
       'IO_CHANGED': this.noop
     };
 
-    if(stepping === true)
+    if(stepping !== true)
       setTimeout(this.tick.bind(this), tickTimeout);
   };
 
