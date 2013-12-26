@@ -18,7 +18,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
     if(!str) {
       console.log("l10n: could not find string for " + key);
-      str = "";
+      str = key;
     }
     return str;
   };
