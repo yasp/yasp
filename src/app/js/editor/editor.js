@@ -48,7 +48,10 @@ yasp.Storage = localStorage || { };
       gutters: ["CodeMirror-lint-markers", "breakpoints"],
       lint: true,
       extraKeys: {
-        "Ctrl-Space": "autocompleteforce"
+        "Ctrl-Space": "autocompleteforce",
+        "Ctrl-O": "open",
+        "Ctrl-S": "save",
+        "Shift-Ctrl-S": "saveas"
       }
     });
     editor.on("gutterClick", (function(cm, n) {
@@ -343,6 +346,16 @@ yasp.Storage = localStorage || { };
         }, 'fast');
       });
       
+      $('.menu_open').click(function() {
+        CodeMirror.commands.open(editor);
+      });
+      $('.menu_save').click(function() {
+        CodeMirror.commands.save(editor);
+      });
+      $('.menu_saveas').click(function() {
+        CodeMirror.commands.saveas(editor);
+      });
+      
       $('.menu_undo').click(function() {
         editor.undo();
       });
@@ -604,6 +617,15 @@ yasp.Storage = localStorage || { };
           closeOnUnfocus: true,
           force: true
         });
+      };
+      CodeMirror.commands.save = function(cm) {
+        yasp.FileDialog.show(yasp.FileDialogMode.SAVE);
+      };
+      CodeMirror.commands.saveas = function(cm) {
+        yasp.FileDialog.show(yasp.FileDialogMode.SAVEAS);
+      };
+      CodeMirror.commands.open = function(cm) {
+        yasp.FileDialog.show(yasp.FileDialogMode.OPEN);
       };
     })();
   });

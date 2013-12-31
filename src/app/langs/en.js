@@ -56,6 +56,9 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.codeCompletion": "Code completion",
     "settings.showLabelList": "Show label list",
     "settings.showHelp": "Show help",
-    "settings.close": "close",
+    "settings.close": "Close",
+    
+    "filedialog.title": "File dialog",
+    "filedialog.close": "Close"
   };
 })();

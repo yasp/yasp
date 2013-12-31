@@ -57,5 +57,8 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.showLabelList": "Label-Liste anzeigen",
     "settings.showHelp": "Hilfe anzeigen",
     "settings.close": "Schließen",
+
+    "filedialog.title": "Dateidialog",
+    "filedialog.close": "Close"
   };
 })();
