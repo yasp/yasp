@@ -11,18 +11,20 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     NEW: 4
   };
 
-  if (typeof yasp.Storage.files == 'undefined') yasp.Storage.files = { };
+  if (typeof yasp.Storage.files == 'undefined') yasp.Storage.files = JSON.stringify({ });
   
   var fileSystemDriver = {
     LOCAL: {
       newFile: function(name, cb) {
+        var files = JSON.parse(yasp.Storage.files);
+        
         var file, err;
-        if (!!yasp.Storage.files[name]) {
+        if (!!files[name] || name.length == 0) {
           // file exists
           file = null;
         } else {
           // create file
-          file = (yasp.Storage.files[name] = {
+          file = (files[name] = {
             filename: name,
             username: "local",
             createdate: new Date().getTime(),
@@ -30,6 +32,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
             changedate: new Date().getTime(),
             content: ""
           });
+          yasp.Storage.files = JSON.stringify(files);
         }
         setTimeout(function() {
           cb(file, 0);
@@ -37,7 +40,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       },
       requestList: function(cb) {
         setTimeout(function() {
-          cb(yasp.Storage.files);
+          cb(JSON.parse(yasp.Storage.files));
         }, 0);
       }
     },
@@ -55,14 +58,21 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         'keyboard': true
       });
       $('#dialog_file .open, #dialog_file .save, #dialog_file .saveas, #dialog_file .new').hide();
-
-      $('#dialog_file a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var tab = $(e.target);
+      
+      var updateFunc;
+      $('#dialog_file a[data-toggle="tab"]').on('shown.bs.tab', updateFunc = function (e) {
+        var tab = $(!!e ? e.target : '#dialog_file .active');
         if (tab.hasClass('link_server')) fileSystem = fileSystemDriver.SERVER;
         if (tab.hasClass('link_local')) fileSystem = fileSystemDriver.LOCAL;
         
         fileSystem.requestList(function(files) {
-          
+          var table = $('#dialog_file .filelist');
+          $.each(files, function(i, row) {
+            $('<tr>')
+              .append($('<td>').text(row.filename))
+              .append($('<td>').text("ACTION YOLO"))
+              .appendTo(table);
+          });
         });
       });
       
@@ -93,7 +103,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
       });
       $('#filedialog_new').click(function() {
-        fileSystem.newFile($('#filedialog_name').text(), function(file) {
+        fileSystem.newFile($('#filedialog_name').val(), function(file) {
           if (!!file) {
             // success
             yasp.EditorManager.applyFile(file);
@@ -103,6 +113,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           }
         });
       });
+      
+      updateFunc();
     },
     close: function() {
       
