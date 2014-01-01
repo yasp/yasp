@@ -1,6 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  yasp.ServerURL = "http://localhost:8000/file.php";
+  
   yasp.FileDialogMode = {
     OPEN: 1,
     SAVE: 2,
@@ -9,6 +11,7 @@ if (typeof yasp == 'undefined') yasp = { };
   
   
   var dialogMode;
+  var dialogFiles;
   yasp.FileDialog = {
     show: function(mode) {
       dialogMode = mode;

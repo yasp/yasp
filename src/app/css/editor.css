@@ -97,6 +97,11 @@ span.cm-keyword {
 #labellist ul li:last-child {
     border-bottom: none;
 }
+/* === File Dialog === */
+#filedialog_login {
+    padding-top: 16px;
+}
+
 
 /* === help modal === */
 #help_container h1 {

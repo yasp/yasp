@@ -317,10 +317,61 @@ END
                         <h4 class="modal-title" data-l10n="filedialog.title"></h4>
                     </div>
                     <div class="modal-body">
-                        
+                        <ul class="nav nav-tabs">
+                            <li><a href="#local" data-toggle="tab" data-l10n="filedialog.local"></a></li>
+                            <li><a href="#server" data-toggle="tab"  data-l10n="filedialog.server"></a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="local">
+                                <table id="filedialog_local" class="table">
+                                    <thead>
+                                        <tr>
+                                            <td data-l10n="filedialog.name"></td>
+                                            <td data-l10n="filedialog.action"></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>YOLO</td>
+                                            <td>SWAG</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="server">
+                                <div id="filedialog_login">
+                                    <form class="form-horizontal" role="form">
+                                        <div class="form-group">
+                                            <div class="col-sm-2 control-label">
+                                                <label for="filedialog_usrname" data-l10n="filedialog.usrname"></label>
+                                            </div>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="filedialog_usrname" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-2 control-label">
+                                                <label for="filedialog_password" data-l10n="filedialog.password"></label>
+                                            </div>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="filedialog_password" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-default" data-l10n="filedialog.login"></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <table id="filedialog_server"></table>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="filedialog.close"></button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="filedialog.open"></button>
                     </div>
                 </div>
             </div>

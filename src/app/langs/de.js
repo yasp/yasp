@@ -59,6 +59,16 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.close": "Schließen",
 
     "filedialog.title": "Dateidialog",
-    "filedialog.close": "Close"
+    "filedialog.close": "Close",
+    "filedialog.server": "Server",
+    "filedialog.local": "Lokal",
+    "filedialog.usrname": "Benutzername",
+    "filedialog.password": "Passwort",
+    "filedialog.login": "Einloggen",
+    "filedialog.name": "Name",
+    "filedialog.action": "Aktion",
+    "filedialog.open": "Öffnen",
+    "filedialog.save": "Speichern",
+    "filedialog.saveas": "Speichern Unter"
   };
 })();
