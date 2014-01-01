@@ -314,16 +314,19 @@ END
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" data-l10n="filedialog.title"></h4>
+                        <h4 class="modal-title open" data-l10n="filedialog.open"></h4>
+                        <h4 class="modal-title save" data-l10n="filedialog.save"></h4>
+                        <h4 class="modal-title saveas" data-l10n="filedialog.saveas"></h4>
+                        <h4 class="modal-title new" data-l10n="filedialog.new"></h4>
                     </div>
                     <div class="modal-body">
                         <ul class="nav nav-tabs">
-                            <li><a href="#local" data-toggle="tab" data-l10n="filedialog.local"></a></li>
-                            <li><a href="#server" data-toggle="tab"  data-l10n="filedialog.server"></a></li>
+                            <li><a href="#local" data-toggle="tab" data-l10n="filedialog.local" class="link_local"></a></li>
+                            <li><a href="#server" data-toggle="tab"  data-l10n="filedialog.server" class="link_server"></a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="local">
-                                <table id="filedialog_local" class="table">
+                                <table id="filedialog_local" class="table open save saveas">
                                     <thead>
                                         <tr>
                                             <td data-l10n="filedialog.name"></td>
@@ -331,12 +334,20 @@ END
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>YOLO</td>
-                                            <td>SWAG</td>
-                                        </tr>
+                                        
                                     </tbody>
                                 </table>
+
+                                <form class="form-horizontal new" role="form">
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">
+                                            <label for="filedialog_name" data-l10n="filedialog.name"></label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="filedialog_name" class="form-control" />
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                             <div class="tab-pane" id="server">
                                 <div id="filedialog_login">
@@ -371,7 +382,10 @@ END
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="filedialog.close"></button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="filedialog.open"></button>
+                        <button type="button" class="btn btn-primary open" data-dismiss="modal" data-l10n="filedialog.open" id="filedialog_open"></button>
+                        <button type="button" class="btn btn-primary save" data-dismiss="modal" data-l10n="filedialog.save" id="filedialog_save"></button>
+                        <button type="button" class="btn btn-primary saveas" data-dismiss="modal" data-l10n="filedialog.saveas" id="filedialog_saveas"></button>
+                        <button type="button" class="btn btn-primary new" data-dismiss="modal" data-l10n="filedialog.create" id="filedialog_new"></button>
                     </div>
                 </div>
             </div>

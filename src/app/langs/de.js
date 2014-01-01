@@ -58,7 +58,6 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.showHelp": "Hilfe anzeigen",
     "settings.close": "Schließen",
 
-    "filedialog.title": "Dateidialog",
     "filedialog.close": "Close",
     "filedialog.server": "Server",
     "filedialog.local": "Lokal",
@@ -69,6 +68,8 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "filedialog.action": "Aktion",
     "filedialog.open": "Öffnen",
     "filedialog.save": "Speichern",
-    "filedialog.saveas": "Speichern Unter"
+    "filedialog.saveas": "Speichern Unter",
+    "filedialog.new": "Neu",
+    "filedialog.create": "Erstellen"
   };
 })();

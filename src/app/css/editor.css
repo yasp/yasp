@@ -98,8 +98,8 @@ span.cm-keyword {
     border-bottom: none;
 }
 /* === File Dialog === */
-#filedialog_login {
-    padding-top: 16px;
+#dialog_file .tab-content {
+    padding-top: 16px !important;
 }
 
 

@@ -1,6 +1,5 @@
 if (typeof yasp == 'undefined') yasp = { };
-
-yasp.Storage = localStorage || { };
+if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
 (function() {
   /**
@@ -9,7 +8,14 @@ yasp.Storage = localStorage || { };
    */
   var EditorManager = function() {
     this.editors = [ ];
-    this.editorContext = null;
+    this.file = {
+      filename: name,
+      username: "local",
+      createdate: new Date().getTime(),
+      group: "local",
+      changedate: new Date().getTime(),
+      content: ""
+    };
   };
 
   /**
@@ -21,13 +27,12 @@ yasp.Storage = localStorage || { };
       func(this.editors[i]);
     }
   };
-
-  /**
-   * Sets the context (this is where the breakpoints are saved for example)
-   * @param context
-   */
-  EditorManager.prototype.setContext = function(context) {
-    this.editorContext = context;
+  EditorManager.prototype.applyFile = function(file) {
+    this.file = file;
+    // update content
+    this.apply(function(editor) {
+      editor.setValue(file.content);
+    });
   };
   
   /**
@@ -51,7 +56,8 @@ yasp.Storage = localStorage || { };
         "Ctrl-Space": "autocompleteforce",
         "Ctrl-O": "open",
         "Ctrl-S": "save",
-        "Shift-Ctrl-S": "saveas"
+        "Shift-Ctrl-S": "saveas",
+        "Ctrl-N": "new"
       }
     });
     editor.on("gutterClick", (function(cm, n) {
@@ -74,6 +80,7 @@ yasp.Storage = localStorage || { };
     this.editors.push(editor);
     return editor;
   };
+  
   yasp.EditorManager = new EditorManager();
 })();
 
@@ -237,7 +244,6 @@ yasp.Storage = localStorage || { };
     if(yasp.Storage['help'] == "true" || yasp.Storage['help'] == "false")
       yasp.Storage['help'] = "slide";
     
-    yasp.EditorManager.setContext(yasp.Editor);
     var editor = yasp.EditorManager.create($('#editor').get(0));
     
     // force intendation everytime something changes
@@ -354,6 +360,9 @@ yasp.Storage = localStorage || { };
       });
       $('.menu_saveas').click(function() {
         CodeMirror.commands.saveas(editor);
+      });
+      $('.menu_new').click(function() {
+        CodeMirror.commands.new(editor);
       });
       
       $('.menu_undo').click(function() {
@@ -626,6 +635,9 @@ yasp.Storage = localStorage || { };
       };
       CodeMirror.commands.open = function(cm) {
         yasp.FileDialog.show(yasp.FileDialogMode.OPEN);
+      };
+      CodeMirror.commands.new = function(cm) {
+        yasp.FileDialog.show(yasp.FileDialogMode.NEW);
       };
     })();
   });
