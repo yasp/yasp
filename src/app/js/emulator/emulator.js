@@ -1,8 +1,6 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  var tickTimeout = 1;
-  var ticksPerTick = 5;
   var debug = false;
 
   /**
@@ -13,6 +11,10 @@ if (typeof yasp == 'undefined') yasp = { };
     this.rom = new Uint8Array(512); // bitcode
     this.ram = new Uint8Array(512); // registers
     this.flags = { c: false, z: false };
+
+    this.tickTimeout = 1;
+    this.ticksPerTick =1;
+    this.debug = 1;
 
     this.commandCache = {}; // parsed commands
 
@@ -111,7 +113,7 @@ if (typeof yasp == 'undefined') yasp = { };
     };
 
     if(stepping !== true)
-      setTimeout(this.tick.bind(this), tickTimeout);
+      setTimeout(this.tick.bind(this), this.tickTimeout);
   };
 
   /**
@@ -497,17 +499,17 @@ if (typeof yasp == 'undefined') yasp = { };
 
   yasp.Emulator.prototype.tick = function () {
     if(this.running == false && !this.stepping) {
-      setTimeout(this.tick.bind(this), tickTimeout);
+      setTimeout(this.tick.bind(this), this.tickTimeout);
       return;
     }
 
-    for(var jj = 0; jj < ticksPerTick; jj++) {
+    for(var jj = 0; jj < this.ticksPerTick; jj++) {
 
     this.ticks++;
 
     if(this.waitTime !== 0) {
       setTimeout(this.tick.bind(this), this.waitTime);
-      var timePerTick = tickTimeout / ticksPerTick;
+      var timePerTick = this.tickTimeout / this.ticksPerTick;
       this.ticks += (this.waitTime / timePerTick);
       this.waitTime = 0;
       return;
