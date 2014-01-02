@@ -461,7 +461,7 @@ yasp.Storage = localStorage || { };
       var found = false;
       var changed = false;
       var height = 0;
-      if (!!c &&  (!yasp.Editor.error || yasp.Editor.error.length == 0) && yasp.Storage['help'] != "hide") {
+      if (!!c && yasp.Storage['help'] != "hide") {
         for (var i = 0; i < yasp.Editor.ast.length; i++) {
           var entry = yasp.Editor.ast[i];
           if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
