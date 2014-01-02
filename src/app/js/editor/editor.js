@@ -467,34 +467,31 @@ yasp.Storage = localStorage || { };
           if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
             var command = entry.params.command;
             var desc = command.doc[yasp.l10n.getLangName()];
-
             var cmdStr = "";
+
             if (command.name instanceof Array) {
-              var names = command.name;
-              for (var j = 0; j < names.length; j++) {
-                if (j > 0) cmdStr += " | ";
-                cmdStr += names[j].toUpperCase();
-              }
-              cmdStr += " ";
+              cmdStr = command.name.join(' | ').toUpperCase();
             } else {
-              cmdStr = command.name.toUpperCase()+" ";
+              cmdStr = command.name.toUpperCase();
             }
+
+            cmdStr += " ";
+
             for (var j = 0; j < command.params.length; j++) {
               if (j > 0) cmdStr += ", ";
-              
-              var param = command.params[j];
-              switch (param.type) {
+
+              switch (command.params[j].type) {
                 case "r_byte":
-                  cmdStr += "Byte Register";
+                  cmdStr += "Byte-Register";
                   break;
                 case "r_word":
-                  cmdStr += "Word Register";
+                  cmdStr += "Word-Register";
                   break;
                 case "l_byte":
-                  cmdStr += "Byte Literal";
+                  cmdStr += "Byte-Literal";
                   break;
                 case "l_word":
-                  cmdStr += "Word Literal";
+                  cmdStr += "Word-Literal";
                   break;
                 case "pin":
                   cmdStr += "Pin";
@@ -504,6 +501,7 @@ yasp.Storage = localStorage || { };
                   break;
                 default:
                   cmdStr += param.type;
+                  break;
               }
             }
             
