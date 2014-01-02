@@ -286,7 +286,8 @@ yasp.Storage = localStorage || { };
           var label = yasp.Editor.symbols.labels[elem.text().toUpperCase()];
           if (!!label) {
             editor.scrollIntoView(CodeMirror.Pos(label.line, label.char), 32);
-            editor.setCursor(CodeMirror.Pos(label.line, label.char));
+            editor.setCursor(CodeMirror.Pos(label.line - 1, 0));
+            editor.focus();
           } else {
             console.log("Unknown label");
           }
