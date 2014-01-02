@@ -47,6 +47,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.toolbar.continue": "Continue",
 
     "help.title": "Hilfe",
+    "help.search": "Suche: ",
     "help.close": "Schließen",
 
     "settings.title": "Einstellungen",

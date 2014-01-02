@@ -453,6 +453,20 @@ yasp.Storage = localStorage || { };
     }).fail(function() {
       console.log("failed to load help");
     });
+
+    // init help search
+    $('#help_search > input').keyup(function () {
+      var text = $('#help_search > input').val().toLowerCase();
+      var commands = $('#help_container .command');
+
+      for (var i = 0; i < commands.length; i++) {
+        var $cmd = $(commands[i]);
+        if($cmd.text().toLowerCase().indexOf(text) !== -1)
+          $cmd.show();
+        else
+          $cmd.hide();
+      }
+    });
     
     // update help rendering parameters
     var quickdoc = null;
