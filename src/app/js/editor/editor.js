@@ -433,12 +433,12 @@ yasp.Storage = localStorage || { };
       $('.menu_help').click(function() {
         switch(yasp.l10n.getLangName()) {
           case "en":
-            $('.help_en').css({'display': 'block'});
-            $('.help_de').css({'display': 'none'});
+            $('.lang_en').css({'display': 'block'});
+            $('.lang_de').css({'display': 'none'});
             break;
           case "de":
-            $('.help_en').css({'display': 'none'});
-            $('.help_de').css({'display': 'block'});
+            $('.lang_en').css({'display': 'none'});
+            $('.lang_de').css({'display': 'block'});
             break;
         }
         $('#dialog_help').modal({
@@ -449,7 +449,7 @@ yasp.Storage = localStorage || { };
     
     // load help data
     $.ajax('app/help/help.html').done(function(responseText) {
-      $('#help_container').html(responseText);
+      $('#help_container').append($(responseText)[4]);
     }).fail(function() {
       console.log("failed to load help");
     });
