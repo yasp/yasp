@@ -329,13 +329,10 @@ yasp.Storage = localStorage || { };
       updateLabelListVisiblity();
       
       $('#labellist').hover(function() {
-        if(yasp.Storage["labellist"] == "slide") {
-
-          $(this).filter(':not(:animated)').animate({
-            'marginLeft': '-100px',
-            'opacity': '1'
-          }, 'fast');
-        }
+        $(this).filter(':not(:animated)').animate({
+          'marginLeft': '-100px',
+          'opacity': '1'
+        }, 'fast');
       }, function() {
         $(this).animate({
           'marginLeft': '-20px',
