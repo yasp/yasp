@@ -47,8 +47,10 @@ span.cm-keyword {
 
     width: 100px;
     left: 100%;
-    top: 44px;
+    top: 45px;
     bottom: 0;
+
+    height: calc(100% - 144px);
 
     overflow-y: auto;
     overflow-x: hidden;
@@ -60,7 +62,7 @@ span.cm-keyword {
 
     opacity: 0.5;
 
-    z-index: 10000;
+    z-index: 10100;
 }
 
 #labellist.hidden {
@@ -121,7 +123,7 @@ span.cm-keyword {
     border-top: 1px solid rgb(220,220,220);
     background-color: #f7f7f7;
 
-    z-index: 10100;
+    z-index: 10000;
 
     font-size: 120%;
 }
@@ -147,7 +149,7 @@ span.cm-keyword {
 }
 
 .toolbarcontainer .dropdown-menu {
-    z-index: 10001;
+    z-index: 20000;
 }
 
 .toolbarcontainer .pull-right {
