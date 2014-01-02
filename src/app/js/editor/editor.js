@@ -503,22 +503,25 @@ yasp.Storage = localStorage || { };
                   cmdStr += "Label";
                   break;
                 default:
-                  cmdStr += type.type;
+                  cmdStr += param.type;
               }
             }
             
             $('#help_quick .command').html("<b>"+cmdStr+"</b>");
             
             $('#help_quick .desc').html(desc.description);
+
+            $('#help_quick .flags').empty();
+            $('#help_quick .flagsDescr').hide();
             
-            if (!!desc.flags) {
-              var state = "";
-              state += !!desc.flags.c ? ("Carry Bit: " + desc.flags.c + "<br />") : "";
-              state += !!desc.flags.z ? ("Zero Bit: " + desc.flags.z) : "";
-              
-              if (state.length > 0) state = "<p>" + state + "</p>";
-              
-              $('#help_quick .state').html(state);
+            if (!!desc.flags && Object.keys(desc.flags).length > 0) {
+              for (var flag in desc.flags) {
+                var $flag = $('<li><span class="name"></span>: <span class="condition"></span></li>');
+                $flag.find('.name').text(flag);
+                $flag.find('.condition').text(desc.flags[flag]);
+                $('#help_quick .flags').append($flag);
+              }
+              $('#help_quick .flagsDescr').show();
             }
             
             height = $('#help_quick .helpquick_container').height() + 16;

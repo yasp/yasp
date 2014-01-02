@@ -25,6 +25,8 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.menu.settings": "Settings",
     "editor.toolbar.menu.about": "About",
 
+    "editor.helpquick.flags": "Sets flags:",
+
     "editor.about.title": "About",
     "editor.about.description":
       "yasp is a fully functional web-based USB-Master development environment."       +
