@@ -92,6 +92,8 @@ span.cm-keyword {
 
     border-bottom: 1px solid rgb(220,220,220);
     word-wrap: break-word;
+
+    cursor: pointer;
 }
 
 #labellist ul li:last-child {
