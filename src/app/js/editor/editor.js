@@ -429,6 +429,13 @@ yasp.Storage = localStorage || { };
           }
         });
       });
+
+      function fixHelpHeight() {
+        $('#help_container').css('height', ($(window).height() - 250) + "px");
+      }
+
+      fixHelpHeight();
+      $(window).resize(fixHelpHeight);
       
       $('.menu_help').click(function() {
         switch(yasp.l10n.getLangName()) {

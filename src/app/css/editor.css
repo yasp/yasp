@@ -105,6 +105,20 @@ span.cm-keyword {
 }
 
 /* === help modal === */
+#dialog_help .modal-dialog,
+#dialog_help .modal-content {
+    height: 100%;
+}
+
+#dialog_help .modal-footer {
+    margin-top: 0;
+}
+
+#help_container {
+    margin-top: 10px;
+    overflow-y: scroll;
+}
+
 #help_container h1 {
     font-size: 20px;
 }
