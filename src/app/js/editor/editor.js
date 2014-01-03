@@ -300,10 +300,12 @@ yasp.Storage = localStorage || { };
 
       $helpqick.removeClass("fixed");
       $('#editorcontainer').removeClass("quickHelpFixed");
+      $('#labellist').removeClass("quickHelpFixed");
 
       if(yasp.Storage['help'] == 'fix') {
         $helpqick.addClass("fixed");
         $('#editorcontainer').addClass("quickHelpFixed");
+        $('#labellist').addClass("quickHelpFixed");
       }
     };
     

@@ -50,8 +50,6 @@ span.cm-keyword {
     top: 45px;
     bottom: 0;
 
-    height: calc(100% - 144px);
-
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -72,6 +70,10 @@ span.cm-keyword {
 #labellist.fixed {
     margin-left: -100px !important;
     opacity: 1 !important;
+}
+
+#labellist.quickHelpFixed {
+    height: calc(100% - 144px);
 }
 
 #labellist ul {
