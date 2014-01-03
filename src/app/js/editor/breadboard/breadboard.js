@@ -72,6 +72,8 @@ if (typeof yasp == 'undefined') yasp = { };
     $wrapper.css('z-index', appear.zindex);
     $wrapper.css('top', appear.top);
     $wrapper.css('left', appear.left);
+    $wrapper.attr('title', "Pin: " + definition.pin);
+    $wrapper.tooltip(definition.tooltip || {});
     if(appear.height)
       $wrapper.css('height', appear.height);
     if(appear.width)

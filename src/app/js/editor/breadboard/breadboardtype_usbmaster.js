@@ -23,6 +23,9 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           onColor: 'rgb(255,0,0)',
           offColor: 'rgb(60,0,0)'
         },
+        tooltip: {
+          placement: "bottom"
+        },
         pin: 11,
         appearance: {
           top: "5px",
@@ -80,6 +83,9 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           pushcolor: 'rgb(60,60,60)'
         },
         pin: 1,
+        tooltip: {
+          placement: "left"
+        },
         appearance: {
           top: "208px",
           left: "185px",
@@ -94,6 +100,9 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           pushcolor: 'rgb(180,0,0)'
         },
         pin: 2,
+        tooltip: {
+          placement: "right"
+        },
         appearance: {
           top: "208px",
           left: "243px",
