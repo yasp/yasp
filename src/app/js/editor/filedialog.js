@@ -58,7 +58,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         'keyboard': true
       });
       $('#dialog_file .open, #dialog_file .save, #dialog_file .saveas, #dialog_file .new').hide();
-      
+      $('#dialog_file .filelist tbody').html("");
+
       var updateFunc;
       $('#dialog_file a[data-toggle="tab"]').on('shown.bs.tab', updateFunc = function (e) {
         var tab = $(!!e ? e.target : '#dialog_file .active');
@@ -70,7 +71,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           $.each(files, function(i, row) {
             $('<tr>')
               .append($('<td>').text(row.filename))
-              .append($('<td>').text("ACTION YOLO"))
+              .append($('<td>').html(''))
               .appendTo(table);
           });
         });
@@ -91,6 +92,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           visible = "new";
           break;
       }
+      
       $('#dialog_file .'+visible).show();
       
       $('#filedialog_open').click(function() {
