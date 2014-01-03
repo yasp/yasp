@@ -42,6 +42,16 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         setTimeout(function() {
           cb(JSON.parse(yasp.Storage.files));
         }, 0);
+      },
+      deleteFile: function(name, cb) {
+        var files = JSON.parse(yasp.Storage.files);
+        if (files[name]) {
+          delete files[name]; // delete it bitch
+        }
+        yasp.Storage.files = JSON.stringify(files);
+        setTimeout(function() {
+          cb(true);
+        });
       }
     },
     SERVER: {
@@ -58,20 +68,27 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         'keyboard': true
       });
       $('#dialog_file .open, #dialog_file .save, #dialog_file .saveas, #dialog_file .new').hide();
-      $('#dialog_file .filelist tbody').html("");
-
+      
       var updateFunc;
       $('#dialog_file a[data-toggle="tab"]').on('shown.bs.tab', updateFunc = function (e) {
+        $('#dialog_file .filelist tbody').html("");
+        
         var tab = $(!!e ? e.target : '#dialog_file .active');
         if (tab.hasClass('link_server')) fileSystem = fileSystemDriver.SERVER;
         if (tab.hasClass('link_local')) fileSystem = fileSystemDriver.LOCAL;
         
         fileSystem.requestList(function(files) {
-          var table = $('#dialog_file .filelist');
+          var table = $('#dialog_file .filelist tbody');
           $.each(files, function(i, row) {
             $('<tr>')
               .append($('<td>').text(row.filename))
-              .append($('<td>').html(''))
+              .append($('<td>').html('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>')).click(function() {
+                // TODO: show alert
+                
+                fileSystem.deleteFile(row.filename, function() {
+                  updateFunc();
+                });
+              })
               .appendTo(table);
           });
         });
