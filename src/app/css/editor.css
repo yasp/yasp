@@ -108,6 +108,14 @@ span.cm-keyword {
     padding-top: 16px !important;
 }
 
+#dialog_file .filedialog_name {
+    vertical-align: middle;
+}
+
+#dialog_file thead {
+    background-color: rgba(128,128,128,0.25);
+}
+
 
 /* === help modal === */
 #dialog_help .modal-dialog,
