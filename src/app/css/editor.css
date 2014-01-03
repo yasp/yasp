@@ -152,6 +152,11 @@ span.cm-keyword {
     padding: 8px;
 }
 
+/* === settings === */
+#dialog_settings label.checkbox > span {
+    vertical-align: middle;
+}
+
 /* === other styles === */
 .toolbarcontainer {
     background-color: #f7f7f7;
