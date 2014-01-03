@@ -522,7 +522,7 @@ yasp.Storage = localStorage || { };
             $('#help_quick .desc').html(desc.description);
 
             $('#help_quick .flags').empty();
-            $('#help_quick .flagsDescr').hide();
+            $('#help_quick .flagsDescr').addClass('hidden');
             
             if (!!desc.flags && Object.keys(desc.flags).length > 0) {
               for (var flag in desc.flags) {
@@ -531,7 +531,7 @@ yasp.Storage = localStorage || { };
                 $flag.find('.condition').text(desc.flags[flag]);
                 $('#help_quick .flags').append($flag);
               }
-              $('#help_quick .flagsDescr').show();
+              $('#help_quick .flagsDescr').removeClass('hidden');
             }
             
             height = $('#help_quick .helpquick_container').height() + 16;
