@@ -29,13 +29,16 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
 
     "editor.about.title": "About",
     "editor.about.description":
-      "yasp is a fully functional web-based USB-Master development environment."       +
-        "It features an integrated development environment, binary compatible emulator," +
-        "cutting-edge Debugger and highly sophisticated assembler. The development suit" +
+        "yasp is a fully functional web-based USB-Master development environment. "       +
+        "It features an integrated development environment, binary compatible emulator, " +
+        "cutting-edge Debugger and highly sophisticated assembler. The development suit " +
         "aims to make learning assembler programming easy and accessible for everyone.",
     "editor.about.version": "Version",
     "editor.about.team": "Team",
     "editor.about.specialthanks": "Besonderer Dank geht an",
+    "editor.about.logo": "Logo",
+    "editor.about.logo.chip": "Chip",
+    "editor.about.logo.font": "Schriftart",
 
     "debugger.title": "Debugger",
     "debugger.close": "Schließen",
