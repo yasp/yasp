@@ -452,6 +452,10 @@ yasp.Storage = localStorage || { };
           'keyboard': true
         });
       });
+
+      $('#dialog_help').on('shown.bs.modal', function () {
+        $('#help_search > input').focus();
+      });
     })();
     
     // load help data
