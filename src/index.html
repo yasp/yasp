@@ -17,6 +17,7 @@
 
         <link rel="stylesheet" href="app/css/main.css">
         <link rel="stylesheet" href="app/css/editor.css">
+        <link rel="stylesheet" href="app/css/doctool.css">
         <link rel="stylesheet" href="app/css/debugger.css">
 
         <!-- Themes -->
@@ -60,9 +61,10 @@
         <link rel="stylesheet" href="lib/addon/dialog.css">
     </head>
     <body>
-        <div class="container presentation">
+        <div class="toolbarcontainer presentation">
             <div class="row">
                 <div class="col-md-12 toolbar">
+                    <img src="app/img/logo.png" class="logo">
                     <button type="button" class="btn btn-default btn-sm menu_run">
                         <span class="glyphicon glyphicon-play item"></span><span data-l10n="editor.toolbar.run"></span>
                     </button>
@@ -150,7 +152,14 @@ END
                         <ul>
                             <li>Dipl.- Ing. Robert Jelinek</li>
                             <li>Dipl.- Ing. Joachim Grüneis</li>
+                            <li>Prof. Andreas Resch (PWM)</li>
                             <li>HTLBVA Spengergasse</li>
+                        </ul>
+                        <h6 data-l10n="editor.about.logo"></h6>
+                        <ul>
+                            <li><span data-l10n="editor.about.logo.chip"></span>: <a href="https://openclipart.org/detail/17349/chip-by-jcartier" target="_blank">Chip by jcartier</a> (Public Domain)</li>
+                            <li><span data-l10n="editor.about.logo.font"></span>: <a href="http://www.dafont.com/digital-7.font" target="_blank">Digital 7</a> (Free for personal use)</li>
+                            <li>Created with Inkscape (<a href="http://inkscape.org/" target="_blank">http://inkscape.org/</a>)</li>
                         </ul>
                         <br>
                         <p>&copy; 2013, 2014 Michael Lutonsky, Robert Fischer</p>
@@ -210,7 +219,11 @@ END
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" data-l10n="help.title"></h4>
                     </div>
-                    <div class="modal-body" id="help_container">
+                    <div class="modal-body">
+                        <div id="help_search">
+                            <span data-l10n="help.search"></span><input>
+                        </div>
+                        <div id="help_container"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="help.close"></button>
@@ -275,14 +288,14 @@ END
                                     <option value="de">Deutsch</option>
                                 </select>
                             </div>
-                            <div class="checkbox">
+                            <label class="checkbox">
                                 <input type="checkbox" id="automaticsave_picker">
-                                <label  data-l10n="settings.autoSave" for="automaticsave_picker"></label>
-                            </div>
-                            <div class="checkbox">
+                                <span data-l10n="settings.autoSave"></span>
+                            </label>
+                            <label class="checkbox">
                                 <input type="checkbox" id="codecompletion_picker">
-                                <label  data-l10n="settings.codeCompletion" for="codecompletion_picker"></label>
-                            </div>
+                                <span data-l10n="settings.codeCompletion"></span>
+                            </label>
                             <div class="form-group">
                                 <label data-l10n="settings.labellist"></label>
                                 <select class="form-control" id="labellist_picker">
@@ -392,9 +405,10 @@ END
         
         <div id="help_quick">
             <div class="helpquick_container">
-                <p class="command"></p>
-                <p class="desc"></p>
-                <p class="state"></p>
+                <div class="command"></div>
+                <div class="desc"></div>
+                <div class="flagsDescr hidden" data-l10n="editor.helpquick.flags"></div>
+                <ul class="flags"></ul>
             </div>
         </div>
 

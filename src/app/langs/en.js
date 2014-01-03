@@ -1,3 +1,5 @@
+
+
 if (typeof yasp == 'undefined') yasp = { };
 if (yasp.l10n === undefined) yasp.l10n = { };
 if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
@@ -25,15 +27,20 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.menu.settings": "Settings",
     "editor.toolbar.menu.about": "About",
 
+    "editor.helpquick.flags": "Sets flags:",
+
     "editor.about.title": "About",
     "editor.about.description":
-      "yasp is a fully functional web-based USB-Master development environment."       +
-      "It features an integrated development environment, binary compatible emulator," +
-      "cutting-edge Debugger and highly sophisticated assembler. The development suit" +
+      "yasp is a fully functional web-based USB-Master development environment. "       +
+      "It features an integrated development environment, binary compatible emulator, " +
+      "cutting-edge Debugger and highly sophisticated assembler. The development suit " +
       "aims to make learning assembler programming easy and accessible for everyone.",
     "editor.about.version": "Version",
     "editor.about.team": "Team",
     "editor.about.specialthanks": "Special Thanks",
+    "editor.about.logo": "Logo",
+    "editor.about.logo.chip": "Chip",
+    "editor.about.logo.font": "Font",
 
     "debugger.title": "Debugger",
     "debugger.close": "Close",
@@ -45,6 +52,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.toolbar.continue": "Continue",
 
     "help.title": "Help",
+    "help.search": "Search: ",
     "help.close": "Close",
 
     "settings.title": "Settings",
@@ -57,6 +65,15 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.showLabelList": "Show label list",
     "settings.showHelp": "Show help",
     "settings.close": "Close",
+    "settings.help": "Help",
+    "settings.help.hide": "never show",
+    "settings.help.slide": "show if needed",
+    "settings.help.fix": "always show",
+    "settings.labellist": "Label list",
+    "settings.labellist.hide": "never show",
+    "settings.labellist.slide": "show if needed",
+    "settings.labellist.fix": "always show",
+    "settings.close": "close",
     
     "filedialog.close": "Close",
     "filedialog.server": "Server",
@@ -70,6 +87,6 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "filedialog.save": "Save",
     "filedialog.saveas": "Save As",
     "filedialog.new": "New",
-    "filedialog.create": "Create"
+    "filedialog.create": "Create",
   };
 })();

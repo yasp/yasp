@@ -5,6 +5,7 @@
   module("emulator commands", {
     setup: function () {
       emulator = new yasp.Emulator(true);
+      emulator.ticksPerTick = 1;
       emulator.continue();
       assembler = new yasp.Assembler();
     },
@@ -848,7 +849,7 @@
       cmd: "HIGH 3",
       setup: { pin: { 3: false } },
       steps: [
-        { pin: { 3: true } }
+        { pin: { 3: 1 } }
       ]
     }
   ]);
@@ -859,7 +860,7 @@
       cmd: "LOW 3",
       setup: { pin: { 3: true } },
       steps: [
-        { pin: { 3: false } }
+        { pin: { 3: 0 } }
       ]
     }
   ]);
@@ -868,9 +869,9 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "TOGGLE 3",
-      setup: { pin: { 3: true } },
+      setup: { pin: { 3: 1 } },
       steps: [
-        { pin: { 3: false } }
+        { pin: { 3: 0 } }
       ]
     }
   ]);
@@ -879,14 +880,14 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "PIN 3",
-      setup: { pin: { 3: true } },
+      setup: { pin: { 3: 1 } },
       steps: [
         { flags: { z: false, c: false } }
       ]
     },
     {
       cmd: "PIN 3",
-      setup: { pin: { 3: false } },
+      setup: { pin: { 3: 0 } },
       steps: [
         { flags: { z: true, c: false } }
       ]

@@ -26,7 +26,7 @@ span.cm-keyword {
     font-size: 12px;
     height: 100%;
     width: 100%;
-    padding-top: 34px; /* Fix scrollbar bug */
+    padding-top: 30px; /* Fix scrollbar bug */
     margin-top: -30px;
 
     float: left;
@@ -47,7 +47,7 @@ span.cm-keyword {
 
     width: 100px;
     left: 100%;
-    top: 32px;
+    top: 45px;
     bottom: 0;
 
     overflow-y: auto;
@@ -56,11 +56,11 @@ span.cm-keyword {
     margin-left: -20px;
     border-left: 1px solid rgb(220,220,220);
 
-    background-color: rgb(240,240,240);
+    background-color: #f7f7f7;
 
     opacity: 0.5;
 
-    z-index: 10000;
+    z-index: 10100;
 }
 
 #labellist.hidden {
@@ -69,7 +69,11 @@ span.cm-keyword {
 
 #labellist.fixed {
     margin-left: -100px !important;
-    opacity: 1;
+    opacity: 1 !important;
+}
+
+#labellist.quickHelpFixed {
+    height: calc(100% - 144px);
 }
 
 #labellist ul {
@@ -92,6 +96,8 @@ span.cm-keyword {
 
     border-bottom: 1px solid rgb(220,220,220);
     word-wrap: break-word;
+
+    cursor: pointer;
 }
 
 #labellist ul li:last-child {
@@ -104,6 +110,20 @@ span.cm-keyword {
 
 
 /* === help modal === */
+#dialog_help .modal-dialog,
+#dialog_help .modal-content {
+    height: 100%;
+}
+
+#dialog_help .modal-footer {
+    margin-top: 0;
+}
+
+#help_container {
+    margin-top: 10px;
+    overflow-y: scroll;
+}
+
 #help_container h1 {
     font-size: 20px;
 }
@@ -122,9 +142,9 @@ span.cm-keyword {
 
     max-height: 100px;
     border-top: 1px solid rgb(220,220,220);
-    background-color: rgb(240,240,240);
+    background-color: #f7f7f7;
 
-    z-index: 10100;
+    z-index: 10000;
 
     font-size: 120%;
 }
@@ -137,7 +157,31 @@ span.cm-keyword {
     padding: 8px;
 }
 
+/* === settings === */
+#dialog_settings label.checkbox > span {
+    vertical-align: middle;
+}
+
 /* === other styles === */
+.toolbarcontainer {
+    background-color: #f7f7f7;
+    padding: 5px 5px 0 5px;
+    border-bottom: 1px solid rgb(220,220,220);
+}
+
+.toolbarcontainer .logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.toolbarcontainer .dropdown-menu {
+    z-index: 20000;
+}
+
+.toolbarcontainer .pull-right {
+    margin-top: 5px;
+}
+
 .toolbar .item {
     padding-right: 20px;
 }

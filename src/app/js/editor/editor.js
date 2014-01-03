@@ -295,7 +295,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           var label = yasp.Editor.symbols.labels[elem.text().toUpperCase()];
           if (!!label) {
             editor.scrollIntoView(CodeMirror.Pos(label.line, label.char), 32);
-            editor.setCursor(CodeMirror.Pos(label.line, label.char));
+            editor.setCursor(CodeMirror.Pos(label.line - 1, 0));
+            editor.focus();
           } else {
             console.log("Unknown label");
           }
@@ -308,10 +309,12 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
       $helpqick.removeClass("fixed");
       $('#editorcontainer').removeClass("quickHelpFixed");
+      $('#labellist').removeClass("quickHelpFixed");
 
       if(yasp.Storage['help'] == 'fix') {
         $helpqick.addClass("fixed");
         $('#editorcontainer').addClass("quickHelpFixed");
+        $('#labellist').addClass("quickHelpFixed");
       }
     };
     
@@ -338,13 +341,10 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       updateLabelListVisiblity();
       
       $('#labellist').hover(function() {
-        if(yasp.Storage["labellist"] == "slide") {
-
-          $(this).filter(':not(:animated)').animate({
-            'marginLeft': '-100px',
-            'opacity': '1'
-          }, 'fast');
-        }
+        $(this).filter(':not(:animated)').animate({
+          'marginLeft': '-100px',
+          'opacity': '1'
+        }, 'fast');
       }, function() {
         $(this).animate({
           'marginLeft': '-20px',
@@ -410,6 +410,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
         $('#language_picker').change(function() {
           yasp.Storage['language'] = this.value;
+          yasp.l10n.translateDocument();
           yasp.EditorManager.apply((function(e) {
             e.setOption("language", this.value);
           }).bind(this));
@@ -450,29 +451,54 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           }
         });
       });
+
+      function fixHelpHeight() {
+        $('#help_container').css('height', ($(window).height() - 250) + "px");
+      }
+
+      fixHelpHeight();
+      $(window).resize(fixHelpHeight);
       
       $('.menu_help').click(function() {
         switch(yasp.l10n.getLangName()) {
           case "en":
-            $('.help_en').css({'display': 'block'});
-            $('.help_de').css({'display': 'none'});
+            $('.lang_en').css({'display': 'block'});
+            $('.lang_de').css({'display': 'none'});
             break;
           case "de":
-            $('.help_en').css({'display': 'none'});
-            $('.help_de').css({'display': 'block'});
+            $('.lang_en').css({'display': 'none'});
+            $('.lang_de').css({'display': 'block'});
             break;
         }
         $('#dialog_help').modal({
           'keyboard': true
         });
       });
+
+      $('#dialog_help').on('shown.bs.modal', function () {
+        $('#help_search > input').focus();
+      });
     })();
     
     // load help data
     $.ajax('app/help/help.html').done(function(responseText) {
-      $('#help_container').html(responseText);
+      $('#help_container').append($(responseText)[4]);
     }).fail(function() {
       console.log("failed to load help");
+    });
+
+    // init help search
+    $('#help_search > input').keyup(function () {
+      var text = $('#help_search > input').val().toLowerCase();
+      var commands = $('#help_container .command');
+
+      for (var i = 0; i < commands.length; i++) {
+        var $cmd = $(commands[i]);
+        if($cmd.text().toLowerCase().indexOf(text) !== -1)
+          $cmd.show();
+        else
+          $cmd.hide();
+      }
     });
     
     // update help rendering parameters
@@ -482,40 +508,37 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       var found = false;
       var changed = false;
       var height = 0;
-      if (!!c &&  (!yasp.Editor.error || yasp.Editor.error.length == 0) && yasp.Storage['help'] != "hide") {
+      if (!!c && yasp.Storage['help'] != "hide") {
         for (var i = 0; i < yasp.Editor.ast.length; i++) {
           var entry = yasp.Editor.ast[i];
           if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
             var command = entry.params.command;
             var desc = command.doc[yasp.l10n.getLangName()];
-
             var cmdStr = "";
+
             if (command.name instanceof Array) {
-              var names = command.name;
-              for (var j = 0; j < names.length; j++) {
-                if (j > 0) cmdStr += " | ";
-                cmdStr += names[j].toUpperCase();
-              }
-              cmdStr += " ";
+              cmdStr = command.name.join(' | ').toUpperCase();
             } else {
-              cmdStr = command.name.toUpperCase()+" ";
+              cmdStr = command.name.toUpperCase();
             }
+
+            cmdStr += " ";
+
             for (var j = 0; j < command.params.length; j++) {
               if (j > 0) cmdStr += ", ";
-              
-              var param = command.params[j];
-              switch (param.type) {
+
+              switch (command.params[j].type) {
                 case "r_byte":
-                  cmdStr += "Byte Register";
+                  cmdStr += "Byte-Register";
                   break;
                 case "r_word":
-                  cmdStr += "Word Register";
+                  cmdStr += "Word-Register";
                   break;
                 case "l_byte":
-                  cmdStr += "Byte Literal";
+                  cmdStr += "Byte-Literal";
                   break;
                 case "l_word":
-                  cmdStr += "Word Literal";
+                  cmdStr += "Word-Literal";
                   break;
                 case "pin":
                   cmdStr += "Pin";
@@ -524,22 +547,26 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
                   cmdStr += "Label";
                   break;
                 default:
-                  cmdStr += type.type;
+                  cmdStr += param.type;
+                  break;
               }
             }
             
             $('#help_quick .command').html("<b>"+cmdStr+"</b>");
             
             $('#help_quick .desc').html(desc.description);
+
+            $('#help_quick .flags').empty();
+            $('#help_quick .flagsDescr').addClass('hidden');
             
-            if (!!desc.flags) {
-              var state = "";
-              state += !!desc.flags.c ? ("Carry Bit: " + desc.flags.c + "<br />") : "";
-              state += !!desc.flags.z ? ("Zero Bit: " + desc.flags.z) : "";
-              
-              if (state.length > 0) state = "<p>" + state + "</p>";
-              
-              $('#help_quick .state').html(state);
+            if (!!desc.flags && Object.keys(desc.flags).length > 0) {
+              for (var flag in desc.flags) {
+                var $flag = $('<li><span class="name"></span>: <span class="condition"></span></li>');
+                $flag.find('.name').text(flag);
+                $flag.find('.condition').text(desc.flags[flag]);
+                $('#help_quick .flags').append($flag);
+              }
+              $('#help_quick .flagsDescr').removeClass('hidden');
             }
             
             height = $('#help_quick .helpquick_container').height() + 16;

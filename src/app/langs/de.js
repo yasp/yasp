@@ -25,15 +25,20 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.menu.settings": "Einstellungen",
     "editor.toolbar.menu.about": "About",
 
+    "editor.helpquick.flags": "Gesetzte Flags:",
+
     "editor.about.title": "About",
     "editor.about.description":
-      "yasp is a fully functional web-based USB-Master development environment."       +
-        "It features an integrated development environment, binary compatible emulator," +
-        "cutting-edge Debugger and highly sophisticated assembler. The development suit" +
+        "yasp is a fully functional web-based USB-Master development environment. "       +
+        "It features an integrated development environment, binary compatible emulator, " +
+        "cutting-edge Debugger and highly sophisticated assembler. The development suit " +
         "aims to make learning assembler programming easy and accessible for everyone.",
     "editor.about.version": "Version",
     "editor.about.team": "Team",
     "editor.about.specialthanks": "Besonderer Dank geht an",
+    "editor.about.logo": "Logo",
+    "editor.about.logo.chip": "Chip",
+    "editor.about.logo.font": "Schriftart",
 
     "debugger.title": "Debugger",
     "debugger.close": "Schließen",
@@ -45,17 +50,24 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.toolbar.continue": "Continue",
 
     "help.title": "Hilfe",
+    "help.search": "Suche: ",
     "help.close": "Schließen",
 
     "settings.title": "Einstellungen",
     "settings.theme": "Theme",
     "settings.tabSize": "Tab-Breite",
-    "settings.tabSize.spaces": "{0} leerzeichen",
+    "settings.tabSize.spaces": "{0} Leerzeichen",
     "settings.language": "Sprache",
     "settings.autoSave": "Automatisches Speichern",
     "settings.codeCompletion": "Codevervollständigung",
-    "settings.showLabelList": "Label-Liste anzeigen",
-    "settings.showHelp": "Hilfe anzeigen",
+    "settings.help": "Hilfe",
+    "settings.help.hide": "nie anzeigen",
+    "settings.help.slide": "bei Bedarf anzeigen",
+    "settings.help.fix": "immer anzeigen",
+    "settings.labellist": "Label-Liste",
+    "settings.labellist.hide": "nie anzeigen",
+    "settings.labellist.slide": "bei Bedarf anzeigen",
+    "settings.labellist.fix": "immer anzeigen",
     "settings.close": "Schließen",
 
     "filedialog.close": "Close",
