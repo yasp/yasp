@@ -583,7 +583,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     if(!this.stepping) {
-      setTimeout(this.tick.bind(this), tickTimeout);
+      setTimeout(this.tick.bind(this), this.tickTimeout);
     }
   };
 })();
