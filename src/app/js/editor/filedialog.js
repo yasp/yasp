@@ -52,6 +52,25 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         setTimeout(function() {
           cb(true);
         });
+      },
+      renameFile: function(oldname, newname, cb) {
+        var files = JSON.parse(yasp.Storage.files);
+        if (files[oldname]) {
+          // save old \o/
+          var old = files[oldname];
+          
+          // delete old \o/
+          delete files[oldname];
+          
+          // create new \o/
+          old.filename = newname;
+          files[newname] = old;
+        }
+        yasp.Storage.files = JSON.stringify(files);
+        
+        setTimeout(function() {
+          cb(true);
+        })
       }
     },
     SERVER: {
@@ -79,17 +98,48 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         
         fileSystem.requestList(function(files) {
           var table = $('#dialog_file .filelist tbody');
+          // create array to sort them
+          var data = [ ];
           $.each(files, function(i, row) {
-            $('<tr>')
-              .append($('<td>').text(row.filename))
-              .append($('<td>').html('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>')).click(function() {
-                // TODO: show alert
-                
-                fileSystem.deleteFile(row.filename, function() {
-                  updateFunc();
-                });
-              })
+            data.push(row);
+          });
+          data.sort(function(a, b) {
+            return a.changedate < b.changedate ? -1 : (a.changedate > b.changedate ? 1 : 0);
+          });
+          
+          // now display
+          $.each(data, function(i, row) {
+            var elem = $('<tr>')
+              .append($('<td class="filedialog_name">').text(row.filename))
+              .append($('<td>').html('<button type="button" class="btn btn-default btn-xs" class="filedialog_remove"><span class="glyphicon glyphicon-remove"></span></button>'))
               .appendTo(table);
+            
+            elem.find('.filedialog_remove').click(function() {
+              // TODO: show alert
+
+              fileSystem.deleteFile(row.filename, function() {
+                updateFunc();
+              });
+            });
+            
+            elem.find('.filedialog_name').dblclick(function() {
+              var elem = $(this)
+                .text("")
+                .append('<form><input type="text" class="form-control" value="'+row.filename+'"/></form>');
+              
+              elem.find('input').select();
+              elem.find('form').submit(function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                
+                var elem = $(this), newtext;
+                fileSystem.renameFile(row.filename, newtext = elem.find('input').val(), function() {
+                  elem.text(newtext);
+                });
+                
+                return false;
+              });
+            });
           });
         });
       });
