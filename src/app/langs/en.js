@@ -36,6 +36,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
       "cutting-edge Debugger and highly sophisticated assembler. The development suit " +
       "aims to make learning assembler programming easy and accessible for everyone.",
     "editor.about.version": "Version",
+    "editor.about.license": "License",
     "editor.about.team": "Team",
     "editor.about.specialthanks": "Special Thanks",
     "editor.about.logo": "Logo",

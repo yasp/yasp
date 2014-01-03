@@ -12,3 +12,6 @@ $ grunt commandsjs
 
 # Online-Demo
 http://yasp.me/yasp/src/app/test/
+
+# License
+GPLv3 (see `LICENSE.txt`)

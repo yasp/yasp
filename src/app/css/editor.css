@@ -123,10 +123,6 @@ span.cm-keyword {
     height: 100%;
 }
 
-#dialog_help .modal-footer {
-    margin-top: 0;
-}
-
 #help_container {
     margin-top: 10px;
     overflow-y: scroll;
@@ -170,6 +166,12 @@ span.cm-keyword {
     vertical-align: middle;
 }
 
+/* === about === */
+#dialog_about h6 {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
 /* === other styles === */
 .toolbarcontainer {
     background-color: #f7f7f7;
@@ -200,6 +202,10 @@ span.cm-keyword {
     margin: 0;
     top: 0;
     left: 0;
+}
+
+.modal-footer {
+    margin-top: 0;
 }
 
 /* Fix z-index bug with labellist */
