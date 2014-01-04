@@ -3,9 +3,9 @@
 </p>
 
 yasp is a fully functional web-based assembler development environment, including a real assembler and debugger.
-The assembler dialect is a custom one which is very simple to keep the learning curve as shallow as apossible.
-It also features some hardware-elements (LED, Potentiometer, Button, etc.). The main purpuse of this project
-is to create an environment in which studends can learn the assembly language to understand computers better.
+The assembler dialect is a custom one which is very simple to keep the learning curve as shallow as possible.
+It also features some hardware-elements (LED, Potentiometer, Button, etc.). The main purpose of this project
+is to create an environment in which students can learn the assembly language to understand computers better.
 It also allows them to experiment easily because there is nothing they can break.
 
 The original project team of yasp consists of Robert Fischer and Michael "luto" Lutonsky. For more information take
@@ -34,7 +34,7 @@ $ grunt commandsjs # build help and instructions
 yasp can additionally upload code-files to an simple server which can be found in the [server repository](https://github.com/yasp/server).
 
 ### Documentation
-The documentation lives in the [/doc/](/doc/)-diretory. Additional documentation in the German language can be found on the [project homepage](http://yasp.me).
+The documentation lives in the [/doc/](/doc/)-directory. Additional documentation in the German language can be found on the [project homepage](http://yasp.me).
 
 ### Hacking
 * [`/src/app/`](/src/app/), IDE
