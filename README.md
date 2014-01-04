@@ -1,4 +1,6 @@
-![yasp](/src/app/img/logo.png)
+<p align="center">
+  <img src="/src/app/img/logo.png" />
+</p>
 
 yasp is a fully functional web-based assembler development environment, including a real assembler and debugger.
 The assembler dialect is a custom one which is very simple to keep the learning curve as shallow as apossible.
