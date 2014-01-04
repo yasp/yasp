@@ -43,7 +43,7 @@ The documentation lives in the [/doc/](/doc/)-diretory. Additional documentation
 * [`/src/app/langs/`](/src/app/langs/), languages for l10n, see [l10n.md](/doc/l10n.md)
 * [`/src/app/js/assembler`](/src/app/js/assembler), home of the assembler
 * [`/src/app/js/emulator`](/src/app/js/emulator), home of the emulator
-* [`/src/app/js/hardware`](/src/app/js/hardware), home of the hardware
+* [`/src/app/js/hardware`](/src/app/js/hardware), home of the hardware, see [hardware.md](/doc/hardware.md)
 * [`/src/app/test/index.html`](/src/app/test/index.html), unit-tests
 * [`/src/app/test/hardware.html`](/src/app/test/hardware.html), hardware-demo
 * [`/src/app/test/repl.html`](/src/app/test/repl.html), interactive assembler/emulator-interface
