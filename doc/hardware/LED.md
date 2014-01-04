@@ -1,6 +1,8 @@
 # LED
 Like a light bulb, just newer.
 
+![led](led.png)
+
 ## State
 * Gets: float from `0` to `1` indicating the light-level.
 * Sets: nothing

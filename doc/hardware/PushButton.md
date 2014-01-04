@@ -1,6 +1,8 @@
 # PushButton
 Button which sets its output to `1` as long as the user presses it.
 
+![pushbutton](pushbutton.png)
+
 ## State
 * Gets: nothing
 * Sets: `1` if pressed, else `0`
