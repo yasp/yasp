@@ -20,8 +20,6 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
       {
         type: "POTI",
         params: {
-          onColor: 'rgb(255,0,0)',
-          offColor: 'rgb(60,0,0)'
         },
         tooltip: {
           placement: "bottom"
