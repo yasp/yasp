@@ -1,17 +1,47 @@
-# Setup
+![yasp](/src/app/img/logo.png)
+
+yasp is a fully functional web-based assembler development environment, including a real assembler and debugger.
+The assembler dialect is a custom one which is very simple to keep the learning curve as shallow as apossible.
+It also features some hardware-elements (LED, Potentiometer, Button, etc.). The main purpuse of this project
+is to create an environment in which studends can learn the assembly language to understand computers better.
+It also allows them to experiment easily because there is nothing they can break.
+
+The original project team of yasp consists of Robert Fischer and Michael "luto" Lutonsky. For more information take
+a look at the about-section in the IDEs menu.
+
+## Online-Demo
+* IDE: http://yasp.me/yasp/src/
+* Test environment: http://yasp.me/yasp/src/app/test/repl.html
+
+## License
+yasp is licensed under the GPLv3-License, for details see [`LICENSE.txt`](LICENSE.txt).
+
+## Development
+
+### Setup
+To develop on yasp you'll need npm and grunt.
 ```
-$ npm install
-$ grunt deps
-$ grunt commandsjs
+$ git clone git@github.com:yasp/yasp.git
+$ cd yasp
+$ npm install      # download grunt-dependencies
+$ grunt deps       # download web-dependecies
+$ grunt commandsjs # build help and instructions
 ```
 
-# Hacking
-* `/src/app/test/index.html`, unit-tests
-* `/src/app/test/hardware.html`, hardware-demo
-* `/src/app/test/repl.html`, interactive assembler/emulator-interface
+### Server
+yasp can additionally upload code-files to an simple server which can be found in the [server repository](https://github.com/yasp/server).
 
-# Online-Demo
-http://yasp.me/yasp/src/app/test/
+### Documentation
+The documentation lives in the [/doc/](/doc/)-diretory. Additional documentation in the German language can be found on the [project homepage](http://yasp.me).
 
-# License
-GPLv3 (see `LICENSE.txt`)
+### Hacking
+* [`/src/app/`](/src/app/), IDE
+* [`/src/app/instructions`](/src/app/instructions), all instruction files, see [instructions.md](/doc/instructions.md)
+* [`/src/app/js/editor/breadboard/`](/src/app/js/editor/breadboard/), breadboards, see [breadboards.md](/doc/breadboards.md)
+* [`/src/app/langs/`](/src/app/langs/), languages for l10n, see [l10n.md](/doc/l10n.md)
+* [`/src/app/js/assembler`](/src/app/js/assembler), home of the assembler
+* [`/src/app/js/emulator`](/src/app/js/emulator), home of the emulator
+* [`/src/app/js/hardware`](/src/app/js/hardware), home of the hardware
+* [`/src/app/test/index.html`](/src/app/test/index.html), unit-tests
+* [`/src/app/test/hardware.html`](/src/app/test/hardware.html), hardware-demo
+* [`/src/app/test/repl.html`](/src/app/test/repl.html), interactive assembler/emulator-interface
