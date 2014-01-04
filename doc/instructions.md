@@ -1,6 +1,6 @@
 # Instructions
-Instructions in yasp consist of a single file inside the `/src/app/instructions/` directory. There is no code in the
-emulator or assembler dealing with a specific instruction. Although some new instructions might need additional
+An instruction in yasp consist of a single file inside the `/src/app/instructions/` directory. There is no code in the
+emulator or assembler dealing with specific instructions. Although some new instructions might need additional
 features in the emulator.
 
 The instructions in the `instructions`-directory are later combined into `/src/app/js/commands.js`. This is done by
@@ -33,7 +33,8 @@ changed.
   // the code is the static part of the bitcode which is representing this command. It is at the very
   // beginning of the bitcode and must be unique across all instructions since the emulator uses it
   // to identify the commands.
-  // The value can be given as number literal or as string containing a binary representation of a number.
+  // The value can be given as number literal or as string containing a binary representation of a number. Literal
+  // values must not exceed one byte in length, binary values do not have a length limitation.
   "code": [
     {
       "value": 0x10
@@ -97,5 +98,42 @@ as objects into the `exec`-function. **Do not modify these objects.** They are r
   type: "",     // e.g. "r_byte"
   value: null,  // see table
   address: null // see table
+}
+```
+
+## Boilerplate
+```javascript
+{
+  "name": "",
+  "doc": {
+    "en": {
+      "description": "",
+      "flags": {
+        "z": "",
+        "c": ""
+      }
+    },
+    "de": {
+      "description": "",
+      "flags": {
+        "z": "",
+        "c": ""
+      }
+    }
+  },
+  "code": [
+    {
+      "value": 0x00
+    }
+  ],
+  "params": [
+    {
+      "valueNeeded": true,
+      "type": "r_byte"
+    }
+  ],
+  "checkFlags": { "z": false },
+  "exec": function (rbyte) {
+  }
 }
 ```
