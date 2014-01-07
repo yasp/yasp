@@ -74,7 +74,18 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       }
     },
     SERVER: {
-      
+      newFile: function(name, cb) {
+        // TODO
+      },
+      requestList: function(cb) {
+        // TODO
+      },
+      deleteFile: function(name, cb) {
+        // TODO
+      },
+      renameFile: function(oldname, newname, cb) {
+        // ToDO
+      }
     }
   };
   var fileSystem = fileSystemDriver.LOCAL;
@@ -111,7 +122,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           $.each(data, function(i, row) {
             var elem = $('<tr>')
               .append($('<td class="filedialog_name">').text(row.filename))
-              .append($('<td>').html('<button type="button" class="btn btn-default btn-xs" class="filedialog_remove"><span class="glyphicon glyphicon-remove"></span></button>'))
+              .append($('<td>').html('<button type="button" class="btn btn-default btn-xs filedialog_remove"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-default btn-xs filedialog_open"><span class="glyphicon glyphicon-open"></span></button>'))
               .appendTo(table);
             
             elem.find('.filedialog_remove').click(function() {
