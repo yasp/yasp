@@ -133,7 +133,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
   yasp.FileDialog = {
     show: function(mode) {
       dialogMode = mode;
-      if (dialogMode == yasp.FileDialogMode.SAVE && typeof yasp.EditorManager.getAndUpdateFile().filename != 'undefined') {
+      if (dialogMode == yasp.FileDialogMode.SAVE && (typeof yasp.EditorManager.getAndUpdateFile().filename != 'undefined' && yasp.EditorManager.getAndUpdateFile().filename != null)) {
         // already saved => just save brah
         saveFunc(yasp.EditorManager.getAndUpdateFile().filename);
         return;
