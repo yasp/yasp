@@ -7,7 +7,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
 
     "title": "yasp",
 
-    "editor.toolbar.run": "Startem",
+    "editor.toolbar.run": "Starten",
     "editor.toolbar.help": "Hilfe",
     "editor.toolbar.menu": "Menü",
 
