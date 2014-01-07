@@ -36,7 +36,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         }
         setTimeout(function() {
           cb(file, 0);
-        });
+        }, 0);
       },
       requestList: function(cb) {
         setTimeout(function() {
@@ -51,7 +51,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         yasp.Storage.files = JSON.stringify(files);
         setTimeout(function() {
           cb(true);
-        });
+        }, 0);
       },
       renameFile: function(oldname, newname, cb) {
         var files = JSON.parse(yasp.Storage.files);
@@ -70,7 +70,22 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         
         setTimeout(function() {
           cb(true);
-        })
+        }, 0);
+      },
+      openFile: function(name, cb) {
+        var files = JSON.parse(yasp.Storage.files);
+        
+        setTimeout(function() {
+          cb(files[name]);
+        }, 0);
+      },
+      saveFile: function(name, cb) {
+        var files = JSON.parse(yasp.Storage.files);
+        
+        yasp.Storage.files = JSON.stringify(files);
+        setTimeout(function() {
+          cb(true);
+        }, 0);
       }
     },
     SERVER: {
@@ -85,9 +100,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       },
       renameFile: function(oldname, newname, cb) {
         // ToDO
+      },
+      openFile: function(name, cb) {
+        // TODO
+      },
+      saveFile: function(name, cb) {
+        // TODO
       }
-    }
-  };
+  }};
   var fileSystem = fileSystemDriver.LOCAL;
   var dialogMode;
   var dialogFiles;
@@ -122,7 +142,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           $.each(data, function(i, row) {
             var elem = $('<tr>')
               .append($('<td class="filedialog_name">').text(row.filename))
-              .append($('<td>').html('<button type="button" class="btn btn-default btn-xs filedialog_remove"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-default btn-xs filedialog_open"><span class="glyphicon glyphicon-open"></span></button>'))
+              .append($('<td>').html('<button type="button" class="btn btn-default btn-xs filedialog_remove"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-default btn-xs filedialog_select"><span class="glyphicon glyphicon-open"></span></button>'))
               .appendTo(table);
             
             elem.find('.filedialog_remove').click(function() {
@@ -131,6 +151,10 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
               fileSystem.deleteFile(row.filename, function() {
                 updateFunc();
               });
+            });
+
+            elem.find('.filedialog_select').click(function() {
+              $('#filedialog_name').val(row.filename);
             });
             
             elem.find('.filedialog_name').dblclick(function() {
@@ -174,7 +198,15 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       $('#dialog_file .'+visible).show();
       
       $('#filedialog_open').click(function() {
-        
+        fileSystem.openFile($('#filedialog_name').val(), function(file) {
+          if (!!file) {
+            // success
+            yasp.EditorManager.applyFile(file);
+          } else {
+            // error
+            // TODO: implement visible error message
+          }
+        });
       });
       $('#filedialog_save').click(function() {
 
