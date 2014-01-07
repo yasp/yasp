@@ -146,6 +146,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         if (tab.hasClass('link_local')) fileSystem = fileSystemDriver.LOCAL;
         
         fileSystem.requestList(function(files) {
+          $('#dialog_file .filelist tbody').html("");
+          
           var table = $('#dialog_file .filelist tbody');
           // create array to sort them
           var data = [ ];
