@@ -83,7 +83,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "filedialog.usrname": "Username",
     "filedialog.password": "Password",
     "filedialog.login": "Login",
-    "filedialog.name": "Name",
+    "filedialog.name": "File",
     "filedialog.action": "Action",
     "filedialog.open": "Open",
     "filedialog.save": "Save",

@@ -337,6 +337,15 @@ END
                         <h4 class="modal-title new" data-l10n="filedialog.new"></h4>
                     </div>
                     <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <label for="filedialog_name" data-l10n="filedialog.name"></label>
+                                    <input type="text" id="filedialog_name" class="form-control" />
+                                </div>
+                            </div>
+                        </form>
+                        
                         <ul class="nav nav-tabs">
                             <li><a href="#local" data-toggle="tab" data-l10n="filedialog.local" class="link_local"></a></li>
                             <li><a href="#server" data-toggle="tab"  data-l10n="filedialog.server" class="link_server"></a></li>
@@ -354,17 +363,6 @@ END
                                         
                                     </tbody>
                                 </table>
-
-                                <form class="form-horizontal" role="form">
-                                    <div class="form-group">
-                                        <div class="col-sm-1 control-label">
-                                            <label for="filedialog_name" data-l10n="filedialog.name"></label>
-                                        </div>
-                                        <div class="col-sm-11">
-                                            <input type="text" id="filedialog_name" class="form-control" />
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
                             <div class="tab-pane" id="server">
                                 <div id="filedialog_login">
