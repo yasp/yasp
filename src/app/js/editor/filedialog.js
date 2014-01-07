@@ -110,10 +110,28 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
   }};
   var fileSystem = fileSystemDriver.LOCAL;
   var dialogMode;
-  var dialogFiles;
+  var saveFunc = function(name) {
+    var file = yasp.EditorManager.getAndUpdateFile();
+    file.filename = name;
+    fileSystem.saveFile(file, function(file) {
+      if (!!file) {
+        // success
+        yasp.EditorManager.applyFile(file);
+      } else {
+        // error
+        // TODO: implement visible error message
+      }
+    });
+  };
+  
   yasp.FileDialog = {
     show: function(mode) {
       dialogMode = mode;
+      if (dialogMode == yasp.FileDialogMode.SAVE && typeof yasp.EditorManager.getAndUpdateFile().filename != 'undefined') {
+        // already saved => just save brah
+        saveFunc(yasp.EditorManager.getAndUpdateFile().filename);
+        return;
+      }
       $('#dialog_file').modal({
         'keyboard': true
       });
@@ -208,21 +226,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           }
         });
       });
-      $('#filedialog_save').click(function() {
-        
-      });
-      $('#filedialog_saveas').click(function() {
-        var file = yasp.EditorManager.getAndUpdateFile();
-        file.filename = $('#filedialog_name').val();
-        fileSystem.saveFile(file, function(file) {
-          if (!!file) {
-            // success
-            yasp.EditorManager.applyFile(file);
-          } else {
-            // error
-            // TODO: implement visible error message
-          }
-        });
+      $('#filedialog_saveas, #filedialog_save').click(function() {
+        saveFunc($('#filedialog_name').val());
       });
       $('#filedialog_new').click(function() {
         fileSystem.newFile($('#filedialog_name').val(), function(file) {

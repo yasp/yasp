@@ -26,6 +26,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.menu.help": "Help",
     "editor.toolbar.menu.settings": "Settings",
     "editor.toolbar.menu.about": "About",
+    "editor.toolbar.menu.untitled": "Untitled",
 
     "editor.helpquick.flags": "Sets flags:",
 

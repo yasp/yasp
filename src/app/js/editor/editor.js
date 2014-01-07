@@ -8,14 +8,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
    */
   var EditorManager = function() {
     this.editors = [ ];
-    this.file = {
-      filename: name,
+    this.applyFile({
+      filename: null,
       username: "local",
       createdate: new Date().getTime(),
       group: "local",
       changedate: new Date().getTime(),
       content: ""
-    };
+    });
   };
 
   /**
@@ -33,6 +33,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     this.apply(function(editor) {
       editor.setValue(file.content);
     });
+    // update filename
+    $('#display_filename').text(file.filename ? file.filename : "Untitled");
   };
   EditorManager.prototype.getAndUpdateFile = function() {
     this.file.content = this.editors[0].getValue();
