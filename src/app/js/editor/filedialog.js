@@ -79,12 +79,12 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           cb(files[name]);
         }, 0);
       },
-      saveFile: function(name, cb) {
+      saveFile: function(file, cb) {
         var files = JSON.parse(yasp.Storage.files);
-        
+        files[file.filename] = file;
         yasp.Storage.files = JSON.stringify(files);
         setTimeout(function() {
-          cb(true);
+          cb(file);
         }, 0);
       }
     },
@@ -209,10 +209,20 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         });
       });
       $('#filedialog_save').click(function() {
-
+        
       });
       $('#filedialog_saveas').click(function() {
-
+        var file = yasp.EditorManager.getAndUpdateFile();
+        file.filename = $('#filedialog_name').val();
+        fileSystem.saveFile(file, function(file) {
+          if (!!file) {
+            // success
+            yasp.EditorManager.applyFile(file);
+          } else {
+            // error
+            // TODO: implement visible error message
+          }
+        });
       });
       $('#filedialog_new').click(function() {
         fileSystem.newFile($('#filedialog_name').val(), function(file) {

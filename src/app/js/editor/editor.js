@@ -34,6 +34,10 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       editor.setValue(file.content);
     });
   };
+  EditorManager.prototype.getAndUpdateFile = function() {
+    this.file.content = this.editors[0].getValue();
+    return this.file;
+  }
   
   /**
    * Creates an editor instance
