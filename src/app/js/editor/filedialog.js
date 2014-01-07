@@ -118,10 +118,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         // success
         yasp.EditorManager.applyFile(file);
       } else {
-        // error
-        // TODO: implement visible error message
+        $('#fileerror').text(yasp.l10n.getTranslation("filedialog.save.error"));
       }
     });
+  };
+  
+  var resetFunc = function() {
+    $('#fileerror').text("");
+    $('#dialog_file .filelist tbody').html("");
   };
   
   yasp.FileDialog = {
@@ -139,14 +143,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       
       var updateFunc;
       $('#dialog_file a[data-toggle="tab"]').on('shown.bs.tab', updateFunc = function (e) {
-        $('#dialog_file .filelist tbody').html("");
+        resetFunc();
         
         var tab = $(!!e ? e.target : '#dialog_file .active');
         if (tab.hasClass('link_server')) fileSystem = fileSystemDriver.SERVER;
         if (tab.hasClass('link_local')) fileSystem = fileSystemDriver.LOCAL;
         
         fileSystem.requestList(function(files) {
-          $('#dialog_file .filelist tbody').html("");
+          resetFunc();
           
           var table = $('#dialog_file .filelist tbody');
           // create array to sort them
@@ -223,8 +227,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
             // success
             yasp.EditorManager.applyFile(file);
           } else {
-            // error
-            // TODO: implement visible error message
+            $('#fileerror').text(yasp.l10n.getTranslation("filedialog.open.error"));
           }
         });
       });
@@ -237,8 +240,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
             // success
             yasp.EditorManager.applyFile(file);
           } else {
-            // error
-            // TODO: implement visible error message
+            $('#fileerror').text(yasp.l10n.getTranslation("filedialog.new.error"));
           }
         });
       });
