@@ -188,6 +188,11 @@ span.cm-keyword {
     z-index: 20000;
 }
 
+.toolbarcontainer .toolbar > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .toolbarcontainer .pull-right {
     margin-top: 5px;
 }
@@ -197,10 +202,7 @@ span.cm-keyword {
 }
 
 #display_filename {
-    padding-top: 10px;
-    position: relative;
-    top: 4px;
-    left: 16px;
+    margin-left: 16px;
 }
 
 .fullscreen {

@@ -9,15 +9,17 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
 
     "editor.toolbar.run": "Starten",
     "editor.toolbar.help": "Hilfe",
-    "editor.toolbar.menu": "Menü",
 
+    "editor.toolbar.filemenu": "Datei",
+    "editor.toolbar.filemenu.new": "Neu",
+    "editor.toolbar.filemenu.save": "Speichern",
+    "editor.toolbar.filemenu.saveAs": "Speichern als",
+    "editor.toolbar.filemenu.open": "Öffnen",
+
+    "editor.toolbar.menu": "Menü",
     "editor.toolbar.menu.run": "Starten",
     "editor.toolbar.menu.undo": "Undo",
     "editor.toolbar.menu.redo": "Redo",
-    "editor.toolbar.menu.new": "Neu",
-    "editor.toolbar.menu.save": "Speichern",
-    "editor.toolbar.menu.saveAs": "Speichern als",
-    "editor.toolbar.menu.open": "Öffnen",
     "editor.toolbar.menu.find": "Suchen",
     "editor.toolbar.menu.replace": "Ersetzen",
     "editor.toolbar.menu.goToLine": "Gehe zu zeile",
