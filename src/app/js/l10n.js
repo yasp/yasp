@@ -13,12 +13,12 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var lang = yasp.l10n.getLangName();
     var str = yasp.l10n.lang[lang][key];
-    for (var i = 0; i < params.length; i++) {
-      str = str.replace("{" + i + "}", params[i]);
-    }
     if(!str) {
       console.log("l10n: could not find string for " + key);
       str = key;
+    }
+    for (var i = 0; i < params.length; i++) {
+      str = str.replace("{" + i + "}", params[i]);
     }
     return str;
   };
