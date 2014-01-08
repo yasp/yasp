@@ -87,6 +87,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "filedialog.saveas": "Speichern Unter",
     "filedialog.new": "Neu",
     "filedialog.create": "Erstellen",
+    "filedialog.delete.warning": "Soll die Datei '{0}' wirklich gelöscht werden?",
     "filedialog.new.error": "Konnte Datei nicht erstellen (Vielleicht ein Duplikat?).",
     "filedialog.open.error": "Konnte Datei nicht öffnen.",
     "filedialog.save.error": "Konnte Datei nicht speichern.."

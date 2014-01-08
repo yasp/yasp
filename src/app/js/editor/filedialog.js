@@ -172,8 +172,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
               .appendTo(table);
             
             elem.find('.filedialog_remove').click(function() {
-              // TODO: show alert
-
+              var del = confirm(yasp.l10n.getTranslation("filedialog.delete.warning", [row.filename]));
+              if(!del)
+                return;
               fileSystem.deleteFile(row.filename, function() {
                 updateFunc();
               });

@@ -92,6 +92,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "filedialog.saveas": "Save As",
     "filedialog.new": "New",
     "filedialog.create": "Create",
+    "filedialog.delete.warning": "Do you really want to delete the file '{0}'?",
     "filedialog.new.error": "Could not create new file (Maybe duplicate?)",
     "filedialog.open.error": "Could not open file",
     "filedialog.save.error": "Could not save file."
