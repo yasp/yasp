@@ -112,6 +112,14 @@ span.cm-keyword {
     vertical-align: middle;
 }
 
+#dialog_file .filedialog_controls {
+    text-align: right;
+}
+
+#dialog_file .filedialog_controls > * {
+    margin-left: 5px;
+}
+
 #dialog_file thead {
     background-color: rgba(128,128,128,0.25);
 }
