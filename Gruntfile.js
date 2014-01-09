@@ -13,16 +13,16 @@ module.exports = function(grunt) {
       ],
       'src/lib/css': [
         'http://code.jquery.com/qunit/qunit-1.12.0.css',
+        'http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css',
         'https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.min.css',
         'https://raw.github.com/marijnh/CodeMirror/master/lib/codemirror.css',
         'https://raw.github.com/necolas/normalize.css/master/normalize.css',
         'https://raw.github.com/marijnh/CodeMirror/master/lib/codemirror.css'
       ],
       'src/lib/fonts': [
-        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.eot',
-        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.svg',
-        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.ttf',
-        'https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.woff'
+        'http://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot',
+        'http://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.svg',
+        'http://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.woff'
       ],
       'src/lib/themes': [
         'https://raw.github.com/marijnh/CodeMirror/master/theme/3024-day.css',

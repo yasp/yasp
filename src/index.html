@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="lib/css/normalize.css">
         <link rel="stylesheet" href="lib/css/bootstrap.min.css">
         <link rel="stylesheet" href="lib/css/codemirror.css">
+        <link rel="stylesheet" href="lib/css/font-awesome.css">
 
         <link rel="stylesheet" href="app/css/main.css">
         <link rel="stylesheet" href="app/css/editor.css">
@@ -66,39 +67,39 @@
                 <div class="col-md-12 toolbar">
                     <img src="app/img/logo.png" class="logo">
                     <button type="button" class="btn btn-default btn-sm menu_run">
-                        <span class="glyphicon glyphicon-play item"></span><span data-l10n="editor.toolbar.run"></span>
+                        <span class="fa fa-play"></span> <span data-l10n="editor.toolbar.run"></span>
                     </button>
                     <button type="button" class="btn btn-default btn-sm menu_help">
-                        <span class="glyphicon glyphicon-info-sign item"></span><span data-l10n="editor.toolbar.help"></span>
+                        <span class="fa fa-info-circle"></span> <span data-l10n="editor.toolbar.help"></span>
                     </button>
                     <div class="dropdown">
                         <a data-toggle="dropdown" href="#" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-file item"></span><span data-l10n="editor.toolbar.filemenu"></span> <b class="caret"></b>
+                            <span class="fa fa-files-o"></span> <span data-l10n="editor.toolbar.filemenu"></span> <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_new"><span class="glyphicon glyphicon-file item"></span><span data-l10n="editor.toolbar.filemenu.new"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_save"><span class="glyphicon glyphicon-floppy-disk item"></span><span data-l10n="editor.toolbar.filemenu.save"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_saveas"><span class="glyphicon glyphicon-floppy-open item"></span><span data-l10n="editor.toolbar.filemenu.saveAs"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_open"><span class="glyphicon glyphicon-folder-open item"></span><span data-l10n="editor.toolbar.filemenu.open"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_new"><span class="fa fa-fw fa-file"></span> <span data-l10n="editor.toolbar.filemenu.new"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_save"><span class="fa fa-fw fa-floppy-o"></span> <span data-l10n="editor.toolbar.filemenu.save"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_saveas"><span class="fa fa-fw fa-floppy-o"></span> <span data-l10n="editor.toolbar.filemenu.saveAs"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_open"><span class="fa fa-fw fa-folder-open"></span> <span data-l10n="editor.toolbar.filemenu.open"></span></a></li>
                         </ul>
                     </div>
                     <span id="display_filename" class="h4"></span>
                     <div class="dropdown pull-right">
                         <a data-toggle="dropdown" href="#" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-align-justify item"></span><span data-l10n="editor.toolbar.menu"></span> <b class="caret"></b>
+                            <span class="fa fa-align-justify"></span> <span data-l10n="editor.toolbar.menu"></span> <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_run"><span class="glyphicon glyphicon-play item"></span><span data-l10n="editor.toolbar.menu.run"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_undo"><span class="glyphicon glyphicon-arrow-left item"></span><span data-l10n="editor.toolbar.menu.undo"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_redo"><span class="glyphicon glyphicon-arrow-right item"></span><span data-l10n="editor.toolbar.menu.redo"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_run"><span class="fa fa-fw fa-play"></span> <span data-l10n="editor.toolbar.menu.run"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_undo"><span class="fa fa-fw fa-arrow-left"></span> <span data-l10n="editor.toolbar.menu.undo"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_redo"><span class="fa fa-fw fa-arrow-right"></span> <span data-l10n="editor.toolbar.menu.redo"></span></a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_find"><span class="glyphicon glyphicon-search item"></span><span data-l10n="editor.toolbar.menu.find"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_replace"><span class="glyphicon glyphicon-search item"></span><span data-l10n="editor.toolbar.menu.replace"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_go2line"><span class="glyphicon glyphicon-search item"></span><span data-l10n="editor.toolbar.menu.goToLine"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_find"><span class="fa fa-fw fa-search"></span> <span data-l10n="editor.toolbar.menu.find"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_replace"><span class="fa fa-fw fa-search"></span> <span data-l10n="editor.toolbar.menu.replace"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_go2line"><span class="fa fa-fw fa-search"></span> <span data-l10n="editor.toolbar.menu.goToLine"></span></a></li>
                             <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_help"><span class="glyphicon glyphicon-info-sign item"></span><span data-l10n="editor.toolbar.menu.help"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_settings"><span class="glyphicon glyphicon-wrench item"></span><span data-l10n="editor.toolbar.menu.settings"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_about"><span class="glyphicon glyphicon-user item"></span><span data-l10n="editor.toolbar.menu.about"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_help"><span class="fa fa-fw fa-info-circle"></span> <span data-l10n="editor.toolbar.menu.help"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_settings"><span class="fa fa-fw fa-wrench"></span> <span data-l10n="editor.toolbar.menu.settings"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_about"><span class="fa fa-fw fa-user"></span> <span data-l10n="editor.toolbar.menu.about"></span></a></li>
                         </ul>
                     </div>
                 </div>

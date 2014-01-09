@@ -168,7 +168,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           $.each(data, function(i, row) {
             var elem = $('<tr>')
               .append($('<td class="filedialog_name">').text(row.filename))
-              .append($('<td class="filedialog_controls">').html('<button type="button" class="btn btn-default btn-xs filedialog_remove"><span class="glyphicon glyphicon-remove"></span></button><button type="button" class="btn btn-default btn-xs filedialog_select"><span class="glyphicon glyphicon-open"></span></button>'))
+              .append($('<td class="filedialog_controls">').html('<button type="button" class="btn btn-default btn-xs filedialog_remove"><span class="fa fa-trash-o"></span></button><button type="button" class="btn btn-default btn-xs filedialog_select"><span class="fa fa-folder-open"></span></button>'))
               .appendTo(table);
             
             elem.find('.filedialog_remove').click(function() {
