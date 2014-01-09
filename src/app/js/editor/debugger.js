@@ -14,7 +14,7 @@ if (typeof yasp == 'undefined') yasp = { };
   
   
   yasp.Debugger = {
-    show: function() {
+    show: function(mode) {
       if (!!yasp.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
       yasp.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
       
@@ -30,9 +30,11 @@ if (typeof yasp == 'undefined') yasp = { };
           bitcode: yasp.Editor.bitcode,
           start: 0
         }, function() {
-          yasp.EmulatorCommunicator.sendMessage("CONTINUE", {
-            count: null
-          });
+          if(mode === "run") {
+            yasp.EmulatorCommunicator.sendMessage("CONTINUE", {
+              count: null
+            });
+          }
         });
         
       }).on('hidden.bs.modal', function() {

@@ -8,6 +8,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "title": "yasp",
 
     "editor.toolbar.run": "Starten",
+    "editor.toolbar.debug": "Debuggen",
     "editor.toolbar.help": "Hilfe",
 
     "editor.toolbar.filemenu": "Datei",
@@ -18,6 +19,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
 
     "editor.toolbar.menu": "Menü",
     "editor.toolbar.menu.run": "Starten",
+    "editor.toolbar.menu.debug": "Debuggen",
     "editor.toolbar.menu.undo": "Undo",
     "editor.toolbar.menu.redo": "Redo",
     "editor.toolbar.menu.find": "Suchen",

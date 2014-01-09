@@ -445,17 +445,25 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           'keyboard': true
         });
       });
-      
-      $('.menu_run').click(function() {
+
+      function showDebugger (mode) {
         // compile
         yasp.CompileManager.compile(editor.getValue(), function(data) {
           if (!yasp.Editor.error || yasp.Editor.error.length == 0) {
-            yasp.Debugger.show(); // open debugger
+            yasp.Debugger.show(mode); // open debugger
           } else {
             console.log("Invalid code");
             // TODO implement proper error dialog
           }
         });
+      }
+
+      $('.menu_run').click(function() {
+        showDebugger("run");
+      });
+
+      $('.menu_debug').click(function() {
+        showDebugger("debug");
       });
 
       function fixHelpHeight() {
