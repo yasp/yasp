@@ -15,23 +15,24 @@ if (typeof yasp == 'undefined') yasp = { };
   
   yasp.Debugger = {
     show: function(mode) {
-      if (!!yasp.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
-      yasp.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
+      if (!!yasp.Debugger.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
+      yasp.Debugger.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
+      yasp.Debugger.mode = mode;
       
       $('#dialog_debugger').modal({
         'keyboard': true
       }).on('shown.bs.modal', function() {
-        var breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
-        breadboard.build();
-        breadboard.render();
+        yasp.Debugger.breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.Debugger.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
+        yasp.Debugger.breadboard.build();
+        yasp.Debugger.breadboard.render();
         
         // load code into emulator
-        yasp.EmulatorCommunicator.sendMessage("LOAD", {
+        yasp.Debugger.EmulatorCommunicator.sendMessage("LOAD", {
           bitcode: yasp.Editor.bitcode,
           start: 0
         }, function() {
-          if(mode === "run") {
-            yasp.EmulatorCommunicator.sendMessage("CONTINUE", {
+          if(yasp.Debugger.mode === "run") {
+            yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
               count: null
             });
           }
@@ -39,10 +40,14 @@ if (typeof yasp == 'undefined') yasp = { };
         
       }).on('hidden.bs.modal', function() {
         // stop execution
-        if (!yasp.EmulatorCommunicator) {
-          yasp.EmulatorCommunicator.sendMessage("BREAK", { });
-          yasp.EmulatorCommunicator.terminate();
-          yasp.EmulatorCommunicator = null;
+        if (yasp.Debugger.EmulatorCommunicator) {
+          yasp.Debugger.EmulatorCommunicator.sendMessage("BREAK", { });
+          yasp.Debugger.EmulatorCommunicator.terminate();
+          yasp.Debugger.EmulatorCommunicator = null;
+        }
+
+        if(yasp.Debugger.breadboard) {
+          yasp.Debugger.breadboard.destroy();
         }
           
         if (!!updateInterval) {
