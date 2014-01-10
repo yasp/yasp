@@ -2,14 +2,13 @@ if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
   var updateInterval;
-  var debuggerEditor;
   
   $('body').ready(function() {
-    debuggerEditor = yasp.EditorManager.create($('#debugger_editor').get(0));
-    debuggerEditor.swapDoc(yasp.EditorManager.editors[0].linkedDoc({
+    yasp.Debugger.editor = yasp.EditorManager.create($('#debugger_editor').get(0));
+    yasp.Debugger.editor.swapDoc(yasp.EditorManager.editors[0].linkedDoc({
       sharedHist: true
     }));
-    debuggerEditor.setOption('readOnly', "nocursor");
+    yasp.Debugger.editor.setOption('readOnly', "nocursor");
   });
   
   
@@ -63,7 +62,7 @@ if (typeof yasp == 'undefined') yasp = { };
           "height": (height-200)+"px"
         });
 
-        debuggerEditor.refresh();
+        yasp.Debugger.editor.refresh();
       }, 250)); // weird hack for CodeMirror & size adjustment
       
       setTimeout(updateFunc, 10);
