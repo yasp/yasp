@@ -194,7 +194,7 @@ END
                         <h4 class="modal-title" data-l10n="debugger.title"></h4>
                     </div>
                     <div class="modal-body debuggerbody">
-                        <div class="col-md-12 container">
+                        <div class="col-md-12 debuggertoolbar">
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.step"></button>
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOver"></button>
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
@@ -208,8 +208,24 @@ END
                                 <td rowspan="2" class="width50">
                                     <textarea id="debugger_editor" name="code"></textarea>
                                 </td>
-                                <td class="width50">
-                                    Debugging Functionality
+                                <td class="width50 height50" id="debugger-tabs">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#debugger-tabs-debug" data-toggle="tab" data-l10n="debugger.tabs.debug"></a></li>
+                                        <li><a href="#debugger-tabs-ram" data-toggle="tab" data-l10n="debugger.tabs.ram"></a></li>
+                                        <li><a href="#debugger-tabs-rom" data-toggle="tab" data-l10n="debugger.tabs.rom"></a></li>
+                                        <li><a href="#debugger-tabs-registers" data-toggle="tab" data-l10n="debugger.tabs.registers"></a></li>
+                                        <li><a href="#debugger-tabs-breakpoints" data-toggle="tab" data-l10n="debugger.tabs.breakpoints"></a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="debugger-tabs-debug">
+                                            <pre></pre>
+                                            <div class="btn btn-primary btn-xs" data-l10n="debugger.tabs.debug.clear"></div>
+                                        </div>
+                                        <div class="tab-pane" id="debugger-tabs-ram"></div>
+                                        <div class="tab-pane" id="debugger-tabs-rom"></div>
+                                        <div class="tab-pane" id="debugger-tabs-registers"></div>
+                                        <div class="tab-pane" id="debugger-tabs-breakpoints"></div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>

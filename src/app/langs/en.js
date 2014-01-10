@@ -56,6 +56,12 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.toolbar.stepBack": "Step Back",
     "debugger.toolbar.break": "Break",
     "debugger.toolbar.continue": "Continue",
+    "debugger.tabs.debug": "Debug",
+    "debugger.tabs.debug.clear": "Clear",
+    "debugger.tabs.ram": "RAM",
+    "debugger.tabs.rom": "ROM",
+    "debugger.tabs.registers": "Registers",
+    "debugger.tabs.breakpoints": "Breakpoints",
 
     "help.title": "Help",
     "help.search": "Search: ",
