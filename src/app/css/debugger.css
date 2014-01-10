@@ -16,6 +16,10 @@
     margin-bottom: 5px;
 }
 
+#debugger_editor_wrapper .CodeMirror-code > div > .line-active.CodeMirror-linebackground {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
 #debugger-tabs {
     position: relative;
 }

@@ -24,6 +24,8 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.Debugger.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
         yasp.Debugger.breadboard.build();
         yasp.Debugger.breadboard.render();
+
+          yasp.Debugger.editor.addLineClass(0, 'background', 'line-active');
         
         // load code into emulator
         yasp.Debugger.EmulatorCommunicator.sendMessage("LOAD", {
