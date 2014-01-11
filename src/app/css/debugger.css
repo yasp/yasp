@@ -20,30 +20,40 @@
     background-color: rgba(0, 0, 0, 0.05);
 }
 
+#debuggercontent {
+    height: calc(100% - 10px);
+    color: white;
+}
+
+#debuggercontent > * {
+    width: 50%;
+    height: 100%;
+
+    vertical-align: top;
+    display: inline-block !important;
+}
+
+#debuggercontent-right > * {
+    height: 50%;
+}
+
 #debugger-tabs {
-    position: relative;
+    height: calc(100% - 60px);
 }
 
-#debugger-tabs .tab-content {
-    height: calc(100% - 37px);
-    width: calc(100% - 1.5px);
-    position: absolute;
-    left: 1px;
-}
-
-#debugger-tabs .tab-content > .tab-pane {
+#debugger-tabs > * {
     height: 100%;
 }
 
 #debugger-tabs-debug > pre {
     height: calc(100% - 30px);
-    margin: 0;
-    border-radius: 0;
+    margin-bottom: 10px;
+
     border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
-#debugger-tabs-debug > .btn {
+#debugger-tabs-debug-clear {
     float: right;
-    margin-top: 5px;
-    margin-right: 5px;
 }

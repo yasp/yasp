@@ -1,8 +1,6 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  var updateInterval;
-  
   $('body').ready(function() {
     yasp.Debugger.editor = yasp.EditorManager.create($('#debugger_editor').get(0));
     yasp.Debugger.editor.swapDoc(yasp.EditorManager.editors[0].linkedDoc({
@@ -10,8 +8,6 @@ if (typeof yasp == 'undefined') yasp = { };
     }));
     yasp.Debugger.editor.setOption('readOnly', "nocursor");
   });
-  
-  
   yasp.Debugger = {
     show: function(mode) {
       if (!!yasp.Debugger.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
@@ -50,24 +46,9 @@ if (typeof yasp == 'undefined') yasp = { };
         if(yasp.Debugger.breadboard) {
           yasp.Debugger.breadboard.destroy();
         }
-          
-        if (!!updateInterval) {
-          clearInterval(updateInterval);
-          updateInterval = null;
-        }
       });
 
-      var updateFunc;
-      updateInterval || (updateInterval = setInterval(updateFunc = function() {
-        var height = $('#dialog_debugger .modal-content').height();
-        $('#debugger_table').css({
-          "height": (height-200)+"px"
-        });
 
-        yasp.Debugger.editor.refresh();
-      }, 250)); // weird hack for CodeMirror & size adjustment
-      
-      setTimeout(updateFunc, 10);
     }
   };
 })();

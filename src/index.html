@@ -186,15 +186,15 @@ END
         </div>
 
         <!-- Debugger Dialog -->
-        <div class="modal fade" id="dialog_debugger" tabindex="-1" role="dialog">
-            <div class="modal-dialog fullscreen">
-                <div class="modal-content fullscreen">
+        <div class="modal fade fullscreen" id="dialog_debugger" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" data-l10n="debugger.title"></h4>
                     </div>
-                    <div class="modal-body debuggerbody">
-                        <div class="col-md-12 debuggertoolbar">
+                    <div class="modal-body">
+                        <div class="debuggertoolbar">
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.step"></button>
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOver"></button>
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
@@ -203,12 +203,12 @@ END
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.break"></button>
                             <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.continue"></button>
                         </div>
-                        <table id="debugger_table" border="1">
-                            <tr>
-                                <td rowspan="2" class="width50">
-                                    <textarea id="debugger_editor" name="code"></textarea>
-                                </td>
-                                <td class="width50 height50" id="debugger-tabs">
+                        <div id="debuggercontent">
+                            <div id="debuggercontent-left">
+                                <textarea id="debugger_editor" name="code"></textarea>
+                            </div><!-- remove whitespace..
+                            --><div id="debuggercontent-right">
+                                <div>
                                     <ul class="nav nav-tabs">
                                         <li class="active"><a href="#debugger-tabs-debug" data-toggle="tab" data-l10n="debugger.tabs.debug"></a></li>
                                         <li><a href="#debugger-tabs-ram" data-toggle="tab" data-l10n="debugger.tabs.ram"></a></li>
@@ -216,23 +216,21 @@ END
                                         <li><a href="#debugger-tabs-registers" data-toggle="tab" data-l10n="debugger.tabs.registers"></a></li>
                                         <li><a href="#debugger-tabs-breakpoints" data-toggle="tab" data-l10n="debugger.tabs.breakpoints"></a></li>
                                     </ul>
-                                    <div class="tab-content">
+                                    <div class="tab-content" id="debugger-tabs">
                                         <div class="tab-pane active" id="debugger-tabs-debug">
                                             <pre></pre>
-                                            <div class="btn btn-primary btn-xs" data-l10n="debugger.tabs.debug.clear"></div>
+                                            <div class="btn btn-primary btn-xs" data-l10n="debugger.tabs.debug.clear" id="debugger-tabs-debug-clear"></div>
                                         </div>
                                         <div class="tab-pane" id="debugger-tabs-ram"></div>
                                         <div class="tab-pane" id="debugger-tabs-rom"></div>
                                         <div class="tab-pane" id="debugger-tabs-registers"></div>
                                         <div class="tab-pane" id="debugger-tabs-breakpoints"></div>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="width50" id="hardwarecontainer">
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                                <div id="hardwarecontainer">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="debugger.close"></button>
