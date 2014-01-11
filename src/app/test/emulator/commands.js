@@ -4,7 +4,7 @@
 
   module("emulator commands", {
     setup: function () {
-      emulator = new yasp.Emulator(true);
+      emulator = new yasp.Emulator();
       emulator.ticksPerTick = 1;
       emulator.continue();
       assembler = new yasp.Assembler();

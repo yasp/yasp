@@ -7,7 +7,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * Emulator is responsible for running the bytecode from the assembler
    * @constructor
    */
-  yasp.Emulator = function(stepping) {
+  yasp.Emulator = function() {
     this.rom = new Uint8Array(512); // bitcode
     this.ram = new Uint8Array(512); // registers
     this.flags = { c: false, z: false };
@@ -24,7 +24,6 @@ if (typeof yasp == 'undefined') yasp = { };
     this.pc = 0;
 
     this.running = false;
-    this.stepping = stepping === true;
 
     this.ticks = 0; // tick-counter (used for PWM)
 
@@ -112,8 +111,7 @@ if (typeof yasp == 'undefined') yasp = { };
       'IO_CHANGED': this.noop
     };
 
-    if(stepping !== true)
-      setTimeout(this.tick.bind(this), this.tickTimeout);
+    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
   };
 
   /**
@@ -497,23 +495,30 @@ if (typeof yasp == 'undefined') yasp = { };
     this.waitTime = ms;
   };
 
-  yasp.Emulator.prototype.tick = function () {
-    if(this.running == false && !this.stepping) {
-      setTimeout(this.tick.bind(this), this.tickTimeout);
+  yasp.Emulator.prototype.tickWrapper = function () {
+    if(this.running === false) {
+      setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
       return;
     }
 
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
 
-    this.ticks++;
+      if(this.waitTime !== 0) {
+        setTimeout(this.tickWrapper.bind(this), this.waitTime);
+        var timePerTick = this.tickTimeout / this.ticksPerTick;
+        this.ticks += (this.waitTime / timePerTick);
+        this.waitTime = 0;
+        return;
+      }
 
-    if(this.waitTime !== 0) {
-      setTimeout(this.tick.bind(this), this.waitTime);
-      var timePerTick = this.tickTimeout / this.ticksPerTick;
-      this.ticks += (this.waitTime / timePerTick);
-      this.waitTime = 0;
-      return;
+      this.tick();
     }
+
+    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
+  };
+
+  yasp.Emulator.prototype.tick = function () {
+    this.ticks++;
 
     if(this.interruptToServe !== -1) {
       if(debug) console.log("interrupt jumped: " + this.interruptToServe);
@@ -579,11 +584,6 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       this.writeFlags(null, z);
-    }
-    }
-
-    if(!this.stepping) {
-      setTimeout(this.tick.bind(this), this.tickTimeout);
     }
   };
 })();

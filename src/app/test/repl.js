@@ -2,7 +2,7 @@
   var assembler = new yasp.Assembler();
 
   yasp.Repl = function () {
-    this.emulator = new yasp.Emulator(true);
+    this.emulator = new yasp.Emulator();
   };
 
   yasp.Repl.prototype.execute = function (code) {
