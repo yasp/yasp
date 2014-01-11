@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/src/app/img/logo.png" />
+  <img src="src/app/img/logo.png" />
 </p>
 
 yasp is a fully functional web-based assembler development environment, including a real assembler and debugger.
