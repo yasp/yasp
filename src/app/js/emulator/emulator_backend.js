@@ -50,6 +50,18 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         io: []
       };
 
+      for (var i = 0; i < emulator.pins.length; i++) {
+        var pin = emulator.pins[i];
+        if(!pin)
+          continue;
+        payload.io.push({
+          "pin": i,
+          "type": pin.type,
+          "mode": pin.mode,
+          "state": pin.state
+        });
+      }
+
       ready({
         payload: payload,
         error: null
