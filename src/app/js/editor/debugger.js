@@ -127,6 +127,16 @@ if (typeof yasp == 'undefined') yasp = { };
           function (data) {
             var state = data.payload;
 
+            renderBytes(state.ram, 14, $('#debugger-ramdump'));
+            if(yasp.Debugger.lastRam)
+              colorChangedBytes(getChangedBytes(state.ram, yasp.Debugger.lastRam), $('#debugger-ramdump'));
+            yasp.Debugger.lastRam = state.ram;
+
+            renderBytes(state.rom, 14, $('#debugger-romdump'));
+            if(yasp.Debugger.lastRom)
+              colorChangedBytes(getChangedBytes(state.rom, yasp.Debugger.lastRom), $('#debugger-romdump'));
+            yasp.Debugger.lastRom = state.rom;
+
             var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
             yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
             yasp.Debugger.editor.addLineClass(line, 'background', 'line-active');
@@ -134,6 +144,50 @@ if (typeof yasp == 'undefined') yasp = { };
             yasp.Debugger.lastExecutedLine = line;
           }
         );
+      }
+
+      function renderBytes (bytes, width, $container) {
+        var $bytes = null;
+        var inRow = 0;
+
+        $container.empty();
+
+        for(var i = 0; i < bytes.length; i++) {
+          if(inRow === width || $bytes === null) {
+            var $row = $('<div class="byterow">');
+            $row.append($('<div class="offset">').text(i));
+            $bytes = $('<div class="bytes">');
+            $row.append($bytes);
+            $container.append($row);
+
+            inRow = 0;
+          }
+
+          var byte = bytes[i].toString(16);
+          if(byte.length === 1)
+            byte = "0" + byte;
+          var $byte = $('<div class="byte">');
+          $byte.text(byte);
+          $byte.attr("data-offset", i);
+          $bytes.append($byte);
+
+          inRow++;
+        }
+      }
+
+      function getChangedBytes (dump1, dump2) {
+        var changed = [];
+        for (var i = 0; i < dump1.length; i++) {
+          if(dump1[i] !== dump2[i])
+            changed.push(i);
+        }
+        return changed;
+      }
+
+      function colorChangedBytes (changed, $container) {
+        for (var i = 0; i < changed.length; i++) {
+          $container.find('.byte[data-offset="' + changed[i] + '"]').css('color', 'red');
+        }
       }
     }
   };

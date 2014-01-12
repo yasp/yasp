@@ -22,7 +22,6 @@
 
 #debuggercontent {
     height: calc(100% - 10px);
-    color: white;
 }
 
 #debuggercontent > * {
@@ -58,4 +57,37 @@
 
 #debugger-tabs-debug-clear {
     float: right;
+}
+
+#debugger-tabs-ram > .bytedump,
+#debugger-tabs-rom > .bytedump {
+    height: 100%;
+    overflow: scroll;
+
+    font-size: 1.4em;
+}
+
+.bytedump > .byterow {
+    display: block;
+    font-family: monospace;
+}
+
+.bytedump > .byterow > .offset,
+.bytedump > .byterow > .bytes {
+    display: inline-block;
+}
+
+.bytedump > .byterow > .offset {
+    width: 2em;
+    text-align: right;
+    margin-right: 1em;
+}
+
+.bytedump > .byterow > .bytes > * {
+    width: 2em;
+    display: inline-block;
+}
+
+.bytedump > .byterow > .bytes > *:before {
+    content: '\0a';
 }
