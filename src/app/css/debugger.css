@@ -49,6 +49,8 @@
     height: calc(100% - 30px);
     margin-bottom: 10px;
 
+    overflow: scroll;
+
     border-top: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;

@@ -7,6 +7,7 @@ if (typeof yasp == 'undefined') yasp = { };
       sharedHist: true
     }));
     yasp.Debugger.editor.setOption('readOnly', "nocursor");
+    yasp.Debugger.debugLog = $('#debugger-tabs-debug > pre:first');
   });
 
   yasp.Debugger = {
@@ -16,6 +17,8 @@ if (typeof yasp == 'undefined') yasp = { };
       yasp.Debugger.mode = mode;
       yasp.Debugger.isEmulatorRunning = false;
       yasp.Debugger.lastExecutedLine = 0;
+
+      clearDebugLog();
       
       $('#dialog_debugger').modal({
         'keyboard': true
@@ -33,6 +36,7 @@ if (typeof yasp == 'undefined') yasp = { };
         }, function() {
           yasp.Debugger.EmulatorCommunicator.subscribe("CONTINUE", onEmulatorContinue);
           yasp.Debugger.EmulatorCommunicator.subscribe("BREAK", onEmulatorBreak);
+          yasp.Debugger.EmulatorCommunicator.subscribe("DEBUG", onEmulatorDebug);
 
           if(yasp.Debugger.mode === "run") {
             yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
@@ -84,6 +88,38 @@ if (typeof yasp == 'undefined') yasp = { };
         var reason = data.payload.reason;
         yasp.Debugger.isEmulatorRunning = false;
         refreshDebugger();
+      }
+
+      function onEmulatorDebug (data) {
+        var msg = data.payload;
+
+        if(msg.type === "register") {
+          var val = "";
+          if(msg.subtype === "b")
+            val = formatHexNumber(msg.val, 2);
+          else if(msg.subtype === "w")
+            val = formatHexNumber(msg.val, 4);
+          addDebugLog(msg.subtype + msg.addr + ": 0x" + val + "\n");
+        } else if(msg.type === "string") {
+
+        }
+      }
+
+      // http://stackoverflow.com/a/57807/2486196
+      function formatHexNumber(d, padding) {
+        var hex = Number(d).toString(16);
+        while (hex.length < padding)
+          hex = "0" + hex;
+        return hex;
+      }
+
+      function addDebugLog(str) {
+        yasp.Debugger.debugLog.text(yasp.Debugger.debugLog.text() + str);
+        yasp.Debugger.debugLog.scrollTop(yasp.Debugger.debugLog[0].scrollHeight);
+      }
+
+      function clearDebugLog() {
+        yasp.Debugger.debugLog.text("");
       }
 
       function refreshDebugger() {

@@ -123,6 +123,7 @@
 ; ---- Blink green and increment b0 by b1
 MyLbl:
         ADD b0, b1
+        DEBUG b0
         JC carry
         TOGGLE 3
         PAUSE 30000
