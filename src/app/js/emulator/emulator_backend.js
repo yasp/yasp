@@ -119,6 +119,10 @@ emulator.registerCallback('CONTINUED', function () {
   communicator.broadcast('CONTINUED', { payload: null, error: null });
 });
 
+emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {
+  communicator.broadcast('DEBUG', { payload: { type: type, subtype: subtype, addr: addr, val: val }, error: null });
+});
+
 emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
   communicator.broadcast('IO_CHANGED', {
     payload: {

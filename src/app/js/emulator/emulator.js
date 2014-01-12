@@ -107,6 +107,7 @@ if (typeof yasp == 'undefined') yasp = { };
       'CONTINUED': this.noop,
       'BREAK': this.noop,
       'LOADED': this.noop,
+      'DEBUG': this.noop,
       'IO_CHANGED': this.noop
     };
 
@@ -173,6 +174,16 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
     this.events.BREAK(reason);
+  };
+
+  /**
+   * @function sends a register to the debugger
+   * @param type the register-type (w or b)
+   * @param addr the register-number
+   * @param val the value to send
+   */
+  yasp.Emulator.prototype.debugRegister = function (type, addr, val) {
+    this.events.DEBUG("register", type, addr, val);
   };
 
   /**
