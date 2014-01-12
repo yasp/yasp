@@ -187,6 +187,21 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /**
+   * @function sends a string to the debugger
+   * @param addr address to read a null-terminated string from
+   */
+  yasp.Emulator.prototype.debugString = function (addr) {
+    var str = "";
+
+    while(this.rom[addr] !== 0) {
+      str += String.fromCharCode(this.rom[addr]);
+      addr++;
+    }
+
+    this.events.DEBUG("string", null, addr, str);
+  };
+
+  /**
    * @function Writes the given value into the given byte register
    * @param r the byte-register to write to
    * @param v the value to write

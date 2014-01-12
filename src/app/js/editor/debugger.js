@@ -101,7 +101,7 @@ if (typeof yasp == 'undefined') yasp = { };
             val = formatHexNumber(msg.val, 4);
           addDebugLog(msg.subtype + msg.addr + ": 0x" + val + "\n");
         } else if(msg.type === "string") {
-
+          addDebugLog(msg.val + "\n");
         }
       }
 
