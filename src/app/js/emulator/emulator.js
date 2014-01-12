@@ -13,8 +13,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.flags = { c: false, z: false };
 
     this.tickTimeout = 1;
-    this.ticksPerTick =1;
-    this.debug = 1;
+    this.ticksPerTick = 3;
 
     this.commandCache = {}; // parsed commands
 
@@ -495,13 +494,27 @@ if (typeof yasp == 'undefined') yasp = { };
     this.waitTime = ms;
   };
 
-  yasp.Emulator.prototype.tickWrapper = function () {
-    if(this.running === false) {
-      setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
-      return;
-    }
+  yasp.Emulator.prototype.setTickWrapperTimeout = function () {
+    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
+  };
 
+  yasp.Emulator.prototype.tickWrapper = function () {
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
+
+      if(this.running === false) {
+        this.setTickWrapperTimeout();
+        return;
+      }
+
+      if(typeof this.running === "number") {
+        this.running--;
+
+        if(this.running === -1) {
+          this.break("count");
+          this.setTickWrapperTimeout();
+          return;
+        }
+      }
 
       if(this.waitTime !== 0) {
         setTimeout(this.tickWrapper.bind(this), this.waitTime);
@@ -514,7 +527,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.tick();
     }
 
-    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
+    this.setTickWrapperTimeout();
   };
 
   yasp.Emulator.prototype.tick = function () {
