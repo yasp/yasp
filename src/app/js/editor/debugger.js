@@ -66,6 +66,16 @@ if (typeof yasp == 'undefined') yasp = { };
         }
       });
 
+      $('.debugger_break').click(function () {
+        yasp.Debugger.EmulatorCommunicator.sendMessage("BREAK", { });
+      });
+
+      $('.debugger_continue').click(function () {
+        yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
+          count: null
+        });
+      });
+
       function onEmulatorContinue () {
         yasp.Debugger.isEmulatorRunning = true;
       }
