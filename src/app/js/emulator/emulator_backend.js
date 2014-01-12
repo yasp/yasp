@@ -37,7 +37,10 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         rom: emulator.rom,
         ram: emulator.ram,
         registers: {
-          general: null,
+          general: {
+            b: {},
+            w: {}
+          },
           special: {
             pc: emulator.pc,
             sp: emulator.sp
@@ -49,6 +52,11 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         },
         io: []
       };
+
+      for (var i = 0; i < 32; i++) {
+        payload.registers.general.b[i] = emulator.readByteRegister(i);
+        payload.registers.general.w[i] = emulator.readWordRegister(i);
+      }
 
       for (var i = 0; i < emulator.pins.length; i++) {
         var pin = emulator.pins[i];
@@ -68,9 +76,11 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "SET_STATE":
-      if(data.payload.io) {
-        for (var i = 0; i < data.payload.io.length; i++) {
-          var io = data.payload.io[i];
+      var state = data.payload;
+
+      if(state.io) {
+        for (var i = 0; i < state.io.length; i++) {
+          var io = state.io[i];
 
           if(io.pin === undefined)
             continue;
@@ -83,6 +93,42 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
             pin.mode = io.mode;
           if(io.state !== undefined)
             emulator.setIO(io.pin, io.state, true);
+        }
+      }
+
+      if(state.rom) {
+        emulator.rom = state.rom;
+      }
+
+      if(state.ram) {
+        emulator.rom = state.rom;
+      }
+
+      if(state.registers) {
+        var regs = state.registers;
+
+        if(regs.general) {
+          if(regs.general.b) {
+            for (var r in regs.general.b) {
+              emulator.writeByteRegister(r, regs.general.b[r]);
+            }
+          }
+          if(regs.general.w) {
+            for (var r in regs.general.w) {
+              emulator.writeWordRegister(r, regs.general.w[r]);
+            }
+          }
+        }
+
+        if(regs.special) {
+          if(typeof regs.special.pc !== "undefined")
+            emulator.writePC(regs.special.pc);
+          if(typeof regs.special.sp !== "undefined")
+            emulator.writePC(regs.special.sp);
+        }
+
+        if(regs.flags) {
+          emulator.writeFlags(regs.special.C, regs.special.Z);
         }
       }
 
