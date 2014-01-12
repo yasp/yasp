@@ -293,12 +293,12 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param z the zero flag to be set (or null)
    */
   yasp.Emulator.prototype.writeFlags = function (c, z) {
-    if(c !== null)
+    if(c === true || c === false)
     {
       if(debug) console.log("c=" + c);
       this.flags.c = c;
     }
-    if(z !== null)
+    if(z === true || z === false)
     {
       if(debug) console.log("z=" + z);
       this.flags.z = z;
