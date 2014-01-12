@@ -80,7 +80,8 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.isEmulatorRunning = true;
       }
 
-      function onEmulatorBreak (reason) {
+      function onEmulatorBreak (data) {
+        var reason = data.payload.reason;
         yasp.Debugger.isEmulatorRunning = false;
         refreshDebugger();
       }
