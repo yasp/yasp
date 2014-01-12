@@ -64,7 +64,7 @@
     height: 100%;
     overflow: scroll;
 
-    font-size: 1.4em;
+    font-size: 1.5em;
 }
 
 .bytedump > .byterow {
@@ -78,13 +78,17 @@
 }
 
 .bytedump > .byterow > .offset {
-    width: 2em;
+    margin-right: 0.7em;
+    margin-left: 0.3em;
+
+    padding-right: 0.3em;
+
     text-align: right;
-    margin-right: 1em;
+    border-right: solid gray 1px;
 }
 
 .bytedump > .byterow > .bytes > * {
-    width: 2em;
+    width: 1.5em;
     display: inline-block;
 }
 

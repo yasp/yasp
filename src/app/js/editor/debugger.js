@@ -127,12 +127,12 @@ if (typeof yasp == 'undefined') yasp = { };
           function (data) {
             var state = data.payload;
 
-            renderBytes(state.ram, 14, $('#debugger-ramdump'));
+            renderBytes(state.ram, 0x10, $('#debugger-ramdump'));
             if(yasp.Debugger.lastRam)
               colorChangedBytes(getChangedBytes(state.ram, yasp.Debugger.lastRam), $('#debugger-ramdump'));
             yasp.Debugger.lastRam = state.ram;
 
-            renderBytes(state.rom, 14, $('#debugger-romdump'));
+            renderBytes(state.rom, 0x10, $('#debugger-romdump'));
             if(yasp.Debugger.lastRom)
               colorChangedBytes(getChangedBytes(state.rom, yasp.Debugger.lastRom), $('#debugger-romdump'));
             yasp.Debugger.lastRom = state.rom;
@@ -155,7 +155,7 @@ if (typeof yasp == 'undefined') yasp = { };
         for(var i = 0; i < bytes.length; i++) {
           if(inRow === width || $bytes === null) {
             var $row = $('<div class="byterow">');
-            $row.append($('<div class="offset">').text(i));
+            $row.append($('<div class="offset">').text("0x" + formatHexNumber(i, 4)));
             $bytes = $('<div class="bytes">');
             $row.append($bytes);
             $container.append($row);
@@ -163,9 +163,7 @@ if (typeof yasp == 'undefined') yasp = { };
             inRow = 0;
           }
 
-          var byte = bytes[i].toString(16);
-          if(byte.length === 1)
-            byte = "0" + byte;
+          var byte = formatHexNumber(bytes[i], 2);
           var $byte = $('<div class="byte">');
           $byte.text(byte);
           $byte.attr("data-offset", i);
