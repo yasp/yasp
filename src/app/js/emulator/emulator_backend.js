@@ -12,7 +12,7 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "CONTINUE":
-      var retn = emulator.continue(data.count);
+      var retn = emulator.continue(data.payload.count);
       ready({
         payload: {},
         error: retn === true ? null : { code: retn }
