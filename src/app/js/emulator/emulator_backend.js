@@ -25,6 +25,36 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         error: null
       });
       break;
+    case "GET_STATE":
+      if(emulator.running !== false) {
+        return ready({
+          payload: {},
+          error: { code: 0 }
+        });
+      }
+
+      var payload = {
+        rom: emulator.rom,
+        ram: emulator.ram,
+        registers: {
+          general: null,
+          special: {
+            pc: emulator.pc,
+            sp: emulator.sp
+          },
+          flags: {
+            C: emulator.flags.c,
+            Z: emulator.flags.z
+          }
+        },
+        io: []
+      };
+
+      ready({
+        payload: payload,
+        error: null
+      });
+      break;
     case "SET_STATE":
       if(data.payload.io) {
         for (var i = 0; i < data.payload.io.length; i++) {

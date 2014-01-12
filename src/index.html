@@ -195,17 +195,18 @@ END
                     </div>
                     <div class="modal-body">
                         <div class="debuggertoolbar">
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.step"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOver"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOut"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.break"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.continue"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_step" data-l10n="debugger.toolbar.step"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_stepOver" data-l10n="debugger.toolbar.stepOver"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_stepBack" data-l10n="debugger.toolbar.stepBack"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_stepOut" data-l10n="debugger.toolbar.stepOut"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_break" data-l10n="debugger.toolbar.break"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_continue" data-l10n="debugger.toolbar.continue"></button>
                         </div>
                         <div id="debuggercontent">
                             <div id="debuggercontent-left">
-                                <textarea id="debugger_editor" name="code"></textarea>
+                                <div id="debugger_editor_wrapper">
+                                    <textarea id="debugger_editor" name="code"></textarea>
+                                </div>
                             </div><!-- remove whitespace..
                             --><div id="debuggercontent-right">
                                 <div>

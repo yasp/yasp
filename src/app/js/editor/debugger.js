@@ -8,11 +8,14 @@ if (typeof yasp == 'undefined') yasp = { };
     }));
     yasp.Debugger.editor.setOption('readOnly', "nocursor");
   });
+
   yasp.Debugger = {
     show: function(mode) {
       if (!!yasp.Debugger.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
       yasp.Debugger.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
       yasp.Debugger.mode = mode;
+      yasp.Debugger.isEmulatorRunning = false;
+      yasp.Debugger.lastExecutedLine = 0;
       
       $('#dialog_debugger').modal({
         'keyboard': true
@@ -21,17 +24,22 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.breadboard.build();
         yasp.Debugger.breadboard.render();
 
-          yasp.Debugger.editor.addLineClass(0, 'background', 'line-active');
+        yasp.Debugger.editor.refresh();
         
         // load code into emulator
         yasp.Debugger.EmulatorCommunicator.sendMessage("LOAD", {
           bitcode: yasp.Editor.bitcode,
           start: 0
         }, function() {
+          yasp.Debugger.EmulatorCommunicator.subscribe("CONTINUE", onEmulatorContinue);
+          yasp.Debugger.EmulatorCommunicator.subscribe("BREAK", onEmulatorBreak);
+
           if(yasp.Debugger.mode === "run") {
             yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
               count: null
             });
+          } else {
+            refreshDebugger();
           }
         });
         
@@ -48,7 +56,38 @@ if (typeof yasp == 'undefined') yasp = { };
         }
       });
 
+      $('.debugger_step').click(function () {
+        if(!yasp.Debugger.isEmulatorRunning) {
+          yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
+            count: 1
+          });
+        } else {
+          alert("no")
+        }
+      });
 
+      function onEmulatorContinue () {
+        yasp.Debugger.isEmulatorRunning = true;
+      }
+
+      function onEmulatorBreak (reason) {
+        yasp.Debugger.isEmulatorRunning = false;
+        refreshDebugger();
+      }
+
+      function refreshDebugger() {
+        yasp.Debugger.EmulatorCommunicator.sendMessage("GET_STATE", {},
+          function (data) {
+            var state = data.payload;
+
+            var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
+            yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
+            yasp.Debugger.editor.addLineClass(line, 'background', 'line-active');
+
+            yasp.Debugger.lastExecutedLine = line;
+          }
+        );
+      }
     }
   };
 })();
