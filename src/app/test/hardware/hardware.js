@@ -148,7 +148,7 @@
         offColor: 'blue'
       }
     });
-    hardware.receiveStateChange(yasp.HardwareType.LED.States.ON);
+    hardware.receiveStateChange(1);
 
     // assert
     equal(!hardware, false);
