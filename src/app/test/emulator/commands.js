@@ -1021,9 +1021,9 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "POT 10,w0",
-      setup: { pin: { 10: 0xFAAB } },
+      setup: { pin: { 10: 0xFF } },
       steps: [
-        { reg: { "w0": 0xFAAB } }
+        { reg: { "w0": 0x00FF } }
       ]
     }
   ]);
@@ -1044,23 +1044,23 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "ADC0 w1",
-      setup: { pin: { 10: 0xFAAB } },
+      setup: { pin: { 10: 0xFA } },
       steps: [
-        { reg: { "w1": 0xFAAB } }
+        { reg: { "w1": 0x00FA } }
       ]
     },
     {
       cmd: "ADC1 w1",
-      setup: { pin: { 11: 0xFAAB } },
+      setup: { pin: { 11: 0xFA } },
       steps: [
-        { reg: { "w1": 0xFAAB } }
+        { reg: { "w1": 0x00FA } }
       ]
     },
     {
       cmd: "ADC2 w1",
-      setup: { pin: { 12: 0xFAAB } },
+      setup: { pin: { 12: 0xFA } },
       steps: [
-        { reg: { "w1": 0xFAAB } }
+        { reg: { "w1": 0x00FA } }
       ]
     },
   ]);

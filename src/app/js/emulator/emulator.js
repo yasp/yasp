@@ -363,7 +363,7 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.setIO = function (p, s, outside) {
     var pin = this.pins[p];
 
-    if(typeof s !== "number" || (s < 0 || s > 65535))
+    if(typeof s !== "number" || (s < 0 || s > 255))
       return 3;
     if(pin === undefined)
       return 1;

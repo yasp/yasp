@@ -341,23 +341,24 @@
 
   test("setIO - unknown pin", function () {
     var expected = 1;
-    var actual = emulator.setIO(1000, true);
+    var actual = emulator.setIO(1000, 1);
     strictEqual(actual, expected);
   });
 
   test("setIO - set an input pin", function () {
     var expected = 2;
     emulator.pins = { 0: { mode: "in" } };
-    var actual = emulator.setIO(0, true);
+    var actual = emulator.setIO(0, 1);
     strictEqual(actual, expected);
   });
 
   test("setIO - set an input pin from outside", function () {
     var expected = 0;
+    var state = 1;
     emulator.pins = { 0: { mode: "in" } };
-    var actual = emulator.setIO(0, true, true);
+    var actual = emulator.setIO(0, state, true);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[0].state, true);
+    strictEqual(emulator.pins[0].state, state);
   });
 
   test("setIO - invalid state, string", function () {
@@ -384,18 +385,20 @@
     strictEqual(actual, expected);
   });
 
-  test("setIO - state = true", function () {
+  test("setIO - state = 1", function () {
     var expected = 0;
-    var actual = emulator.setIO(3, true);
+    var state = 1;
+    var actual = emulator.setIO(3, state);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[3].state, true);
+    strictEqual(emulator.pins[3].state, state);
   });
 
-  test("setIO - state = false", function () {
+  test("setIO - state = 0", function () {
     var expected = 0;
-    var actual = emulator.setIO(3, false);
+    var state = 0;
+    var actual = emulator.setIO(3, state);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[3].state, false);
+    strictEqual(emulator.pins[3].state, state);
   });
 
   test("setIO - state = min", function () {
@@ -407,14 +410,14 @@
 
   test("setIO - state = max", function () {
     var expected = 0;
-    var actual = emulator.setIO(3, 65535);
+    var actual = emulator.setIO(3, 255);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[3].state, 65535);
+    strictEqual(emulator.pins[3].state, 255);
   });
 
   test("getIO - unknown pin", function () {
     var expected = null;
-    var actual = emulator.getIO(10000);
+    var actual = emulator.getIO(300);
     strictEqual(actual, expected);
   });
 
