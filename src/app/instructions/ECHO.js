@@ -23,6 +23,6 @@
     }
   ],
   "exec": function(addr) {
-    this.debugString(addr.address);
+    this.debugString(addr.value);
   }
 }
