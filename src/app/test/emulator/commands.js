@@ -958,16 +958,16 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "PAUSE w0",
-      setup: { reg: { "w0": 0xFAFB } },
+      setup: { reg: { "w0": 1000 } },
       steps: [
-        { waitTicks: 0xFAFB }
+        { waitTime: 15 }
       ]
     },
     {
       cmd: "DELAY w0",
-      setup: { reg: { "w0": 0xFBFA } },
+      setup: { reg: { "w0": 1000 } },
       steps: [
-        { waitTicks: 0xFBFA }
+        { waitTime: 15 }
       ]
     }
   ]);
@@ -975,17 +975,17 @@
   // PAUSE/DELAY literal
   commandTestData = commandTestData.concat([
     {
-      cmd: "PAUSE 0xFAFB",
+      cmd: "PAUSE 1000",
       setup: { },
       steps: [
-        { waitTicks: 0xFAFB }
+        { waitTime: 15 }
       ]
     },
     {
-      cmd: "DELAY 0xFBFA",
+      cmd: "DELAY 1000",
       setup: { },
       steps: [
-        { waitTicks: 0xFBFA }
+        { waitTime: 15 }
       ]
     }
   ]);
@@ -1231,8 +1231,8 @@
           strictEqual(actual, expected, stepPrefix + "stack-entry " + r + " is " + expected);
         }
       }
-      if(step.waitTicks !== undefined) {
-        strictEqual(emulator.waitTicks, step.waitTicks);
+      if(step.waitTime !== undefined) {
+        strictEqual(emulator.waitTime, step.waitTime);
       }
     }
 

@@ -445,16 +445,15 @@
   });
 
   test("wait", function () {
-    var expected = 50;
-    emulator.wait(expected);
-    strictEqual(emulator.waitTicks, expected);
+    var val = 50;
+    emulator.wait(val);
+    strictEqual(emulator.waitTime, 0.75);
   });
 
   test("wait - tick", function () {
-    var expected = 49;
-    emulator.wait(expected + 1);
+    emulator.wait(1000);
     emulator.tick();
-    strictEqual(emulator.waitTicks, expected);
+    strictEqual(emulator.waitTime, 0);
   });
 
 })();
