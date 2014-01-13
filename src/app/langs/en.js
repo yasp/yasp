@@ -12,11 +12,11 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.run": "Run",
     "editor.toolbar.help": "Help",
 
-    "editor.toolbar.filemenu": "Datei",
-    "editor.toolbar.filemenu.new": "Neu",
-    "editor.toolbar.filemenu.save": "Speichern",
-    "editor.toolbar.filemenu.saveAs": "Speichern als",
-    "editor.toolbar.filemenu.open": "Öffnen",
+    "editor.toolbar.filemenu": "File",
+    "editor.toolbar.filemenu.new": "New",
+    "editor.toolbar.filemenu.save": "Save",
+    "editor.toolbar.filemenu.saveAs": "Save as",
+    "editor.toolbar.filemenu.open": "Open",
 
     "editor.toolbar.menu": "Menu",
     "editor.toolbar.menu.run": "Run",
@@ -68,7 +68,6 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.codeCompletion": "Code completion",
     "settings.showLabelList": "Show label list",
     "settings.showHelp": "Show help",
-    "settings.close": "Close",
     "settings.help": "Help",
     "settings.help.hide": "never show",
     "settings.help.slide": "show if needed",
@@ -77,7 +76,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "settings.labellist.hide": "never show",
     "settings.labellist.slide": "show if needed",
     "settings.labellist.fix": "always show",
-    "settings.close": "close",
+    "settings.close": "Close",
     
     "filedialog.close": "Close",
     "filedialog.server": "Server",
