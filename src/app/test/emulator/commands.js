@@ -1065,6 +1065,17 @@
     },
   ]);
 
+  // BREAK
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "BREAK",
+      setup: {},
+      steps: [
+        { running: false }
+      ]
+    }
+  ]);
+
   for (var i = 0; i < commandTestData.length; i++) {
     var test = commandTestData[i];
 
@@ -1233,6 +1244,9 @@
       }
       if(step.waitTime !== undefined) {
         strictEqual(emulator.waitTime, step.waitTime);
+      }
+      if(step.running !== undefined) {
+        strictEqual(emulator.running, step.running);
       }
     }
 
