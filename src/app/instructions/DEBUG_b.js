@@ -2,12 +2,12 @@
   "name": "DEBUG",
   "doc": {
     "de": {
-      "description": "",
+      "description": "Sendet den Wert eines Byte-Registers zum Debugger.",
       "flags": {
       }
     },
     "en": {
-      "description": "",
+      "description": "Sends the value of a byte register to the debugger.",
       "flags": {
       }
     }
