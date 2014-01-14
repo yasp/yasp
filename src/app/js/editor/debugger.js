@@ -80,6 +80,8 @@ if (typeof yasp == 'undefined') yasp = { };
         });
       });
 
+      $('.debugger-tabs-debug-clear').click(clearDebugLog);
+
       function onEmulatorContinue () {
         yasp.Debugger.isEmulatorRunning = true;
       }

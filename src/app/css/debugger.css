@@ -55,7 +55,7 @@
     border-top-right-radius: 0;
 }
 
-#debugger-tabs-debug-clear {
+.debugger-tabs-debug-clear {
     float: right;
 }
 
