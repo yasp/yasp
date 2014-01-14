@@ -95,3 +95,53 @@
 .bytedump > .byterow > .bytes > *:before {
     content: '\0a';
 }
+
+.registers {
+    font-family: monospace;
+    font-size: 1.5em;
+}
+
+.registers > .heading {
+    font-weight: bold;
+    margin-left: 1.45em;
+    border-bottom: solid black 2px;
+}
+
+.registers > .heading .register:first-child {
+    padding-left: 0.6em;
+}
+
+.registers > .heading > *,
+.registers > .snapshots > div > * {
+    display: inline-block;
+}
+
+.registers > .snapshots {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.registers > .snapshots > div {
+    border-bottom: dashed black 1px;
+}
+
+.registers .number {
+    width: 1.5em;
+    border-right: solid black 2px;
+}
+
+.registers > .snapshots .register:nth-child(2) {
+    padding-left: 0.5em;
+}
+
+.registers .register.changed {
+    color: red;
+}
+
+.registers .register.byte {
+    width: 3.5em;
+}
+
+.registers .register.word {
+    width: 4.5em;
+}

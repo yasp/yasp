@@ -12,6 +12,15 @@ if (typeof yasp == 'undefined') yasp = { };
       yasp.Debugger.lastExecutedLine = 0;
 
       yasp.Debugger.debugLog.clearLog();
+
+      yasp.Debugger.registers.heading.empty();
+      yasp.Debugger.registers.snapshots.empty();
+
+      for (var reg in yasp.Editor.symbols.usedRegisters) {
+        yasp.Debugger.registers.heading.append(
+          $('<div class="register">' + reg.toLowerCase() + '</div>').addClass(reg[0] === "B" ? "byte" : "word")
+        );
+      }
     },
     debugLog: {
       addLog: function (str) {
@@ -20,6 +29,36 @@ if (typeof yasp == 'undefined') yasp = { };
       },
       clearLog: function () {
         yasp.Debugger.debugLog.element.text("");
+      }
+    },
+    registers: {
+      addSnapshot: function (regs) {
+        var $snap = $('<div>');
+        var i = 0;
+
+        var lastSnap = $(yasp.Debugger.registers.snapshots.children()[0]);
+        $snap.append('<div class="number">' + yasp.Debugger.registers.snapshots.children().length + '</div>');
+
+        for (var reg in regs) {
+          var $reg = $('<div class="register">');
+
+          if(reg[0] === "B") {
+            $reg.text(formatHexNumber(regs[reg], 2));
+            $reg.addClass("byte");
+          }
+          else if(reg[0] === "W") {
+            $reg.text(formatHexNumber(regs[reg], 4));
+            $reg.addClass("word");
+          }
+
+          if(lastSnap.length > 0 && $reg.text() != lastSnap.children()[i + 1].innerText)
+            $reg.addClass("changed");
+
+          $snap.append($reg);
+          i++;
+        }
+
+        yasp.Debugger.registers.snapshots.prepend($snap);
       }
     }
   };
@@ -94,6 +133,9 @@ if (typeof yasp == 'undefined') yasp = { };
     });
 
     $('.debugger-tabs-debug-clear').click(yasp.Debugger.debugLog.clearLog);
+
+    yasp.Debugger.registers.heading = $('#debugger-tabs-registers > .registers > .heading');
+    yasp.Debugger.registers.snapshots = $('#debugger-tabs-registers > .registers > .snapshots');
   });
 
   function onEmulatorContinue () {
@@ -137,6 +179,14 @@ if (typeof yasp == 'undefined') yasp = { };
         if(yasp.Debugger.lastRom)
           colorChangedBytes(getChangedBytes(state.rom, yasp.Debugger.lastRom), $('#debugger-romdump'));
         yasp.Debugger.lastRom = state.rom;
+
+        var snap = {};
+
+        for (var reg in yasp.Editor.symbols.usedRegisters) {
+          snap[reg] = state.registers.general[reg[0].toLowerCase()][reg.substr(1)];
+        }
+
+        yasp.Debugger.registers.addSnapshot(snap);
 
         var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
         yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
