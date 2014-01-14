@@ -2,6 +2,10 @@ if (typeof yasp == 'undefined') yasp = { };
 importScripts('../communicator.js', '../commands.js', '../assembler/passes/generator.js', 'bitutils.js', 'disasm.js', 'emulator.js');
 
 var emulator = new yasp.Emulator();
+
+var lastIOUpdate = {};
+var IOUpdateTimeout = {};
+
 var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
     case "LOAD":
@@ -170,6 +174,21 @@ emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {
 });
 
 emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
+  var now = +new Date();
+
+  if(now - lastIOUpdate[pin] < 50) {
+    IOUpdateTimeout[pin] = setTimeout(function () {
+      sendIOUpdate(pin, state, mode, type);
+    }, 50);
+    return;
+  }
+
+  clearTimeout(IOUpdateTimeout[pin]);
+  sendIOUpdate(pin, state, mode, type);
+});
+
+function sendIOUpdate(pin, state, mode, type) {
+
   communicator.broadcast('IO_CHANGED', {
     payload: {
       "pin": pin,
@@ -179,4 +198,6 @@ emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
     },
     error: null
   });
-});
+
+  lastIOUpdate[pin] = +new Date();
+}
