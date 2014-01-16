@@ -13,6 +13,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
       yasp.Debugger.debugLog.clearLog();
 
+      yasp.Debugger.lastRom = null;
+      yasp.Debugger.lastRam = null;
 
       yasp.Debugger.registers.heading.empty();
       yasp.Debugger.registers.snapshots.empty();
