@@ -74,7 +74,7 @@ if (typeof yasp == 'undefined') yasp = { };
             $reg.addClass("register word");
           }
 
-          if(lastSnap.length > 0 && $reg.text() != lastSnap.children()[i + 1].innerText)
+          if(lastSnap.length > 0 && $reg.text() != $(lastSnap.children()[i + 1]).text())
             $reg.addClass("changed");
 
           $snap.append($reg);
