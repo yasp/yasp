@@ -522,7 +522,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.interruptToServe = -1;
     }
 
-    if(!this.commandCache[this.pc]) {
+    if(this.commandCache[this.pc] === undefined) {
       this.commandCache[this.pc] = yasp.disasm.getCommand(this.rom, this.pc);
     }
 
