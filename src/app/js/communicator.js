@@ -13,7 +13,10 @@ if (typeof yasp == 'undefined') yasp = { };
     this.listener = { };
     this.id = 0;
     this.openMessages = { };
-    
+
+    var lastSlash = path.lastIndexOf("/") + 1;
+    var filename = path.substring(lastSlash);
+
     this.worker.addEventListener("message", (function(event) {
       var data = event.data;
       if (!!data.id) {
@@ -28,7 +31,7 @@ if (typeof yasp == 'undefined') yasp = { };
       } else if (data.action == 'internal_error') {
         throw "Error ("+data.payload.code+") "+data.payload.msg;
       } else if (data.action == 'internal_log') {
-        console.log("Communicator Log: "+data.payload);
+        console.log("[" + filename + "] Communicator Log: "+data.payload);
       } else {
         // broadcast
         var events = this.listener[data.action];
@@ -123,6 +126,7 @@ if (typeof yasp == 'undefined') yasp = { };
     listener = listener.bind(this);
     
     this.broadcast = function(action, result) {
+      console.log("Send broadcast: " + action + " result " + JSON.stringify(result));
       self.postMessage({
         action: action,
         id: null,
@@ -133,8 +137,9 @@ if (typeof yasp == 'undefined') yasp = { };
     
     self.addEventListener('message', function(e) {
       e = e.data;
-      console.log("Receive message: "+ e.action+" payload "+ JSON.stringify(e.payload));
+      console.log("Receive message: " + e.action+" payload " + JSON.stringify(e.payload));
       var ready = function(result) {
+        console.log("Send response: " + e.action+" result " + JSON.stringify(result));
         self.postMessage({
           action: e.action,
           id: e.id,
