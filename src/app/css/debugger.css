@@ -103,11 +103,11 @@
 
 .registers > .heading {
     font-weight: bold;
-    margin-left: 1.45em;
+    margin-left: 2.7em;
     border-bottom: solid black 2px;
 }
 
-.registers > .heading .register:first-child {
+.registers > .heading *:first-child {
     padding-left: 0.6em;
 }
 
@@ -126,22 +126,38 @@
 }
 
 .registers .number {
-    width: 1.5em;
+    width: 2.8em;
     border-right: solid black 2px;
 }
 
-.registers > .snapshots .register:nth-child(2) {
+.registers > .snapshots > div > *:nth-child(2) {
     padding-left: 0.5em;
 }
 
-.registers .register.changed {
+.registers .changed {
     color: red;
 }
 
+.registers .flag {
+    width: 2em;
+}
+
+.registers .flag:last-of-type {
+    margin-right: 1em;
+}
+
+.registers .pointer {
+    width: 3em;
+}
+
+.registers .pointer:last-of-type {
+    margin-right: 1em;
+}
+
 .registers .register.byte {
-    width: 3.5em;
+    width: 2em;
 }
 
 .registers .register.word {
-    width: 4.5em;
+    width: 3em;
 }

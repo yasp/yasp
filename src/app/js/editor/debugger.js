@@ -13,8 +13,14 @@ if (typeof yasp == 'undefined') yasp = { };
 
       yasp.Debugger.debugLog.clearLog();
 
+
       yasp.Debugger.registers.heading.empty();
       yasp.Debugger.registers.snapshots.empty();
+
+      yasp.Debugger.registers.heading.append('<div class="flag">C</div>');
+      yasp.Debugger.registers.heading.append('<div class="flag">Z</div>');
+      yasp.Debugger.registers.heading.append('<div class="pointer">PC</div>');
+      yasp.Debugger.registers.heading.append('<div class="pointer">SP</div>');
 
       for (var reg in yasp.Editor.symbols.usedRegisters) {
         yasp.Debugger.registers.heading.append(
@@ -40,15 +46,30 @@ if (typeof yasp == 'undefined') yasp = { };
         $snap.append('<div class="number">' + yasp.Debugger.registers.snapshots.children().length + '</div>');
 
         for (var reg in regs) {
-          var $reg = $('<div class="register">');
+          var $reg = $('<div>');
+
+          if(reg === "C" || reg === "Z") {
+            $reg.text(regs[reg] ? "1" : "0");
+            $reg.addClass("flag");
+          }
+
+          if(reg === "PC" || reg === "SP") {
+            $reg.text(formatHexNumber(regs[reg], 4));
+            $reg.addClass("pointer");
+          }
+
+          if(reg === "SP") {
+            $reg.text(regs[reg]);
+            $reg.addClass("pointer");
+          }
 
           if(reg[0] === "B") {
             $reg.text(formatHexNumber(regs[reg], 2));
-            $reg.addClass("byte");
+            $reg.addClass("register byte");
           }
           else if(reg[0] === "W") {
             $reg.text(formatHexNumber(regs[reg], 4));
-            $reg.addClass("word");
+            $reg.addClass("register word");
           }
 
           if(lastSnap.length > 0 && $reg.text() != lastSnap.children()[i + 1].innerText)
@@ -181,6 +202,12 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.lastRom = state.rom;
 
         var snap = {};
+
+        snap["C"] = state.registers.flags["C"];
+        snap["Z"] = state.registers.flags["Z"];
+
+        snap["PC"] = state.registers.special["pc"];
+        snap["SP"] = state.registers.special["sp"];
 
         for (var reg in yasp.Editor.symbols.usedRegisters) {
           snap[reg] = state.registers.general[reg[0].toLowerCase()][reg.substr(1)];
