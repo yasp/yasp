@@ -87,10 +87,12 @@ if (typeof yasp == 'undefined') yasp = { };
         var str = "";
 
         for (var i = 0; i < stack.length; i++) {
+          str += (i === stack.length - 1) ? "> " : "  ";
           str += formatHexNumber(stack[i], 2) + "\n";
         }
 
         yasp.Debugger.registers.stack.text(str);
+        yasp.Debugger.registers.stack.scrollTop(yasp.Debugger.registers.stack[0].scrollHeight);
       }
     }
   };
