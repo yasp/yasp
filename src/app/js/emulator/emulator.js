@@ -18,7 +18,8 @@ if (typeof yasp == 'undefined') yasp = { };
     this.commandCache = {}; // parsed commands
 
     this.stack = new Uint8Array(16);
-    this.sp = -1;
+    this.initialSP = -1;
+    this.sp = this.initialSP;
 
     this.pc = 0;
 

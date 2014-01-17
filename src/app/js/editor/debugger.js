@@ -82,6 +82,15 @@ if (typeof yasp == 'undefined') yasp = { };
         }
 
         yasp.Debugger.registers.snapshots.prepend($snap);
+      },
+      setStack: function (stack) {
+        var str = "";
+
+        for (var i = 0; i < stack.length; i++) {
+          str += formatHexNumber(stack[i], 2) + "\n";
+        }
+
+        yasp.Debugger.registers.stack.text(str);
       }
     }
   };
@@ -159,6 +168,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     yasp.Debugger.registers.heading = $('#debugger-tabs-registers > .registers > .heading');
     yasp.Debugger.registers.snapshots = $('#debugger-tabs-registers > .registers > .snapshots');
+    yasp.Debugger.registers.stack = $('#debugger-tabs-registers > .stack > pre');
   });
 
   function onEmulatorContinue () {
@@ -216,6 +226,8 @@ if (typeof yasp == 'undefined') yasp = { };
         }
 
         yasp.Debugger.registers.addSnapshot(snap);
+
+        yasp.Debugger.registers.setStack(state.stack);
 
         var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
         yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');

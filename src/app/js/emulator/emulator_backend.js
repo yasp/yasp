@@ -40,6 +40,7 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       var payload = {
         rom: emulator.rom,
         ram: emulator.ram,
+        stack: emulator.stack.subarray(emulator.initialSP + 1, (emulator.sp + 1) - (emulator.initialSP + 1)),
         registers: {
           general: {
             b: {},

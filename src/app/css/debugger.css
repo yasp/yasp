@@ -96,9 +96,20 @@
     content: '\0a';
 }
 
+#debugger-tabs-registers > * {
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
 .registers {
-    font-family: monospace;
+    width: calc(100% - 80px);
+}
+
+.registers > .heading,
+.register > .snapshots {
     font-size: 1.5em;
+    font-family: monospace;
 }
 
 .registers > .heading {
@@ -117,7 +128,7 @@
 }
 
 .registers > .snapshots {
-    height: 200px;
+    height: calc(100% - 22px);
     overflow-y: scroll;
 }
 
@@ -160,4 +171,13 @@
 
 .registers .register.word {
     width: 3em;
+}
+
+.stack {
+    width: 80px;
+}
+
+.stack > pre {
+    height: calc(100% - 4px);
+    overflow-y: scroll;
 }
