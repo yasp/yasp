@@ -543,7 +543,7 @@ if (typeof yasp == 'undefined') yasp = { };
         }
       }
 
-      if(this.waitTime !== 0) {
+      if(this.waitTime !== 0 && this.running !== 0) { // ignore WAIT/PAUSE
         setTimeout(this.tickWrapper.bind(this), this.waitTime);
         var timePerTick = this.tickTimeout / this.ticksPerTick;
         this.ticks += (this.waitTime / timePerTick);
