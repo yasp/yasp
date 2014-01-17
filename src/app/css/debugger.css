@@ -107,7 +107,7 @@
 }
 
 .registers > .heading,
-.register > .snapshots {
+.registers > .snapshots {
     font-size: 1.5em;
     font-family: monospace;
 }
@@ -139,6 +139,8 @@
 .registers .number {
     width: 2.8em;
     border-right: solid black 2px;
+    text-align: right;
+    padding-right: 5px;
 }
 
 .registers > .snapshots > div > *:nth-child(2) {
