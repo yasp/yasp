@@ -3,7 +3,7 @@
 
   module("emulator api", {
     setup: function () {
-      emulator = new yasp.Emulator(true);
+      emulator = new yasp.Emulator();
     },
     teardown: function () {
       emulator = null;

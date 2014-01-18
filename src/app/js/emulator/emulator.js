@@ -7,24 +7,23 @@ if (typeof yasp == 'undefined') yasp = { };
    * Emulator is responsible for running the bytecode from the assembler
    * @constructor
    */
-  yasp.Emulator = function(stepping) {
+  yasp.Emulator = function() {
     this.rom = new Uint8Array(512); // bitcode
     this.ram = new Uint8Array(512); // registers
     this.flags = { c: false, z: false };
 
     this.tickTimeout = 1;
-    this.ticksPerTick =1;
-    this.debug = 1;
+    this.ticksPerTick = 3;
 
     this.commandCache = {}; // parsed commands
 
     this.stack = new Uint8Array(16);
-    this.sp = -1;
+    this.initialSP = -1;
+    this.sp = this.initialSP;
 
     this.pc = 0;
 
     this.running = false;
-    this.stepping = stepping === true;
 
     this.ticks = 0; // tick-counter (used for PWM)
 
@@ -109,11 +108,11 @@ if (typeof yasp == 'undefined') yasp = { };
       'CONTINUED': this.noop,
       'BREAK': this.noop,
       'LOADED': this.noop,
+      'DEBUG': this.noop,
       'IO_CHANGED': this.noop
     };
 
-    if(stepping !== true)
-      setTimeout(this.tick.bind(this), this.tickTimeout);
+    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
   };
 
   /**
@@ -176,6 +175,31 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
     this.events.BREAK(reason);
+  };
+
+  /**
+   * @function sends a register to the debugger
+   * @param type the register-type (w or b)
+   * @param addr the register-number
+   * @param val the value to send
+   */
+  yasp.Emulator.prototype.debugRegister = function (type, addr, val) {
+    this.events.DEBUG("register", type, addr, val);
+  };
+
+  /**
+   * @function sends a string to the debugger
+   * @param addr address to read a null-terminated string from
+   */
+  yasp.Emulator.prototype.debugString = function (addr) {
+    var str = "";
+
+    while(this.rom[addr] !== 0) {
+      str += String.fromCharCode(this.rom[addr]);
+      addr++;
+    }
+
+    this.events.DEBUG("string", null, addr, str);
   };
 
   /**
@@ -270,12 +294,12 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param z the zero flag to be set (or null)
    */
   yasp.Emulator.prototype.writeFlags = function (c, z) {
-    if(c !== null)
+    if(c === true || c === false)
     {
       if(debug) console.log("c=" + c);
       this.flags.c = c;
     }
-    if(z !== null)
+    if(z === true || z === false)
     {
       if(debug) console.log("z=" + z);
       this.flags.z = z;
@@ -379,6 +403,10 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(outside !== true) {
       this.updatePwm(p, pin, s);
+    } else {
+      this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+      this.pwmTimeouts[p] = null;
+      this.pwmStatus[p] = null;
     }
 
     return 0;
@@ -497,23 +525,44 @@ if (typeof yasp == 'undefined') yasp = { };
     this.waitTime = ms;
   };
 
-  yasp.Emulator.prototype.tick = function () {
-    if(this.running == false && !this.stepping) {
-      setTimeout(this.tick.bind(this), this.tickTimeout);
-      return;
-    }
+  yasp.Emulator.prototype.setTickWrapperTimeout = function () {
+    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
+  };
 
+  yasp.Emulator.prototype.tickWrapper = function () {
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
 
-    this.ticks++;
+      if(this.running === false) {
+        this.setTickWrapperTimeout();
+        return;
+      }
 
-    if(this.waitTime !== 0) {
-      setTimeout(this.tick.bind(this), this.waitTime);
-      var timePerTick = this.tickTimeout / this.ticksPerTick;
-      this.ticks += (this.waitTime / timePerTick);
-      this.waitTime = 0;
-      return;
+      if(typeof this.running === "number") {
+        this.running--;
+
+        if(this.running === -1) {
+          this.break("count");
+          this.setTickWrapperTimeout();
+          return;
+        }
+      }
+
+      if(this.waitTime !== 0 && this.running !== 0) { // ignore WAIT/PAUSE
+        setTimeout(this.tickWrapper.bind(this), this.waitTime);
+        var timePerTick = this.tickTimeout / this.ticksPerTick;
+        this.ticks += (this.waitTime / timePerTick);
+        this.waitTime = 0;
+        return;
+      }
+
+      this.tick();
     }
+
+    this.setTickWrapperTimeout();
+  };
+
+  yasp.Emulator.prototype.tick = function () {
+    this.ticks++;
 
     if(this.interruptToServe !== -1) {
       if(debug) console.log("interrupt jumped: " + this.interruptToServe);
@@ -579,11 +628,6 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       this.writeFlags(null, z);
-    }
-    }
-
-    if(!this.stepping) {
-      setTimeout(this.tick.bind(this), this.tickTimeout);
     }
   };
 })();

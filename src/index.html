@@ -69,6 +69,9 @@
                     <button type="button" class="btn btn-default btn-sm menu_run">
                         <span class="fa fa-play"></span> <span data-l10n="editor.toolbar.run"></span>
                     </button>
+                    <button type="button" class="btn btn-default btn-sm menu_debug">
+                        <span class="fa fa-bug"></span> <span data-l10n="editor.toolbar.debug"></span>
+                    </button>
                     <button type="button" class="btn btn-default btn-sm menu_help">
                         <span class="fa fa-info-circle"></span> <span data-l10n="editor.toolbar.help"></span>
                     </button>
@@ -90,6 +93,7 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_run"><span class="fa fa-fw fa-play"></span> <span data-l10n="editor.toolbar.menu.run"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_debug"><span class="fa fa-fw fa-bug"></span> <span data-l10n="editor.toolbar.menu.debug"></span></a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_undo"><span class="fa fa-fw fa-arrow-left"></span> <span data-l10n="editor.toolbar.menu.undo"></span></a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_redo"><span class="fa fa-fw fa-arrow-right"></span> <span data-l10n="editor.toolbar.menu.redo"></span></a></li>
                             <li role="presentation" class="divider"></li>
@@ -119,6 +123,7 @@
 ; ---- Blink green and increment b0 by b1
 MyLbl:
         ADD b0, b1
+        DEBUG b0
         JC carry
         TOGGLE 3
         PAUSE 30000
@@ -182,37 +187,66 @@ END
         </div>
 
         <!-- Debugger Dialog -->
-        <div class="modal fade" id="dialog_debugger" tabindex="-1" role="dialog">
-            <div class="modal-dialog fullscreen">
-                <div class="modal-content fullscreen">
+        <div class="modal fade fullscreen" id="dialog_debugger" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" data-l10n="debugger.title"></h4>
                     </div>
-                    <div class="modal-body debuggerbody">
-                        <div class="col-md-12 container">
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.step"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOver"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepOut"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.stepBack"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.break"></button>
-                            <button type="button" class="btn btn-default btn-xs" data-l10n="debugger.toolbar.continue"></button>
+                    <div class="modal-body">
+                        <div class="debuggertoolbar">
+                            <button type="button" class="btn btn-default btn-xs debugger_step" data-l10n="debugger.toolbar.step"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_stepOver" data-l10n="debugger.toolbar.stepOver"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_stepBack" data-l10n="debugger.toolbar.stepBack"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_stepOut" data-l10n="debugger.toolbar.stepOut"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_break" data-l10n="debugger.toolbar.break"></button>
+                            <button type="button" class="btn btn-default btn-xs debugger_continue" data-l10n="debugger.toolbar.continue"></button>
                         </div>
-                        <table id="debugger_table" border="1">
-                            <tr>
-                                <td rowspan="2" class="width50">
+                        <div id="debuggercontent">
+                            <div id="debuggercontent-left">
+                                <div id="debugger_editor_wrapper">
                                     <textarea id="debugger_editor" name="code"></textarea>
-                                </td>
-                                <td class="width50">
-                                    Debugging Functionality
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="width50" id="hardwarecontainer">
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </div><!-- remove whitespace..
+                            --><div id="debuggercontent-right">
+                                <div>
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#debugger-tabs-debug" data-toggle="tab" data-l10n="debugger.tabs.debug"></a></li>
+                                        <li><a href="#debugger-tabs-ram" data-toggle="tab" data-l10n="debugger.tabs.ram"></a></li>
+                                        <li><a href="#debugger-tabs-rom" data-toggle="tab" data-l10n="debugger.tabs.rom"></a></li>
+                                        <li><a href="#debugger-tabs-registers" data-toggle="tab" data-l10n="debugger.tabs.registers"></a></li>
+                                        <li><a href="#debugger-tabs-breakpoints" data-toggle="tab" data-l10n="debugger.tabs.breakpoints"></a></li>
+                                    </ul>
+                                    <div class="tab-content" id="debugger-tabs">
+                                        <div class="tab-pane active" id="debugger-tabs-debug">
+                                            <pre></pre>
+                                            <div class="btn btn-primary btn-xs debugger-tabs-debug-clear" data-l10n="debugger.tabs.debug.clear"></div>
+                                        </div>
+                                        <div class="tab-pane" id="debugger-tabs-ram">
+                                            <div id="debugger-ramdump" class="bytedump"></div>
+                                        </div>
+                                        <div class="tab-pane" id="debugger-tabs-rom">
+                                            <div id="debugger-romdump" class="bytedump"></div>
+                                        </div>
+                                        <div class="tab-pane" id="debugger-tabs-registers">
+                                            <div class="registers">
+                                                <span>Registers</span>
+                                                <div class="heading"></div>
+                                                <div class="snapshots"></div>
+                                            </div><!-- remove whitespace
+                                            --><div class="stack">
+                                                <span>Stack</span>
+                                                <pre></pre>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="debugger-tabs-breakpoints"></div>
+                                    </div>
+                                </div>
+                                <div id="hardwarecontainer">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" data-l10n="debugger.close"></button>

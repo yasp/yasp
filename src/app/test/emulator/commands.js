@@ -1,16 +1,27 @@
 (function () {
   var emulator;
-  var assembler = new yasp.Assembler();
+  var lastEmulatorDebug = null;
+  var assembler;
 
   module("emulator commands", {
     setup: function () {
-      emulator = new yasp.Emulator(true);
+      emulator = new yasp.Emulator();
       emulator.ticksPerTick = 1;
-      emulator.continue();
+      emulator.registerCallback("DEBUG",
+        function (type, subtype, addr, val) {
+          lastEmulatorDebug = {
+            type: type,
+            subtype: subtype,
+            addr: addr,
+            val: val
+          }
+        }
+      );
       assembler = new yasp.Assembler();
     },
     teardown: function () {
       emulator = null;
+      lastEmulatorDebug = null;
       assembler = null;
     }
   });
@@ -1040,6 +1051,35 @@
     }
   ]);
 
+  // ECHO
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "ECHO str\nstr: STRING foo",
+      setup: {},
+      steps: [
+        { debug: { "addr": 5, "subtype": null, "type": "string", "val": "foo" } }
+      ]
+    }
+  ]);
+
+  // DEBUG
+  commandTestData = commandTestData.concat([
+    {
+      cmd: "DEBUG w1",
+      setup: { reg: { "w1": 0x0102 } },
+      steps: [
+        { debug: { "addr": 1, "subtype": "w", "type": "register", "val": 0x0102 } }
+      ]
+    },
+    {
+      cmd: "DEBUG b2",
+      setup: { reg: { "b2": 0xFA } },
+      steps: [
+        { debug: { "addr": 2, "subtype": "b", "type": "register", "val": 0xFA } }
+      ]
+    }
+  ]);
+
   // ADC0/1/2
   commandTestData = commandTestData.concat([
     {
@@ -1247,6 +1287,9 @@
       }
       if(step.running !== undefined) {
         strictEqual(emulator.running, step.running);
+      }
+      if(step.debug !== undefined) {
+        deepEqual(lastEmulatorDebug, step.debug, "Debug " + JSON.stringify(step.debug) + " was issued");
       }
     }
 
