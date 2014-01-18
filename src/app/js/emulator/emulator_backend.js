@@ -109,6 +109,10 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         emulator.rom = state.rom;
       }
 
+      if(state.stack) {
+        emulator.stack = state.stack;
+      }
+
       if(state.registers) {
         var regs = state.registers;
 
@@ -129,7 +133,7 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
           if(typeof regs.special.pc !== "undefined")
             emulator.writePC(regs.special.pc);
           if(typeof regs.special.sp !== "undefined")
-            emulator.writePC(regs.special.sp);
+            emulator.sp = regs.special.sp;
         }
 
         if(regs.flags) {
