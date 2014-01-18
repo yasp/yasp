@@ -75,8 +75,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
             "color": '#FF0000',
             "font-size": "125%",
             "position": "relative",
-            "top": "-2px",
-            "left": "-2px"
+            "top": "-0.21em",
+            "left": "-0.6em"
           });
           marker.text("●");
           return marker.get(0);
