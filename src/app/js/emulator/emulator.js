@@ -403,6 +403,10 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(outside !== true) {
       this.updatePwm(p, pin, s);
+    } else {
+      this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+      this.pwmTimeouts[p] = null;
+      this.pwmStatus[p] = null;
     }
 
     return 0;

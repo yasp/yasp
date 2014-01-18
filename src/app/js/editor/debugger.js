@@ -39,6 +39,7 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.debugLog.element.text("");
       }
     },
+    states: [],
     registers: {
       addSnapshot: function (regs) {
         var $snap = $('<div>');
@@ -158,6 +159,19 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     });
 
+
+    $('.debugger_stepBack').click(function () {
+      if(yasp.Debugger.states.length > 1) {
+        yasp.Debugger.states.pop();
+      }
+
+      var state = yasp.Debugger.states.pop();
+
+      yasp.Debugger.steppedBack = true;
+      yasp.Debugger.EmulatorCommunicator.sendMessage("SET_STATE", state);
+      yasp.Debugger.EmulatorCommunicator.sendMessage("BREAK", { });
+    });
+
     $('.debugger_break').click(function () {
       yasp.Debugger.EmulatorCommunicator.sendMessage("BREAK", { });
     });
@@ -206,6 +220,8 @@ if (typeof yasp == 'undefined') yasp = { };
     yasp.Debugger.EmulatorCommunicator.sendMessage("GET_STATE", {},
       function (data) {
         var state = data.payload;
+
+        yasp.Debugger.states.push(state);
 
         renderBytes(state.ram, 0x10, $('#debugger-ramdump'));
         if(yasp.Debugger.lastRam)
