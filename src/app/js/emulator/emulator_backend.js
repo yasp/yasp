@@ -87,29 +87,37 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         for (var i = 0; i < state.io.length; i++) {
           var io = state.io[i];
 
-          if(io.pin === undefined)
+          if(!io || io.pin === undefined)
             continue;
+
+          if(!emulator.pins[io.pin]) {
+            emulator.pins[io.pin] = {
+              type: "gpio",
+              state: 0,
+              mode: "out"
+            };
+          }
 
           var pin = emulator.pins[io.pin];
 
-          if(io.type)
+          if(io.type === "gpio" || io.type === "adc")
             pin.type = io.type;
-          if(io.mode)
+          if(io.mode === "in" || io.mode === "out")
             pin.mode = io.mode;
           if(io.state !== undefined)
             emulator.setIO(io.pin, io.state, true);
         }
       }
 
-      if(state.rom) {
+      if(state.rom instanceof Uint8Array) {
         emulator.rom = state.rom;
       }
 
-      if(state.ram) {
+      if(state.ram instanceof Uint8Array) {
         emulator.rom = state.rom;
       }
 
-      if(state.stack) {
+      if(state.stack instanceof Uint8Array) {
         emulator.stack = state.stack;
       }
 
@@ -130,9 +138,9 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
         }
 
         if(regs.special) {
-          if(typeof regs.special.pc !== "undefined")
+          if(typeof regs.special.pc === "number" && regs.special.pc >= 0)
             emulator.writePC(regs.special.pc);
-          if(typeof regs.special.sp !== "undefined")
+          if(typeof regs.special.sp === "number")
             emulator.sp = regs.special.sp;
         }
 
