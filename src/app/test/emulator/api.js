@@ -452,7 +452,8 @@
 
   test("wait - tick", function () {
     emulator.wait(1000);
-    emulator.tick();
+    emulator.running = true;
+    emulator.tickWrapper();
     strictEqual(emulator.waitTime, 0);
   });
 
