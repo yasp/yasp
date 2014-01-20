@@ -12,13 +12,24 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       if (!this.element) {
         this.element = $('<div></div>');
 
-        this.element.mousedown((function() {
+        var locked = false;
+
+        this.element.mousedown((function(e) {
+          if(e.shiftKey) {
+            locked = true;
+          }
           this.receiveStateChange(states.PUSH);
         }).bind(this));
-        this.element.mouseup((function() {
+        this.element.mouseup((function(e) {
+          if(e.shiftKey) {
+            return;
+          }
           this.receiveStateChange(states.NO_PUSH);
         }).bind(this));
         this.element.mouseleave((function() {
+          if(locked) {
+            return;
+          }
           this.receiveStateChange(states.NO_PUSH);
         }).bind(this));
 
