@@ -4,7 +4,7 @@ importScripts('../communicator.js', '../commands.js', '../assembler/passes/gener
 var emulator = new yasp.Emulator();
 
 var lastIOUpdate = {};
-var IOUpdateTimeout = {};
+var IOUpdateLimiter = {};
 
 var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
@@ -188,29 +188,33 @@ emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {
 
 emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
   var now = +new Date();
+  var tt = 50;
 
-  if(now - lastIOUpdate[pin] < 50) {
-    IOUpdateTimeout[pin] = setTimeout(function () {
-      sendIOUpdate(pin, state, mode, type);
-    }, 50);
-    return;
+  if(!IOUpdateLimiter[pin])
+    IOUpdateLimiter[pin] = { last: 0 };
+
+  IOUpdateLimiter[pin].state = {
+    pin: pin,
+    state: state,
+    mode: mode,
+    type: type
+  };
+
+  if(now - IOUpdateLimiter[pin].last > tt) {
+    sendIOUpdate(pin);
+  } else {
+    IOUpdateLimiter[pin].timeout = setTimeout(function () {
+      IOUpdateLimiter[pin].timeout = null;
+      sendIOUpdate(pin);
+    }, tt);
   }
-
-  clearTimeout(IOUpdateTimeout[pin]);
-  sendIOUpdate(pin, state, mode, type);
 });
 
-function sendIOUpdate(pin, state, mode, type) {
-
+function sendIOUpdate(pin) {
   communicator.broadcast('IO_CHANGED', {
-    payload: {
-      "pin": pin,
-      "type": type,
-      "mode": mode,
-      "state": state
-    },
+    payload: IOUpdateLimiter[pin].state,
     error: null
   });
 
-  lastIOUpdate[pin] = +new Date();
+  IOUpdateLimiter[pin].last = +new Date();
 }
