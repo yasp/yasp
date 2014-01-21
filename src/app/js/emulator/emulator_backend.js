@@ -3,8 +3,10 @@ importScripts('../communicator.js', '../commands.js', '../assembler/passes/gener
 
 var emulator = new yasp.Emulator();
 
-var lastIOUpdate = {};
+var debugQueue = [];
 var IOUpdateLimiter = {};
+
+setInterval(flushDebugQueue, 100);
 
 var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
@@ -183,8 +185,16 @@ emulator.registerCallback('CONTINUED', function () {
 });
 
 emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {
-  communicator.broadcast('DEBUG', { payload: { type: type, subtype: subtype, addr: addr, val: val }, error: null });
+  var log = { type: type, subtype: subtype, addr: addr, val: val };
+  debugQueue.push(log);
 });
+
+function flushDebugQueue () {
+  if(debugQueue.length !== 0) {
+    communicator.broadcast('DEBUG', { payload: debugQueue, error: null });
+    debugQueue.length = 0;
+  }
+}
 
 emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
   var now = +new Date();

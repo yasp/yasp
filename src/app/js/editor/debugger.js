@@ -31,10 +31,6 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     },
     debugLog: {
-      addLog: function (str) {
-        yasp.Debugger.debugLog.element.text(yasp.Debugger.debugLog.element.text() + str);
-        yasp.Debugger.debugLog.element.scrollTop(yasp.Debugger.debugLog.element[0].scrollHeight);
-      },
       clearLog: function () {
         yasp.Debugger.debugLog.element.text("");
       }
@@ -200,20 +196,34 @@ if (typeof yasp == 'undefined') yasp = { };
   }
 
   function onEmulatorDebug (data) {
-    var msg = data.payload;
+    var msgs = data.payload;
+    var strs = [];
 
-    if(msg.type === "register") {
-      var val = "";
+    for (var i = 0; i < msgs.length; i++) {
+      var msg = msgs[i];
 
-      if(msg.subtype === "b")
-        val = formatHexNumber(msg.val, 2);
-      else if(msg.subtype === "w")
-        val = formatHexNumber(msg.val, 4);
+      if(msg.type === "register") {
+        var val = "";
 
-      yasp.Debugger.debugLog.addLog(msg.subtype + msg.addr + ": 0x" + val + "\n");
-    } else if(msg.type === "string") {
-      yasp.Debugger.debugLog.addLog(msg.val + "\n");
+        if(msg.subtype === "b")
+          val = formatHexNumber(msg.val, 2);
+        else if(msg.subtype === "w")
+          val = formatHexNumber(msg.val, 4);
+
+        strs.push(msg.subtype + msg.addr + ": 0x" + val);
+      } else if(msg.type === "string") {
+        strs.push(msg.val);
+      }
     }
+
+    var str = yasp.Debugger.debugLog.element.text() + "\n" + strs.join("\n");
+
+    if(str.length > 1024) {
+      str = str.substring(str.length - 1024);
+    }
+
+    yasp.Debugger.debugLog.element.text(str);
+    yasp.Debugger.debugLog.element.scrollTop(yasp.Debugger.debugLog.element[0].scrollHeight);
   }
 
   function refreshDebugger() {
