@@ -1,6 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
+  var debug = false;
+
   /**
    * Responsible for communicating
    * @param path is the path to the specified file
@@ -31,7 +33,7 @@ if (typeof yasp == 'undefined') yasp = { };
       } else if (data.action == 'internal_error') {
         throw "Error ("+data.payload.code+") "+data.payload.msg;
       } else if (data.action == 'internal_log') {
-        console.log("[" + filename + "] Communicator Log: "+data.payload);
+        if(debug) console.log("[" + filename + "] Communicator Log: "+data.payload);
       } else {
         // broadcast
         var events = this.listener[data.action];
