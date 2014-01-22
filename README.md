@@ -3,10 +3,10 @@
 </p>
 
 yasp is a fully functional web-based assembler development environment, including a real assembler and debugger.
-The assembler dialect is a custom one which is very simple to keep the learning curve as shallow as possible.
+The assembler dialect is a custom which is held very simple so as to keep the learning curve as shallow as possible.
 It also features some hardware-elements (LED, Potentiometer, Button, etc.). The main purpose of this project
-is to create an environment in which students can learn the assembly language to understand computers better.
-It also allows them to experiment easily because there is nothing they can break.
+is to create an environment in which students can learn the assembly language so that they understand computers better.
+Furthermore it allows them to experiment without the fear of breaking something.
 
 The original project team of yasp consists of Robert Fischer and Michael "luto" Lutonsky. For more information take
 a look at the about-section in the IDEs menu.
