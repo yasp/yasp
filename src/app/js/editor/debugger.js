@@ -137,6 +137,8 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.EmulatorCommunicator = null;
       }
 
+      yasp.Debugger.states = [];
+
       yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
 
       if(yasp.Debugger.breadboard) {
