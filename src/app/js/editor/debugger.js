@@ -44,6 +44,10 @@ if (typeof yasp == 'undefined') yasp = { };
         var lastSnap = $(yasp.Debugger.registers.snapshots.children()[0]);
         $snap.append('<div class="number">' + yasp.Debugger.registers.snapshots.children().length + '</div>');
 
+        var format = yasp.Debugger.registers.currentFormat;
+        var formatNum = formatNameToRadix(format);
+        var padding = yasp.Debugger.registers.formatPadding[yasp.Debugger.registers.currentFormat];
+
         for (var reg in regs) {
           var $reg = $('<div>');
 
@@ -63,11 +67,11 @@ if (typeof yasp == 'undefined') yasp = { };
           }
 
           if(reg[0] === "B") {
-            $reg.text(formatHexNumber(regs[reg], 2));
+            $reg.text(formatNumber(regs[reg], padding, formatNum));
             $reg.addClass("register byte");
           }
           else if(reg[0] === "W") {
-            $reg.text(formatHexNumber(regs[reg], 4));
+            $reg.text(formatNumber(regs[reg], padding * 2, formatNum));
             $reg.addClass("register word");
           }
 
@@ -183,8 +187,52 @@ if (typeof yasp == 'undefined') yasp = { };
     $('.debugger-tabs-debug-clear').click(yasp.Debugger.debugLog.clearLog);
 
     yasp.Debugger.registers.heading = $('#debugger-tabs-registers > .registers > .heading');
+    yasp.Debugger.registers.format = $('#debugger-tabs-registers .registerFormat');
+    yasp.Debugger.registers.registers = $('#debugger-tabs-registers > .registers');
     yasp.Debugger.registers.snapshots = $('#debugger-tabs-registers > .registers > .snapshots');
     yasp.Debugger.registers.stack = $('#debugger-tabs-registers > .stack > pre');
+
+    yasp.Debugger.registers.formatPadding = {
+      "bin": 8,
+      "dec": 3,
+      "hex": 2
+    };
+
+    yasp.Debugger.registers.format.text('HEX');
+    yasp.Debugger.registers.registers.addClass("format-hex");
+    yasp.Debugger.registers.currentFormat = 'hex';
+
+    $('.registerFormat').click(function () {
+      var newVal;
+      var oldRadix = formatNameToRadix(yasp.Debugger.registers.currentFormat);
+
+      yasp.Debugger.registers.registers.removeClass("format-hex");
+      yasp.Debugger.registers.registers.removeClass("format-bin");
+      yasp.Debugger.registers.registers.removeClass("format-dec");
+
+      if(yasp.Debugger.registers.currentFormat === "hex") {
+        newVal = "bin";
+      } else if(yasp.Debugger.registers.currentFormat === "bin") {
+        newVal = "dec";
+      } else if(yasp.Debugger.registers.currentFormat === "dec") {
+        newVal = "hex";
+      }
+
+      var newRadix = formatNameToRadix(newVal);
+      var newPadding = yasp.Debugger.registers.formatPadding[newVal];
+      var allRegs = yasp.Debugger.registers.snapshots.find('.register');
+
+      for (var i = 0; i < allRegs.length; i++) {
+        var $reg = $(allRegs[i]);
+        var num = parseInt($reg.text(), oldRadix);
+
+        $reg.text(formatNumber(num, newPadding * ($reg.hasClass('word') ? 2 : 1), newRadix));
+      }
+
+      yasp.Debugger.registers.registers.addClass("format-" + newVal);
+      yasp.Debugger.registers.currentFormat = newVal;
+      yasp.Debugger.registers.format.text(newVal.toUpperCase());
+    });
   });
 
   function onEmulatorContinue () {
@@ -312,9 +360,26 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   }
 
-  // http://stackoverflow.com/a/57807/2486196
+  function formatNameToRadix (name) {
+    name = name.toUpperCase();
+    if(name === "OCT")
+      return 8;
+    if(name === "BIN")
+      return 2;
+    if(name === "DEC")
+      return 10;
+    if(name === "HEX")
+      return 16;
+    return 10;
+  }
+
   function formatHexNumber(d, padding) {
-    var hex = Number(d).toString(16);
+    return formatNumber(d, padding, 16);
+  }
+
+  // http://stackoverflow.com/a/57807/2486196
+  function formatNumber(d, padding, format) {
+    var hex = Number(d).toString(format);
     while (hex.length < padding)
       hex = "0" + hex;
     return hex;

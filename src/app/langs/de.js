@@ -59,6 +59,9 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.tabs.ram": "RAM",
     "debugger.tabs.rom": "ROM",
     "debugger.tabs.registers": "Register",
+    "debugger.tabs.registers.registers": "Register",
+    "debugger.tabs.registers.registers.format": "Format: ",
+    "debugger.tabs.registers.stack": "Stack",
     "debugger.tabs.breakpoints": "Breakpoints",
 
     "help.title": "Hilfe",

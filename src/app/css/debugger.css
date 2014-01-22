@@ -106,6 +106,14 @@
     width: calc(100% - 80px);
 }
 
+.registers .registerFormat {
+    margin-right: 10px;
+
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .registers > .heading,
 .registers > .snapshots {
     font-size: 1.5em;
@@ -167,13 +175,14 @@
     margin-right: 1em;
 }
 
-.registers .register.byte {
-    width: 2em;
-}
+.registers.format-hex .register.byte { width: 2em; }
+.registers.format-hex .register.word { width: 3em; }
 
-.registers .register.word {
-    width: 3em;
-}
+.registers.format-dec .register.byte { width: 3em; }
+.registers.format-dec .register.word { width: 5em; }
+
+.registers.format-bin .register.byte { width: 6em; }
+.registers.format-bin .register.word { width: 10em; }
 
 .stack {
     width: 80px;
