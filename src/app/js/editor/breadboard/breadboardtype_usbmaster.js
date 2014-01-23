@@ -26,10 +26,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         pin: 11,
         appearance: {
-          top: "5px",
-          left: "137px",
-          height: "65px",
-          width: "65px"
+          top: "1px",
+          left: "120px",
+          height: "80px",
+          width: "80px"
         }
       },
       {
@@ -86,9 +86,9 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         appearance: {
           top: "208px",
-          left: "185px",
-          height: "35px",
-          width: "35px"
+          left: "180px",
+          height: "40px",
+          width: "40px"
         }
       },
       {
@@ -103,9 +103,9 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         appearance: {
           top: "208px",
-          left: "243px",
-          height: "35px",
-          width: "35px"
+          left: "240px",
+          height: "40px",
+          width: "40px"
         }
       }
     ]
