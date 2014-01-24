@@ -112,7 +112,8 @@ if (typeof yasp == 'undefined') yasp = { };
       'IO_CHANGED': this.noop
     };
 
-    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
+
+    this.setTickWrapperTimeout();
   };
 
   /**
@@ -530,6 +531,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   yasp.Emulator.prototype.tickWrapper = function () {
+
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
 
       if(this.running === false) {
@@ -540,15 +542,21 @@ if (typeof yasp == 'undefined') yasp = { };
       if(typeof this.running === "number") {
         this.running--;
 
-        if(this.running === -1) {
+        if(this.running < 0) {
           this.break("count");
           this.setTickWrapperTimeout();
           return;
         }
       }
 
-      if(this.waitTime !== 0 && this.running !== 0) { // ignore WAIT/PAUSE
-        setTimeout(this.tickWrapper.bind(this), this.waitTime);
+      if(this.waitTime !== 0) {
+        if(this.running === 0) { // ignore WAIT/PAUSE when stepping
+          this.running = 1;
+          this.setTickWrapperTimeout();
+        } else {
+          setTimeout(this.tickWrapper.bind(this), this.waitTime);
+        }
+
         var timePerTick = this.tickTimeout / this.ticksPerTick;
         this.ticks += (this.waitTime / timePerTick);
         this.waitTime = 0;
