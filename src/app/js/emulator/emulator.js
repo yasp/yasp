@@ -137,6 +137,8 @@ if (typeof yasp == 'undefined') yasp = { };
    * @returns {Number|Boolean}
    */
   yasp.Emulator.prototype.load = function(bitcode, start) {
+    if(typeof start !== "number")
+      return 3;
     if(start < 0 || start >= this.rom.length)
       return 0;
     if(!(bitcode instanceof Uint8Array))
