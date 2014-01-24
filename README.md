@@ -36,13 +36,15 @@ yasp can additionally upload code-files to an simple server which can be found i
 ### Documentation
 The documentation lives in the [/doc/](/doc/)-directory. Additional documentation in the German language can be found on the [project homepage](http://yasp.me).
 
+**If you think that something is lacking documentation please [create an issue](https://github.com/yasp/yasp/issues/new).**
+
 ### Hacking
 * [`/src/app/`](/src/app/), IDE
 * [`/src/app/instructions`](/src/app/instructions), all instruction files, see [instructions.md](/doc/instructions.md)
 * [`/src/app/js/editor/breadboard/`](/src/app/js/editor/breadboard/), breadboards, see [breadboards.md](/doc/breadboards.md)
 * [`/src/app/langs/`](/src/app/langs/), languages for l10n, see [l10n.md](/doc/l10n.md)
 * [`/src/app/js/assembler`](/src/app/js/assembler), home of the assembler
-* [`/src/app/js/emulator`](/src/app/js/emulator), home of the emulator
+* [`/src/app/js/emulator`](/src/app/js/emulator), home of the emulator, see [emulator.md](/doc/emulator/emulator.md)
 * [`/src/app/js/hardware`](/src/app/js/hardware), home of the hardware, see [hardware.md](/doc/hardware.md)
 * [`/src/app/test/index.html`](/src/app/test/index.html), unit-tests
 * [`/src/app/test/hardware.html`](/src/app/test/hardware.html), hardware-demo
