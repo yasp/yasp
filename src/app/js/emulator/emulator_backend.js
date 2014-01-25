@@ -18,7 +18,7 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "CONTINUE":
-      var retn = emulator.continue(data.payload.count);
+      var retn = emulator.continue(data.payload.count, data.payload.skipBreakpoint);
       ready({
         payload: {},
         error: retn === true ? null : { code: retn }
@@ -29,6 +29,13 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       ready({
         payload: {},
         error: null
+      });
+      break;
+    case "SET_BREAKPOINTS":
+      var retn = emulator.setBreakpoints(data.payload.breakpoints);
+      ready({
+        payload: {},
+        error: retn === true ? null : { code: retn }
       });
       break;
     case "GET_STATE":

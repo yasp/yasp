@@ -112,6 +112,10 @@ if (typeof yasp == 'undefined') yasp = { };
       'IO_CHANGED': this.noop
     };
 
+    this.breakpoints = new Array(this.rom.length);
+    for (var i = 0; i < this.breakpoints.length; i++) {
+      this.breakpoints[i] = false;
+    }
 
     this.setTickWrapperTimeout();
   };
@@ -153,9 +157,10 @@ if (typeof yasp == 'undefined') yasp = { };
   /**
    * @function Continues the execution
    * @param count number of instructions to execute or null
+   * @param skipBreakpoint true if the current breakpoint should be skipped
    * @returns {Number|Boolean}
    */
-  yasp.Emulator.prototype.continue = function (count) {
+  yasp.Emulator.prototype.continue = function (count, skipBreakpoint) {
     if(count == null) {
       this.running = true;
     } else if(typeof count == "number") {
@@ -165,6 +170,8 @@ if (typeof yasp == 'undefined') yasp = { };
     } else {
       return 1;
     }
+
+    this.skipBreakpoint = !!skipBreakpoint;
 
     this.events.CONTINUED();
     return true;
@@ -176,6 +183,28 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
     this.events.BREAK(reason);
+  };
+
+
+  /**
+   * @function updates the internal list of breakpoints
+   * @param breakpoints the breakpoints to save
+   * @returns {Number|Boolean}
+   */
+  yasp.Emulator.prototype.setBreakpoints = function (breakpoints) {
+    if(!(breakpoints instanceof Array))
+      return 0;
+
+    for (var i = 0; i < this.breakpoints.length; i++) {
+      this.breakpoints[i] = false;
+    }
+
+    for (var i = 0; i < breakpoints.length; i++) {
+      var brk = breakpoints[i];
+      this.breakpoints[brk.offset] = true;
+    }
+
+    return true;
   };
 
   /**
@@ -538,6 +567,14 @@ if (typeof yasp == 'undefined') yasp = { };
         this.setTickWrapperTimeout();
         return;
       }
+
+      if(this.breakpoints[this.pc] === true && this.skipBreakpoint === false) {
+        this.break("breakpoint");
+        this.setTickWrapperTimeout();
+        return;
+      }
+
+      this.skipBreakpoint = false;
 
       if(typeof this.running === "number") {
         this.running--;
