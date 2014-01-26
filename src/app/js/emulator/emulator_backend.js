@@ -32,13 +32,6 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "GET_STATE":
-      if(emulator.running !== false) {
-        return ready({
-          payload: {},
-          error: { code: 0 }
-        });
-      }
-
       var payload = {
         rom: emulator.rom,
         ram: emulator.ram,
@@ -83,13 +76,6 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "SET_STATE":
-      if(emulator.running !== false) {
-        return ready({
-          payload: {},
-          error: { code: 0 }
-        });
-      }
-
       var state = data.payload;
 
       if(state.io) {

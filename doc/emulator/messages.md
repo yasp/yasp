@@ -110,8 +110,7 @@ empty object
 none
 
 ### Message: `GET_STATE`
-Get the current state of the emulator, such as registers, `pc`, stack, and so on. This can only be used if the emulator
-is not running.
+Get the current state of the emulator, such as registers, `pc`, stack, and so on.
 #### Message-Payload
 empty object
 
@@ -119,12 +118,10 @@ empty object
 state-object, see Data-section in emulator-documentation
 
 #### Error-Payloads
-| code | error               |
-| ---- | ------------------- |
-| 0    | emulator is running |
+none
 
 ### Message: `SET_STATE`
-Sets the current state of the emulator. This can only be used if the emulator is not running.
+Sets the current state of the emulator.
 #### Message-Payload
 state-object, see Data-section in emulator-documentation
 
@@ -132,6 +129,4 @@ state-object, see Data-section in emulator-documentation
 empty object
 
 #### Error-Payloads
-| code | error               |
-| ---- | ------------------- |
-| 0    | emulator is running |
+none
