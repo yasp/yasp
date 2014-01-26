@@ -27,6 +27,6 @@
     }
   ],
   "exec": function (rword) {
-    this.debugRegister('w', rword.address, rword.value);
+    this.debugRegister('w', rword.address);
   }
 }

@@ -186,7 +186,12 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param addr the register-number
    * @param val the value to send
    */
-  yasp.Emulator.prototype.debugRegister = function (type, addr, val) {
+  yasp.Emulator.prototype.debugRegister = function (type, addr) {
+    var val = 0;
+    if(type === "w")
+      val = this.readWordRegister(addr);
+    if(type === "b")
+      val = this.readByteRegister(addr);
     this.events.DEBUG("register", type, addr, val);
   };
 
