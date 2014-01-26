@@ -6,7 +6,7 @@ if (typeof yasp == 'undefined') yasp = { };
   var bitmaps = buildBitmapMap ();
 
   /**
-   * @function takes a number of unsigned integers from an array of bytes. It can, for example, get the integer from bit 0 to 3 and from 5 to 7 in the numer 01000011, which would result in 2 and 3.
+   * @function takes a number of unsigned integers from an array of bytes. See the emulator-documentation for details.
    * @param bytes the source bytes
    * @param parts length of the parts to extract
    * @param retn array to store the result in, has to be of the same length as parts
@@ -66,13 +66,16 @@ if (typeof yasp == 'undefined') yasp = { };
    * @function splits a word into two bytes and writes the resulting two bytes into an existing array. The bytes are not returned as an array or object because allocations are expensive.
    * @param w the word to split
    * @param dest the destination array
-   * @param offset the offset in the destination array, start of the two bytes
+   * @param destOffset the offset in the destination array, start of the two bytes
    */
   yasp.bitutils.bytesFromWord = function (w, dest, destOffset) {
     dest[destOffset] = w >> 8;
     dest[destOffset + 1] = w & 0xFF;
   };
 
+  /**
+   * @function builds a bitmaps for `00000000b`, through `11110000b` to `11111111b`
+   */
   function buildBitmapMap () {
     var maps = { };
 
