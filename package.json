@@ -6,7 +6,8 @@
     "grunt-contrib-qunit": "~0.2.2",
     "grunt-doctool": "git+ssh://git@github.com:yasp/doctool.git#0.0.8",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-http-server": "0.0.2"
+    "grunt-http-server": "0.0.2",
+    "grunt-jsdoc": "~0.5.1"
   },
   "dependencies": {
     "grunt-curl": "~1.1.1",

@@ -10,5 +10,8 @@ node_modules
 src/app/js/commands.js
 src/app/help/help.html
 
+# Generated HTML doc
+doc/jsdoc
+
 # Libs
 src/lib

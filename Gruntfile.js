@@ -77,6 +77,21 @@ module.exports = function(grunt) {
       watchcommands: {
         files: ['src/app/instructions/**/*.js'],
         tasks: ['doctool:doc']
+      },
+      watchdoc: {
+        files: ['src/app/**/*.js'],
+        tasks: ['jsdoc:dist']
+      }
+    },
+    jsdoc : {
+      dist : {
+        src: [
+          './src/app/js/emulator/*.js',
+          './src/app/js/assembler/*.js'
+        ],
+        options: {
+          destination: 'doc/jsdoc'
+        }
       }
     },
     connect: {
@@ -95,6 +110,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-doctool');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
@@ -102,4 +118,6 @@ module.exports = function(grunt) {
   grunt.registerTask('commandsjs', [ 'doctool' ]);
   grunt.registerTask('watchcommands', [ 'watch' ]);
   grunt.registerTask('http', [ 'connect' ]);
+  grunt.registerTask('doc', [ 'jsdoc' ]);
+  grunt.registerTask('watchdoc', [ 'watch' ]);
 };
