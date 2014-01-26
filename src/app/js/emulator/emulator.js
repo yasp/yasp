@@ -116,10 +116,10 @@ if (typeof yasp == 'undefined') yasp = { };
     this.setTickWrapperTimeout();
   };
 
-  /**
-   * @function Registers the callback for an event. It is not possible to register multiple callbacks for one event for performance reasons.
+  /** Registers the callback for an event. It is not possible to register multiple callbacks for one event for performance reasons.
    * @param evt the event name
    * @param func the event callback
+   * @private
    */
   yasp.Emulator.prototype.registerCallback = function (evt, func) {
     if(typeof func == "function") {
@@ -130,11 +130,11 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function Loads the given bitcode into the ROM
+  /** Loads the given bitcode into the ROM
    * @param bitcode bitcode to load
    * @param start address to start loading into
    * @returns {Number|Boolean}
+   * @private
    */
   yasp.Emulator.prototype.load = function(bitcode, start) {
     if(typeof start !== "number")
@@ -152,10 +152,10 @@ if (typeof yasp == 'undefined') yasp = { };
     return true;
   };
 
-  /**
-   * @function Continues the execution
+  /** Continues the execution
    * @param count number of instructions to execute or null
    * @returns {Number|Boolean}
+   * @private
    */
   yasp.Emulator.prototype.continue = function (count) {
     if(count == null) {
@@ -172,16 +172,14 @@ if (typeof yasp == 'undefined') yasp = { };
     return true;
   };
 
-  /**
-   * @function Stops the execution
+  /** Stops the execution
    */
   yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
     this.events.BREAK(reason);
   };
 
-  /**
-   * @function sends a register to the debugger
+  /** sends a register to the debugger
    * @param type the register-type (w or b)
    * @param addr the register-number
    * @param val the value to send
@@ -195,8 +193,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.events.DEBUG("register", type, addr, val);
   };
 
-  /**
-   * @function sends a string to the debugger
+  /** sends a string to the debugger
    * @param addr address to read a null-terminated string from
    */
   yasp.Emulator.prototype.debugString = function (addr) {
@@ -210,8 +207,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.events.DEBUG("string", null, addr, str);
   };
 
-  /**
-   * @function Writes the given value into the given byte register
+  /** Writes the given value into the given byte register
    * @param r the byte-register to write to
    * @param v the value to write
    * @returns {Number|Boolean}
@@ -226,8 +222,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return true;
   };
 
-  /**
-   * @function Reads the given value at the given byte
+  /** Reads the given value at the given byte
    * @param r the byte-register to read
    * @returns {Number}
    */
@@ -237,8 +232,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.ram[r];
   };
 
-  /**
-   * @function Writes the given value into the given word register
+  /** Writes the given value into the given word register
    * @param r the word-register to write to
    * @param v the value to write
    * @returns {Number|Boolean}
@@ -256,8 +250,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return true;
   };
 
-  /**
-   * @function Reads the given value at the given word
+  /** Reads the given value at the given word
    * @param r the word-register to read
    * @returns {Number}
    */
@@ -269,9 +262,9 @@ if (typeof yasp == 'undefined') yasp = { };
     return yasp.bitutils.wordFromBytes(this.ram[r], this.ram[r + 1]);
   };
 
-  /**
-   * @function Reads the flags
+  /** Reads the flags. This function is deprecated for speed reasons. Use isCarryFlagSet() and isZeroFlagSet().
    * @returns object containing the flag-values
+   * @deprecated
    */
   yasp.Emulator.prototype.readFlags = function () {
     return {
@@ -280,24 +273,21 @@ if (typeof yasp == 'undefined') yasp = { };
     };
   };
 
-  /**
-   * @function Reads the carry flag
+  /** Reads the carry flag
    * @returns boolean true if the carry flag is set, otherwise false
    */
   yasp.Emulator.prototype.isCarryFlagSet = function () {
     return this.flags.c;
   };
 
-  /**
-   * @function Reads the zero flag
+  /** Reads the zero flag
    * @returns boolean true if the zero flag is set, otherwise false
    */
   yasp.Emulator.prototype.isZeroFlagSet = function () {
     return this.flags.z;
   };
 
-  /**
-   * @function Write the flags
+  /** Write the flags
    * @param c the carry flag to be set (or null)
    * @param z the zero flag to be set (or null)
    */
@@ -314,8 +304,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function splits the given word into two bytes and pushes them onto the stack
+  /** splits the given word into two bytes and pushes them onto the stack
    * @param v to word to push onto the stack
    * @see Emulator#popWord
    */
@@ -325,8 +314,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack[++this.sp] = v >> 8;
   };
 
-  /**
-   * @function pushes one byte onto the stack
+  /** pushes one byte onto the stack
    * @param v the byte to push onto the stack
    * @see Emulator#popByte
    */
@@ -335,8 +323,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.stack[++this.sp] = v;
   };
 
-  /**
-   * @function gets two bytes from the stack, combines and removes them
+  /** gets two bytes from the stack, combines and removes them
    * @returns a word from the top of stack
    * @see Emulator#pushWord
    */
@@ -344,8 +331,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return yasp.bitutils.wordFromBytes(this.popByte(), this.popByte());
   };
 
-  /**
-   * @function gets one byte from the stack and removed it
+  /** gets one byte from the stack and removed it
    * @returns a byte from the top of stack or 0 if the stack is empty
    * @see Emulator#pushByte
    */
@@ -355,8 +341,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.stack[this.sp--];
   };
 
-  /**
-   * @function sets the program counter
+  /** sets the program counter
    * @param pc the new value to set
    */
   yasp.Emulator.prototype.writePC = function (pc) {
@@ -364,16 +349,14 @@ if (typeof yasp == 'undefined') yasp = { };
     this.pc = pc;
   };
 
-  /**
-   * @function gets the program counter
+  /** gets the program counter
    * @returns number the current value of the program counter
    */
   yasp.Emulator.prototype.readPC = function () {
     return this.pc;
   };
 
-  /**
-   * @function writes one byte to the ram
+  /** writes one byte to the ram
    * @param o the position to write the byte to
    * @param v the byte to write
    * @returns number 0 is success, 1 if o was out of bounds
@@ -385,8 +368,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return 0;
   };
 
-  /**
-   * @function sets the state of a pin
+  /** sets the state of a pin
    * @param p pin-number
    * @param s new state to set
    * @param outside true if the pin was set by the environment
@@ -420,11 +402,11 @@ if (typeof yasp == 'undefined') yasp = { };
     return 0;
   };
 
-  /**
-   * @function helper function to handle PWM
+  /** helper function to handle PWM
    * @param p pin-number
    * @param pin pin instance
    * @param s state which has been set
+   * @private
    */
   yasp.Emulator.prototype.updatePwm = function (p, pin, s) {
     var now = this.ticks;
@@ -466,8 +448,7 @@ if (typeof yasp == 'undefined') yasp = { };
     };
   };
 
-  /**
-   * @function gets the state of a pin
+  /** gets the state of a pin
    * @returns number or boolean depending on the pin-type, false if the pin does not exist
    */
   yasp.Emulator.prototype.getIO = function (p) {
@@ -479,8 +460,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return pin.state;
   };
 
-  /**
-   * @function reads one byte from the ram
+  /** reads one byte from the ram
    * @param o the position to write the byte to
    * @returns number the read byte, or 0 if o was out of bounds
    */
@@ -490,8 +470,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.ram[o];
   };
 
-  /**
-   * @function triggers an interrupt for the next tick
+  /** triggers an interrupt for the next tick
    * @param i the interrupt to trigger
    * @returns boolean true if the interrupt is going to served, false otherwise (depends on the active interrupt-mask)
    */
@@ -503,17 +482,16 @@ if (typeof yasp == 'undefined') yasp = { };
     return true;
   };
 
-  /**
-   * @function returns to byte to jump to for a given interrupt
+  /** returns to byte to jump to for a given interrupt
    * @param i the interrupt
+   * @private
    */
   yasp.Emulator.prototype.getInterruptAddress = function (i) {
     i = 0x100 + (i * 2); // interrupt table starts at 0x100, each entry is 2 bytes long
     return yasp.bitutils.wordFromBytes(this.rom[i], this.rom[i + 1]);
   };
 
-  /**
-   * @function sets the interrupt-mask
+  /** sets the interrupt-mask
    * @param mask mask to set
    */
   yasp.Emulator.prototype.setInterruptMask = function (mask) {
@@ -523,8 +501,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function waits for a given time
+  /** waits for a given time
    * @param ticks number of ticks to wait
    */
   yasp.Emulator.prototype.wait = function (ticks) {
@@ -533,10 +510,16 @@ if (typeof yasp == 'undefined') yasp = { };
     this.waitTime = ms;
   };
 
+  /**
+   * @private
+   */
   yasp.Emulator.prototype.setTickWrapperTimeout = function () {
     setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
   };
 
+  /**
+   * @private
+   */
   yasp.Emulator.prototype.tickWrapper = function () {
 
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
@@ -576,6 +559,9 @@ if (typeof yasp == 'undefined') yasp = { };
     this.setTickWrapperTimeout();
   };
 
+  /**
+   * @private
+   */
   yasp.Emulator.prototype.tick = function () {
     this.ticks++;
 
