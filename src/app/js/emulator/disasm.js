@@ -1,11 +1,15 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function () {
+  /**
+   * @namespace
+   */
   yasp.disasm = {};
 
-  yasp.disasm.getCommands = function (bytes, offset, length) {
-  };
-
+  /** disassembles one command
+   * @param rom the array to read from
+   * @param offset offset to start reading
+   */
   yasp.disasm.getCommand = function (rom, offset) {
     var parts = [ ];
     var ppc = offset;

@@ -8,7 +8,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
   var bitmaps = buildBitmapMap ();
 
-  /**takes a number of unsigned integers from an array of bytes. See the emulator-documentation for details.
+  /** takes a number of unsigned integers from an array of bytes. See the emulator-documentation for details.
    * @param bytes the source bytes
    * @param parts length of the parts to extract
    * @param retn array to store the result in, has to be of the same length as parts
@@ -39,7 +39,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**takes one unsigned integer from a single byte. For example: (00100111b, 3dec, 4dec) => 0111b => 7dec
+  /** takes one unsigned integer from a single byte. For example: (00100111b, 3dec, 4dec) => 0111b => 7dec
    * @param byte the byte to read the int from
    * @param p start of the int inside the byte
    * @param l length of the int
@@ -55,7 +55,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return val;
   }
 
-  /**combines two bytes into one word
+  /** combines two bytes into one word
    * @param b1 the most significant byte
    * @param b2 the last significant byte
    */
@@ -63,7 +63,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return b1 << 8 | b2;
   };
 
-  /**splits a word into two bytes and writes the resulting two bytes into an existing array. The bytes are not returned as an array or object because allocations are expensive.
+  /** splits a word into two bytes and writes the resulting two bytes into an existing array. The bytes are not returned as an array or object because allocations are expensive.
    * @param w the word to split
    * @param dest the destination array
    * @param destOffset the offset in the destination array, start of the two bytes
@@ -73,7 +73,7 @@ if (typeof yasp == 'undefined') yasp = { };
     dest[destOffset + 1] = w & 0xFF;
   };
 
-  /**builds a bitmaps for `00000000b`, through `11110000b` to `11111111b`
+  /** builds a bitmaps for `00000000b`, through `11110000b` to `11111111b`
    */
   function buildBitmapMap () {
     var maps = { };
