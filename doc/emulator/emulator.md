@@ -100,74 +100,19 @@ Examples:
 }
 ```
 
-## Communication
-The emulator is executed inside an webworker, so the communication is handled by a [Communicator](../communicator.md).
+## Debug
+Data-structure used by the `DEBUG`-Broadcast.
 
-### Message: `LOAD`
-#### Message-Payload
 ```javascript
 {
-  "bitcode": new Uint8Array(),
-  "start": 0 // byte offset to start loading
+  "type": "",
+  "subtype": "",
+  "addr": 0,
+  "val": 0 // number or string
 }
 ```
 
-#### Response-Payload
-empty object
-
-#### Error-Payloads
-| code | error                      |
-| ---- | -------------------------- |
-| 0    | start is out of bounds     |
-| 1    | bitcode array too large    |
-| 2    | bitcode is of invalid type |
-| 3    | start is of invalid type   |
-
-### Message: `CONTINUE`
-#### Message-Payload
-```javascript
-{
-  "count": null // null = run unlimited steps, number = run x steps
-}
-```
-
-#### Response-Payload
-empty object
-
-#### Error-Payloads
-| code | error                    |
-| ---- | ------------------------ |
-| 0    | count is negative        |
-| 1    | count is of invalid type |
-
-### Message: `BREAK`
-#### Message-Payload
-empty object
-
-#### Response-Payload
-empty object
-
-#### Error-Payloads
-none
-
-### Message: `GET_STATE`
-#### Message-Payload
-empty object
-
-#### Response-Payload
-empty object
-
-#### Error-Payloads
-| code | error               |
-| ---- | ------------------- |
-| 0    | emulator is running |
-
-### Message: `SET_STATE`
-#### Message-Payload
-state-object
-
-#### Response-Payload
-empty object
-
-#### Error-Payloads
-none
+| type     | subtype    | addr                          | val    |
+| -------- | ---------- | ----------------------------- | ------ |
+| register | `b` or `w` | register-number (`0` to `31`) | number |
+| string   | `null`     | offset in ROM                 | string |
