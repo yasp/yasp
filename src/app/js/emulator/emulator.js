@@ -384,7 +384,7 @@ if (typeof yasp == 'undefined') yasp = { };
     if(pin.mode === "in" && outside !== true)
       return 2;
 
-    if(s === 1) {
+    if(s === 1 && pin.mode === "in") {
       this.triggerInterrupt(p);
     }
 
