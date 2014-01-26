@@ -28,7 +28,16 @@ $ cd yasp
 $ npm install      # download grunt-dependencies
 $ grunt deps       # download web-dependecies
 $ grunt commandsjs # build help and instructions
+$ grunt http       # start development http-server
 ```
+
+### Grunt-Tasks
+* `deps` download all client dependencies
+* `commandsjs` build help and commands.js, see [instructions.md](/doc/instructions.md)
+* `watchcommands` watch-task for `commandsjs`
+* `http` start a development http-server
+* `doc` builds jsdoc to `/doc/jsdoc/`
+* `watchdoc` watch-task for `doc`
 
 ### Server
 yasp can additionally upload code-files to an simple server which can be found in the [server repository](https://github.com/yasp/server).
