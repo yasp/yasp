@@ -19,6 +19,6 @@
   ],
   "params": [ ],
   "exec": function() {
-    this.break();
+    this.break("break_instr");
   }
 }
