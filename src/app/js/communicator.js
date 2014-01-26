@@ -114,6 +114,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * Responsible in the Web Worker for communicating with the client
    * @param self The self variable which is set in the web worker environment
    * @param listener The listener has to call "ready" if the results are available
+   * @constructor
    */
   yasp.CommunicatorBackend = function(self, listener) {
     console = {
@@ -126,7 +127,14 @@ if (typeof yasp == 'undefined') yasp = { };
     };
     
     listener = listener.bind(this);
-    
+
+    /**
+     * Sends a broadcast to all registered listeners
+     * @param action
+     * @param result
+     * @see Communicator#subscribe
+     * @see Communicator#unsubscribe
+     */
     this.broadcast = function(action, result) {
       console.log("Send broadcast: " + action + " result " + JSON.stringify(result));
       self.postMessage({
