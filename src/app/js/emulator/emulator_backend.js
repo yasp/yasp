@@ -188,7 +188,7 @@ emulator.registerCallback('LOADED', function (start, length) {
 });
 
 emulator.registerCallback('CONTINUED', function () {
-  communicator.broadcast('CONTINUED', { payload: null, error: null });
+  communicator.broadcast('CONTINUED', { payload: {}, error: null });
 });
 
 emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {
