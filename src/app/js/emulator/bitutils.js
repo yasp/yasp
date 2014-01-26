@@ -26,7 +26,7 @@ if (typeof yasp == 'undefined') yasp = { };
         var v;
         var ll = Math.min(l, 8 - pointerInByte); // number of bits to get from this byte
 
-        v = extractFromByte(bytes[Math.floor(pointer / 8)], pointerInByte, ll);
+        v = yasp.bitutils.extractFromByte(bytes[Math.floor(pointer / 8)], pointerInByte, ll);
         valPointer -= ll;
         v = v << valPointer;
         val = val | v;
