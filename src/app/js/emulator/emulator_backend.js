@@ -25,7 +25,7 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "BREAK":
-      emulator.break("break");
+      emulator.break("break_msg");
       ready({
         payload: {},
         error: null
