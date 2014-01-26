@@ -58,9 +58,6 @@ module.exports = function(grunt) {
         'https://raw.github.com/marijnh/CodeMirror/master/addon/dialog/dialog.css'
       ]
     },
-    qunit: {
-      test: ['src/app/test/index.html']
-    },
     doctool: {
       doc: {
         converter: "commandsjs",
@@ -105,7 +102,6 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-curl');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-doctool');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
@@ -113,7 +109,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
-  grunt.registerTask('test', [ 'qunit' ]);
   grunt.registerTask('commandsjs', [ 'doctool' ]);
   grunt.registerTask('watchcommands', [ 'watch' ]);
   grunt.registerTask('http', [ 'connect' ]);
