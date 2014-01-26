@@ -38,8 +38,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.jobs = [ ];
   }
 
-  /**
-   * @function Assembles the files
+  /** Assembles the files
    */
   yasp.Assembler.prototype.assemble = function (params) {
     this.reset();
@@ -91,8 +90,7 @@ if (typeof yasp == 'undefined') yasp = { };
     return result;
   };
 
-  /**
-   * @function Rises a syntax error
+  /** Rises a syntax error
    */
   yasp.Assembler.prototype.riseSyntaxError = function (iterator, msg) {
     var token = iterator.current();

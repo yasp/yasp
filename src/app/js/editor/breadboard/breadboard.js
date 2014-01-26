@@ -15,8 +15,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.type = type;
   };
 
-  /**
-   * @function Generates this breadboard
+  /** Generates this breadboard
    */
   yasp.BreadBoard.prototype.build = function () {
     this.container.empty();
@@ -44,8 +43,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function Generates a image and adds it to the DOM
+  /** Generates a image and adds it to the DOM
    * @param $container jQuery-Object of the container to place the image in
    * @param image the image to generate
    */
@@ -57,8 +55,7 @@ if (typeof yasp == 'undefined') yasp = { };
     $container.append($image);
   };
 
-  /**
-   * @function Generates a given piece of hardware, adds it to the DOM and attaches event-handlers
+  /** Generates a given piece of hardware, adds it to the DOM and attaches event-handlers
    * @param $container jQuery-Object of the container to place the hardware in
    * @param definition this pieces definition from the breadboard-type
    */
@@ -101,8 +98,7 @@ if (typeof yasp == 'undefined') yasp = { };
     $container.append($wrapper);
   };
 
-  /**
-   * @function redraws all hardware elements
+  /** redraws all hardware elements
    */
   yasp.BreadBoard.prototype.render = function () {
     for (var i = 0; i < this.hardware.length; i++) {
@@ -110,8 +106,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function removes all the hardware from the DOM and removes the event-handlers from the emulator
+  /** removes all the hardware from the DOM and removes the event-handlers from the emulator
    */
   yasp.BreadBoard.prototype.destroy = function () {
     this.container.empty();
