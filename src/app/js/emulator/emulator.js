@@ -262,9 +262,9 @@ if (typeof yasp == 'undefined') yasp = { };
     return yasp.bitutils.wordFromBytes(this.ram[r], this.ram[r + 1]);
   };
 
-  /** Reads the flags. This function is deprecated for speed reasons. Use isCarryFlagSet() and isZeroFlagSet().
+  /** Reads the flags.
    * @returns object containing the flag-values
-   * @deprecated
+   * @deprecated for speed reasons. Use Emulator#isCarryFlagSet and Emulator#isZeroFlagSet.
    */
   yasp.Emulator.prototype.readFlags = function () {
     return {
