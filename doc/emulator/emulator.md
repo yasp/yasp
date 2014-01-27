@@ -79,7 +79,10 @@ of the pin will always be `1` or `0`. PWM causes the state to be between `1` and
 ```
 
 ## [Utils](./utils.md)
+A number of utilities used by the emulator.
 
 ## [Data](./data.md)
+Data structures which are used inside the emulator and its messages.
 
 ## [Messages](./messages.md)
+Details about the [Communicator](../communicator.md)-Implementation for the emulator, including the messages and broadcasts.
