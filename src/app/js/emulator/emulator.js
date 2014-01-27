@@ -614,20 +614,20 @@ if (typeof yasp == 'undefined') yasp = { };
     setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
   };
 
-  /** helper function, invoked by setTimeout, calls tick()
+  /** helper function, invoked by setTimeout, calls {@link yasp.Emulator#tick}. Do not call manually.
    * @private
+   * @see {@link https://github.com/yasp/yasp/blob/master/doc/emulator/emulator.md#ticks|Additional documentation}
    * @see yasp.Emulator#ticksPerTick
-   * @see yasp.Emulator#tick
    * @see yasp.Emulator#running
-   * @see yasp.Emulator#setTickWrapperTimeout
+   * @see yasp.Emulator#break
+   * @see yasp.Emulator#continue
    */
   yasp.Emulator.prototype.tickWrapper = function () {
 
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
 
       if(this.running === false) {
-        this.setTickWrapperTimeout();
-        return;
+        break;
       }
 
       if(typeof this.running === "number") {
@@ -635,8 +635,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
         if(this.running < 0) {
           this.break("count");
-          this.setTickWrapperTimeout();
-          return;
+          break;
         }
       }
 
@@ -645,11 +644,15 @@ if (typeof yasp == 'undefined') yasp = { };
           this.running = 1;
           this.setTickWrapperTimeout();
         } else {
+          // don't set the normal timeout but wait for the desired time
           setTimeout(this.tickWrapper.bind(this), this.waitTime);
         }
 
+        // fix the number of ticks executed. This has to be accurate since PWM relies on the tick-count
+        // to calculate for how long a pin was high or low.
         var timePerTick = this.tickTimeout / this.ticksPerTick;
-        this.ticks += (this.waitTime / timePerTick);
+        var ticksSkipped = (this.waitTime / timePerTick);
+        this.ticks += ticksSkipped;
         this.waitTime = 0;
         return;
       }
@@ -660,12 +663,14 @@ if (typeof yasp == 'undefined') yasp = { };
     this.setTickWrapperTimeout();
   };
 
-  /**
+  /** Executes instructions. Do not call manually.
    * @private
+   * @see {@link https://github.com/yasp/yasp/blob/master/doc/emulator/emulator.md#ticks|Additional documentation}
    */
   yasp.Emulator.prototype.tick = function () {
     this.ticks++;
 
+    // interrupts
     if(this.interruptToServe !== -1) {
       if(debug) console.log("interrupt jumped: " + this.interruptToServe);
       this.pushWord(this.pc); // for RETI
@@ -673,6 +678,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.interruptToServe = -1;
     }
 
+    // fetch instruction
     if(this.commandCache[this.pc] === undefined) {
       this.commandCache[this.pc] = yasp.disasm.getCommand(this.rom, this.pc);
     }
@@ -680,16 +686,24 @@ if (typeof yasp == 'undefined') yasp = { };
     var ccmd = this.commandCache[this.pc];
     var cmd = ccmd.cmd;
 
+    // increment the program counter by the length of the instruction in the ROM
     this.writePC(this.pc + ccmd.neededBytes);
 
     if(debug) console.log(ccmd.str);
 
+    // the loaded value of p0 is needed by the zero-flag-checking
     var p0 = ccmd.params[0];
 
+    // load the values of register and pin-parameters. This is an unrolled loop, limited to two parameters for speed
+    // reasons. In addition it is possible to skip loading of certain values by adding valueNeeded=false to the
+    // instruction file. Refer to the instruction documentation for further details:
+    //                   https://github.com/yasp/yasp/blob/master/doc/instructions.md
     if(ccmd.params.length === 0) {
       cmd.exec.call(this);
     } else {
       if(p0.valueNeeded) {
+        // isRByte, isRWord and isPin are added by yasp.disasm.getCommand
+        // checking the booleans is way faster than comparing the type-string of each instruction.
         if(p0.isRByte === true)
           p0.value = this.readByteRegister(p0.address);
         else if(p0.isRWord === true)
@@ -698,8 +712,11 @@ if (typeof yasp == 'undefined') yasp = { };
           p0.value = this.getIO(p0.address);
       }
 
-      if(ccmd.params.length === 2) {
+      if(ccmd.params.length === 1) {
+        cmd.exec.call(this, p0);
+      } else if(ccmd.params.length === 2) {
         var p1 = ccmd.params[1];
+
         if(p1.valueNeeded) {
           if(p1.isRByte === true)
             p1.value = this.readByteRegister(p1.address);
@@ -711,10 +728,11 @@ if (typeof yasp == 'undefined') yasp = { };
 
         cmd.exec.call(this, p0, p1);
       } else {
-        cmd.exec.call(this, p0);
+        throw "Instructions with more than 2 parameters are not supported.";
       }
     }
 
+    // check the zero-flag if specified in the instruction-file
     if(cmd.checkFlags !== undefined && p0 !== undefined) {
       var newVal;
 
