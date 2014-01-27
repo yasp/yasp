@@ -12,8 +12,7 @@ The original project team of yasp consists of Robert Fischer and Michael "luto" 
 a look at the about-section in the IDEs menu.
 
 ## Online-Demo
-* IDE: http://yasp.me/yasp/src/
-* Test environment: http://yasp.me/yasp/src/app/test/repl.html
+A hosted version of yasp can be found on http://demo.yasp.me/.
 
 ## License
 yasp is licensed under the GPLv3-License, for details see [`LICENSE.txt`](LICENSE.txt).
