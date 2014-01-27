@@ -23,8 +23,60 @@ ticks is executed in each `tickWrapper()`-call.
 2. [`setTickWrapperTimeout()`](http://doc.yasp.me/yasp.Emulator.html#setTickWrapperTimeout)
 
 ## PWM
+The emulator is capable of simulating PWM, in terms of calculating a pins analogue output power when a pin is rapidly
+switched on and off. This is done in the [`updatePwm()`](http://doc.yasp.me/yasp.Emulator.html#updatePwm) helper function.
+Note that this behaviour only used when the pins state changes more often than 10 times a second, otherwise the state
+of the pin will always be `1` or `0`. PWM causes the state to be between `1` and `255`.
 
-## Command-API
+```
+ Impulse
+     +--+
+     |  |
+   --+  +------------------
+
+
+ Pulse
+     +--+  +--+  +--+  +--+  +--+
+     |  |  |  |  |  |  |  |  |  |
+   --+  +--+  +--+  +--+  +--+  +--
+
+ Pulse width modulation
+     t   t
+      on  off
+     <--><-->
+     +---+  +---+  +---+  +---+  +-- ...
+     |   |  |   |  |   |  |   |  |
+   --+   +--+   +--+   +--+   +--+
+     |<---->|<---->|<---->|<---->|
+       t
+        const
+
+    t   +  t     = t
+     on     off     const
+
+ Calculation of the output power
+
+     1234566789
+     +---+  +---+  +---+  +---+  +-- ...
+     |   |  |   |  |   |  |   |  |
+   --+   +--+   +--+   +--+   +--+
+
+    startOn1 = 1
+    startOff = 5
+    startOn2 = 7
+
+    t    = startOff - startOn1 = 4
+     on
+
+    t    = startOff - startOn2 = 2
+     off
+
+             t
+              on             4       2
+    x =  --------------  =  ---  =  ---  = 66.66%
+          t    +  t          6       3
+           off     on
+```
 
 ## [Utils](./utils.md)
 
