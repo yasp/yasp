@@ -2,8 +2,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
   if (!yasp.l10n) {
-    /**
-     * @namespace
+    /** Additional documentation can be found in the {@link https://github.com/yasp/yasp/blob/master/doc/l10n.md|GitHub repository}.
+     * @class
      */
     yasp.l10n = {};
   }
@@ -18,8 +18,8 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** translates a single key and replaces placeholders (`{0}`) with values given in the params-parameter.
-   * @param key the key to translate
-   * @param params the parameters to put in the translated string
+   * @param key {String} the key to translate
+   * @param params {String[]} the parameters to put in the translated string
    */
   yasp.l10n.getTranslation = function (key, params) {
     params = params || [];
@@ -48,7 +48,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** translates a DOM-Element using the key given in its data-l10n attribute.
-   * @param element the DOM-Element to translate
+   * @param element {object} the DOM-Element to translate
    * @see yasp.l10n#translateDocument
    */
   yasp.l10n.translateSingleDomElement = function (element) {

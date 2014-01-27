@@ -2,7 +2,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
 (function () {
   /**
-   * @namespace
+   * @class
    */
   yasp.disasm = {};
 
