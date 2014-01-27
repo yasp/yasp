@@ -508,22 +508,22 @@ if (typeof yasp == 'undefined') yasp = { };
     if(s === 1) {
       if(!this.pwmStatus[p]) {
         this.pwmStatus[p] = {
-          timeOn: now
+          startOn: now
         };
       } else {
-        var ss = this.pwmStatus[p];
-        var tOn = ss.timeOff - ss.timeOn;
-        var tOff = now - ss.timeOff;
-        var total = tOn + tOff;
+        var status = this.pwmStatus[p];
+        var timeOn = status.startOff - status.startOn;
+        var timeOff = now - status.startOff;
+        var total = timeOn + timeOff;
 
-        var x = tOn / total;
-        this.events.IO_CHANGED(p, x, pin.mode, pin.type);
+        var percentOn = timeOn / total;
+        this.events.IO_CHANGED(p, percentOn, pin.mode, pin.type);
         clearTimeout(this.pwmTimeouts[p]);
 
         this.pwmStatus[p] = null;
       }
     } else if(s === 0 && this.pwmStatus[p]) {
-      this.pwmStatus[p].timeOff = now;
+      this.pwmStatus[p].startOff = now;
     }
 
     if(this.pwmTimeouts[p]) {
