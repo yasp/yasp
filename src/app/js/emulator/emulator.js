@@ -499,6 +499,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param pin {object} pin instance
    * @param s {Number} state which has been set
    * @fires yasp.Emulator~IO_CHANGED
+   * @see {@link https://github.com/yasp/yasp/blob/master/doc/emulator/emulator.md#pwm|Additional documentation}
    * @see yasp.Emulator#setIO
    * @private
    */
