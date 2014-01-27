@@ -76,7 +76,7 @@ if (typeof yasp == 'undefined') yasp = { };
     /** bits of the interrupt-mask
      * @member {boolean[]}
      * @see yasp.Emulator#setInterruptMask
-     * @see yasp.Emulator#triggerInterrupt */
+     * @see yasp.Emulator#scheduleInterrupt */
     this.interruptMask = [
       false,
       false,
@@ -92,7 +92,7 @@ if (typeof yasp == 'undefined') yasp = { };
      * @member {Number}
      * @see yasp.Emulator#tick
      * @see yasp.Emulator#setIO
-     * @see yasp.Emulator#triggerInterrupt */
+     * @see yasp.Emulator#scheduleInterrupt */
     this.interruptToServe = -1;
 
     // status (waiting for high or low) and timeout-ids for PWM
@@ -477,7 +477,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return 2;
 
     if(s === 1 && pin.mode === "in") {
-      this.triggerInterrupt(p);
+      this.scheduleInterrupt(p);
     }
 
     if(debug) console.log("p" + p + "=" + s + " (outside: " + (!!outside) + ")");
@@ -564,11 +564,11 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.ram[o];
   };
 
-  /** triggers an interrupt for the next tick
-   * @param i {Number} the interrupt to trigger
+  /** schedules an interrupt for the next tick
+   * @param i {Number} the interrupt to schedule
    * @returns {boolean} true if the interrupt is going to served, false otherwise (depends on the active interrupt-mask)
    */
-  yasp.Emulator.prototype.triggerInterrupt = function (i) {
+  yasp.Emulator.prototype.scheduleInterrupt = function (i) {
     if(this.interruptMask[i] === false)
       return false;
     if(debug) console.log("interrupt triggered: " + i);
