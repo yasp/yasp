@@ -95,6 +95,11 @@ if (typeof yasp == 'undefined') yasp = { };
      * @see yasp.Emulator#scheduleInterrupt */
     this.interruptToServe = -1;
 
+    /** do not ever execute a tick unless {@link yasp.Emulator#tick} is called directly. This is used by the test-suite and should not be used by anything else.
+     * @member {boolean}
+     * @see yasp.Emulator#setTickWrapperTimeout */
+    this.forceStep = false;
+
     // status (waiting for high or low) and timeout-ids for PWM
     this.pwmStatus = {};
     this.pwmTimeouts = {};
@@ -642,6 +647,8 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see yasp.Emulator#tickWrapper
    */
   yasp.Emulator.prototype.setTickWrapperTimeout = function () {
+    if(this.forceStep === true)
+      return;
     setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
   };
 
@@ -678,7 +685,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       if(this.waitTime !== 0) {
-        if(this.running === 0) { // ignore WAIT/PAUSE when stepping
+        if(this.running === 0 || this.forceStep === true) { // ignore WAIT/PAUSE when stepping or running in test-suite
           this.running = 1;
           this.setTickWrapperTimeout();
         } else {

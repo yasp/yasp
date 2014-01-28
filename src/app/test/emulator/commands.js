@@ -7,6 +7,8 @@
     setup: function () {
       emulator = new yasp.Emulator();
       emulator.ticksPerTick = 1;
+      emulator.forceStep = true;
+      emulator.running = true;
       emulator.registerCallback("DEBUG",
         function (type, subtype, addr, val) {
           lastEmulatorDebug = {
@@ -1197,7 +1199,8 @@
       var step = params.steps[i];
       var stepPrefix = "Step " + (i+1) + ": ";
 
-      emulator.tick();
+      emulator.running = true;
+      emulator.tickWrapper();
 
       if(step.reg) {
         for (var r in step.reg) {
