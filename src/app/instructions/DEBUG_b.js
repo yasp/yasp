@@ -27,6 +27,6 @@
     }
   ],
   "exec": function (rbyte) {
-    this.debugRegister('b', rbyte.address, rbyte.value);
+    this.debugRegister('b', rbyte.address);
   }
 }

@@ -123,7 +123,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
             yasp.Editor.reverseMap = {};
             for (var line in yasp.Editor.map) {
               var bitPos = yasp.Editor.map[line];
-              yasp.Editor.reverseMap[bitPos] = line;
+              yasp.Editor.reverseMap[bitPos] = +line;
             }
             
             // update orderedSymbols

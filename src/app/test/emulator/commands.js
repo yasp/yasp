@@ -1272,7 +1272,7 @@
         }
       }
       if(step.triggerInterrupt) {
-        emulator.triggerInterrupt(step.triggerInterrupt);
+        emulator.scheduleInterrupt(step.triggerInterrupt);
       }
       if(step.stack) {
         for (var r in step.stack) {

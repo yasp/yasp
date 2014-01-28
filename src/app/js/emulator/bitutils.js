@@ -1,15 +1,17 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function () {
+  /**
+   * @class
+   */
   yasp.bitutils = { };
 
   var bitmaps = buildBitmapMap ();
 
-  /**
-   * @function takes a number of unsigned integers from an array of bytes. It can, for example, get the integer from bit 0 to 3 and from 5 to 7 in the numer 01000011, which would result in 2 and 3.
-   * @param bytes the source bytes
-   * @param parts length of the parts to extract
-   * @param retn array to store the result in, has to be of the same length as parts
+  /** takes a number of unsigned integers from an array of bytes. See the emulator-documentation for details.
+   * @param bytes {Uint8Array} the source bytes
+   * @param parts {Number} length of the parts to extract
+   * @param retn {Uint8Array} to store the result in, has to be of the same length as parts
    */
   yasp.bitutils.extractBits = function (bytes, parts, retn) {
     var pointer = 0; // bit-pointer in bytes
@@ -24,7 +26,7 @@ if (typeof yasp == 'undefined') yasp = { };
         var v;
         var ll = Math.min(l, 8 - pointerInByte); // number of bits to get from this byte
 
-        v = extractFromByte(bytes[Math.floor(pointer / 8)], pointerInByte, ll);
+        v = yasp.bitutils.extractFromByte(bytes[Math.floor(pointer / 8)], pointerInByte, ll);
         valPointer -= ll;
         v = v << valPointer;
         val = val | v;
@@ -37,13 +39,13 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function takes one unsigned integer from a single byte. For example: (00100111b, 3dec, 4dec) => 0111b => 7dec
-   * @param byte the byte to read the int from
-   * @param p start of the int inside the byte
-   * @param l length of the int
+  /** takes one unsigned integer from a single byte. For example: (00100111b, 3dec, 4dec) => 0111b => 7dec
+   * @param byte {Number} the byte to read the int from
+   * @param p {Number} start of the int inside the byte
+   * @param l {Number} length of the int
+   * @private
    */
-  function extractFromByte (byte, p, l) {
+  yasp.bitutils.extractFromByte = function (byte, p, l) {
     if(l == 8)
       return byte;
 
@@ -53,26 +55,27 @@ if (typeof yasp == 'undefined') yasp = { };
     return val;
   }
 
-  /**
-   * @function combines two bytes into one word
-   * @param b1 the most significant byte
-   * @param b2 the last significant byte
+  /** combines two bytes into one word
+   * @param b1 {Number} the most significant byte
+   * @param b2 {Number} the last significant byte
+   * @returns {Number} word
    */
   yasp.bitutils.wordFromBytes = function (b1, b2) {
     return b1 << 8 | b2;
   };
 
-  /**
-   * @function splits a word into two bytes and writes the resulting two bytes into an existing array. The bytes are not returned as an array or object because allocations are expensive.
-   * @param w the word to split
-   * @param dest the destination array
-   * @param offset the offset in the destination array, start of the two bytes
+  /** splits a word into two bytes and writes the resulting two bytes into an existing array. The bytes are not returned as an array or object because allocations are expensive.
+   * @param w {Number} the word to split
+   * @param dest {Uint8Array} the destination array
+   * @param destOffset {Number} the offset in the destination array, start of the two bytes
    */
   yasp.bitutils.bytesFromWord = function (w, dest, destOffset) {
     dest[destOffset] = w >> 8;
     dest[destOffset + 1] = w & 0xFF;
   };
 
+  /** builds a bitmaps for `00000000b`, through `11110000b` to `11111111b`
+   */
   function buildBitmapMap () {
     var maps = { };
 

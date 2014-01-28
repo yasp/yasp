@@ -25,7 +25,7 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "BREAK":
-      emulator.break("break");
+      emulator.break("break_msg");
       ready({
         payload: {},
         error: null
@@ -39,13 +39,6 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "GET_STATE":
-      if(emulator.running !== false) {
-        return ready({
-          payload: {},
-          error: { code: 0 }
-        });
-      }
-
       var payload = {
         rom: emulator.rom,
         ram: emulator.ram,
@@ -188,7 +181,7 @@ emulator.registerCallback('LOADED', function (start, length) {
 });
 
 emulator.registerCallback('CONTINUED', function () {
-  communicator.broadcast('CONTINUED', { payload: null, error: null });
+  communicator.broadcast('CONTINUED', { payload: {}, error: null });
 });
 
 emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {

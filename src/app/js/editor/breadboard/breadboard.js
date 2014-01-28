@@ -3,10 +3,11 @@ if (typeof yasp == 'undefined') yasp = { };
 (function () {
 
   /**
-   * Displays the hardware in the debugger
-   * @param container the DOM-element to place the hardware in
-   * @param communicator EmulatorCommunicator
-   * @param type the breadboard-type to generate
+   * Displays the hardware in the debugger.
+   * Additional documentation can be found in the {@link https://github.com/yasp/yasp/blob/master/doc/breadboards.md|GitHub repository}.
+   * @param container {object} the DOM-element to place the hardware in
+   * @param communicator {Communicator} EmulatorCommunicator
+   * @param type {object} the breadboard-type to generate
    * @constructor
    */
   yasp.BreadBoard = function (container, communicator, type) {
@@ -15,8 +16,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.type = type;
   };
 
-  /**
-   * @function Generates this breadboard
+  /** Generates this breadboard: wire emulator to hardware, generate html
    */
   yasp.BreadBoard.prototype.build = function () {
     this.container.empty();
@@ -44,10 +44,10 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function Generates a image and adds it to the DOM
-   * @param $container jQuery-Object of the container to place the image in
-   * @param image the image to generate
+  /** Generates a image and adds it to the DOM
+   * @param $container {object} jQuery-Object of the container to place the image in
+   * @param image {object} the image to generate
+   * @private
    */
   yasp.BreadBoard.prototype.buildImage = function ($container, image) {
     var $image = $('<img style="position: absolute; top: 0; left: 0; z-index: 1;">');
@@ -57,10 +57,10 @@ if (typeof yasp == 'undefined') yasp = { };
     $container.append($image);
   };
 
-  /**
-   * @function Generates a given piece of hardware, adds it to the DOM and attaches event-handlers
+  /** Generates a given piece of hardware, adds it to the DOM and attaches event-handlers
    * @param $container jQuery-Object of the container to place the hardware in
    * @param definition this pieces definition from the breadboard-type
+   * @private
    */
   yasp.BreadBoard.prototype.buildPiece = function ($container, definition) {
     var appear = definition.appearance;
@@ -101,8 +101,7 @@ if (typeof yasp == 'undefined') yasp = { };
     $container.append($wrapper);
   };
 
-  /**
-   * @function redraws all hardware elements
+  /** redraws all hardware elements
    */
   yasp.BreadBoard.prototype.render = function () {
     for (var i = 0; i < this.hardware.length; i++) {
@@ -110,8 +109,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
-  /**
-   * @function removes all the hardware from the DOM and removes the event-handlers from the emulator
+  /** removes all the hardware from the DOM and removes the event-handlers from the emulator
    */
   yasp.BreadBoard.prototype.destroy = function () {
     this.container.empty();

@@ -4,8 +4,9 @@ if (typeof yasp == 'undefined') yasp = { };
   var debug = false;
 
   /**
-   * Responsible for communicating
-   * @param path is the path to the specified file
+   * Responsible for communicating with webworkers.
+   * Additional documentation can be found in the {@link https://github.com/yasp/yasp/blob/master/doc/communicator.md|GitHub repository}.
+   * @param path {String} is the path to the specified file
    * @constructor
    */
   yasp.Communicator = function(path) {
@@ -48,9 +49,9 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /**
    * Sends a message to the Worker
-   * @param action
-   * @param payload
-   * @param cb
+   * @param action {String}
+   * @param payload {object}
+   * @param cb {function}
    */
   yasp.Communicator.prototype.sendMessage = function(action, payload, cb) {
     var id = ++this.id;
@@ -69,8 +70,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /**
    * Starts listening to broadcast events
-   * @param event
-   * @param cb
+   * @param event {string}
+   * @param cb {function}
    */
   yasp.Communicator.prototype.subscribe = function(event, cb) {
     event = event.toUpperCase();
@@ -80,8 +81,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /**
    * Quits listening to Broadcast events
-   * @param event
-   * @param cb
+   * @param event {string}
+   * @param cb {function}
    */
   yasp.Communicator.prototype.unsubscribe = function(event, cb) {
     if (!!this.listener[event]) {
@@ -114,6 +115,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * Responsible in the Web Worker for communicating with the client
    * @param self The self variable which is set in the web worker environment
    * @param listener The listener has to call "ready" if the results are available
+   * @constructor
    */
   yasp.CommunicatorBackend = function(self, listener) {
     console = {
@@ -126,7 +128,14 @@ if (typeof yasp == 'undefined') yasp = { };
     };
     
     listener = listener.bind(this);
-    
+
+    /**
+     * Sends a broadcast to all registered listeners
+     * @param action {String}
+     * @param result {object}
+     * @see Communicator#subscribe
+     * @see Communicator#unsubscribe
+     */
     this.broadcast = function(action, result) {
       console.log("Send broadcast: " + action + " result " + JSON.stringify(result));
       self.postMessage({

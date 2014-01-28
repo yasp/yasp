@@ -126,8 +126,7 @@ if (typeof yasp == "undefined") yasp = { };
     this.char = char;
   };
 
-  /**
-   * @function Returns the type of this Token (Literal, Label, ...)
+  /** Returns the type of this Token (Literal, Label, ...)
    */
   yasp.Token.prototype.getType = function () {
     // TODO: optimize this function => cache values and dont iterate through everything

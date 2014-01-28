@@ -3,8 +3,8 @@ if (typeof yasp == 'undefined') yasp = { };
 (function() {
 
   /**
-   * An IO device
-   * @param params Consists of:
+   * An IO device.
+   * params looks like:
    * {
    *   state: The state of this Hardware (yasp.HardwareType.XXX.states.YYY
    *   cb: Callback that is executed when the state changes
@@ -12,6 +12,7 @@ if (typeof yasp == 'undefined') yasp = { };
    *   type: What type is this Hardware (yasp.HardwareType.XXX)
    *   params: Additional parameters that are needed for the Hardware (for example: color for LED)
    * }
+   * @param params
    * @constructor
    */
   yasp.Hardware = function(params) {
