@@ -1271,8 +1271,8 @@
           strictEqual(actual, expected, stepPrefix + "pin " + p + " is " + expected);
         }
       }
-      if(step.scheduleInterrupt) {
-        emulator.scheduleInterrupt(step.scheduleInterrupt);
+      if(step.triggerInterrupt) {
+        emulator.scheduleInterrupt(step.triggerInterrupt);
       }
       if(step.stack) {
         for (var r in step.stack) {
