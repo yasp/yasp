@@ -161,6 +161,9 @@ if (typeof yasp == 'undefined') yasp = { };
       'IO_CHANGED': this.noop
     };
 
+    /** offsets in ROM which have a breakpoint set
+     * @member {boolean[]}
+     * @see yasp.Emulator#setBreakpoints */
     this.breakpoints = new Array(this.rom.length);
     for (var i = 0; i < this.breakpoints.length; i++) {
       this.breakpoints[i] = false;
@@ -273,9 +276,9 @@ if (typeof yasp == 'undefined') yasp = { };
     this.events.BREAK(reason);
   };
 
-  /**
-   * @function updates the internal list of breakpoints
-   * @param breakpoints the breakpoints to save
+  /** updates the internal list of breakpoints
+   * @param breakpoints {Breakpoint[]} the breakpoints to save.
+   *        {@link https://github.com/yasp/yasp/blob/master/doc/emulator/data.md#breakpoints|Additional documentation}.
    * @returns {Number|Boolean}
    */
   yasp.Emulator.prototype.setBreakpoints = function (breakpoints) {
