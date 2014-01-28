@@ -1289,7 +1289,7 @@
         strictEqual(emulator.waitTime, step.waitTime);
       }
       if(step.running !== undefined) {
-        strictEqual(emulator.running, step.running);
+        strictEqual(emulator.running, step.running, stepPrefix + "Emulator is " + (step.running ? "" : "not ") + "running");
       }
       if(step.debug !== undefined) {
         deepEqual(lastEmulatorDebug, step.debug, "Debug " + JSON.stringify(step.debug) + " was issued");
