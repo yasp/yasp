@@ -663,8 +663,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
       if(this.breakpoints[this.pc] === true && this.skipBreakpoint === false) {
         this.break("breakpoint");
-        this.setTickWrapperTimeout();
-        return;
+        break;
       }
 
       this.skipBreakpoint = false;
