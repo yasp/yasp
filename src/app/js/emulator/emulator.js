@@ -100,6 +100,8 @@ if (typeof yasp == 'undefined') yasp = { };
      * @see yasp.Emulator#setTickWrapperTimeout */
     this.forceStep = false;
 
+    this.skipBreakpoint = false;
+
     // status (waiting for high or low) and timeout-ids for PWM
     this.pwmStatus = {};
     this.pwmTimeouts = {};
