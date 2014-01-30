@@ -1122,7 +1122,7 @@
     var test = commandTestData[i];
 
     if(!test.title)
-      test.title = test.cmd.replace('\n', ' / ');
+      test.title = test.cmd.replace(/\n/g, ' / ');
   }
 
   QUnit.cases(commandTestData).test("command", function (params) {
