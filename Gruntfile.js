@@ -7,6 +7,7 @@ module.exports = function(grunt) {
         'http://code.jquery.com/jquery-1.10.2.min.js',
         'http://code.jquery.com/qunit/qunit-1.12.0.js',
         'https://raw.github.com/AStepaniuk/qunit-parameterize/master/qunit-parameterize.js',
+        'https://raw.github.com/alex-seville/blanket/master/dist/qunit/blanket.min.js',
         'http://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js',
         'https://raw.github.com/marijnh/CodeMirror/master/lib/codemirror.js'
         
