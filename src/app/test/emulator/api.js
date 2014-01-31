@@ -30,6 +30,12 @@
     }
   });
 
+  test("load - invalid start type", function () {
+    var expected = 3;
+    var actual = emulator.load(new Uint8Array(0), "a");
+    strictEqual(expected, actual);
+  });
+
   test("load - start < 0", function () {
     var expected = 0;
     var actual = emulator.load(new Uint8Array(0), -1);
