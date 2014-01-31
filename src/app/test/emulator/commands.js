@@ -1308,6 +1308,28 @@
     vals: breakpointCases[breakpointCases.length - 1].vals
   });
 
+  breakpointCases.push(
+    {
+      title: "breakpoint: offset + RAM-array",
+      type: "ram", param: 10,
+      vals: [
+        [{ 10: 42, 11: 43 }, "=", [42, 43], true],
+        [{ 10: 42, 11: 43 }, "=", [10, 43], false],
+        [{ 10: 42, 11: 43 }, "=", [42, 10], false],
+
+        [{ 10: 42, 11: 43 }, "!=", [10, 43], true],
+        [{ 10: 42, 11: 43 }, "!=", [42, 10], true],
+        [{ 10: 42, 11: 43 }, "!=", [42, 43], false]
+      ]
+    }
+  );
+
+  breakpointCases.push({
+    title: "breakpoint: offset + RAM-byte",
+    type: "ram", param: 10,
+    vals: breakpointCases[breakpointCases.length - 1].vals
+  });
+
   for (var i = 0; i < breakpointCases.length; i++) {
     var cat = breakpointCases[i];
 
@@ -1336,10 +1358,12 @@
       } else if(cat.type === "io") {
         setup.pin = {};
         setup.pin[cat.param] = val[0];
-      } else if(cat.type === "ram") {
-        setup.ram = val[0];
-      } else if(cat.type === "rom") {
-        setup.rom = val[0];
+      } else if(cat.type === "ram" || cat.type === "rom") {
+        setup[cat.type] = val[0];
+
+        if(setup.breakpoints[0].condition.value instanceof Array) {
+          setup.breakpoints[0].condition.value = new Uint8Array(setup.breakpoints[0].condition.value);
+        }
       }
 
       commandTestData.push({

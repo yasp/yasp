@@ -347,7 +347,7 @@ if (typeof yasp == 'undefined') yasp = { };
         condition.isRomOffset = (brk.condition.type === "rom");
         condition.memoryOffset = +brk.condition.param;
 
-        if(brk.value instanceof Uint8Array)
+        if(brk.condition.value instanceof Uint8Array)
           condition.isUintArrayValue = true;
         else
           condition.isNumValue = true;
