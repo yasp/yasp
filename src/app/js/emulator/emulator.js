@@ -791,23 +791,25 @@ if (typeof yasp == 'undefined') yasp = { };
     if(cond === null)
       return true;
 
+    // ========================
     // check for changed values
-    // TODO
     if(cond.isChange) {
       if(cond.isByteRegister)
         return false;
-      if(cond.isWordRegister)
+      else if(cond.isWordRegister)
         return false;
-      if(cond.isCarryFlag)
+      else if(cond.isCarryFlag)
         return false;
-      if(cond.isZeroFlag)
+      else if(cond.isZeroFlag)
         return false;
-      if(cond.isIO)
+      else if(cond.isIO)
         return false;
-      if(cond.isRamOffset)
+      else if(cond.isRamOffset)
         return false;
-      if(cond.isRomOffset)
+      else if(cond.isRomOffset)
         return false;
+
+      return false;
     }
 
     // ===================
@@ -856,18 +858,14 @@ if (typeof yasp == 'undefined') yasp = { };
       else if(cond.isUintArrayValue)
         return !actualUintArrayValue.equals(cond.uintArrayValue);
 
-    } else if(cond.isSmaller) {
-      if(cond.isNumValue) return (actualNumValue < cond.numValue);
-      return false;
-    } else if(cond.isBigger) {
-      if(cond.isNumValue) return (actualNumValue > cond.numValue);
-      return false;
-    } else if(cond.isSmallerEquals) {
-      if(cond.isNumValue) return (actualNumValue <= cond.numValue);
-      return false;
-    } else if(cond.isBiggerEquals) {
-      if(cond.isNumValue) return (actualNumValue >= cond.numValue);
-      return false;
+    } else if(cond.isSmaller && cond.isNumValue) {
+      return (actualNumValue < cond.numValue);
+    } else if(cond.isBigger && cond.isNumValue) {
+      return (actualNumValue > cond.numValue);
+    } else if(cond.isSmallerEquals && cond.isNumValue) {
+      return (actualNumValue <= cond.numValue);
+    } else if(cond.isBiggerEquals && cond.isNumValue) {
+      return (actualNumValue >= cond.numValue);
     }
 
     console.log("Invalid condition: " + JSON.stringify(cond));
