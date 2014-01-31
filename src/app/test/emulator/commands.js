@@ -858,7 +858,7 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "HIGH 3",
-      setup: { pin: { 3: false } },
+      setup: { pin: { 3: 0 } },
       steps: [
         { pin: { 3: 1 } }
       ]
@@ -869,7 +869,7 @@
   commandTestData = commandTestData.concat([
     {
       cmd: "LOW 3",
-      setup: { pin: { 3: true } },
+      setup: { pin: { 3: 1 } },
       steps: [
         { pin: { 3: 0 } }
       ]
@@ -883,6 +883,13 @@
       setup: { pin: { 3: 1 } },
       steps: [
         { pin: { 3: 0 } }
+      ]
+    },
+    {
+      cmd: "TOGGLE 3",
+      setup: { pin: { 3: 0 } },
+      steps: [
+        { pin: { 3: 1 } }
       ]
     }
   ]);
