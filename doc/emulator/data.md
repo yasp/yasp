@@ -58,7 +58,7 @@ State of an input or output pin. Used by the `IO_CHANGED`-Broadcast and `SET_STA
 | --------- | ------------------------ | --------------------------- | ----------------------------------------- |
 | register  | `b0 - b31` or `w0 - w31` | number (byte or word)       | `=`, `!=`, `<`, `>`, `<=`, `>=`, `change` |
 | flag      | `c` or `z`               | boolean                     | `=`, `!=`, `change`                       |
-| io        | pin-number               | number (byte)               | `=`, `!=`, `<`, `>`, `<=`, `>=`, `change` |
+| io        | pin-number               | number (byte)               | `=`, `!=`, `change`                       |
 | ram       | byte-offset              | number (byte) or Uint8Array | `=`, `!=`, `<`, `>`, `<=`, `>=`, `change` |
 | rom       | byte-offset              | number (byte) or Uint8Array | `=`, `!=`, `<`, `>`, `<=`, `>=`, `change` |
 

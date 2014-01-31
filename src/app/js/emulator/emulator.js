@@ -176,6 +176,15 @@ if (typeof yasp == 'undefined') yasp = { };
       this.breakpoints[i] = false;
     }
 
+    /** conditions for breakpoints, null means no condition.
+     * {@link https://github.com/yasp/yasp/blob/master/doc/emulator/data.md#breakpoints|Additional documentation}.
+     * @member {object[]}
+     * @see yasp.Emulator#setBreakpoints */
+    this.breakpointConditions = new Array(this.rom.length);
+    for (var i = 0; i < this.breakpointConditions.length; i++) {
+      this.breakpointConditions[i] = false;
+    }
+
     this.setTickWrapperTimeout();
   };
 
@@ -294,11 +303,65 @@ if (typeof yasp == 'undefined') yasp = { };
 
     for (var i = 0; i < this.breakpoints.length; i++) {
       this.breakpoints[i] = false;
+      this.breakpointConditions[i] = null;
     }
 
     for (var i = 0; i < breakpoints.length; i++) {
       var brk = breakpoints[i];
       this.breakpoints[brk.offset] = true;
+
+      if(brk.condition === null)
+        continue;
+
+      var condition = {};
+
+      condition.boolValue = (brk.condition.value === true);
+      condition.numValue = +brk.condition.value;
+      condition.uintArrayValue = (brk.condition.value instanceof Uint8Array) ? brk.condition.value : new Uint8Array();
+
+      condition.isBoolValue = false;
+      condition.isNumValue = false;
+      condition.isUintArrayValue = false;
+
+      if(brk.condition.type === "register") {
+        condition.isByteRegister = (brk.condition.param.charAt(0) === "b");
+        condition.isWordRegister = (brk.condition.param.charAt(0) === "w");
+        condition.registerNumber = +brk.condition.param.substring(1);
+        condition.isNumValue = true;
+      }
+
+      if(brk.condition.type === "flag") {
+        condition.isCarryFlag = (brk.condition.param === "c");
+        condition.isZeroFlag = (brk.condition.param === "z");
+        condition.isBoolValue = true;
+      }
+
+      if(brk.condition.type === "io") {
+        condition.isIO = true;
+        condition.ioPinNumber = +brk.condition.param;
+        condition.isNumValue = true;
+      }
+
+      if(brk.condition.type === "ram" || brk.condition.type === "rom") {
+        condition.isRamOffset = (brk.condition.type === "ram");
+        condition.isRomOffset = (brk.condition.type === "rom");
+        condition.memoryOffset = +brk.param;
+
+        if(brk.value instanceof Uint8Array)
+          condition.isUintArrayValue = true;
+        else
+          condition.isNumValue = true;
+      }
+
+      condition.isEquals        = (brk.condition.operator === "=");
+      condition.isNotEquals     = (brk.condition.operator === "!=");
+      condition.isSmaller       = (brk.condition.operator === "<");
+      condition.isBigger        = (brk.condition.operator === ">");
+      condition.isSmallerEquals = (brk.condition.operator === "<=");
+      condition.isBiggerEquals  = (brk.condition.operator === ">=");
+      condition.isChange        = (brk.condition.operator === "change");
+
+      this.breakpointConditions[brk.offset] = condition;
     }
 
     return true;
@@ -671,8 +734,13 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       if(this.breakpoints[this.pc] === true && this.skipBreakpoint === false) {
-        this.break("breakpoint");
-        break;
+        var condition = this.breakpointConditions[this.pc];
+        var shouldBreak = this.checkBreakpointCondition(condition);
+
+        if(shouldBreak) {
+          this.break("breakpoint");
+          break;
+        }
       }
 
       this.skipBreakpoint = false;
@@ -708,6 +776,102 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     this.setTickWrapperTimeout();
+  };
+
+  /** check if a conditional breakpoint should be triggered with the current state
+   * @param cond {object} optimized breakpoint condition, see {@link yasp.Emulator#setBreakpoints}
+   * @private
+   */
+  yasp.Emulator.prototype.checkBreakpointCondition = function (cond) {
+    var actualBoolValue = false;
+    var actualNumValue = 0;
+    var actualUintArrayValue = null;
+
+    // no checking needed if there is no condition..
+    if(cond === null)
+      return true;
+
+    // check for changed values
+    // TODO
+    if(cond.isChange) {
+      if(cond.isByteRegister)
+        return false;
+      if(cond.isWordRegister)
+        return false;
+      if(cond.isCarryFlag)
+        return false;
+      if(cond.isZeroFlag)
+        return false;
+      if(cond.isIO)
+        return false;
+      if(cond.isRamOffset)
+        return false;
+      if(cond.isRomOffset)
+        return false;
+    }
+
+    // ===================
+    // read current values
+
+    if(cond.isByteRegister) {
+      actualNumValue = this.readByteRegister(cond.registerNumber);
+    } else if(cond.isWordRegister) {
+      actualNumValue = this.readWordRegister(cond.registerNumber);
+    } else if(cond.isCarryFlag) {
+      actualBoolValue = this.isCarryFlagSet();
+    } else if(cond.isZeroFlag) {
+      actualBoolValue = this.isZeroFlagSet();
+    } else if(cond.isIO) {
+      actualNumValue = this.getIO(cond.ioPinNumber);
+    } else if(cond.isRamOffset) {
+      if(cond.isUintArrayValue) {
+        actualUintArrayValue = this.ram.subarray(cond.memoryOffset, cond.memoryOffset + cond.uintArrayValue.length);
+      } else {
+        actualNumValue = this.readRAM(cond.memoryOffset);
+      }
+    } else if(cond.isRomOffset) {
+      if(cond.isUintArrayValue) {
+        actualUintArrayValue = this.rom.subarray(cond.memoryOffset, cond.memoryOffset + cond.uintArrayValue.length);
+      } else {
+        actualNumValue = this.readROM(cond.memoryOffset);
+      }
+    }
+
+    // ============
+    // check values
+
+    if(cond.isEquals) {
+      if(cond.isNumValue)
+        return (actualNumValue  === cond.numValue);
+      else if(cond.isBoolValue)
+        return (actualBoolValue === cond.boolValue);
+      else if(cond.isUintArrayValue)
+        return actualUintArrayValue.equals(cond.uintArrayValue);
+
+    } else if(cond.isNotEquals) {
+      if(cond.isNumValue)
+        return (actualNumValue  !== cond.numValue);
+      else if(cond.isBoolValue)
+        return (actualBoolValue !== cond.boolValue);
+      else if(cond.isUintArrayValue)
+        return !actualUintArrayValue.equals(cond.uintArrayValue);
+
+    } else if(cond.isSmaller) {
+      if(cond.isNumValue) return (actualNumValue < cond.numValue);
+      return false;
+    } else if(cond.isBigger) {
+      if(cond.isNumValue) return (actualNumValue > cond.numValue);
+      return false;
+    } else if(cond.isSmallerEquals) {
+      if(cond.isNumValue) return (actualNumValue <= cond.numValue);
+      return false;
+    } else if(cond.isBiggerEquals) {
+      if(cond.isNumValue) return (actualNumValue >= cond.numValue);
+      return false;
+    }
+
+    console.log("Invalid condition: " + JSON.stringify(cond));
+    return false;
   };
 
   /** Executes instructions. Do not call manually.
