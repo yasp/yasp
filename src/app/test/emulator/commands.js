@@ -1126,7 +1126,7 @@
   }
 
   QUnit.cases(commandTestData).test("command", function (params) {
-    var asm = assembler.assemble({ code: params.cmd, jobs: ["bitcode"] });
+    var asm = assembler.assemble({ code: params.cmd || "", jobs: ["bitcode"] });
     ok(asm.success, "Assembling works");
 
     if(!asm.success)
