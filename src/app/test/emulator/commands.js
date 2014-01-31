@@ -1325,8 +1325,8 @@
   );
 
   breakpointCases.push({
-    title: "breakpoint: offset + RAM-byte",
-    type: "ram", param: 10,
+    title: "breakpoint: offset + ROM-array",
+    type: "rom", param: 10,
     vals: breakpointCases[breakpointCases.length - 1].vals
   });
 
