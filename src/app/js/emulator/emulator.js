@@ -731,6 +731,10 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     var ccmd = this.commandCache[this.pc];
+    if(ccmd === null) {
+      this.break("invalid_instr");
+      return;
+    }
     var cmd = ccmd.cmd;
 
     // increment the program counter by the length of the instruction in the ROM
