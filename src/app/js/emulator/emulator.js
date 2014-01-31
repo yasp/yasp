@@ -310,7 +310,7 @@ if (typeof yasp == 'undefined') yasp = { };
       var brk = breakpoints[i];
       this.breakpoints[brk.offset] = true;
 
-      if(brk.condition === null)
+      if(brk.condition === null || brk.condition === undefined)
         continue;
 
       var condition = {};
