@@ -1272,6 +1272,42 @@
     }
   );
 
+  breakpointCases.push(
+    {
+      title: "breakpoint: offset + RAM-byte",
+      type: "ram", param: 10,
+      vals: [
+        [{ 10: 42 }, "=", 42, true],
+        [{ 10: 42 }, "=", 41, false],
+
+        [{ 10: 42 }, "!=", 41, true],
+        [{ 10: 42 }, "!=", 42, false],
+
+        [{ 10: 42 }, ">", 41, true],
+        [{ 10: 42 }, ">", 42, false],
+        [{ 10: 42 }, ">", 43, false],
+
+        [{ 10: 42 }, ">=", 41, true],
+        [{ 10: 42 }, ">=", 42, true],
+        [{ 10: 42 }, ">=", 43, false],
+
+        [{ 10: 41 }, "<", 42, true],
+        [{ 10: 42 }, "<", 42, false],
+        [{ 10: 43 }, "<", 42, false],
+
+        [{ 10: 41 }, "<=", 42, true],
+        [{ 10: 42 }, "<=", 42, true],
+        [{ 10: 43 }, "<=", 42, false]
+      ]
+    }
+  );
+
+  breakpointCases.push({
+    title: "breakpoint: offset + ROM-byte",
+    type: "rom", param: 10,
+    vals: breakpointCases[breakpointCases.length - 1].vals
+  });
+
   for (var i = 0; i < breakpointCases.length; i++) {
     var cat = breakpointCases[i];
 
@@ -1300,6 +1336,10 @@
       } else if(cat.type === "io") {
         setup.pin = {};
         setup.pin[cat.param] = val[0];
+      } else if(cat.type === "ram") {
+        setup.ram = val[0];
+      } else if(cat.type === "rom") {
+        setup.rom = val[0];
       }
 
       commandTestData.push({
@@ -1330,6 +1370,15 @@
     var setup = params.setup;
 
     if(setup) {
+      if(setup.ram) {
+        if(setup.ram instanceof Uint8Array) {
+          emulator.ram = setup.ram;
+        } else {
+          for (var a in setup.ram) {
+            emulator.ram[a] = setup.ram[a];
+          }
+        }
+      }
       if(setup.reg) {
         for (var r in setup.reg) {
           var val = parseRegValue(setup.reg[r]);

@@ -345,7 +345,7 @@ if (typeof yasp == 'undefined') yasp = { };
       if(brk.condition.type === "ram" || brk.condition.type === "rom") {
         condition.isRamOffset = (brk.condition.type === "ram");
         condition.isRomOffset = (brk.condition.type === "rom");
-        condition.memoryOffset = +brk.param;
+        condition.memoryOffset = +brk.condition.param;
 
         if(brk.value instanceof Uint8Array)
           condition.isUintArrayValue = true;
@@ -663,6 +663,16 @@ if (typeof yasp == 'undefined') yasp = { };
     if(o < 0 || o >= this.ram.length)
       return 0;
     return this.ram[o];
+  };
+
+  /** reads one byte from the rom
+   * @param o {Number} the offset to read from
+   * @returns {Number} the bytes value, or 0 if o was out of bounds
+   */
+  yasp.Emulator.prototype.readROM = function (o) {
+    if(o < 0 || o >= this.rom.length)
+      return 0;
+    return this.rom[o];
   };
 
   /** schedules an interrupt for the next tick
