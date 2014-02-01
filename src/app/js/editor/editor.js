@@ -259,20 +259,28 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     var editor = yasp.EditorManager.create($('#editor').get(0));
     
     // force intendation everytime something changes
+    var changing = false;
     editor.on("change", function() {
+      if (changing) return;
       var c = editor.getCursor();
       if (!!c) {
-        var content = editor.getLine(c.line);
-        editor.indentLine(c.line);
-        // fix bug introduced in Commit #32d7db0cf78f5ed9dde3450ad885ced98851271b that causes the input to be fucked up...
-        if (editor.getLine(c.line) != content) {
-          c.ch++; // if you ever add multiple levels of intendation this should be changed into somehting more intelligent
+        try {
+          var content = editor.getLine(c.line);
+          editor.indentLine(c.line);
+          var newc = editor.getCursor();
+          // fix bug introduced in Commit #32d7db0cf78f5ed9dde3450ad885ced98851271b that causes the input to be fucked up...
+          if (editor.getLine(c.line) != content && (newc.ch == c.ch && newc.line == c.line)) { // if intendation changed something while the character kept the same
+            newc.ch++; // if you ever add multiple levels of intendation this should be changed into somehting more intelligent
+          }
+          c = newc;
+          editor.setCursor(c);
+          
+          setTimeout(function() { // fixes bug that causes the completition dialog to be immediately closed
+            CodeMirror.commands.autocomplete(editor);
+          }, 0);
+        } finally {
+          changing = false;
         }
-        editor.setCursor(c);
-        
-        setTimeout(function() { // fixes bug that causes the completition dialog to be immediately closed
-          CodeMirror.commands.autocomplete(editor);
-        }, 0);
       }
     });
     
