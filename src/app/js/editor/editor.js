@@ -293,7 +293,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         var currentSymbols = JSON.stringify(yasp.Editor.symbols);
         if (currentSymbols != lastSymbols) {
           lastSymbols = currentSymbols;
-          editor.setOption("mode", editor.getOption("mode")); // CodeMirror dirty way of highlighting by setting the mode (used to highlight labels in the correct color)
+          editor.setOption("mode", editor.getOption("mode")); // CodeMirror dirty way of force highlighting by setting the mode (used to highlight labels in the correct color)
         }
         
         setTimeout(update, UPDATE_DELAY)

@@ -277,52 +277,64 @@ if (typeof yasp == 'undefined') yasp = { };
         break;
       case "STRING":
         var cur = iterator.current();
-        iterator.next();
-        if (iterator.current().getType() != yasp.TokenType.STRING) iterator.riseSyntaxError("STRING expects string value");
+        do {
+          iterator.next();
+          if (iterator.current().getType() != yasp.TokenType.STRING) iterator.riseSyntaxError("STRING expects string value");
+          
+          this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+            data: new String(iterator.current().text)
+          }));
+          iterator.optNext();
+        } while (iterator.is(','));
         
-        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
-          data: new String(iterator.current().text)
-        }));
-        iterator.optNext();
         break;
       case "DB":
         var cur = iterator.current();
-        iterator.next();
-        var val = +iterator.current().text;
-        if (isNaN(val)) iterator.riseSyntaxError("Expecting number.");
-        if (val < 0 || val >= Math.pow(2, 8)) iterator.riseSyntaxError("Invalid number [0,2^8]");
-        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
-          data: val,
-          len: 8
-        }));
-        iterator.optNext();
+        do {
+          iterator.next();
+          var val = +iterator.current().text;
+          if (isNaN(val)) iterator.riseSyntaxError("Expecting number.");
+          if (val < 0 || val >= Math.pow(2, 8)) iterator.riseSyntaxError("Invalid number [0,2^8]");
+          this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+            data: val,
+            len: 8
+          }));
+          iterator.optNext();
+        } while (iterator.is(','));
+        
         break;
       case "DA":
         var cur = iterator.current();
-        iterator.next();
-        var val = iterator.current().text;
-        var label;
-        if (!(label = iterator.assembler.getLabel(val))) {
-          iterator.riseSyntaxError("Unknown label "+label);
-        }
+        do {
+          iterator.next();
+          var val = iterator.current().text;
+          var label;
+          if (!(label = iterator.assembler.getLabel(val))) {
+            iterator.riseSyntaxError("Unknown label "+label);
+          }
+          
+          this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+            data: new String(val),
+            len: 16
+          }));
+          iterator.optNext();
+        } while (iterator.is(','));
         
-        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
-          data: new String(val),
-          len: 16
-        }));
-        iterator.optNext();
         break;
       case "DW":
         var cur = iterator.current();
-        iterator.next();
-        var val = +iterator.current().text;
-        if (isNaN(val)) iterator.riseSyntaxError("Expecting number.");
-        if (val < 0 || val >= Math.pow(2, 16)) iterator.riseSyntaxError("Invalid number [0,2^16]");
-        this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
-          data: val,
-          len: 16
-        }));
-        iterator.optNext();
+        do {
+          iterator.next();
+          var val = +iterator.current().text;
+          if (isNaN(val)) iterator.riseSyntaxError("Expecting number.");
+          if (val < 0 || val >= Math.pow(2, 16)) iterator.riseSyntaxError("Invalid number [0,2^16]");
+          this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
+            data: val,
+            len: 16
+          }));
+          iterator.optNext();
+        } while (iterator.is(','));
+        
         break;
       case "END":
         while(iterator.hasNext()) {
