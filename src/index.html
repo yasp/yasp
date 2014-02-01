@@ -75,17 +75,6 @@
                     <button type="button" class="btn btn-default btn-sm menu_help">
                         <span class="fa fa-info-circle"></span> <span data-l10n="editor.toolbar.help"></span>
                     </button>
-                    <div class="dropdown">
-                        <a data-toggle="dropdown" href="#" class="btn btn-default btn-sm">
-                            <span class="fa fa-files-o"></span> <span data-l10n="editor.toolbar.filemenu"></span> <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_new"><span class="fa fa-fw fa-file"></span> <span data-l10n="editor.toolbar.filemenu.new"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_open"><span class="fa fa-fw fa-folder-open"></span> <span data-l10n="editor.toolbar.filemenu.open"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_save"><span class="fa fa-fw fa-floppy-o"></span> <span data-l10n="editor.toolbar.filemenu.save"></span></a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_saveas"><span class="fa fa-fw fa-floppy-o"></span> <span data-l10n="editor.toolbar.filemenu.saveAs"></span></a></li>
-                        </ul>
-                    </div>
                     <span id="display_filename" class="h4"></span>
                     <div class="dropdown pull-right">
                         <a data-toggle="dropdown" href="#" class="btn btn-default btn-sm">
@@ -104,6 +93,17 @@
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_help"><span class="fa fa-fw fa-info-circle"></span> <span data-l10n="editor.toolbar.menu.help"></span></a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_settings"><span class="fa fa-fw fa-wrench"></span> <span data-l10n="editor.toolbar.menu.settings"></span></a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_about"><span class="fa fa-fw fa-user"></span> <span data-l10n="editor.toolbar.menu.about"></span></a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown pull-right">
+                        <a data-toggle="dropdown" href="#" class="btn btn-default btn-sm">
+                            <span class="fa fa-files-o"></span> <span data-l10n="editor.toolbar.filemenu"></span> <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_new"><span class="fa fa-fw fa-file"></span> <span data-l10n="editor.toolbar.filemenu.new"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_open"><span class="fa fa-fw fa-folder-open"></span> <span data-l10n="editor.toolbar.filemenu.open"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_save"><span class="fa fa-fw fa-floppy-o"></span> <span data-l10n="editor.toolbar.filemenu.save"></span></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" class="menu_saveas"><span class="fa fa-fw fa-floppy-o"></span> <span data-l10n="editor.toolbar.filemenu.saveAs"></span></a></li>
                         </ul>
                     </div>
                 </div>
@@ -359,14 +359,6 @@ END
                                     <option value="de">Deutsch</option>
                                 </select>
                             </div>
-                            <label class="checkbox">
-                                <input type="checkbox" id="automaticsave_picker">
-                                <span data-l10n="settings.autoSave"></span>
-                            </label>
-                            <label class="checkbox">
-                                <input type="checkbox" id="codecompletion_picker">
-                                <span data-l10n="settings.codeCompletion"></span>
-                            </label>
                             <div class="form-group">
                                 <label data-l10n="settings.labellist"></label>
                                 <select class="form-control" id="labellist_picker">
@@ -383,6 +375,14 @@ END
                                     <option value="fix" data-l10n="settings.help.fix"></option>
                                 </select>
                             </div>
+                            <label class="checkbox">
+                                <input type="checkbox" id="automaticsave_picker">
+                                <span data-l10n="settings.autoSave"></span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" id="codecompletion_picker">
+                                <span data-l10n="settings.codeCompletion"></span>
+                            </label>
                         </form>
                     </div>
                     <div class="modal-footer">
