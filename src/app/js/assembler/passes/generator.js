@@ -31,7 +31,8 @@ if (typeof yasp == 'undefined') yasp = { };
           if (node.type == yasp.AstNodeTypes.NODE_LABEL) {
             node.type.generate.call(node, this)
           }
-          this.linkPos += node.type.calculateBitSize.call(node, this);
+          var increment = node.type.calculateBitSize.call(node, this);
+          this.linkPos += increment;
         }
       }
     }
@@ -333,7 +334,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // does this position already exists?
     if (pos >= this.bits.length) {
       var l = this.bits.length;
-      for (var i = 0; i <= (pos - l); i++) {
+      for (var i = 1; i <= (pos - l); i++) {
         this.bits += "0";
       }
     }
