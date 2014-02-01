@@ -85,7 +85,7 @@ if (typeof yasp == 'undefined') yasp = { };
             
             generator.bitWriter.append(generator.labelMachinePosition[labelToken.text.toUpperCase()], this.params.len);
           } else {
-            var str = this.params.data;
+            var str = this.params.data.substring(1, this.params.data.length-1); // remove '"'
             for (var i = 0; i < str.length; i++) {
               generator.bitWriter.append(str.charCodeAt(i), 8);
             }

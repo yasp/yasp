@@ -11,6 +11,7 @@
   TokenName4TokenType[yasp.TokenType.UNKNOWN_REGISTER] = "error";
   TokenName4TokenType[yasp.TokenType.UNKNOWN] = "error";
   TokenName4TokenType[yasp.TokenType.DELIMITER] = "qualifier";
+  TokenName4TokenType[yasp.TokenType.STRING] = "string2";
   
   CodeMirror.defineMode("assembler", function(config, parserConfig) {
     var indentUnit = config.indentUnit || config.tabSize || 2

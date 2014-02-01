@@ -278,6 +278,7 @@ if (typeof yasp == 'undefined') yasp = { };
       case "STRING":
         var cur = iterator.current();
         iterator.next();
+        if (iterator.current().getType() != yasp.TokenType.STRING) iterator.riseSyntaxError("STRING expects string value");
         
         this.nodes.push(new yasp.AstNode(yasp.AstNodeTypes.NODE_DUMP, cur, {
           data: new String(iterator.current().text)

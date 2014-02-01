@@ -452,7 +452,7 @@
         {
           "char": 8,
           "line": 1,
-          "text": "HALLO EIN COOLER; STRING "
+          "text": '"HALLO EIN COOLER; STRING "'
         },
         {
           "char": 9,

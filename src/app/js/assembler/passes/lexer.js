@@ -66,6 +66,7 @@ if (typeof yasp == "undefined") yasp = { };
             token += input.charAt(i);
             i++;
           }
+          token = '"' + token + '"';
           this.newToken(new yasp.Token(token, line, char));
         } else {
           this.newToken(new yasp.Token(token, line, char));
@@ -110,7 +111,8 @@ if (typeof yasp == "undefined") yasp = { };
     DIRECTIVE: "directive",
     UNKNOWN_REGISTER: "unknown register",
     UNKNOWN: "unknown",
-    DELIMITER: "delimiter"
+    DELIMITER: "delimiter",
+    STRING: "string"
   };
 
   /**
@@ -140,7 +142,12 @@ if (typeof yasp == "undefined") yasp = { };
         return yasp.TokenType.NUMBER;
       }
     }
-
+    
+    // am i a string
+    if (name.charAt(0) == '"' && name.charAt(name.length-1) == '"') {
+      return yasp.TokenType.STRING;
+    }
+    
     // am i a byte register
     for (var i = 0; i < validByteRegisters.length; i++) {
       if (validByteRegisters[i] == name) return yasp.TokenType.BYTE_REGISTER;
