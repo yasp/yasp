@@ -287,10 +287,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     // update symbols
     var update, first = true;
     (update = function() {
+      var lastSymbols = null;
       var content = editor.getValue();
       yasp.CompileManager.compile(content, function(result) {
-        if (first) editor.setValue(content); // force update of existing labels, VERY dirty
-        first = false;
+        var currentSymbols = JSON.stringify(yasp.Editor.symbols);
+        if (currentSymbols != lastSymbols) {
+          lastSymbols = currentSymbols;
+          editor.setOption("mode", editor.getOption("mode")); // CodeMirror dirty way of highlighting by setting the mode (used to highlight labels in the correct color)
+        }
         
         setTimeout(update, UPDATE_DELAY)
       });
