@@ -70,9 +70,10 @@ yasp.test.EmulatorTester.prototype.done = function () {
       return;
 
     this.emulator.pc = 0;
-    this.emulator.load(asm.bitcode, 0);
 
     tester.applySetup(test.setup);
+
+    this.emulator.load(asm.bitcode, 0);
 
     test.steps = test.steps || [];
 
@@ -145,7 +146,12 @@ yasp.test.EmulatorTester.prototype.done = function () {
         }
       }
       if(step.rom) {
-        alert(stepPrefix +"Step-ROM-Checking is not yet implemented")
+        for (var r in step.rom) {
+          var expected = this.parseLiteral(step.rom[r]);
+          var actual = this.emulator.rom[r];
+
+          strictEqual(actual, expected, stepPrefix + "rom-byte " + r + " is " + expected);
+        }
       }
       if(step.interruptMask) {
         deepEqual(this.emulator.interruptMask, step.interruptMask);
