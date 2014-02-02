@@ -40,7 +40,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }).bind(this));
 
     // generate symbol table
-    if (assembler.jobs.indexOf("symbols") != -1 && assembler.errors.length == 0) {
+    if (assembler.jobs.indexOf("symbols") != -1 && assembler.getFatalErrorCount() == 0) {
       // labels are already generated in the Analyser
       // defines will be generated in parseDirectives
       // usedRegisters & instructions
@@ -197,13 +197,16 @@ if (typeof yasp == 'undefined') yasp = { };
           iterator.next();
           start = false;
         }
-        var node = new yasp.AstNode(yasp.AstNodeTypes.NODE_UNKNOWNCOMMAND, commandToken, {
-          possibleCommands: possibleCommands,
-          params: parameterArray
-        });
-        this.nodes.push(node);
         
-        iterator.riseSyntaxError("Unknown command " + name + "(" + parameters + ")");
+        if (possibleCommands.length > 0) {
+          var node = new yasp.AstNode(yasp.AstNodeTypes.NODE_UNKNOWNCOMMAND, commandToken, {
+            possibleCommands: possibleCommands,
+            params: parameterArray
+          });
+          this.nodes.push(node);
+        }
+        
+        iterator.riseSyntaxError("Unknown command " + name + "(" + parameters + ")", possibleCommands.length > 0 ? "minor" : "error");
       } else {
         // build AST
         var node = new yasp.AstNode(yasp.AstNodeTypes.NODE_COMMAND, commandToken, {

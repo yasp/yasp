@@ -105,6 +105,71 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     lastCompile: null,
     commands: null,
     registers: null,
+    update: function(params) {
+      yasp.Editor.symbols = params.symbols;
+      yasp.Editor.ast = params.ast;
+
+      // update orderedSymbols
+      var osymbols = yasp.Editor.orderedSymbols;
+      osymbols.length = 0;
+      var instructions = yasp.Editor.symbols.instructions;
+      for (var k in instructions) {
+        osymbols.push(k);
+      }
+      var labels = yasp.Editor.symbols.labels;
+      for (var k in labels) {
+        osymbols.push(labels[k].text);
+      }
+      var usedRegisters = yasp.Editor.symbols.usedRegisters;
+      for (var k in usedRegisters) {
+        osymbols.push(k);
+      }
+      var defines = yasp.Editor.symbols.defines;
+      for (var k in defines) {
+        osymbols.push(k);
+      }
+      osymbols.sort(function(a, b) {
+        var aCount = yasp.Editor.getIdentifierOccurence(a);
+        var bCount = yasp.Editor.getIdentifierOccurence(b);
+
+        return bCount - aCount;
+      });
+
+      // init commands if uninitialized
+      if (!this.commands) {
+        this.commands = [ ];
+        var added = { }
+        for (var i = 0; i < yasp.commands.length; i++) {
+          var commandName = yasp.commands[i].name;
+          for (var j = 0; j < (commandName instanceof Array ? commandName.length : 1); j++) {
+            var name = commandName instanceof Array ? commandName[j] : commandName;
+            if (!added[name] && !yasp.Editor.symbols.instructions[name] && name != null) {
+              this.commands.push(name);
+              added[name] = 42;
+            }
+          }
+        }
+        this.commands.sort();
+      }
+
+      // add commands
+      var added = { }
+      for (var i = 0; i < this.commands.length; i++) {
+        var name = this.commands[i];
+        if (!added[name] && !yasp.Editor.symbols.instructions[name] && name != null) {
+          osymbols.push(name);
+          added[name] = 42;
+        }
+      }
+
+      // init registers
+      if (!this.registers) this.registers = yasp.Lexer.getRegisters();
+
+      // add registers
+      for (var i = 0; i < this.registers.length; i++) {
+        if (!usedRegisters[this.registers[i]]) osymbols.push(this.registers[i]);
+      }
+    },
     compile: function(content, cb) {
       if (content != this.lastUpdate) {
         this.lastUpdate = content;
@@ -114,77 +179,22 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           jobs: ['symbols', 'map', 'ast', 'bitcode']
         }, function(response) {
           yasp.Editor.error = !!response.error ? response.error.errors : null;
+          
+          if (!!response.error && !!response.error.ast && !!response.error.symbols) {
+            yasp.CompileManager.update.call(this, response.error);
+            fireDataReceived();
+          }
+          
           if (!!response.payload) {
+            yasp.CompileManager.update.call(this, response.payload);
+            
             yasp.Editor.map = response.payload.map;
-            yasp.Editor.symbols = response.payload.symbols;
-            yasp.Editor.ast = response.payload.ast;
             yasp.Editor.bitcode = response.payload.bitcode;
 
             yasp.Editor.reverseMap = {};
             for (var line in yasp.Editor.map) {
               var bitPos = yasp.Editor.map[line];
               yasp.Editor.reverseMap[bitPos] = +line;
-            }
-            
-            // update orderedSymbols
-            var osymbols = yasp.Editor.orderedSymbols;
-            osymbols.length = 0;
-            var instructions = yasp.Editor.symbols.instructions;
-            for (var k in instructions) {
-              osymbols.push(k);
-            }
-            var labels = yasp.Editor.symbols.labels;
-            for (var k in labels) {
-              osymbols.push(labels[k].text);
-            }
-            var usedRegisters = yasp.Editor.symbols.usedRegisters;
-            for (var k in usedRegisters) {
-              osymbols.push(k);
-            }
-            var defines = yasp.Editor.symbols.defines;
-            for (var k in defines) {
-              osymbols.push(k);
-            }
-            osymbols.sort(function(a, b) {
-              var aCount = yasp.Editor.getIdentifierOccurence(a);
-              var bCount = yasp.Editor.getIdentifierOccurence(b);
-              
-              return bCount - aCount;
-            });
-            
-            // init commands if uninitialized
-            if (!this.commands) {
-              this.commands = [ ];
-              var added = { }
-              for (var i = 0; i < yasp.commands.length; i++) {
-                var commandName = yasp.commands[i].name;
-                for (var j = 0; j < (commandName instanceof Array ? commandName.length : 1); j++) {
-                  var name = commandName instanceof Array ? commandName[j] : commandName;
-                  if (!added[name] && !yasp.Editor.symbols.instructions[name] && name != null) {
-                    this.commands.push(name);
-                    added[name] = 42;
-                  }
-                }
-              }
-              this.commands.sort();
-            }
-            
-            // add commands
-            var added = { }
-            for (var i = 0; i < this.commands.length; i++) {
-              var name = this.commands[i];
-              if (!added[name] && !yasp.Editor.symbols.instructions[name] && name != null) {
-                osymbols.push(name);
-                added[name] = 42;
-              }
-            }
-            
-            // init registers
-            if (!this.registers) this.registers = yasp.Lexer.getRegisters();
-            
-            // add registers
-            for (var i = 0; i < this.registers.length; i++) {
-              if (!usedRegisters[this.registers[i]]) osymbols.push(this.registers[i]);
             }
             
             fireDataReceived();

@@ -6,7 +6,7 @@
   // ECHO
   commandTestData = commandTestData.concat([
     {
-      cmd: "ECHO str\nstr: STRING foo",
+      cmd: "ECHO str\nstr: STRING \"foo\"",
       setup: {},
       steps: [
         { debug: { "addr": 5, "subtype": null, "type": "string", "val": "foo" } }

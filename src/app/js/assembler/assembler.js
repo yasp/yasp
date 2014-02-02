@@ -81,24 +81,45 @@ if (typeof yasp == 'undefined') yasp = { };
         });
       }
       
-      result = {
-        success: false,
-        errors: errors
-      };
+      if (this.getFatalErrorCount() == 0) {
+        result = {
+          success: false,
+          errors: errors,
+          symbols: this.jobs.indexOf('symbols') != -1 ? this.symbols : null, // no fatal errors, this could still be generated <3
+          ast: this.jobs.indexOf('ast') != -1 ? this.ast : null
+        };
+      } else {
+        result = {
+          success: false,
+          errors: errors
+        };
+      }
     }
     
     return result;
   };
 
+  /**
+   * How many errors are fatal (no AST proper AST could be generated)
+   * @returns {number}
+   */
+  yasp.Assembler.prototype.getFatalErrorCount = function() {
+    var count = 0;
+    for (var i = 0; i < this.errors.length; i++) {
+      if (this.errors[i].type == "error") count++;
+    }
+    return count;
+  }
+  
   /** Rises a syntax error
    */
-  yasp.Assembler.prototype.riseSyntaxError = function (iterator, msg) {
+  yasp.Assembler.prototype.riseSyntaxError = function (iterator, msg, type) {
     var token = iterator.current();
     console.log("Syntax error: " + msg + " in line " + token.line + " at character " + token.char);
     this.errors.push({
       token: token,
       msg: msg,
-      type: "error"
+      type: type
     });
 
     throw msg;
@@ -202,8 +223,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * Wrapper for the yasp.Assembler.riseSyntaxError function
    * @param msg
    */
-  yasp.TokenIterator.prototype.riseSyntaxError = function (msg) {
-    this.assembler.riseSyntaxError(this, msg);
+  yasp.TokenIterator.prototype.riseSyntaxError = function (msg, type) {
+    if (typeof type == 'undefined') type = "error";
+    this.assembler.riseSyntaxError(this, msg, type);
   };
 
   /**
