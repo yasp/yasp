@@ -152,13 +152,15 @@ span.cm-keyword {
     right: 0;
     height: 0;
 
-    max-height: 100px;
+    max-height: 150px;
     border-top: 1px solid rgb(220,220,220);
     background-color: #f7f7f7;
 
     z-index: 10000;
 
     font-size: 120%;
+    
+    overflow-x: auto; 
 }
 
 #help_quick.fixed {

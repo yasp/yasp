@@ -156,7 +156,7 @@ if (typeof yasp == 'undefined') yasp = { };
           if (!itsMe || paramPos != command.params.length) {
             // nope, its not me
             // but could it still be?
-            if (paramPos < command.params.length) {
+            if (paramPos < command.params.length && itsMe) {
               possibleCommands.push(command);
             }
             iterator.pos = oldPos;

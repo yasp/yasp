@@ -559,90 +559,120 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     });
     
     // update help rendering parameters
-    var quickdoc = null;
+    var setQuickhelpCommand = function(command) {
+      var desc = command.doc[yasp.l10n.getLangName()];
+      var cmdStr = "";
+
+      if (command.name instanceof Array) {
+        cmdStr = command.name.join(' | ').toUpperCase();
+      } else {
+        cmdStr = command.name.toUpperCase();
+      }
+
+      cmdStr += " ";
+
+      for (var j = 0; j < command.params.length; j++) {
+        if (j > 0) cmdStr += ", ";
+
+        switch (command.params[j].type) {
+          case "r_byte":
+            cmdStr += "Byte-Register";
+            break;
+          case "r_word":
+            cmdStr += "Word-Register";
+            break;
+          case "l_byte":
+            cmdStr += "Byte-Literal";
+            break;
+          case "l_word":
+            cmdStr += "Word-Literal";
+            break;
+          case "pin":
+            cmdStr += "Pin";
+            break;
+          case "address":
+            cmdStr += "Label";
+            break;
+          default:
+            cmdStr += param.type;
+            break;
+        }
+      }
+
+      var commandDiv = $('<div></div>').addClass("command").html("<b>"+cmdStr+"</b>");
+      var descDiv = $('<div></div>').addClass("desc").html(desc.description);
+      var flagsDiv = $('<div></div>').addClass("flags").empty();
+      var flagsDescrDiv = $('<div></div>').text(yasp.l10n.getTranslation("editor.helpquick.flags")).addClass("flagsDescr").addClass('hidden');
+
+      if (!!desc.flags && Object.keys(desc.flags).length > 0) {
+        for (var flag in desc.flags) {
+          var $flag = $('<li><span class="name"></span>: <span class="condition"></span></li>');
+          $flag.find('.name').text(flag);
+          $flag.find('.condition').text(desc.flags[flag]);
+          flagsDiv.append($flag);
+        }
+        flagsDescrDiv.removeClass('hidden');
+      }
+      $('#help_quick .helpquick_container')
+        .append(commandDiv)
+        .append(descDiv)
+        .append(flagsDescrDiv)
+        .append(flagsDiv);
+        
+    };
+    
+    var prevCommand = null;
     setInterval(function() {
       var c = editor.getCursor();
       var found = false;
       var changed = false;
       var height = 0;
+      
+      
       if (!!c && yasp.Storage['help'] != "hide") {
         for (var i = 0; i < yasp.Editor.ast.length; i++) {
           var entry = yasp.Editor.ast[i];
-          if (entry.type.name == "command" && entry.token.line == (c.line + 1) && !!entry.params.command) {            
-            var command = entry.params.command;
-            var desc = command.doc[yasp.l10n.getLangName()];
-            var cmdStr = "";
-
-            if (command.name instanceof Array) {
-              cmdStr = command.name.join(' | ').toUpperCase();
-            } else {
-              cmdStr = command.name.toUpperCase();
-            }
-
-            cmdStr += " ";
-
-            for (var j = 0; j < command.params.length; j++) {
-              if (j > 0) cmdStr += ", ";
-
-              switch (command.params[j].type) {
-                case "r_byte":
-                  cmdStr += "Byte-Register";
-                  break;
-                case "r_word":
-                  cmdStr += "Word-Register";
-                  break;
-                case "l_byte":
-                  cmdStr += "Byte-Literal";
-                  break;
-                case "l_word":
-                  cmdStr += "Word-Literal";
-                  break;
-                case "pin":
-                  cmdStr += "Pin";
-                  break;
-                case "address":
-                  cmdStr += "Label";
-                  break;
-                default:
-                  cmdStr += param.type;
-                  break;
+          if (entry.token.line == (c.line + 1)) {   
+            if (entry.type.name == "command" && !!entry.params.command) {
+              var command = entry.params.command;
+              if (prevCommand != command) {
+                changed = true;
+                prevCommand = command;
+              
+                $('#help_quick .helpquick_container').html("");
+                setQuickhelpCommand(command);
               }
-            }
-            
-            $('#help_quick .command').html("<b>"+cmdStr+"</b>");
-            
-            $('#help_quick .desc').html(desc.description);
-
-            $('#help_quick .flags').empty();
-            $('#help_quick .flagsDescr').addClass('hidden');
-            
-            if (!!desc.flags && Object.keys(desc.flags).length > 0) {
-              for (var flag in desc.flags) {
-                var $flag = $('<li><span class="name"></span>: <span class="condition"></span></li>');
-                $flag.find('.name').text(flag);
-                $flag.find('.condition').text(desc.flags[flag]);
-                $('#help_quick .flags').append($flag);
+              found = true;
+            } else if (entry.type.name == "unknowncommand" && !!entry.params.possibleCommands) {
+              var commands = entry.params.possibleCommands;
+              
+              if (prevCommand != commands) {
+                changed = true;
+                prevCommand = commands;
+                
+                $('#help_quick .helpquick_container').html("");
+                for (var j = 0; j < commands.length; j++) {
+                  setQuickhelpCommand(commands[j]);
+                  if (j < commands.length - 1) {
+                    $('#help_quick .helpquick_container').append($('<hr />'));
+                  }
+                }
               }
-              $('#help_quick .flagsDescr').removeClass('hidden');
+               
+              found = true;
             }
             
-            height = $('#help_quick .helpquick_container').height() + 16;
-            if (quickdoc != desc) changed = true;
-            quickdoc = desc;
-            
-            found = true;
+            if (changed) {
+              height = $('#help_quick .helpquick_container').height() + 32;
+            }
+            break;
           }
         }
       }
-      if (!found && !!quickdoc) {
+      
+      if (!found) {
         changed = true;
-        quickdoc = null;
-      }
-
-      if(!found) {
-        $('#help_quick .command').html("");
-        $('#help_quick .desc').html("");
-        $('#help_quick .state').html("");
+        $('#help_quick .helpquick_container').html(""); // clear children
       }
 
       if (changed) {
