@@ -30,6 +30,49 @@
     ]
   });
 
+  var changeBreakpoints = [
+    { type: "register", param: "b2", setup: { reg: { b2: 42 } }, stop: true },
+    { type: "register", param: "b2", setup: { reg: { b20: 42 } }, stop: false },
+
+    { type: "register", param: "w5", setup: { reg: { w5: 0xFFFA } }, stop: true },
+    { type: "register", param: "w5", setup: { reg: { w30: 0xFFFA } }, stop: false },
+
+    { type: "flag", param: "c", setup: { flags: { c: true } }, stop: true },
+    { type: "flag", param: "z", setup: { flags: { z: true } }, stop: true },
+    { type: "flag", param: "c", setup: { flags: { c: false } }, stop: true },
+    { type: "flag", param: "z", setup: { flags: { z: false } }, stop: true },
+
+    { type: "ram", param: 42, setup: { ram: { 42: 0x10 } }, stop: true },
+    { type: "ram", param: 42, setup: { ram: { 43: 0x10 } }, stop: false },
+
+    { type: "rom", param: 42, setup: { rom: { 42: 0x10 } }, stop: true },
+    { type: "rom", param: 42, setup: { rom: { 43: 0x10 } }, stop: false },
+
+    { type: "io", param: 2, setup: { pin: { 2: 1 } }, stop: true },
+    { type: "io", param: 2, setup: { pin: { 3: 1 } }, stop: false }
+  ];
+
+  for (var i = 0; i < changeBreakpoints.length; i++) {
+    var brk = changeBreakpoints[i];
+
+    tester.addTest({
+      title: "breakpoint: offset + change: " + brk.type + " " + brk.param + " => " + brk.stop,
+      setup: {
+        breakpoints: [
+          { offset: 3, condition: { type: brk.type, param: brk.param, operator: "change", value: null } },
+          { offset: 6, condition: { type: brk.type, param: brk.param, operator: "change", value: null } }
+        ]
+      },
+      steps: [
+        { },
+        { ss: brk.setup },
+        { running: !brk.stop },
+        { running: true }
+      ]
+    });
+  }
+
+
   var breakpointCases = [];
 
   //  set value  operator  check-value  should break?

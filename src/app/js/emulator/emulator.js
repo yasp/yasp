@@ -176,6 +176,25 @@ if (typeof yasp == 'undefined') yasp = { };
       this.breakpoints[i] = false;
     }
 
+    /** Flags for 'change'-breakpoints. If one of these is true write-actions to the specific value will be recored.
+     */
+    this.changeBreakpoints = {
+      rbyte: false,
+      rword: false,
+      zflag: false,
+      cflag: false,
+      io: false,
+      ram: false,
+      rom: false
+    };
+
+    this.changeBreakpointData = {};
+
+    for (var c in this.changeBreakpoints) {
+      this.changeBreakpointData[c] = new Array(10);
+      this.changeBreakpointData[c].length = 0;
+    }
+
     /** conditions for breakpoints, null means no condition.
      * {@link https://github.com/yasp/yasp/blob/master/doc/emulator/data.md#breakpoints|Additional documentation}.
      * @member {object[]}
@@ -306,6 +325,11 @@ if (typeof yasp == 'undefined') yasp = { };
       this.breakpointConditions[i] = null;
     }
 
+    for (var r in this.changeBreakpoints) {
+      this.changeBreakpoints[r] = false;
+    }
+
+
     for (var i = 0; i < breakpoints.length; i++) {
       var brk = breakpoints[i];
       this.breakpoints[brk.offset] = true;
@@ -361,6 +385,17 @@ if (typeof yasp == 'undefined') yasp = { };
       condition.isBiggerEquals  = (brk.condition.operator === ">=");
       condition.isChange        = (brk.condition.operator === "change");
 
+      if(condition.isChange) {
+        this.changeBreakpointExists = true;
+
+        if(condition.isByteRegister === true) this.changeBreakpoints["rbyte"] = true;
+        if(condition.isWordRegister === true) this.changeBreakpoints["rword"] = true;
+        if(condition.isCarryFlag    === true) this.changeBreakpoints["cflag"] = true;
+        if(condition.isZeroFlag     === true) this.changeBreakpoints["zflag"] = true;
+        if(condition.isIO           === true) this.changeBreakpoints["io"]    = true;
+        if(condition.isRamOffset    === true) this.changeBreakpoints["ram"]   = true;
+        if(condition.isRomOffset    === true) this.changeBreakpoints["rom"]   = true;
+      }
       this.breakpointConditions[brk.offset] = condition;
     }
 
@@ -406,8 +441,12 @@ if (typeof yasp == 'undefined') yasp = { };
       return 0;
     if(v < 0 || v > 255)
       return 1;
+
     this.ram[r] = v;
+
     if(debug) console.log("b" + r + "=" + v);
+    if(this.changeBreakpoints.rbyte === true) this.changeBreakpointData.rbyte.push(r);
+
     return true;
   };
 
@@ -433,6 +472,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return 1;
 
     if(debug) console.log("w" + r + "=" + v);
+    if(this.changeBreakpoints.rword === true) this.changeBreakpointData.rword.push(r);
 
     r = r * 2;
     yasp.bitutils.bytesFromWord(v, this.ram, r);
@@ -486,11 +526,15 @@ if (typeof yasp == 'undefined') yasp = { };
     if(c === true || c === false)
     {
       if(debug) console.log("c=" + c);
+      if(this.changeBreakpoints.cflag === true) this.changeBreakpointData.cflag.push(true);
+
       this.flags.c = c;
     }
     if(z === true || z === false)
     {
       if(debug) console.log("z=" + z);
+      if(this.changeBreakpoints.zflag === true) this.changeBreakpointData.zflag.push(true);
+
       this.flags.z = z;
     }
   };
@@ -556,6 +600,10 @@ if (typeof yasp == 'undefined') yasp = { };
     if(o < 0 || o >= this.ram.length)
       return 1;
     this.ram[o] = v;
+
+    if(debug) console.log("ram[" + o + "] = " + v);
+    if(this.changeBreakpoints.ram === true) this.changeBreakpointData.ram.push(o);
+
     return 0;
   };
 
@@ -567,7 +615,11 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.writeROM = function (o, v) {
     if(o < 0 || o >= this.rom.length)
       return 1;
+
     this.rom[o] = v;
+
+    if(debug) console.log("rom[" + o + "] = " + v);
+    if(this.changeBreakpoints.rom === true) this.changeBreakpointData.rom.push(o);
 
     if(this.commandCache[o] !== undefined) {
       var cmd = null;
@@ -619,6 +671,8 @@ if (typeof yasp == 'undefined') yasp = { };
       this.events.IO_CHANGED(p, s, pin.mode, pin.type);
       this.pwmTimeouts[p] = null;
       this.pwmStatus[p] = null;
+
+      if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
     }
 
     return 0;
@@ -652,6 +706,8 @@ if (typeof yasp == 'undefined') yasp = { };
         clearTimeout(this.pwmTimeouts[p]);
 
         this.pwmStatus[p] = null;
+
+        if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
       }
     } else if(s === 0 && this.pwmStatus[p]) {
       this.pwmStatus[p].startOff = now;
@@ -668,6 +724,7 @@ if (typeof yasp == 'undefined') yasp = { };
       state: s,
       timeoutId: setTimeout(function () {
         this.events.IO_CHANGED(p, s, pin.mode, pin.type);
+        if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
         this.pwmStatus[p] = null;
       }.bind(this), 100)
     };
@@ -778,10 +835,13 @@ if (typeof yasp == 'undefined') yasp = { };
         var shouldBreak = this.checkBreakpointCondition(condition);
 
         if(shouldBreak) {
+          this.resetChangeBreakpointData();
           this.break("breakpoint");
           break;
         }
       }
+
+      this.resetChangeBreakpointData();
 
       this.skipBreakpoint = false;
 
@@ -818,6 +878,23 @@ if (typeof yasp == 'undefined') yasp = { };
     this.setTickWrapperTimeout();
   };
 
+  yasp.Emulator.prototype.resetChangeBreakpointData = function () {
+    if(this.changeBreakpoints.rbyte === true)
+      this.changeBreakpointData.rbyte.length = 0;
+    if(this.changeBreakpoints.rword === true)
+      this.changeBreakpointData.rword.length = 0;
+    if(this.changeBreakpoints.zflag === true)
+      this.changeBreakpointData.zflag.length = 0;
+    if(this.changeBreakpoints.cflag === true)
+      this.changeBreakpointData.cflag.length = 0;
+    if(this.changeBreakpoints.io === true)
+      this.changeBreakpointData.io.length = 0;
+    if(this.changeBreakpoints.ram === true)
+      this.changeBreakpointData.ram.length = 0;
+    if(this.changeBreakpoints.rom === true)
+      this.changeBreakpointData.rom.length = 0;
+  }
+
   /** check if a conditional breakpoint should be triggered with the current state
    * @param cond {object} optimized breakpoint condition, see {@link yasp.Emulator#setBreakpoints}
    * @private
@@ -835,19 +912,19 @@ if (typeof yasp == 'undefined') yasp = { };
     // check for changed values
     if(cond.isChange) {
       if(cond.isByteRegister)
-        return false;
+        return this.changeBreakpointData.rbyte.indexOf(cond.registerNumber) !== -1;
       else if(cond.isWordRegister)
-        return false;
+        return this.changeBreakpointData.rword.indexOf(cond.registerNumber) !== -1;
       else if(cond.isCarryFlag)
-        return false;
+        return this.changeBreakpointData.cflag.length !== 0;
       else if(cond.isZeroFlag)
-        return false;
+        return this.changeBreakpointData.zflag.length !== 0;
       else if(cond.isIO)
-        return false;
+        return this.changeBreakpointData.io.indexOf(cond.ioPinNumber) !== -1;
       else if(cond.isRamOffset)
-        return false;
+        return this.changeBreakpointData.ram.indexOf(cond.memoryOffset) !== -1;
       else if(cond.isRomOffset)
-        return false;
+        return this.changeBreakpointData.rom.indexOf(cond.memoryOffset) !== -1;
 
       return false;
     }
