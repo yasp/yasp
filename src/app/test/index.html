@@ -8,6 +8,7 @@
     <script src="../../lib/js/jquery-1.10.2.min.js"></script>
     <script src="../js/commands.js" data-cover></script>
     <script src="../js/utils.js" data-cover></script>
+    <script src="./emulatortester.js" data-cover></script>
 </head>
 <body>
     <div id="qunit"></div>
@@ -41,7 +42,15 @@
     <script src="../js/emulator/disasm.js" data-cover></script>
     <script src="emulator/disasm.js"></script>
 
-    <script src="emulator/commands.js"></script>
+    <script src="emulator/commands_basic.js"></script>
+    <script src="emulator/commands_debug.js"></script>
+    <script src="emulator/commands_interrupts.js"></script>
+    <script src="emulator/commands_io.js"></script>
+    <script src="emulator/commands_jump.js"></script>
+    <script src="emulator/commands_other.js"></script>
+    <script src="emulator/commands_stack.js"></script>
+
+    <script src="emulator/breakpoints.js"></script>
 
     <script src="../js/hardware/hardware.js" data-cover></script>
     <script src="../js/hardware/led.js" data-cover></script>
