@@ -230,7 +230,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @private
    */
   yasp.Emulator.prototype.registerCallback = function (evt, func) {
-    if(typeof func == "function") {
+    if(typeof func === "function") {
       this.events[evt] = func;
       return true;
     } else {
@@ -268,9 +268,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * @private
    */
   yasp.Emulator.prototype.continue = function (count, skipBreakpoint) {
-    if(count == null) {
+    if(count === null) {
       this.running = true;
-    } else if(typeof count == "number") {
+    } else if(typeof count === "number") {
       if(count < 0)
         return 0;
       this.running = +count;
