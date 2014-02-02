@@ -1,61 +1,5 @@
 (function () {
-  var emulator;
-  var lastEmulatorDebug = null;
-  var assembler;
-
-  module("emulator commands", {
-    setup: function () {
-      emulator = new yasp.Emulator();
-      emulator.ticksPerTick = 1;
-      emulator.registerCallback("DEBUG",
-        function (type, subtype, addr, val) {
-          lastEmulatorDebug = {
-            type: type,
-            subtype: subtype,
-            addr: addr,
-            val: val
-          }
-        }
-      );
-      assembler = new yasp.Assembler();
-    },
-    teardown: function () {
-      emulator = null;
-      lastEmulatorDebug = null;
-      assembler = null;
-    }
-  });
-
-  /*
-    Test-Format:
-      {
-        cmd: "MOV b0,b1",
-        setup: { reg: { }, flags: { }, stack: { } },
-        steps: [
-          { reg: { }, stack: { 0: 0xFF } },
-          { ram: { 0x42: 1 }, pin: { .. to be defined .. } },
-          { rom: { 0x00: 0 }, flags: { c: false, z: true } }
-        ]
-      }
-
-    Checkable / setable registers:
-      b0 to b31 - byte registers
-      w0 to b31 - word registers
-      pc        - programm counter
-      sp        - stack pointer
-
-    Possible value-formats: (reg, ram, rom, stack)
-      hex - 0xFF       - normal JS number literal
-      dec - 255        - normal JS number literal
-      bin - "1111 111" - binary format, written as string, spaces allowed
-
-    Minimal example:
-      {
-        cmd: "MOV b0,b2",
-        setup: { reg: { "b2": 1 } },
-        steps: { reg: { "b0": 1 } }
-      }
-  */
+  var tester = new yasp.test.EmulatorTester("Basic");
 
   var commandTestData = [];
 
@@ -390,13 +334,13 @@
     {
       cmd: "OR b0,b1",
       setup: { reg: { "b0": "01010101",
-                      "b1": "01000011" } },
+        "b1": "01000011" } },
       steps: { reg: { "b0": "01010111" }, flags: { c: false, z: false } }
     },
     {
       cmd: "OR b0,b1",
       setup: { reg: { "b0": "00000000",
-                      "b1": "00000000" } },
+        "b1": "00000000" } },
       steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
     }
   ]);
@@ -420,13 +364,13 @@
     {
       cmd: "OR w0,w1",
       setup: { reg: { "w0": "01010101 10101010",
-                      "w1": "01000011 11000010" } },
+        "w1": "01000011 11000010" } },
       steps: { reg: { "w0": "01010111 11101010" }, flags: { c: false, z: false } }
     },
     {
       cmd: "OR w0,w1",
       setup: { reg: { "w0": "00000000 00000000",
-                      "w1": "00000000 00000000" } },
+        "w1": "00000000 00000000" } },
       steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
     }
   ]);
@@ -450,13 +394,13 @@
     {
       cmd: "AND b0,b1",
       setup: { reg: { "b0": "01010101",
-                      "b1": "01000011" } },
+        "b1": "01000011" } },
       steps: { reg: { "b0": "01000001" }, flags: { c: false, z: false } }
     },
     {
       cmd: "AND b0,b1",
       setup: { reg: { "b0": "11000000",
-                      "b1": "00000011" } },
+        "b1": "00000011" } },
       steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
     }
   ]);
@@ -480,13 +424,13 @@
     {
       cmd: "AND w0,w1",
       setup: { reg: { "w0": "01010101 10101010",
-                      "w1": "01000011 11000010" } },
+        "w1": "01000011 11000010" } },
       steps: { reg: { "w0": "01000001 10000010" }, flags: { c: false, z: false } }
     },
     {
       cmd: "AND w0,w1",
       setup: { reg: { "w0": "00100000 00000100",
-                      "w1": "10000000 00000001" } },
+        "w1": "10000000 00000001" } },
       steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
     }
   ]);
@@ -510,13 +454,13 @@
     {
       cmd: "XOR b0,b1",
       setup: { reg: { "b0": "01010101",
-                      "b1": "01000011" } },
+        "b1": "01000011" } },
       steps: { reg: { "b0": "00010110" }, flags: { c: false, z: false } }
     },
     {
       cmd: "XOR b0,b1",
       setup: { reg: { "b0": "11000000",
-                      "b1": "11000000" } },
+        "b1": "11000000" } },
       steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
     }
   ]);
@@ -540,13 +484,13 @@
     {
       cmd: "XOR w0,w1",
       setup: { reg: { "w0": "01010101 10101010",
-                      "w1": "01000011 11000010" } },
+        "w1": "01000011 11000010" } },
       steps: { reg: { "w0": "00010110 01101000" }, flags: { c: false, z: false } }
     },
     {
       cmd: "XOR w0,w1",
       setup: { reg: { "w0": "00100000 00000100",
-                      "w1": "00100000 00000100" } },
+        "w1": "00100000 00000100" } },
       steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
     }
   ]);
@@ -691,289 +635,6 @@
       cmd: "DIV w0,w1",
       setup: { reg: { "w0": 0x000F, "w1": 0xFF02 } },
       steps: { reg: { "w0": 0x0007 } }
-    },
-    {
-      cmd: "DIV w0,w1",
-      setup: { reg: { "w0": 0x000F, "w1": 0 } },
-      steps: { running: false }
-    }
-  ]);
-
-  // PUSH
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "PUSH b0",
-      setup: { reg: { "b0": 0xFA } },
-      steps: { reg: { "sp": 0 }, stack: { 0: 0xFA } }
-    },
-    {
-      cmd: "PUSH w0",
-      setup: { reg: { "w0": 0xFAFB } },
-      steps: { reg: { "sp": 1 }, stack: { 0: 0xFB, 1: 0xFA } }
-    }
-  ]);
-
-  // POP
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "POP b0",
-      setup: { reg: { "sp": 0 }, stack: [0xFA] },
-      steps: { reg: { "b0": 0xFA } }
-    },
-    {
-      cmd: "POP w0",
-      setup: { reg: { "sp": 1 }, stack: [0xFB, 0xFA] },
-      steps: { reg: { "w0": 0xFAFB } }
-    }
-  ]);
-
-  // Stack
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "PUSH b0\nPOP b1",
-      setup: { reg: { "b0": 0xFA } },
-      steps: [
-        {},
-        { reg: { "b1": 0xFA } }
-      ]
-    },
-    {
-      cmd: "PUSH w0\nPOP w1",
-      setup: { reg: { "w0": 0xFAFB } },
-      steps: [
-        {},
-        { reg: { "w1": 0xFAFB } }
-      ]
-    }
-  ]);
-
-  // JMP
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "JMP lbl\nDB 0xFF\nlbl:",
-      setup: { },
-      steps: [
-        { reg: { "pc": 3 } }
-      ]
-    }
-  ]);
-
-  // JZ
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "JZ lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { z: false } },
-      steps: [
-        { reg: { "pc": 2 } }
-      ]
-    },
-    {
-      cmd: "JZ lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { z: true } },
-      steps: [
-        { reg: { "pc": 3 } }
-      ]
-    }
-  ]);
-
-  // JNZ
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "JNZ lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { z: false } },
-      steps: [
-        { reg: { "pc": 3 } }
-      ]
-    },
-    {
-      cmd: "JNZ lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { z: true } },
-      steps: [
-        { reg: { "pc": 2 } }
-      ]
-    }
-  ]);
-
-  // JC
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "JC lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { c: false } },
-      steps: [
-        { reg: { "pc": 2 } }
-      ]
-    },
-    {
-      cmd: "JC lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { c: true } },
-      steps: [
-        { reg: { "pc": 3 } }
-      ]
-    }
-  ]);
-
-  // JNC
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "JNC lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { c: false } },
-      steps: [
-        { reg: { "pc": 3 } }
-      ]
-    },
-    {
-      cmd: "JNC lbl\nDB 0xFF\nlbl:",
-      setup: { flags: { c: true } },
-      steps: [
-        { reg: { "pc": 2 } }
-      ]
-    }
-  ]);
-
-  // WRITERAM
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "WRITERAM w0,b2",
-      setup: { reg: { "w0": 0xFF, "b2": 0xFA } },
-      steps: [
-        { ram: { 0xFF: 0xFA } }
-      ]
-    },
-    {
-      cmd: "WRITERAM w0,b2",
-      setup: { ram: new Uint8Array(160), reg: { "w0": 0xFFFF, "b2": 0xFA } },
-      steps: [
-        { flags: { "c": true, "z": false } }
-      ]
-    }
-  ]);
-
-  // READRAM
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "READRAM b2,w0",
-      setup: { reg: { "w0": 0x03, "b3": 0xFA } },
-      steps: [
-        { reg: { "b2": 0xFA } }
-      ]
-    }
-  ]);
-
-  // HIGH
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "HIGH 3",
-      setup: { pin: { 3: 0 } },
-      steps: [
-        { pin: { 3: 1 } }
-      ]
-    }
-  ]);
-
-  // LOW
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "LOW 3",
-      setup: { pin: { 3: 1 } },
-      steps: [
-        { pin: { 3: 0 } }
-      ]
-    }
-  ]);
-
-  // TOGGLE
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "TOGGLE 3",
-      setup: { pin: { 3: 1 } },
-      steps: [
-        { pin: { 3: 0 } }
-      ]
-    },
-    {
-      cmd: "TOGGLE 3",
-      setup: { pin: { 3: 0 } },
-      steps: [
-        { pin: { 3: 1 } }
-      ]
-    }
-  ]);
-  
-  // PIN
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "PIN 3",
-      setup: { pin: { 3: 1 } },
-      steps: [
-        { flags: { z: false, c: false } }
-      ]
-    },
-    {
-      cmd: "PIN 3",
-      setup: { pin: { 3: 0 } },
-      steps: [
-        { flags: { z: true, c: false } }
-      ]
-    }
-  ]);
-
-  // RETI
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "RETI",
-      setup: { reg: { "sp": 1 }, stack: [ 0x42, 0x41 ] },
-      steps: [
-        { reg: { "pc": 0x4142 } }
-      ]
-    }
-  ]);
-
-  // ENABLE
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "ENABLE 42",
-      setup: { },
-      steps: [
-        { interruptMask: [ false, true, false, true, false, true, false, false ] }
-      ]
-    }
-  ]);
-
-  // DISABLE
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "DISABLE",
-      setup: { interruptMask: [ true, true, true, true, true, true, true, true ] },
-      steps: [
-        { interruptMask: [ false, false, false, false, false, false, false, false ] }
-      ]
-    }
-  ]);
-
-  // Interrupt-Test
-  commandTestData = commandTestData.concat([
-    {
-      title: "Interrupt",
-      cmd: "MOV b0,1",
-      setup: {
-        interruptMask: [ false, true, false, false, false, false, false, false ],
-        rom: { 0x102: 0x00, 0x103: 66 }
-      },
-      steps: [
-        { "triggerInterrupt": 1 },
-        { "reg": { "pc": 69 } } // not 66 because there is 0x00 0x00 0x00 at that address which is MOV b0,0
-      ]
-    }
-  ]);
-
-  // RANDOM
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "RANDOM b1",
-      setup: { },
-      steps: [
-        { }
-      ]
     }
   ]);
 
@@ -1013,303 +674,17 @@
     }
   ]);
 
-  // CALL/RET
+  // RANDOM
   commandTestData = commandTestData.concat([
     {
-      title: "CALL/RET",
-      cmd: "CALL lbl\n"
-         + "DB 255\n"
-         + "lbl:"
-         + "RET",
+      cmd: "RANDOM b1",
       setup: { },
       steps: [
-        { reg: { "pc": 3, "sp": 1 }, stack: [ 0x02, 0x00 ]  },
-        { reg: { "pc": 2, "sp": -1 } }
+        { }
       ]
     }
   ]);
 
-  // JMPI
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "JMPI w0",
-      setup: { reg: { "w0": 0xFAFB } },
-      steps: [
-        { reg: { "pc": 0xFAFB } }
-      ]
-    }
-  ]);
-
-  // POT
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "POT 10,w0",
-      setup: { pin: { 10: 0xFF } },
-      steps: [
-        { reg: { "w0": 0x00FF } }
-      ]
-    }
-  ]);
-
-  // LA
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "MOV b0,0\nlbl: LA w0,lbl",
-      setup: {},
-      steps: [
-        { }, // MOV
-        { reg: { "w0": 0x0003 } }
-      ]
-    }
-  ]);
-
-  // ECHO
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "ECHO str\nstr: STRING \"foo\"",
-      setup: {},
-      steps: [
-        { debug: { "addr": 5, "subtype": null, "type": "string", "val": "foo" } }
-      ]
-    }
-  ]);
-
-  // DEBUG
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "DEBUG w1",
-      setup: { reg: { "w1": 0x0102 } },
-      steps: [
-        { debug: { "addr": 1, "subtype": "w", "type": "register", "val": 0x0102 } }
-      ]
-    },
-    {
-      cmd: "DEBUG b2",
-      setup: { reg: { "b2": 0xFA } },
-      steps: [
-        { debug: { "addr": 2, "subtype": "b", "type": "register", "val": 0xFA } }
-      ]
-    }
-  ]);
-
-  // ADC0/1/2
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "ADC0 w1",
-      setup: { pin: { 10: 0xFA } },
-      steps: [
-        { reg: { "w1": 0x00FA } }
-      ]
-    },
-    {
-      cmd: "ADC1 w1",
-      setup: { pin: { 11: 0xFA } },
-      steps: [
-        { reg: { "w1": 0x00FA } }
-      ]
-    },
-    {
-      cmd: "ADC2 w1",
-      setup: { pin: { 12: 0xFA } },
-      steps: [
-        { reg: { "w1": 0x00FA } }
-      ]
-    },
-  ]);
-
-  // BREAK
-  commandTestData = commandTestData.concat([
-    {
-      cmd: "BREAK",
-      setup: {},
-      steps: [
-        { running: false }
-      ]
-    }
-  ]);
-
-  for (var i = 0; i < commandTestData.length; i++) {
-    var test = commandTestData[i];
-
-    if(!test.title)
-      test.title = test.cmd.replace('\n', ' / ');
-  }
-
-  QUnit.cases(commandTestData).test("command", function (params) {
-    var asm = assembler.assemble({ code: params.cmd, jobs: ["bitcode"] });
-    ok(asm.success, "Assembling works");
-
-    if(!asm.success)
-      return;
-
-    emulator.pc = 0;
-    emulator.load(asm.bitcode, 0);
-
-    var setup = params.setup;
-
-    if(setup) {
-      if(setup.reg) {
-        for (var r in setup.reg) {
-          var val = parseRegValue(setup.reg[r]);
-
-          if(r.length < 2)
-          {
-            ok(false, "Invalid test: setup-register " + r);
-            continue;
-          }
-
-          if(r == "pc") {
-            emulator.pc = val;
-          } else if (r == "sp") {
-            emulator.sp = val;
-          } else {
-            var n = +r.substr(1);
-
-            if(r.charAt(0) === "b")
-              emulator.writeByteRegister(n, val);
-            else if (r.charAt(0) === "w")
-              emulator.writeWordRegister(n, val);
-            else
-            {
-              ok(false, "Invalid test: setup-register " + r + " does not exist.");
-            }
-          }
-        }
-      }
-      if(setup.stack) {
-        emulator.stack = setup.stack;
-      }
-      if(setup.pin) {
-        for (var p in setup.pin) {
-          emulator.setIO(p, setup.pin[p], true);
-        }
-      }
-      if(setup.rom) {
-        for (var a in setup.rom) {
-          emulator.rom[a] = setup.rom[a];
-        }
-      }
-      if(setup.interruptMask) {
-        emulator.interruptMask = setup.interruptMask;
-      }
-      if(setup.flags) {
-        if(setup.flags.z)
-          emulator.flags.z = true;
-        if(setup.flags.c)
-          emulator.flags.c = true;
-      }
-    }
-
-    params.steps = params.steps || [];
-
-    if(!(params.steps instanceof Array))
-      params.steps = [params.steps];
-
-    for (var i = 0; i < params.steps.length; i++) {
-      var step = params.steps[i];
-      var stepPrefix = "Step " + (i+1) + ": ";
-
-      emulator.tick();
-
-      if(step.reg) {
-        for (var r in step.reg) {
-          var actual;
-          var expected = parseRegValue(step.reg[r]);
-
-          if(r.length < 2)
-          {
-            ok(false, stepPrefix + "Invalid test: step-register " + r);
-            continue;
-          }
-
-          if(r == "pc") {
-            actual = emulator.pc;
-          } else if (r == "sp") {
-            actual = emulator.sp;
-          } else {
-            var n = +r.substr(1);
-
-            if(r.charAt(0) === "b")
-              actual = emulator.readByteRegister(n);
-            else if (r.charAt(0) === "w")
-              actual = emulator.readWordRegister(n);
-            else
-            {
-              ok(false, stepPrefix + "Invalid test: step-register " + r + " does not exist.");
-              continue;
-            }
-          }
-
-          strictEqual(actual, expected, stepPrefix + "register " + r + " is " + expected);
-        }
-      }
-      if(step.flags) {
-        var flags = emulator.readFlags();
-
-        for (var flag in flags) {
-          var longname = "unknown";
-          if(flag == "c")
-            longname = "carry";
-          if(flag == "z")
-            longname = "zero";
-          var msg = stepPrefix +longname + " flag is " + (step.flags[flag] === true ? "set" : "not set");
-
-          if(typeof step.flags[flag] === undefined && flags[flag] === false ||
-             typeof step.flags[flag] !== undefined && flags[flag] == step.flags[flag])
-            ok(true, msg);
-          else
-            ok(false, msg);
-        }
-      }
-      if(step.ram) {
-        for (var r in step.ram) {
-          var expected = parseRegValue(step.ram[r]);
-          var actual = emulator.ram[r];
-
-          strictEqual(actual, expected, stepPrefix + "ram-byte " + r + " is " + expected);
-        }
-      }
-      if(step.rom) {
-        alert(stepPrefix +"Step-ROM-Checking is not yet implemented")
-      }
-      if(step.interruptMask) {
-        deepEqual(emulator.interruptMask, step.interruptMask);
-      }
-      if(step.pin) {
-        for (var p in step.pin) {
-          var expected = step.pin[p];
-          var actual = emulator.getIO(p);
-
-          strictEqual(actual, expected, stepPrefix + "pin " + p + " is " + expected);
-        }
-      }
-      if(step.triggerInterrupt) {
-        emulator.scheduleInterrupt(step.triggerInterrupt);
-      }
-      if(step.stack) {
-        for (var r in step.stack) {
-          var expected = parseRegValue(step.stack[r]);
-          var actual = emulator.stack[r];
-
-          strictEqual(actual, expected, stepPrefix + "stack-entry " + r + " is " + expected);
-        }
-      }
-      if(step.waitTime !== undefined) {
-        strictEqual(emulator.waitTime, step.waitTime);
-      }
-      if(step.running !== undefined) {
-        strictEqual(emulator.running, step.running);
-      }
-      if(step.debug !== undefined) {
-        deepEqual(lastEmulatorDebug, step.debug, "Debug " + JSON.stringify(step.debug) + " was issued");
-      }
-    }
-
-    function parseRegValue (val) {
-      if(typeof val === "string")
-        return parseInt(val.replace(' ', ''), 2);
-      return val;
-    }
-  });
-
+  tester.addTests(commandTestData);
+  tester.done();
 })();
