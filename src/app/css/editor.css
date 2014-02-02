@@ -33,11 +33,11 @@ span.cm-keyword {
 }
 
 #editorcontainer.quickHelpFixed {
-    height: calc(100% - 99px);
+    height: calc(100% - 115px);
 }
 
 #editorcontainer.labelListFixed {
-    width: calc(100% - 99px);
+    width: calc(100% - 100px);
 }
 
 /* === Labellist === */
