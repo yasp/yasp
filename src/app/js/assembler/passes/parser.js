@@ -204,6 +204,8 @@ if (typeof yasp == 'undefined') yasp = { };
             params: parameterArray
           });
           this.nodes.push(node);
+          
+          if (iterator.is(',')) iterator.next(); // skip ","
         }
         
         iterator.riseSyntaxError("Unknown command " + name + "(" + parameters + ")", possibleCommands.length > 0 ? "minor" : "error");
