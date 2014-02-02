@@ -346,6 +346,12 @@
     strictEqual(actual, expected);
   });
 
+  test("readRAM - bounds", function () {
+    var expected = 0;
+    var actual = emulator.readRAM(emulator.ram.length + 1);
+    strictEqual(actual, expected);
+  });
+
   test("writeROM - simple", function () {
     var expected = 241;
     emulator.writeROM(100, expected);
@@ -395,6 +401,12 @@
     var expected = 241;
     emulator.rom[100] = expected;
     var actual = emulator.readROM(100);
+    strictEqual(actual, expected);
+  });
+
+  test("readROM - bounds", function () {
+    var expected = 0;
+    var actual = emulator.readROM(emulator.rom.length + 1);
     strictEqual(actual, expected);
   });
 
@@ -577,4 +589,16 @@
     deepEqual(actual, expected);
   });
 
+  test("registerCallback", function () {
+    var func = function () {};
+    var actual = emulator.registerCallback("BREAK", func);
+    strictEqual(actual, true);
+    strictEqual(emulator.events["BREAK"], func);
+  });
+
+  test("registerCallback - invalid func", function () {
+    var actual = emulator.registerCallback("BREAK", "asd");
+    strictEqual(actual, false);
+    strictEqual(emulator.events["BREAK"], emulator.noop);
+  });
 })();
