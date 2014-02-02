@@ -656,10 +656,12 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
               if (prevCommand != commands) {
                 changed = true;
                 prevCommand = commands;
+
+                var multiple = (commands.length > 1);
                 
                 $('#help_quick .helpquick_container').html("");
                 for (var j = 0; j < commands.length; j++) {
-                  setQuickhelpCommand(commands[j], true);
+                  setQuickhelpCommand(commands[j], multiple);
                   if (j < commands.length - 1) {
                     $('#help_quick .helpquick_container').append($('<hr />'));
                   }
