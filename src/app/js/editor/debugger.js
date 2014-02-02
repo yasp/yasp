@@ -24,6 +24,9 @@ if (typeof yasp == 'undefined') yasp = { };
       yasp.Debugger.registers.heading.append('<div class="pointer">PC</div>');
       yasp.Debugger.registers.heading.append('<div class="pointer">SP</div>');
 
+      yasp.Debugger.breakpoints.sendBreakpoints();
+      yasp.Debugger.breakpointHit = false;
+
       for (var reg in yasp.Editor.symbols.usedRegisters) {
         yasp.Debugger.registers.heading.append(
           $('<div class="register">' + reg.toLowerCase() + '</div>').addClass(reg[0] === "B" ? "byte" : "word")
@@ -33,6 +36,34 @@ if (typeof yasp == 'undefined') yasp = { };
     debugLog: {
       clearLog: function () {
         yasp.Debugger.debugLog.element.text("");
+      }
+    },
+    breakpoints: {
+      breakpoints: [],
+      breakpointsChanged: function (lines) {
+        yasp.Debugger.breakpoints.breakpoints = [];
+
+        for (var i = 0; i < lines.length; i++) {
+          if(lines[i] === true) {
+            yasp.Debugger.breakpoints.breakpoints.push({
+              offset: yasp.Editor.map[i + 1],
+              condition: null
+            });
+          }
+        }
+
+        yasp.Debugger.breakpoints.sendBreakpoints();
+      },
+      sendBreakpoints: function () {
+        if(yasp.Debugger.EmulatorCommunicator) {
+          yasp.Debugger.EmulatorCommunicator.sendMessage("SET_BREAKPOINTS",
+            {
+              breakpoints: yasp.Debugger.breakpoints.breakpoints
+            },
+            function () {
+            }
+          )
+        }
       }
     },
     states: [],
@@ -154,7 +185,8 @@ if (typeof yasp == 'undefined') yasp = { };
     $('.debugger_step').click(function () {
       if(!yasp.Debugger.isEmulatorRunning) {
         yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
-          count: 1
+          count: 1,
+          skipBreakpoint: true
         });
       } else {
         alert("no")
@@ -180,7 +212,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
     $('.debugger_continue').click(function () {
       yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
-        count: null
+        count: null,
+        skipBreakpoint: yasp.Debugger.breakpointHit
       });
     });
 
@@ -241,6 +274,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
   function onEmulatorBreak (data) {
     var reason = data.payload.reason;
+    yasp.Debugger.breakpointHit = (reason === "breakpoint");
     yasp.Debugger.isEmulatorRunning = false;
     refreshDebugger();
   }

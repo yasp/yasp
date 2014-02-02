@@ -95,6 +95,13 @@ if (typeof yasp == 'undefined') yasp = { };
      * @see yasp.Emulator#scheduleInterrupt */
     this.interruptToServe = -1;
 
+    /** do not ever execute a tick unless {@link yasp.Emulator#tick} is called directly. This is used by the test-suite and should not be used by anything else.
+     * @member {boolean}
+     * @see yasp.Emulator#setTickWrapperTimeout */
+    this.forceStep = false;
+
+    this.skipBreakpoint = false;
+
     // status (waiting for high or low) and timeout-ids for PWM
     this.pwmStatus = {};
     this.pwmTimeouts = {};
@@ -161,6 +168,22 @@ if (typeof yasp == 'undefined') yasp = { };
       'IO_CHANGED': this.noop
     };
 
+    /** offsets in ROM which have a breakpoint set
+     * @member {boolean[]}
+     * @see yasp.Emulator#setBreakpoints */
+    this.breakpoints = new Array(this.rom.length);
+    for (var i = 0; i < this.breakpoints.length; i++) {
+      this.breakpoints[i] = false;
+    }
+
+    /** conditions for breakpoints, null means no condition.
+     * {@link https://github.com/yasp/yasp/blob/master/doc/emulator/data.md#breakpoints|Additional documentation}.
+     * @member {object[]}
+     * @see yasp.Emulator#setBreakpoints */
+    this.breakpointConditions = new Array(this.rom.length);
+    for (var i = 0; i < this.breakpointConditions.length; i++) {
+      this.breakpointConditions[i] = false;
+    }
 
     this.setTickWrapperTimeout();
   };
@@ -244,7 +267,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @fires yasp.Emulator~CONTINUED
    * @private
    */
-  yasp.Emulator.prototype.continue = function (count) {
+  yasp.Emulator.prototype.continue = function (count, skipBreakpoint) {
     if(count == null) {
       this.running = true;
     } else if(typeof count == "number") {
@@ -254,6 +277,8 @@ if (typeof yasp == 'undefined') yasp = { };
     } else {
       return 1;
     }
+
+    this.skipBreakpoint = !!skipBreakpoint;
 
     this.events.CONTINUED();
     return true;
@@ -265,6 +290,81 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
     this.events.BREAK(reason);
+  };
+
+  /** updates the internal list of breakpoints
+   * @param breakpoints {Breakpoint[]} the breakpoints to save.
+   *        {@link https://github.com/yasp/yasp/blob/master/doc/emulator/data.md#breakpoints|Additional documentation}.
+   * @returns {Number|Boolean}
+   */
+  yasp.Emulator.prototype.setBreakpoints = function (breakpoints) {
+    if(!(breakpoints instanceof Array))
+      return 0;
+
+    for (var i = 0; i < this.breakpoints.length; i++) {
+      this.breakpoints[i] = false;
+      this.breakpointConditions[i] = null;
+    }
+
+    for (var i = 0; i < breakpoints.length; i++) {
+      var brk = breakpoints[i];
+      this.breakpoints[brk.offset] = true;
+
+      if(brk.condition === null || brk.condition === undefined)
+        continue;
+
+      var condition = {};
+
+      condition.boolValue = (brk.condition.value === true);
+      condition.numValue = +brk.condition.value;
+      condition.uintArrayValue = (brk.condition.value instanceof Uint8Array) ? brk.condition.value : new Uint8Array();
+
+      condition.isBoolValue = false;
+      condition.isNumValue = false;
+      condition.isUintArrayValue = false;
+
+      if(brk.condition.type === "register") {
+        condition.isByteRegister = (brk.condition.param.charAt(0) === "b");
+        condition.isWordRegister = (brk.condition.param.charAt(0) === "w");
+        condition.registerNumber = +brk.condition.param.substring(1);
+        condition.isNumValue = true;
+      }
+
+      if(brk.condition.type === "flag") {
+        condition.isCarryFlag = (brk.condition.param === "c");
+        condition.isZeroFlag = (brk.condition.param === "z");
+        condition.isBoolValue = true;
+      }
+
+      if(brk.condition.type === "io") {
+        condition.isIO = true;
+        condition.ioPinNumber = +brk.condition.param;
+        condition.isNumValue = true;
+      }
+
+      if(brk.condition.type === "ram" || brk.condition.type === "rom") {
+        condition.isRamOffset = (brk.condition.type === "ram");
+        condition.isRomOffset = (brk.condition.type === "rom");
+        condition.memoryOffset = +brk.condition.param;
+
+        if(brk.condition.value instanceof Uint8Array)
+          condition.isUintArrayValue = true;
+        else
+          condition.isNumValue = true;
+      }
+
+      condition.isEquals        = (brk.condition.operator === "=");
+      condition.isNotEquals     = (brk.condition.operator === "!=");
+      condition.isSmaller       = (brk.condition.operator === "<");
+      condition.isBigger        = (brk.condition.operator === ">");
+      condition.isSmallerEquals = (brk.condition.operator === "<=");
+      condition.isBiggerEquals  = (brk.condition.operator === ">=");
+      condition.isChange        = (brk.condition.operator === "change");
+
+      this.breakpointConditions[brk.offset] = condition;
+    }
+
+    return true;
   };
 
   /** sends a register to the debugger
@@ -565,6 +665,16 @@ if (typeof yasp == 'undefined') yasp = { };
     return this.ram[o];
   };
 
+  /** reads one byte from the rom
+   * @param o {Number} the offset to read from
+   * @returns {Number} the bytes value, or 0 if o was out of bounds
+   */
+  yasp.Emulator.prototype.readROM = function (o) {
+    if(o < 0 || o >= this.rom.length)
+      return 0;
+    return this.rom[o];
+  };
+
   /** schedules an interrupt for the next tick
    * @param i {Number} the interrupt to schedule
    * @returns {boolean} true if the interrupt is going to served, false otherwise (depends on the active interrupt-mask)
@@ -612,6 +722,8 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see yasp.Emulator#tickWrapper
    */
   yasp.Emulator.prototype.setTickWrapperTimeout = function () {
+    if(this.forceStep === true)
+      return;
     setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
   };
 
@@ -631,6 +743,18 @@ if (typeof yasp == 'undefined') yasp = { };
         break;
       }
 
+      if(this.breakpoints[this.pc] === true && this.skipBreakpoint === false) {
+        var condition = this.breakpointConditions[this.pc];
+        var shouldBreak = this.checkBreakpointCondition(condition);
+
+        if(shouldBreak) {
+          this.break("breakpoint");
+          break;
+        }
+      }
+
+      this.skipBreakpoint = false;
+
       if(typeof this.running === "number") {
         this.running--;
 
@@ -641,7 +765,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       if(this.waitTime !== 0) {
-        if(this.running === 0) { // ignore WAIT/PAUSE when stepping
+        if(this.running === 0 || this.forceStep === true) { // ignore WAIT/PAUSE when stepping or running in test-suite
           this.running = 1;
           this.setTickWrapperTimeout();
         } else {
@@ -662,6 +786,100 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     this.setTickWrapperTimeout();
+  };
+
+  /** check if a conditional breakpoint should be triggered with the current state
+   * @param cond {object} optimized breakpoint condition, see {@link yasp.Emulator#setBreakpoints}
+   * @private
+   */
+  yasp.Emulator.prototype.checkBreakpointCondition = function (cond) {
+    var actualBoolValue = false;
+    var actualNumValue = 0;
+    var actualUintArrayValue = null;
+
+    // no checking needed if there is no condition..
+    if(cond === null)
+      return true;
+
+    // ========================
+    // check for changed values
+    if(cond.isChange) {
+      if(cond.isByteRegister)
+        return false;
+      else if(cond.isWordRegister)
+        return false;
+      else if(cond.isCarryFlag)
+        return false;
+      else if(cond.isZeroFlag)
+        return false;
+      else if(cond.isIO)
+        return false;
+      else if(cond.isRamOffset)
+        return false;
+      else if(cond.isRomOffset)
+        return false;
+
+      return false;
+    }
+
+    // ===================
+    // read current values
+
+    if(cond.isByteRegister) {
+      actualNumValue = this.readByteRegister(cond.registerNumber);
+    } else if(cond.isWordRegister) {
+      actualNumValue = this.readWordRegister(cond.registerNumber);
+    } else if(cond.isCarryFlag) {
+      actualBoolValue = this.isCarryFlagSet();
+    } else if(cond.isZeroFlag) {
+      actualBoolValue = this.isZeroFlagSet();
+    } else if(cond.isIO) {
+      actualNumValue = this.getIO(cond.ioPinNumber);
+    } else if(cond.isRamOffset) {
+      if(cond.isUintArrayValue) {
+        actualUintArrayValue = this.ram.subarray(cond.memoryOffset, cond.memoryOffset + cond.uintArrayValue.length);
+      } else {
+        actualNumValue = this.readRAM(cond.memoryOffset);
+      }
+    } else if(cond.isRomOffset) {
+      if(cond.isUintArrayValue) {
+        actualUintArrayValue = this.rom.subarray(cond.memoryOffset, cond.memoryOffset + cond.uintArrayValue.length);
+      } else {
+        actualNumValue = this.readROM(cond.memoryOffset);
+      }
+    }
+
+    // ============
+    // check values
+
+    if(cond.isEquals) {
+      if(cond.isNumValue)
+        return (actualNumValue  === cond.numValue);
+      else if(cond.isBoolValue)
+        return (actualBoolValue === cond.boolValue);
+      else if(cond.isUintArrayValue)
+        return actualUintArrayValue.equals(cond.uintArrayValue);
+
+    } else if(cond.isNotEquals) {
+      if(cond.isNumValue)
+        return (actualNumValue  !== cond.numValue);
+      else if(cond.isBoolValue)
+        return (actualBoolValue !== cond.boolValue);
+      else if(cond.isUintArrayValue)
+        return !actualUintArrayValue.equals(cond.uintArrayValue);
+
+    } else if(cond.isSmaller && cond.isNumValue) {
+      return (actualNumValue < cond.numValue);
+    } else if(cond.isBigger && cond.isNumValue) {
+      return (actualNumValue > cond.numValue);
+    } else if(cond.isSmallerEquals && cond.isNumValue) {
+      return (actualNumValue <= cond.numValue);
+    } else if(cond.isBiggerEquals && cond.isNumValue) {
+      return (actualNumValue >= cond.numValue);
+    }
+
+    console.log("Invalid condition: " + JSON.stringify(cond));
+    return false;
   };
 
   /** Executes instructions. Do not call manually.
@@ -685,6 +903,10 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     var ccmd = this.commandCache[this.pc];
+    if(ccmd === null) {
+      this.break("invalid_instr");
+      return;
+    }
     var cmd = ccmd.cmd;
 
     // increment the program counter by the length of the instruction in the ROM

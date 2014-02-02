@@ -16,6 +16,8 @@ Reasons:
 * `break_instr`: the `BREAK`-Instruction was executed
 * `divide_by_zero`: the value of the second register of a `DIV`-Instruction was zero
 * `break_msg`: a `BREAK`-Message has been issued
+* `invalid_instr`: a invalid instruction has been found
+* `breakpoint`: a breakpoint has been hit
 
 ### Broadcast: `CONTINUED`
 The emulator has continued, this is caused by a `CONTINUE`-Message.

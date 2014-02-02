@@ -35,3 +35,17 @@ if (typeof window != 'undefined') {
       };
   })();
 }
+
+if (!Uint8Array.prototype.equals) {
+  Uint8Array.prototype.equals = function (arr) {
+    if(arr.length !== this.length)
+      return false;
+
+    for (var i = 0; i < this.length; i++) {
+      if(this[i] !== arr[i])
+        return false;
+    }
+
+    return true;
+  }
+}

@@ -268,7 +268,44 @@ END
                                                 <pre></pre>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="debugger-tabs-breakpoints"></div>
+                                        <div class="tab-pane" id="debugger-tabs-breakpoints">
+                                            <table class="table table-condensed breakpoints">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="break-line">Line</th>
+                                                        <th class="break-condition">Condition</th>
+                                                        <th class="break-active">Active</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="break-line">1</td>
+                                                        <td class="break-condition">b0 = 2</td>
+                                                        <td class="break-active"><input type="checkbox" checked></td>
+                                                    </tr>
+                                                    <tr class="hit">
+                                                        <td class="break-line">8</td>
+                                                        <td class="break-condition">None</td>
+                                                        <td class="break-active"><input type="checkbox" checked></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="break-line">3</td>
+                                                        <td class="break-condition">w0 changed</td>
+                                                        <td class="break-active"><input type="checkbox" checked></td>
+                                                    </tr>
+                                                    <tr class="inactive">
+                                                        <td class="break-line none">none</td>
+                                                        <td class="break-condition">Pin 3 high</td>
+                                                        <td class="break-active"><input type="checkbox"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="break-line">4</td>
+                                                        <td class="break-condition">Carry = 1</td>
+                                                        <td class="break-active"><input type="checkbox" checked></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                                 <div id="hardwarecontainer">

@@ -81,6 +81,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           marker.text("●");
           return marker.get(0);
         })());
+
+        yasp.Editor.updateBreakpoints();
       }).bind(this));
     }).bind(this));
     this.editors.push(editor);
@@ -211,6 +213,16 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     breakpoints: [ ],
     ast: [ ],
     bitcode: new Uint8Array(),
+    updateBreakpoints: function  () {
+      var editor = yasp.EditorManager.editors[0];
+      yasp.Editor.breakpoints = [];
+      editor.eachLine(function (handle) {
+        var info = editor.lineInfo(handle);
+        yasp.Editor.breakpoints[info.line] = !!(info.gutterMarkers && info.gutterMarkers.breakpoints);
+      });
+
+      yasp.Debugger.breakpoints.breakpointsChanged(yasp.Editor.breakpoints);
+    },
     getIdentifierOccurence: function(name) {
       if (!!yasp.Editor.symbols.instructions[name]) return yasp.Editor.symbols.instructions[name];
       if (!!yasp.Editor.symbols.usedRegisters[name]) return yasp.Editor.symbols.usedRegisters[name];
@@ -262,6 +274,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     var changing = false;
     editor.on("change", function() {
       if (changing) return;
+
+      yasp.Editor.updateBreakpoints();
+
       var c = editor.getCursor();
       if (!!c) {
         try {

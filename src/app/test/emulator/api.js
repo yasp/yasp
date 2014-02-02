@@ -1,4 +1,5 @@
 (function () {
+  /** @type yasp.Emulator */
   var emulator;
 
   module("emulator api", {
@@ -461,6 +462,67 @@
     emulator.running = true;
     emulator.tickWrapper();
     strictEqual(emulator.waitTime, 0);
+  });
+
+  test("setBreakpoints - no condition", function () {
+    emulator.setBreakpoints([
+      {
+        offset: 3,
+        condition: null
+      },
+      {
+        offset: 10,
+        condition: undefined
+      }
+    ]);
+
+    strictEqual(emulator.breakpoints[3], true);
+    strictEqual(emulator.breakpointConditions[3], null, "condition = null");
+    strictEqual(emulator.breakpoints[10], true);
+    strictEqual(emulator.breakpointConditions[10], null, "condition = undefined");
+  });
+
+  test("setBreakpoints - with condition", function () {
+    emulator.setBreakpoints([{
+      offset: 3,
+      condition: {
+        "type": "register",
+        "param": "b2",
+        "operator": "=",
+        "value": 5
+      }
+    }]);
+
+    if(emulator.breakpointConditions[3])
+      emulator.breakpointConditions[3].uintArrayValue = {};
+
+    strictEqual(emulator.breakpoints[3], true);
+    deepEqual(emulator.breakpointConditions[3],
+      {
+        "boolValue": false,
+        "isBigger": false,
+        "isBiggerEquals": false,
+        "isBoolValue": false,
+        "isByteRegister": true,
+        "isChange": false,
+        "isEquals": true,
+        "isNotEquals": false,
+        "isNumValue": true,
+        "isSmaller": false,
+        "isSmallerEquals": false,
+        "isUintArrayValue": false,
+        "isWordRegister": false,
+        "numValue": 5,
+        "registerNumber": 2,
+        "uintArrayValue": {}
+      }
+    );
+  });
+
+  test("setBreakpoints - invalid array", function () {
+    var expected = 0;
+    var actual = emulator.setBreakpoints("");
+    deepEqual(actual, expected);
   });
 
 })();
