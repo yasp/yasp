@@ -691,6 +691,11 @@
       cmd: "DIV w0,w1",
       setup: { reg: { "w0": 0x000F, "w1": 0xFF02 } },
       steps: { reg: { "w0": 0x0007 } }
+    },
+    {
+      cmd: "DIV w0,w1",
+      setup: { reg: { "w0": 0x000F, "w1": 0 } },
+      steps: { running: false }
     }
   ]);
 
