@@ -56,13 +56,16 @@
     if(asmResult.error != null)
       return asmResult;
 
+    this.emulator.ticksPerTick = 1;
+    this.emulator.forceStep = true;
+    this.emulator.running = true;
     this.emulator.load(asmResult.bitcode, 0);
 
     var start = window.performance.now();
 
     while(ttimes--) {
       this.emulator.pc = 0;
-      this.emulator.tick();
+      this.emulator.tickWrapper();
     }
 
     var end = window.performance.now();
