@@ -346,6 +346,58 @@
     strictEqual(actual, expected);
   });
 
+  test("writeROM - simple", function () {
+    var expected = 241;
+    emulator.writeROM(100, expected);
+    strictEqual(emulator.rom[100], expected);
+  });
+
+  test("writeROM - with commands 1", function () {
+    emulator.commandCache[10] = true;
+    emulator.commandCache[9] = true;
+    emulator.commandCache[8] = { neededBytes: 3 };
+
+    emulator.writeROM(10, 42);
+
+    strictEqual(emulator.rom[10], 42);
+    strictEqual(emulator.commandCache[10], undefined);
+    strictEqual(emulator.commandCache[9], undefined);
+    strictEqual(emulator.commandCache[8], undefined);
+  });
+
+  test("writeROM - with commands 2", function () {
+    emulator.commandCache[10] = true;
+    emulator.commandCache[9] = true;
+    emulator.commandCache[8] = { neededBytes: 3 };
+
+    emulator.writeROM(9, 42);
+
+    strictEqual(emulator.rom[9], 42);
+    strictEqual(emulator.commandCache[10], undefined);
+    strictEqual(emulator.commandCache[9], undefined);
+    strictEqual(emulator.commandCache[8], undefined);
+  });
+
+  test("writeROM - with commands 3", function () {
+    emulator.commandCache[10] = true;
+    emulator.commandCache[9] = true;
+    emulator.commandCache[8] = { neededBytes: 3 };
+
+    emulator.writeROM(8, 42);
+
+    strictEqual(emulator.rom[8], 42);
+    strictEqual(emulator.commandCache[10], undefined);
+    strictEqual(emulator.commandCache[9], undefined);
+    strictEqual(emulator.commandCache[8], undefined);
+  });
+
+  test("readROM", function () {
+    var expected = 241;
+    emulator.rom[100] = expected;
+    var actual = emulator.readROM(100);
+    strictEqual(actual, expected);
+  });
+
   test("setIO - unknown pin", function () {
     var expected = 1;
     var actual = emulator.setIO(1000, 1);

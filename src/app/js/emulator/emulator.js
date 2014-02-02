@@ -559,6 +559,36 @@ if (typeof yasp == 'undefined') yasp = { };
     return 0;
   };
 
+  /** writes one byte to the rom. This also clears the {@link yasp.Emulator#commandCache} for the written bytes.
+   * @param o {Number} the position to write the byte to
+   * @param v {Number} the byte to write
+   * @returns {Number} 0 = success, 1 = o was out of bounds
+   */
+  yasp.Emulator.prototype.writeROM = function (o, v) {
+    if(o < 0 || o >= this.rom.length)
+      return 1;
+    this.rom[o] = v;
+
+    if(this.commandCache[o] !== undefined) {
+      var cmd = null;
+      var pos = o;
+
+      for (;; pos--) {
+        if (this.commandCache[pos] !== undefined && this.commandCache[pos] !== true) {
+          cmd = this.commandCache[pos];
+          break;
+        }
+      }
+
+      var lastByte = pos + cmd.neededBytes;
+      for (var i = pos; i < lastByte; i++) {
+        this.commandCache[i] = undefined;
+      }
+    }
+
+    return 0;
+  };
+
   /** sets the state of a pin
    * @param p {Number} pin-number
    * @param s {Number} new state to set
@@ -899,11 +929,20 @@ if (typeof yasp == 'undefined') yasp = { };
 
     // fetch instruction
     if(this.commandCache[this.pc] === undefined) {
-      this.commandCache[this.pc] = yasp.disasm.getCommand(this.rom, this.pc);
+      var cmd = yasp.disasm.getCommand(this.rom, this.pc);
+
+      if(cmd !== null) {
+        this.commandCache[this.pc] = cmd;
+
+        var lastByte = this.pc + cmd.neededBytes;
+        for (var i = this.pc + 1; i < lastByte; i++) {
+          this.commandCache[i] = true;
+        }
+      }
     }
 
     var ccmd = this.commandCache[this.pc];
-    if(ccmd === null) {
+    if(ccmd === undefined) {
       this.break("invalid_instr");
       return;
     }
