@@ -98,6 +98,7 @@ if (typeof yasp == 'undefined') yasp = { };
       var command = null;
       var params = null;
       var commandToken = iterator.current();
+      var possibleCommands = [ ];
       iterator.next();
       if (iterator.is(":")) {
         iterator.riseSyntaxError("Command cannot be a label.");
@@ -119,6 +120,7 @@ if (typeof yasp == 'undefined') yasp = { };
         
         if (commandName.toUpperCase() == name) {
           command = yasp.commands[i];
+          
           var oldPos = iterator.pos;
           var itsMe = true;
           var paramPos = 0;
@@ -153,6 +155,10 @@ if (typeof yasp == 'undefined') yasp = { };
           
           if (!itsMe || paramPos != command.params.length) {
             // nope, its not me
+            // but could it still be?
+            if (paramPos < command.params.length) {
+              possibleCommands.push(command);
+            }
             iterator.pos = oldPos;
             command = null;
           } else {
@@ -165,12 +171,14 @@ if (typeof yasp == 'undefined') yasp = { };
         var parameters = "";
         var start = true;
         var last = null;
+        var parameterArray = [ ];
         while (!iterator.is('\n')) {
           if (!start) {
             iterator.match(",");
             parameters += ", ";
           }
           var cur = iterator.current();
+          parameterArray.push(cur);
           var typ = cur.getType();
           
           if (!!last && typ == yasp.TokenType.NUMBER ) {
@@ -189,6 +197,12 @@ if (typeof yasp == 'undefined') yasp = { };
           iterator.next();
           start = false;
         }
+        var node = new yasp.AstNode(yasp.AstNodeTypes.NODE_UNKNOWNCOMMAND, commandToken, {
+          possibleCommands: possibleCommands,
+          params: parameterArray
+        });
+        this.nodes.push(node);
+        
         iterator.riseSyntaxError("Unknown command " + name + "(" + parameters + ")");
       } else {
         // build AST

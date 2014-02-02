@@ -124,6 +124,15 @@ if (typeof yasp == 'undefined') yasp = { };
         return 0;
       }
     },
+    NODE_UNKNOWNCOMMAND: {
+      name: "unknowncommand",
+      generate: function(generator) {
+        throw "Cannot generate bitcode for unknown command";
+      },
+      calculateBitSize: function() {
+        return 42;
+      }
+    },
     NODE_COMMAND: {
       name: "command",
       generate: function(generator) {
