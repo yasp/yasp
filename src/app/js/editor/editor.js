@@ -559,7 +559,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     });
     
     // update help rendering parameters
-    var setQuickhelpCommand = function(command) {
+    var setQuickhelpCommand = function(command, singleLine) {
       var desc = command.doc[yasp.l10n.getLangName()];
       var cmdStr = "";
 
@@ -601,6 +601,13 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
       var commandDiv = $('<div></div>').addClass("command").html("<b>"+cmdStr+"</b>");
       var descDiv = $('<div></div>').addClass("desc").html(desc.description);
+
+      if(singleLine) {
+        commandDiv.css('display', 'inline-block');
+        descDiv.css('display', 'inline-block');
+        descDiv.css('margin-left', '0.3em');
+      }
+
       var flagsDiv = $('<div></div>').addClass("flags").empty();
       var flagsDescrDiv = $('<div></div>').text(yasp.l10n.getTranslation("editor.helpquick.flags")).addClass("flagsDescr").addClass('hidden');
 
@@ -640,7 +647,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
                 prevCommand = command;
               
                 $('#help_quick .helpquick_container').html("");
-                setQuickhelpCommand(command);
+                setQuickhelpCommand(command, false);
               }
               found = true;
             } else if (entry.type.name == "unknowncommand" && !!entry.params.possibleCommands) {
@@ -652,7 +659,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
                 
                 $('#help_quick .helpquick_container').html("");
                 for (var j = 0; j < commands.length; j++) {
-                  setQuickhelpCommand(commands[j]);
+                  setQuickhelpCommand(commands[j], true);
                   if (j < commands.length - 1) {
                     $('#help_quick .helpquick_container').append($('<hr />'));
                   }

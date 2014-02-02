@@ -171,6 +171,10 @@ span.cm-keyword {
     padding: 8px;
 }
 
+#help_quick .helpquick_container hr {
+    margin: 0.3em 0;
+}
+
 /* === settings === */
 #dialog_settings label.checkbox > span {
     vertical-align: middle;
