@@ -110,7 +110,7 @@
     width: calc(100% - 80px);
 }
 
-.registers .registerFormat {
+#debugger-tabs .numberFormat {
     margin-right: 10px;
 
     color: blue;

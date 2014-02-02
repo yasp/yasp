@@ -34,6 +34,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     },
     debugLog: {
+
       clearLog: function () {
         yasp.Debugger.debugLog.element.text("");
       }
@@ -77,7 +78,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
         var format = yasp.Debugger.registers.currentFormat;
         var formatNum = formatNameToRadix(format);
-        var padding = yasp.Debugger.registers.formatPadding[yasp.Debugger.registers.currentFormat];
+        var padding = yasp.Debugger.formatPadding[yasp.Debugger.registers.currentFormat];
 
         for (var reg in regs) {
           var $reg = $('<div>');
@@ -136,6 +137,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }));
     yasp.Debugger.editor.setOption('readOnly', "nocursor");
     yasp.Debugger.debugLog.element = $('#debugger-tabs-debug > pre:first');
+    yasp.Debugger.debugLog.formatSpan = $('#debugger-tabs-debug .logFormat');
 
     $('#dialog_debugger').modal({
       'show': false,
@@ -225,7 +227,7 @@ if (typeof yasp == 'undefined') yasp = { };
     yasp.Debugger.registers.snapshots = $('#debugger-tabs-registers > .registers > .snapshots');
     yasp.Debugger.registers.stack = $('#debugger-tabs-registers > .stack > pre');
 
-    yasp.Debugger.registers.formatPadding = {
+    yasp.Debugger.formatPadding = {
       "bin": 8,
       "dec": 3,
       "hex": 2
@@ -235,24 +237,30 @@ if (typeof yasp == 'undefined') yasp = { };
     yasp.Debugger.registers.registers.addClass("format-hex");
     yasp.Debugger.registers.currentFormat = 'hex';
 
-    $('.registerFormat').click(function () {
+    yasp.Debugger.debugLog.formatSpan.text('HEX');
+    yasp.Debugger.debugLog.numberFormat = 'hex';
+
+    function cycleNumberFormat ($span, current) {
       var newVal;
-      var oldRadix = formatNameToRadix(yasp.Debugger.registers.currentFormat);
 
-      yasp.Debugger.registers.registers.removeClass("format-hex");
-      yasp.Debugger.registers.registers.removeClass("format-bin");
-      yasp.Debugger.registers.registers.removeClass("format-dec");
-
-      if(yasp.Debugger.registers.currentFormat === "hex") {
+      if(current === "hex") {
         newVal = "bin";
-      } else if(yasp.Debugger.registers.currentFormat === "bin") {
+      } else if(current === "bin") {
         newVal = "dec";
-      } else if(yasp.Debugger.registers.currentFormat === "dec") {
+      } else if(current === "dec") {
         newVal = "hex";
       }
 
-      var newRadix = formatNameToRadix(newVal);
-      var newPadding = yasp.Debugger.registers.formatPadding[newVal];
+      $span.text(newVal.toUpperCase());
+      return newVal;
+    }
+
+    $('.registerFormat').click(function () {
+      var oldRadix = formatNameToRadix(yasp.Debugger.registers.currentFormat);
+      var next = cycleNumberFormat(yasp.Debugger.registers.format, yasp.Debugger.registers.currentFormat);
+
+      var newRadix = formatNameToRadix(next);
+      var newPadding = yasp.Debugger.formatPadding[next];
       var allRegs = yasp.Debugger.registers.snapshots.find('.register');
 
       for (var i = 0; i < allRegs.length; i++) {
@@ -262,9 +270,17 @@ if (typeof yasp == 'undefined') yasp = { };
         $reg.text(formatNumber(num, newPadding * ($reg.hasClass('word') ? 2 : 1), newRadix));
       }
 
-      yasp.Debugger.registers.registers.addClass("format-" + newVal);
-      yasp.Debugger.registers.currentFormat = newVal;
-      yasp.Debugger.registers.format.text(newVal.toUpperCase());
+      yasp.Debugger.registers.registers.removeClass("format-hex");
+      yasp.Debugger.registers.registers.removeClass("format-bin");
+      yasp.Debugger.registers.registers.removeClass("format-dec");
+      yasp.Debugger.registers.registers.addClass("format-" + next);
+
+      yasp.Debugger.registers.currentFormat = next;
+    });
+
+    $('.logFormat').click(function () {
+      var next = cycleNumberFormat(yasp.Debugger.debugLog.formatSpan, yasp.Debugger.debugLog.numberFormat);
+      yasp.Debugger.debugLog.numberFormat = next;
     });
   });
 
@@ -288,13 +304,18 @@ if (typeof yasp == 'undefined') yasp = { };
 
       if(msg.type === "register") {
         var val = "";
+        var format = formatNameToRadix(yasp.Debugger.debugLog.numberFormat);
+        var padding = yasp.Debugger.formatPadding[yasp.Debugger.debugLog.numberFormat];
 
         if(msg.subtype === "b")
-          val = formatHexNumber(msg.val, 2);
+          val = formatNumber(msg.val, padding, format);
         else if(msg.subtype === "w")
-          val = formatHexNumber(msg.val, 4);
+          val = formatNumber(msg.val, padding * 2, format);
 
-        strs.push(msg.subtype + msg.addr + ": 0x" + val);
+        if(format === 16)
+          val = "0x" + val;
+
+        strs.push(msg.subtype + msg.addr + ": " + val);
       } else if(msg.type === "string") {
         strs.push(msg.val);
       }
