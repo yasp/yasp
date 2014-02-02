@@ -160,7 +160,7 @@ span.cm-keyword {
 
     font-size: 120%;
     
-    overflow-x: auto; 
+    overflow: auto; 
 }
 
 #help_quick.fixed {
