@@ -82,12 +82,14 @@ yasp.test.EmulatorTester.prototype.done = function () {
 
     for (var i = 0; i < test.steps.length; i++) {
       var step = test.steps[i];
+      var keys = Object.keys(step);
       var stepPrefix = "Step " + (i+1) + ": ";
 
       this.emulator.running = true;
       this.emulator.tickWrapper();
 
       if(step.reg) {
+        keys.splice("reg", 1);
         for (var r in step.reg) {
           var actual;
           var expected = this.parseLiteral(step.reg[r]);
@@ -120,6 +122,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
         }
       }
       if(step.flags) {
+        keys.splice("flags", 1);
         var flags = this.emulator.readFlags();
 
         for (var flag in flags) {
@@ -138,6 +141,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
         }
       }
       if(step.ram) {
+        keys.splice("ram", 1);
         for (var r in step.ram) {
           var expected = this.parseLiteral(step.ram[r]);
           var actual = this.emulator.ram[r];
@@ -146,6 +150,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
         }
       }
       if(step.rom) {
+        keys.splice("rom", 1);
         for (var r in step.rom) {
           var expected = this.parseLiteral(step.rom[r]);
           var actual = this.emulator.rom[r];
@@ -154,9 +159,11 @@ yasp.test.EmulatorTester.prototype.done = function () {
         }
       }
       if(step.interruptMask) {
+        keys.splice("interruptMask", 1);
         deepEqual(this.emulator.interruptMask, step.interruptMask);
       }
       if(step.pin) {
+        keys.splice("pin", 1);
         for (var p in step.pin) {
           var expected = step.pin[p];
           var actual = this.emulator.getIO(p);
@@ -168,6 +175,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
         this.emulator.scheduleInterrupt(step.triggerInterrupt);
       }
       if(step.stack) {
+        keys.splice("stack", 1);
         for (var r in step.stack) {
           var expected = this.parseLiteral(step.stack[r]);
           var actual = this.emulator.stack[r];
@@ -176,13 +184,20 @@ yasp.test.EmulatorTester.prototype.done = function () {
         }
       }
       if(step.waitTime !== undefined) {
+        keys.splice("waitTime", 1);
         strictEqual(this.emulator.waitTime, step.waitTime, "waitTime");
       }
       if(step.running !== undefined) {
+        keys.splice("running", 1);
         strictEqual(this.emulator.running, step.running, stepPrefix + "Emulator is " + (step.running ? "" : "not ") + "running");
       }
       if(step.debug !== undefined) {
+        keys.splice("debug", 1);
         deepEqual(this.lastDebugMessage, step.debug, "Debug " + JSON.stringify(step.debug) + " was issued");
+      }
+
+      if(keys.length !== 0) {
+        alert("Unhandled Step-Keys:\n" + keys.join(', '));
       }
     }
   }).bind(this));
@@ -196,7 +211,10 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
   if(!setup)
     return;
 
+  var keys = Object.keys(setup);
+
   if(setup.ram) {
+    keys.splice("ram", 1);
     if(setup.ram instanceof Uint8Array) {
       this.emulator.ram = setup.ram;
     } else {
@@ -206,6 +224,7 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
     }
   }
   if(setup.reg) {
+    keys.splice("reg", 1);
     for (var r in setup.reg) {
       var val = this.parseLiteral(setup.reg[r]);
 
@@ -233,14 +252,17 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
     }
   }
   if(setup.stack) {
+    keys.splice("stack", 1);
     this.emulator.stack = setup.stack;
   }
   if(setup.pin) {
+    keys.splice("pin", 1);
     for (var p in setup.pin) {
       this.emulator.setIO(p, setup.pin[p], true);
     }
   }
   if(setup.rom) {
+    keys.splice("rom", 1);
     if(setup.rom instanceof Uint8Array) {
       this.emulator.rom = setup.rom;
     } else {
@@ -250,16 +272,23 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
     }
   }
   if(setup.interruptMask) {
+    keys.splice("interruptMask", 1);
     this.emulator.interruptMask = setup.interruptMask;
   }
   if(setup.flags) {
+    keys.splice("flags", 1);
     if(setup.flags.z !== undefined)
       this.emulator.flags.z = setup.flags.z;
     if(setup.flags.c !== undefined)
       this.emulator.flags.c = setup.flags.c;
   }
   if(setup.breakpoints) {
+    keys.splice("breakpoints", 1);
     this.emulator.setBreakpoints(setup.breakpoints);
+  }
+
+  if(keys.length !== 0) {
+    alert("Unhandled Setup-Keys:\n" + keys.join(', '));
   }
 };
 
