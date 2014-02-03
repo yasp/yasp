@@ -220,7 +220,7 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
       this.emulator.ram = setup.ram;
     } else {
       for (var a in setup.ram) {
-        this.emulator.ram[a] = setup.ram[a];
+        this.emulator.writeRAM(+a, setup.ram[a]);
       }
     }
   }
@@ -268,7 +268,7 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
       this.emulator.rom = setup.rom;
     } else {
       for (var a in setup.rom) {
-        this.emulator.rom[a] = setup.rom[a];
+        this.emulator.writeROM(+a, setup.rom[a]);
       }
     }
   }
