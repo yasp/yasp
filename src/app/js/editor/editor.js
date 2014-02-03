@@ -608,6 +608,10 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         descDiv.css('margin-left', '0.3em');
       }
 
+      $('#help_quick .helpquick_container')
+        .append(commandDiv)
+        .append(descDiv);
+
       if(!singleLine) {
         var flagsDiv = $('<div></div>').addClass("flags").empty();
         var flagsDescrDiv = $('<div></div>').text(yasp.l10n.getTranslation("editor.helpquick.flags")).addClass("flagsDescr").addClass('hidden');
@@ -626,10 +630,6 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           .append(flagsDescrDiv)
           .append(flagsDiv);
       }
-
-      $('#help_quick .helpquick_container')
-        .append(commandDiv)
-        .append(descDiv);
     };
     
     var prevCommand = null;
