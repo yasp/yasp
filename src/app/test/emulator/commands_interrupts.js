@@ -46,7 +46,7 @@
         rom: { 0x102: 0x00, 0x103: 66 }
       },
       steps: [
-        { "triggerInterrupt": 1 },
+        { ss: { "triggerInterrupt": 1 } },
         { "reg": { "pc": 69 } } // not 66 because there is 0x00 0x00 0x00 at that address which is MOV b0,0
       ]
     }

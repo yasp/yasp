@@ -171,9 +171,6 @@ yasp.test.EmulatorTester.prototype.done = function () {
           strictEqual(actual, expected, stepPrefix + "pin " + p + " is " + expected);
         }
       }
-      if(step.triggerInterrupt) {
-        this.emulator.scheduleInterrupt(step.triggerInterrupt);
-      }
       if(step.stack) {
         keys.splice("stack", 1);
         for (var r in step.stack) {
@@ -194,6 +191,10 @@ yasp.test.EmulatorTester.prototype.done = function () {
       if(step.debug !== undefined) {
         keys.splice("debug", 1);
         deepEqual(this.lastDebugMessage, step.debug, "Debug " + JSON.stringify(step.debug) + " was issued");
+      }
+      if(step.ss !== undefined) {
+        keys.splice("ss", 1);
+        this.applySetup(step.ss);
       }
 
       if(keys.length !== 0) {
@@ -274,6 +275,10 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
   if(setup.interruptMask) {
     keys.splice("interruptMask", 1);
     this.emulator.interruptMask = setup.interruptMask;
+  }
+  if(setup.triggerInterrupt) {
+    keys.splice("triggerInterrupt", 1);
+    this.emulator.scheduleInterrupt(setup.triggerInterrupt);
   }
   if(setup.flags) {
     keys.splice("flags", 1);
