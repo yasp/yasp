@@ -18,6 +18,8 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "CONTINUE":
+      if(data.payload.count === undefined)
+        data.payload.count = null;
       var retn = emulator.continue(data.payload.count, data.payload.skipBreakpoint);
       ready({
         payload: {},
