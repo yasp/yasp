@@ -283,9 +283,9 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
   if(setup.flags) {
     keys.splice("flags", 1);
     if(setup.flags.z !== undefined)
-      this.emulator.flags.z = setup.flags.z;
+      this.emulator.writeFlags(null, setup.flags.z);
     if(setup.flags.c !== undefined)
-      this.emulator.flags.c = setup.flags.c;
+      this.emulator.writeFlags(setup.flags.c, null);
   }
   if(setup.breakpoints) {
     keys.splice("breakpoints", 1);
