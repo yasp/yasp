@@ -2,7 +2,7 @@
   <img src="src/app/img/logo.png" />
 </p>
 
-yasp is a fully functional web-based assembler development environment, including a real assembler and debugger.
+yasp is a fully functional web-based assembler development environment, including a real assembler, emulator and debugger.
 The assembler dialect is a custom which is held very simple so as to keep the learning curve as shallow as possible.
 It also features some hardware-elements (LED, Potentiometer, Button, etc.). The main purpose of this project
 is to create an environment in which students can learn the assembly language so that they understand computers better.
