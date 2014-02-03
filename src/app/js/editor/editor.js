@@ -608,24 +608,28 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         descDiv.css('margin-left', '0.3em');
       }
 
-      var flagsDiv = $('<div></div>').addClass("flags").empty();
-      var flagsDescrDiv = $('<div></div>').text(yasp.l10n.getTranslation("editor.helpquick.flags")).addClass("flagsDescr").addClass('hidden');
+      if(!singleLine) {
+        var flagsDiv = $('<div></div>').addClass("flags").empty();
+        var flagsDescrDiv = $('<div></div>').text(yasp.l10n.getTranslation("editor.helpquick.flags")).addClass("flagsDescr").addClass('hidden');
 
-      if (!!desc.flags && Object.keys(desc.flags).length > 0) {
-        for (var flag in desc.flags) {
-          var $flag = $('<li><span class="name"></span>: <span class="condition"></span></li>');
-          $flag.find('.name').text(flag);
-          $flag.find('.condition').text(desc.flags[flag]);
-          flagsDiv.append($flag);
+        if (!!desc.flags && Object.keys(desc.flags).length > 0) {
+          for (var flag in desc.flags) {
+            var $flag = $('<li><span class="name"></span>: <span class="condition"></span></li>');
+            $flag.find('.name').text(flag);
+            $flag.find('.condition').text(desc.flags[flag]);
+            flagsDiv.append($flag);
+          }
+          flagsDescrDiv.removeClass('hidden');
         }
-        flagsDescrDiv.removeClass('hidden');
+
+        $('#help_quick .helpquick_container')
+          .append(flagsDescrDiv)
+          .append(flagsDiv);
       }
+
       $('#help_quick .helpquick_container')
         .append(commandDiv)
-        .append(descDiv)
-        .append(flagsDescrDiv)
-        .append(flagsDiv);
-        
+        .append(descDiv);
     };
     
     var prevCommand = null;
