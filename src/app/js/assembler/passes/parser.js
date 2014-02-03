@@ -151,12 +151,15 @@ if (typeof yasp == 'undefined') yasp = { };
             iterator.optNext();
             start = false;
             paramPos++;
+
+            if (!!cur && cur.getType() == 'delimiter') break;
           }
           
           if (!itsMe || paramPos != command.params.length) {
             // nope, its not me
             // but could it still be?
-            if (paramPos < command.params.length && itsMe) {
+            var typ = !!cur ? cur.getType() : "";
+            if ((paramPos < command.params.length || (typ == 'delimiter' && paramPos - 1 < command.params.length)) && (itsMe || typ == 'delimiter')) {
               possibleCommands.push(command);
             }
             iterator.pos = oldPos;
@@ -172,9 +175,13 @@ if (typeof yasp == 'undefined') yasp = { };
         var start = true;
         var last = null;
         var parameterArray = [ ];
-        while (!iterator.is('\n')) {
+        while (!iterator.is('\n') && iterator.hasNext()) {
           if (!start) {
-            iterator.match(",");
+            if (iterator.is(',')) {
+              iterator.match(",");
+            } else {
+              iterator.optNext();
+            }
             parameters += ", ";
           }
           var cur = iterator.current();
@@ -194,7 +201,7 @@ if (typeof yasp == 'undefined') yasp = { };
           
           parameters += typ;
           last = cur;
-          iterator.next();
+          iterator.optNext();
           start = false;
         }
         
