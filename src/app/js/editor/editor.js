@@ -705,25 +705,125 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         var start = cur.ch, end = start;
         while (end < curLine.length && delimiters.indexOf(curLine.charAt(end)) == -1) ++end;
         while (start && delimiters.indexOf(curLine.charAt(start - 1)) == -1) --start;
-        var curWord = start != end && curLine.slice(start, end);
-        if (!!curWord) {
-          curWord = curWord.toUpperCase();
-        } else {
-          if (options.force) {
-            curWord = "";
-          } else {
-            curWord = null;
+        
+        var symbols = [];
+        // AST?
+        var found = false;
+        for (var i = 0; i < yasp.Editor.ast.length; i++) {
+          var entry = yasp.Editor.ast[i];
+          if (entry.token.line == (cur.line + 1) && (entry.type.name == "unknowncommand" && !!entry.params.possibleCommands)) {
+            found = true;
+            var commands = entry.params.possibleCommands;
+            
+            // check where i am
+            var isIn = false;
+            var expectedTypes = [ ];
+            expectedTypes.contains = (function(a) {
+              for (var j = 0; j < this.length; j++) {
+                if (this[j] == a) return true;
+              }
+              return false;
+            }).bind(expectedTypes);
+            
+            for (var j = 0; j < entry.params.params.length; j++) {
+              var token = entry.params.params[j];
+              if (cur.ch >= token.char && cur.ch < token.char + token.text.length) {
+                for (var k = 0; k < commands.length; k++) {
+                  if (k < commands[k].params.length) {
+                    if (!expectedTypes.contains(commands[k].params[j].type)) expectedTypes.push(commands[k].params[j].type);
+                  }
+                }
+                isIn = true;
+              }
+            }
+            
+            if (!isIn) {
+              for (var k = 0; k < commands.length; k++) {
+                var pos = Math.min(entry.params.params.length, commands[k].params.length-1);
+                if (!expectedTypes.contains(commands[k].params[pos].type)) expectedTypes.push(commands[k].params[pos].type);
+              }
+            }
+            
+            // now add symbols
+            for (var j = 0; j < expectedTypes.length; j++) {
+              var type = expectedTypes[j];
+              switch (type) {
+                case "r_byte":
+                  var usedRegisters = yasp.Editor.symbols.usedRegisters;
+                  for (var k in usedRegisters) {
+                    if (k.charAt(0) == 'B') symbols.push(k);
+                  }
+                  if (!yasp.CompileManager.registers) yasp.CompileManager.registers = yasp.Lexer.getRegisters();
+                  for (var k = 0; k < yasp.CompileManager.registers.length; k++) {
+                    if (!usedRegisters[yasp.CompileManager.registers[k]] && yasp.CompileManager.registers[k].charAt(0) == 'B') symbols.push(yasp.CompileManager.registers[k]);
+                  }
+                  break;
+                case "r_word":
+                  var usedRegisters = yasp.Editor.symbols.usedRegisters;
+                  for (var k in usedRegisters) {
+                    if (k.charAt(0) == 'W') symbols.push(k);
+                  }
+                  if (!yasp.CompileManager.registers) yasp.CompileManager.registers = yasp.Lexer.getRegisters();
+                  for (var k = 0; k < yasp.CompileManager.registers.length; k++) {
+                    if (!usedRegisters[yasp.CompileManager.registers[k]] && yasp.CompileManager.registers[k].charAt(0) == 'W') symbols.push(yasp.CompileManager.registers[k]);
+                  }
+                  break;
+                case "l_byte":
+                  for (var k = 0; k < Math.pow(2, 8); k++) {
+                    symbols.push(k+"");
+                  }
+                  break;
+                case "l_word":
+                  if (!expectedTypes.contains('l_byte')) {
+                    for (var k = 0; k < Math.pow(2, 8); k++) {
+                      symbols.push(k+"");
+                    }
+                  }
+                  break;
+                case "pin":
+                  for (var k = 0; k < Math.pow(2, 5); k++) {
+                    symbols.push(k+"");
+                  }
+                  break;
+                case "address":
+                  var labels = yasp.Editor.symbols.labels;
+                  for (var k in labels) {
+                    symbols.push(labels[k].text);
+                  }
+                  break;
+              }
+            }
+            if (expectedTypes.length > 0) {
+              // add defines
+              var defines = yasp.Editor.symbols.defines;
+              for (var k in defines) {
+                symbols.push(k);
+              }
+            }
+            
+            break;
           }
         }
         
-        console.log("Current Word: '"+curWord+"'");
-        
-        var symbols = [];
-        
-        var osymbols = yasp.Editor.orderedSymbols;
-        for (var i = 0; i < osymbols.length && curWord != null; i++) {
-          if ((osymbols[i].toUpperCase().indexOf(curWord) == 0 && osymbols[i].toUpperCase() != curWord)) {
-            symbols.push(osymbols[i]);
+        if (!found) {
+          var curWord = start != end && curLine.slice(start, end);
+          if (!!curWord) {
+            curWord = curWord.toUpperCase();
+          } else {
+            if (options.force) {
+              curWord = "";
+            } else {
+              curWord = null;
+            }
+          }
+          
+          console.log("Current Word: '"+curWord+"'");
+          
+          var osymbols = yasp.Editor.orderedSymbols;
+          for (var i = 0; i < osymbols.length && curWord != null; i++) {
+            if ((osymbols[i].toUpperCase().indexOf(curWord) == 0 && osymbols[i].toUpperCase() != curWord)) {
+              symbols.push(osymbols[i]);
+            }
           }
         }
         
