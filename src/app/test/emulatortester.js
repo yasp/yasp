@@ -63,17 +63,22 @@ yasp.test.EmulatorTester.prototype.done = function () {
   });
 
   QUnit.cases(this.tests).test("command", (function (test) {
-    var asm = this.assembler.assemble({ code: test.cmd || "", jobs: ["bitcode"] });
-    ok(asm.success, "Assembling works");
+    var asm;
 
-    if(!asm.success)
-      return;
+    if(test.cmd) {
+      asm = this.assembler.assemble({ code: test.cmd, jobs: ["bitcode"] });
+      ok(asm.success, "Assembling works");
+
+      if(!asm.success)
+        return;
+    }
 
     this.emulator.pc = 0;
 
     tester.applySetup(test.setup);
 
-    this.emulator.load(asm.bitcode, 0);
+    if(asm)
+      this.emulator.load(asm.bitcode, 0);
 
     test.steps = test.steps || [];
 
@@ -259,7 +264,7 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
   if(setup.pin) {
     keys.splice("pin", 1);
     for (var p in setup.pin) {
-      this.emulator.setIO(p, setup.pin[p], true);
+      this.emulator.setIO(+p, setup.pin[p], true);
     }
   }
   if(setup.rom) {
