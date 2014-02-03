@@ -3,160 +3,63 @@ if (typeof yasp == 'undefined') yasp = { };
 (function() {
   yasp.Debugger = {
     show: function(mode) {
-      $('#dialog_debugger').modal('show');
-
-      if (!!yasp.Debugger.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
-      yasp.Debugger.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
       yasp.Debugger.mode = mode;
-      yasp.Debugger.isEmulatorRunning = false;
-      yasp.Debugger.lastExecutedLine = 0;
-
-      yasp.Debugger.debugLog.clearLog();
-
-      yasp.Debugger.lastRom = null;
-      yasp.Debugger.lastRam = null;
-
-      yasp.Debugger.registers.heading.empty();
-      yasp.Debugger.registers.snapshots.empty();
-
-      yasp.Debugger.registers.heading.append('<div class="flag">C</div>');
-      yasp.Debugger.registers.heading.append('<div class="flag">Z</div>');
-      yasp.Debugger.registers.heading.append('<div class="pointer">PC</div>');
-      yasp.Debugger.registers.heading.append('<div class="pointer">SP</div>');
-
-      yasp.Debugger.breakpoints.sendBreakpoints();
-      yasp.Debugger.breakpointHit = false;
-
-      for (var reg in yasp.Editor.symbols.usedRegisters) {
-        yasp.Debugger.registers.heading.append(
-          $('<div class="register">' + reg.toLowerCase() + '</div>').addClass(reg[0] === "B" ? "byte" : "word")
-        );
-      }
+      $('#dialog_debugger').modal('show');
     },
-    debugLog: {
-
-      clearLog: function () {
-        yasp.Debugger.debugLog.element.text("");
-      }
+    formatPadding : {
+      bin: 8,
+      dec: 3,
+      hex: 2
     },
-    breakpoints: {
-      breakpoints: [],
-      breakpointsChanged: function (lines) {
-        yasp.Debugger.breakpoints.breakpoints = [];
+    parts: [ "breakpoints", "ramrom", "debugLog", "registers" ],
+    states: []
+  };
 
-        for (var i = 0; i < lines.length; i++) {
-          if(lines[i] === true) {
-            yasp.Debugger.breakpoints.breakpoints.push({
-              offset: yasp.Editor.map[i + 1],
-              condition: null
-            });
-          }
-        }
-
-        yasp.Debugger.breakpoints.sendBreakpoints();
-      },
-      sendBreakpoints: function () {
-        if(yasp.Debugger.EmulatorCommunicator) {
-          yasp.Debugger.EmulatorCommunicator.sendMessage("SET_BREAKPOINTS",
-            {
-              breakpoints: yasp.Debugger.breakpoints.breakpoints
-            },
-            function () {
-            }
-          )
-        }
-      }
-    },
-    states: [],
-    registers: {
-      addSnapshot: function (regs) {
-        var $snap = $('<div>');
-        var i = 0;
-
-        var lastSnap = $(yasp.Debugger.registers.snapshots.children()[0]);
-        $snap.append('<div class="number">' + yasp.Debugger.registers.snapshots.children().length + '</div>');
-
-        var format = yasp.Debugger.registers.currentFormat;
-        var formatNum = formatNameToRadix(format);
-        var padding = yasp.Debugger.formatPadding[yasp.Debugger.registers.currentFormat];
-
-        for (var reg in regs) {
-          var $reg = $('<div>');
-
-          if(reg === "C" || reg === "Z") {
-            $reg.text(regs[reg] ? "1" : "0");
-            $reg.addClass("flag");
-          }
-
-          if(reg === "PC" || reg === "SP") {
-            $reg.text(formatHexNumber(regs[reg], 4));
-            $reg.addClass("pointer");
-          }
-
-          if(reg === "SP") {
-            $reg.text(regs[reg]);
-            $reg.addClass("pointer");
-          }
-
-          if(reg[0] === "B") {
-            $reg.text(formatNumber(regs[reg], padding, formatNum));
-            $reg.addClass("register byte");
-          }
-          else if(reg[0] === "W") {
-            $reg.text(formatNumber(regs[reg], padding * 2, formatNum));
-            $reg.addClass("register word");
-          }
-
-          if(lastSnap.length > 0 && $reg.text() != $(lastSnap.children()[i + 1]).text())
-            $reg.addClass("changed");
-
-          $snap.append($reg);
-          i++;
-        }
-
-        yasp.Debugger.registers.snapshots.prepend($snap);
-      },
-      setStack: function (stack) {
-        var str = "";
-
-        for (var i = 0; i < stack.length; i++) {
-          str += (i === stack.length - 1) ? "> " : "  ";
-          str += formatHexNumber(stack[i], 2) + "\n";
-        }
-
-        yasp.Debugger.registers.stack.text(str);
-        yasp.Debugger.registers.stack.scrollTop(yasp.Debugger.registers.stack[0].scrollHeight);
+  function firePartEvent (name, params) {
+    for (var i = 0; i < yasp.Debugger.parts.length; i++) {
+      var part = yasp.Debugger[yasp.Debugger.parts[i]];
+      if (typeof part[name] === "function") {
+        part[name].apply(null, params || []);
       }
     }
-  };
+  }
 
   $('body').ready(function() {
     yasp.Debugger.editor = yasp.EditorManager.create($('#debugger_editor').get(0));
     yasp.Debugger.editor.swapDoc(yasp.EditorManager.editors[0].linkedDoc({
       sharedHist: true
     }));
+
     yasp.Debugger.editor.setOption('readOnly', "nocursor");
-    yasp.Debugger.debugLog.element = $('#debugger-tabs-debug > pre:first');
-    yasp.Debugger.debugLog.formatSpan = $('#debugger-tabs-debug .logFormat');
+
+    firePartEvent("onInit");
 
     $('#dialog_debugger').modal({
       'show': false,
       'keyboard': true
     }).on('shown.bs.modal', function() {
+      if (!!yasp.Debugger.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
+      yasp.Debugger.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
+      yasp.Debugger.isEmulatorRunning = false;
+      yasp.Debugger.lastExecutedLine = 0;
+
       yasp.Debugger.breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.Debugger.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
       yasp.Debugger.breadboard.build();
       yasp.Debugger.breadboard.render();
 
       yasp.Debugger.editor.refresh();
 
+      yasp.Debugger.states = [];
+
       // load code into emulator
       yasp.Debugger.EmulatorCommunicator.sendMessage("LOAD", {
         bitcode: yasp.Editor.bitcode,
         start: 0
       }, function() {
-        yasp.Debugger.EmulatorCommunicator.subscribe("CONTINUE", onEmulatorContinue);
         yasp.Debugger.EmulatorCommunicator.subscribe("BREAK", onEmulatorBreak);
         yasp.Debugger.EmulatorCommunicator.subscribe("DEBUG", onEmulatorDebug);
+
+        firePartEvent("onOpen");
 
         if(yasp.Debugger.mode === "run") {
           yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
@@ -174,15 +77,12 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.EmulatorCommunicator = null;
       }
 
-      yasp.Debugger.states = [];
-
       yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
 
       if(yasp.Debugger.breadboard) {
         yasp.Debugger.breadboard.destroy();
       }
     });
-
 
     $('.debugger_step').click(function () {
       if(!yasp.Debugger.isEmulatorRunning) {
@@ -194,7 +94,6 @@ if (typeof yasp == 'undefined') yasp = { };
         alert("no")
       }
     });
-
 
     $('.debugger_stepBack').click(function () {
       if(yasp.Debugger.states.length > 1) {
@@ -218,117 +117,16 @@ if (typeof yasp == 'undefined') yasp = { };
         skipBreakpoint: yasp.Debugger.breakpointHit
       });
     });
-
-    $('.debugger-tabs-debug-clear').click(yasp.Debugger.debugLog.clearLog);
-
-    yasp.Debugger.registers.heading = $('#debugger-tabs-registers > .registers > .heading');
-    yasp.Debugger.registers.format = $('#debugger-tabs-registers .registerFormat');
-    yasp.Debugger.registers.registers = $('#debugger-tabs-registers > .registers');
-    yasp.Debugger.registers.snapshots = $('#debugger-tabs-registers > .registers > .snapshots');
-    yasp.Debugger.registers.stack = $('#debugger-tabs-registers > .stack > pre');
-
-    yasp.Debugger.formatPadding = {
-      "bin": 8,
-      "dec": 3,
-      "hex": 2
-    };
-
-    yasp.Debugger.registers.format.text('HEX');
-    yasp.Debugger.registers.registers.addClass("format-hex");
-    yasp.Debugger.registers.currentFormat = 'hex';
-
-    yasp.Debugger.debugLog.formatSpan.text('HEX');
-    yasp.Debugger.debugLog.numberFormat = 'hex';
-
-    function cycleNumberFormat ($span, current) {
-      var newVal;
-
-      if(current === "hex") {
-        newVal = "bin";
-      } else if(current === "bin") {
-        newVal = "dec";
-      } else if(current === "dec") {
-        newVal = "hex";
-      }
-
-      $span.text(newVal.toUpperCase());
-      return newVal;
-    }
-
-    $('.registerFormat').click(function () {
-      var oldRadix = formatNameToRadix(yasp.Debugger.registers.currentFormat);
-      var next = cycleNumberFormat(yasp.Debugger.registers.format, yasp.Debugger.registers.currentFormat);
-
-      var newRadix = formatNameToRadix(next);
-      var newPadding = yasp.Debugger.formatPadding[next];
-      var allRegs = yasp.Debugger.registers.snapshots.find('.register');
-
-      for (var i = 0; i < allRegs.length; i++) {
-        var $reg = $(allRegs[i]);
-        var num = parseInt($reg.text(), oldRadix);
-
-        $reg.text(formatNumber(num, newPadding * ($reg.hasClass('word') ? 2 : 1), newRadix));
-      }
-
-      yasp.Debugger.registers.registers.removeClass("format-hex");
-      yasp.Debugger.registers.registers.removeClass("format-bin");
-      yasp.Debugger.registers.registers.removeClass("format-dec");
-      yasp.Debugger.registers.registers.addClass("format-" + next);
-
-      yasp.Debugger.registers.currentFormat = next;
-    });
-
-    $('.logFormat').click(function () {
-      var next = cycleNumberFormat(yasp.Debugger.debugLog.formatSpan, yasp.Debugger.debugLog.numberFormat);
-      yasp.Debugger.debugLog.numberFormat = next;
-    });
   });
-
-  function onEmulatorContinue () {
-    yasp.Debugger.isEmulatorRunning = true;
-  }
 
   function onEmulatorBreak (data) {
     var reason = data.payload.reason;
-    yasp.Debugger.breakpointHit = (reason === "breakpoint");
-    yasp.Debugger.isEmulatorRunning = false;
+    firePartEvent("onBreak", [reason]);
     refreshDebugger();
   }
 
   function onEmulatorDebug (data) {
-    var msgs = data.payload;
-    var strs = [];
-
-    for (var i = 0; i < msgs.length; i++) {
-      var msg = msgs[i];
-
-      if(msg.type === "register") {
-        var val = "";
-        var format = formatNameToRadix(yasp.Debugger.debugLog.numberFormat);
-        var padding = yasp.Debugger.formatPadding[yasp.Debugger.debugLog.numberFormat];
-
-        if(msg.subtype === "b")
-          val = formatNumber(msg.val, padding, format);
-        else if(msg.subtype === "w")
-          val = formatNumber(msg.val, padding * 2, format);
-
-        if(format === 16)
-          val = "0x" + val;
-
-        strs.push(msg.subtype + msg.addr + ": " + val);
-      } else if(msg.type === "string") {
-        strs.push(msg.val);
-      }
-    }
-
-    var str = yasp.Debugger.debugLog.element.text() + "\n" + strs.join("\n");
-
-    if(str.length > 1024) {
-      str = str.substring(str.length - 1024);
-    }
-
-    yasp.Debugger.debugLog.element.text(str);
-    yasp.Debugger.debugLog.element.scrollTop(yasp.Debugger.debugLog.element[0].scrollHeight);
+    firePartEvent("onDebug", [data.payload]);
   }
 
   function refreshDebugger() {
@@ -338,31 +136,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
         yasp.Debugger.states.push(state);
 
-        renderBytes(state.ram, 0x10, $('#debugger-ramdump'));
-        if(yasp.Debugger.lastRam)
-          colorChangedBytes(getChangedBytes(state.ram, yasp.Debugger.lastRam), $('#debugger-ramdump'));
-        yasp.Debugger.lastRam = state.ram;
-
-        renderBytes(state.rom, 0x10, $('#debugger-romdump'));
-        if(yasp.Debugger.lastRom)
-          colorChangedBytes(getChangedBytes(state.rom, yasp.Debugger.lastRom), $('#debugger-romdump'));
-        yasp.Debugger.lastRom = state.rom;
-
-        var snap = {};
-
-        snap["C"] = state.registers.flags["C"];
-        snap["Z"] = state.registers.flags["Z"];
-
-        snap["PC"] = state.registers.special["pc"];
-        snap["SP"] = state.registers.special["sp"];
-
-        for (var reg in yasp.Editor.symbols.usedRegisters) {
-          snap[reg] = state.registers.general[reg[0].toLowerCase()][reg.substr(1)];
-        }
-
-        yasp.Debugger.registers.addSnapshot(snap);
-
-        yasp.Debugger.registers.setStack(state.stack);
+        firePartEvent("onState", [state]);
 
         var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
         yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
@@ -373,49 +147,20 @@ if (typeof yasp == 'undefined') yasp = { };
     );
   }
 
-  function renderBytes (bytes, width, $container) {
-    var $bytes = null;
-    var inRow = 0;
+  yasp.Debugger.cycleNumberFormat = function ($span, current) {
+    var newVal;
 
-    $container.empty();
-
-    for(var i = 0; i < bytes.length; i++) {
-      if(inRow === width || $bytes === null) {
-        var $row = $('<div class="byterow">');
-        $row.append($('<div class="offset">').text("0x" + formatHexNumber(i, 4)));
-        $bytes = $('<div class="bytes">');
-        $row.append($bytes);
-        $container.append($row);
-
-        inRow = 0;
-      }
-
-      var byte = formatHexNumber(bytes[i], 2);
-      var $byte = $('<div class="byte">');
-      $byte.text(byte);
-      $byte.attr("data-offset", i);
-      $bytes.append($byte);
-
-      inRow++;
+    switch(current) {
+      case "hex": newVal = "bin"; break;
+      case "bin": newVal = "dec"; break;
+      case "dec": newVal = "hex"; break;
     }
-  }
 
-  function getChangedBytes (dump1, dump2) {
-    var changed = [];
-    for (var i = 0; i < dump1.length; i++) {
-      if(dump1[i] !== dump2[i])
-        changed.push(i);
-    }
-    return changed;
-  }
+    $span.text(newVal.toUpperCase());
+    return newVal;
+  };
 
-  function colorChangedBytes (changed, $container) {
-    for (var i = 0; i < changed.length; i++) {
-      $container.find('.byte[data-offset="' + changed[i] + '"]').css('color', 'red');
-    }
-  }
-
-  function formatNameToRadix (name) {
+  yasp.Debugger.formatNameToRadix = function (name) {
     name = name.toUpperCase();
     if(name === "OCT")
       return 8;
@@ -426,18 +171,17 @@ if (typeof yasp == 'undefined') yasp = { };
     if(name === "HEX")
       return 16;
     return 10;
-  }
+  };
 
-  function formatHexNumber(d, padding) {
-    return formatNumber(d, padding, 16);
-  }
+  yasp.Debugger.formatHexNumber = function (d, padding) {
+    return yasp.Debugger.formatNumber(d, padding, 16);
+  };
 
   // http://stackoverflow.com/a/57807/2486196
-  function formatNumber(d, padding, format) {
+  yasp.Debugger.formatNumber = function (d, padding, format) {
     var hex = Number(d).toString(format);
     while (hex.length < padding)
       hex = "0" + hex;
     return hex;
-  }
+  };
 })();
-
