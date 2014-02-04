@@ -54,6 +54,6 @@ The documentation lives in the [/doc/](/doc/)-directory. Additional documentatio
 * [`/src/app/js/assembler`](/src/app/js/assembler), home of the assembler
 * [`/src/app/js/emulator`](/src/app/js/emulator), home of the emulator, see [emulator.md](/doc/emulator/emulator.md)
 * [`/src/app/js/hardware`](/src/app/js/hardware), home of the hardware, see [hardware.md](/doc/hardware.md)
-* [`/src/app/test/index.html`](/src/app/test/index.html), unit-tests
-* [`/src/app/test/hardware.html`](/src/app/test/hardware.html), hardware-demo
-* [`/src/app/test/repl.html`](/src/app/test/repl.html), interactive assembler/emulator-interface
+* [`/src/test/index.html`](/src/test/index.html), unit-tests
+* [`/src/test/hardware.html`](/src/test/hardware.html), hardware-demo
+* [`/src/test/repl.html`](/src/test/repl.html), interactive assembler/emulator-interface
