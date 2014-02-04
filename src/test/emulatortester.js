@@ -259,7 +259,13 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
   }
   if(setup.stack) {
     keys.splice("stack", 1);
-    this.emulator.stack = setup.stack;
+    if(setup.stack instanceof Uint8Array) {
+      this.emulator.stack = setup.stack;
+    } else {
+      for (var a in setup.stack) {
+        this.emulator.stack[a] = setup.stack[a];
+      }
+    }
   }
   if(setup.pin) {
     keys.splice("pin", 1);
