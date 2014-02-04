@@ -73,6 +73,9 @@ if (typeof yasp == 'undefined') yasp = { };
      * @see yasp.Emulator#tickWrapper */
     this.waitTime = 0; // time to wait in ms
 
+    this.waitTimeout = -1;
+    this.isWaiting = false;
+
     /** bits of the interrupt-mask
      * @member {boolean[]}
      * @see yasp.Emulator#setInterruptMask
@@ -771,6 +774,10 @@ if (typeof yasp == 'undefined') yasp = { };
       return false;
     if(debug) console.log("interrupt triggered: " + i);
     this.interruptToServe = i;
+    if(this.isWaiting === true) {
+      clearTimeout(this.waitTimeout);
+      this.setTickWrapperTimeout();
+    }
     return true;
   };
 
@@ -824,6 +831,8 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.tickWrapper = function () {
 
+    this.isWaiting = false;
+
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
 
       if(this.running === false) {
@@ -860,7 +869,8 @@ if (typeof yasp == 'undefined') yasp = { };
           this.setTickWrapperTimeout();
         } else {
           // don't set the normal timeout but wait for the desired time
-          setTimeout(this.tickWrapper.bind(this), this.waitTime);
+          this.waitTimeout = setTimeout(this.tickWrapper.bind(this), this.waitTime);
+          this.isWaiting = true;
         }
 
         // fix the number of ticks executed. This has to be accurate since PWM relies on the tick-count
