@@ -137,6 +137,36 @@ on:
 ## Stack
 There is a 16-byte-stack which can be accessed by the fairly standard `PUSH` and `POP`-instructions.
 
+```
+MOV b0, 0x20
+MOV b1, 0x40
+MOV b2, 0x60
+; w0 = 0x2040
+; w1 = 0x6000
+; initial sp = -1
+
+
+; b1 = 0x40
+PUSH b1
+; Stack = 0x40
+; sp    = 0
+
+; b1 = 0x20
+PUSH b0
+; Stack = 0x40 0x20
+; sp    = 1
+
+; b1 = 0x6000
+PUSH w1
+; Stack = 0x40 0x20 0x00 0x60
+; sp    = 3
+
+POP w0
+; Stack = 0x40 0x20
+; sp    = 1
+; w0    = 0x6000
+```
+
 ## Subroutines
 Subroutinenesting is also supported using the stack.
 

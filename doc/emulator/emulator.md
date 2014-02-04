@@ -78,6 +78,10 @@ of the pin will always be `1` or `0`. PWM causes the state to be between `1` and
            off     on
 ```
 
+## Stack
+The emulator has a 16-byte, pre-increment stack. So the `sp` always points to the last element. Words are pushed with
+the least significant byte first. An example is  in the [tutorial](../tutorial.md).
+
 ## [Utils](./utils.md)
 A number of utilities used by the emulator.
 
