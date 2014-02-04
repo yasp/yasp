@@ -65,5 +65,5 @@
     }
   ];
 
-  yasp.communicatorTester(cases, "../js/emulator/emulator_backend.js");
+  yasp.communicatorTester(cases, "../app/js/emulator/emulator_backend.js");
 })();

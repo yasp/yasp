@@ -1,6 +1,6 @@
 if (typeof yasp == 'undefined') yasp = { };
 
-importScripts('../../js/communicator.js');
+importScripts('../../app/js/communicator.js');
 
 new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
