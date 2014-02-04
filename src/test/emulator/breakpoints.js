@@ -254,46 +254,64 @@
     vals: breakpointCases[breakpointCases.length - 1].vals
   });
 
+  function getSetup (cat, val, offset) {
+    var op = val[1];
+    var setVal = val[0];
+    var checkVal = val[2];
+
+    var setup = {
+      breakpoints: [
+        {
+          offset: offset,
+          condition: {
+            type: cat.type,
+            param: cat.param,
+            operator: op,
+            value: checkVal
+          }
+        }
+      ]
+    };
+
+    if(cat.type === "register") {
+      setup.reg = {};
+      setup.reg[cat.param] = setVal
+    } else if(cat.type === "flag") {
+      setup.flags = {};
+      setup.flags[cat.param] = setVal;
+    } else if(cat.type === "io") {
+      setup.pin = {};
+      setup.pin[cat.param] = setVal;
+    } else if(cat.type === "ram" || cat.type === "rom") {
+      setup[cat.type] = setVal;
+
+      if(setup.breakpoints[0].condition.value instanceof Array) {
+        setup.breakpoints[0].condition.value = new Uint8Array(setup.breakpoints[0].condition.value);
+      }
+    }
+
+    return setup;
+  }
+
   for (var i = 0; i < breakpointCases.length; i++) {
     var cat = breakpointCases[i];
 
     for (var j = 0; j < cat.vals.length; j++) {
       var val = cat.vals[j];
-      var setup = {
-        breakpoints: [
-          {
-            offset: 0,
-            condition: {
-              type: cat.type,
-              param: cat.param,
-              operator: val[1],
-              value: val[2]
-            }
-          }
-        ]
-      };
-
-      if(cat.type === "register") {
-        setup.reg = {};
-        setup.reg[cat.param] = val[0];
-      } else if(cat.type === "flag") {
-        setup.flags = {};
-        setup.flags[cat.param] = val[0];
-      } else if(cat.type === "io") {
-        setup.pin = {};
-        setup.pin[cat.param] = val[0];
-      } else if(cat.type === "ram" || cat.type === "rom") {
-        setup[cat.type] = val[0];
-
-        if(setup.breakpoints[0].condition.value instanceof Array) {
-          setup.breakpoints[0].condition.value = new Uint8Array(setup.breakpoints[0].condition.value);
-        }
-      }
+      var shouldStop = val[3];
 
       tester.addTest({
-        title: cat.title + " " + JSON.stringify(val),
-        setup: setup,
-        steps: [ { running: !val[3] } ]
+        title: cat.title + " " + JSON.stringify(val) + " - offset",
+        setup: getSetup(cat, val, 0),
+        steps: [ { running: !shouldStop } ]
+      });
+
+      tester.addTest({
+        title: cat.title + " " + JSON.stringify(val) + " - global",
+        steps: [
+          { running: true, ss: getSetup(cat, val, null) },
+          { running: !shouldStop }
+        ]
       });
     }
   }

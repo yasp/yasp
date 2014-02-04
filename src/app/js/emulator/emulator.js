@@ -191,6 +191,9 @@ if (typeof yasp == 'undefined') yasp = { };
       rom: false
     };
 
+    /** stores the changes to registers, flags, io and so on. Only written if a change-breakpoint for the specific value is set.
+     * @member {object}
+     */
     this.changeBreakpointData = {};
 
     for (var c in this.changeBreakpoints) {
@@ -206,6 +209,12 @@ if (typeof yasp == 'undefined') yasp = { };
     for (var i = 0; i < this.breakpointConditions.length; i++) {
       this.breakpointConditions[i] = false;
     }
+
+    /** all breakpoins which do not have a offset-value.
+     * {@link https://github.com/yasp/yasp/blob/master/doc/emulator/data.md#breakpoints|Additional documentation}.
+     * @member {object[]}
+     * @see yasp.Emulator#setBreakpoints */
+    this.globalBreakpoints = [];
 
     this.setTickWrapperTimeout();
   };
@@ -323,6 +332,8 @@ if (typeof yasp == 'undefined') yasp = { };
     if(!(breakpoints instanceof Array))
       return 0;
 
+    this.globalBreakpoints.length = 0;
+
     for (var i = 0; i < this.breakpoints.length; i++) {
       this.breakpoints[i] = false;
       this.breakpointConditions[i] = null;
@@ -335,7 +346,10 @@ if (typeof yasp == 'undefined') yasp = { };
 
     for (var i = 0; i < breakpoints.length; i++) {
       var brk = breakpoints[i];
-      this.breakpoints[brk.offset] = true;
+
+      if(brk.offset !== null && brk.offset !== undefined) {
+        this.breakpoints[brk.offset] = true;
+      }
 
       if(brk.condition === null || brk.condition === undefined)
         continue;
@@ -389,8 +403,6 @@ if (typeof yasp == 'undefined') yasp = { };
       condition.isChange        = (brk.condition.operator === "change");
 
       if(condition.isChange) {
-        this.changeBreakpointExists = true;
-
         if(condition.isByteRegister === true) this.changeBreakpoints["rbyte"] = true;
         if(condition.isWordRegister === true) this.changeBreakpoints["rword"] = true;
         if(condition.isCarryFlag    === true) this.changeBreakpoints["cflag"] = true;
@@ -399,7 +411,13 @@ if (typeof yasp == 'undefined') yasp = { };
         if(condition.isRamOffset    === true) this.changeBreakpoints["ram"]   = true;
         if(condition.isRomOffset    === true) this.changeBreakpoints["rom"]   = true;
       }
-      this.breakpointConditions[brk.offset] = condition;
+
+
+      if(brk.offset !== null && brk.offset !== undefined) {
+        this.breakpointConditions[brk.offset] = condition;
+      } else {
+        this.globalBreakpoints.push(condition);
+      }
     }
 
     return true;
@@ -837,6 +855,19 @@ if (typeof yasp == 'undefined') yasp = { };
 
       if(this.running === false) {
         break;
+      }
+
+      if(this.globalBreakpoints.length !== 0) {
+        for (var i = 0; i < this.globalBreakpoints.length; i++) {
+          var condition = this.globalBreakpoints[i];
+          var shouldBreak = this.checkBreakpointCondition(condition);
+
+          if(shouldBreak) {
+            this.resetChangeBreakpointData();
+            this.break("breakpoint");
+            break;
+          }
+        }
       }
 
       if(this.breakpoints[this.pc] === true && this.skipBreakpoint === false) {
