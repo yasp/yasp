@@ -1,7 +1,7 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function() {
-  var debug = false;
+  var debug = true;
 
   /**
    * Responsible for communicating with webworkers.

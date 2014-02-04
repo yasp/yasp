@@ -9,6 +9,7 @@
     <script src="../app/js/hardware/led.js"></script>
     <script src="../app/js/hardware/poti.js"></script>
     <script src="../app/js/hardware/pushbutton.js"></script>
+    <script src="../app/js/hardware/ledmatrix.js"></script>
     <script>
         // Hardware
         $('body').ready(function() {
@@ -108,6 +109,21 @@
                     dir *= -1;
             };
             setInterval(greenLedAn, 50);
+            
+            var ledMatrix = new yasp.Hardware({
+                cb: function(matrix) {
+                    $('#matrix_state').text(poti.state);
+                },
+                container: $('#matrix'),
+                type: yasp.HardwareType.LEDMatrix,
+                state: 0,
+                params: {
+                    width: 8,
+                    height: 8,
+                    onColor: 'rgb(255, 0, 0)',
+                    offColor: 'rgb(150,0,0)'
+                }
+            });
         });
     </script>
     <style>
@@ -142,6 +158,11 @@
             width: 80px;
             height: 80px;
         }
+        
+        .matrix {
+            width: 256px;
+            height: 256px;
+        }
     </style>
 </head>
 <body>
@@ -173,6 +194,12 @@
     <div class="group">
         <div id="poti" class="poti"></div>
         <div id="poti_state" class="desc"></div>
+    </div>
+
+    <h1>LED MATRIX</h1>
+    <div class="group">
+        <div id="matrix" class="matrix"></div>
+        <div id="matrix_state" class="desc"></div>
     </div>
 </body>
 </html>
