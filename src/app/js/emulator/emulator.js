@@ -674,7 +674,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(typeof s !== "number" || (s < 0 || s > 255))
       return 3;
-    if(pin === undefined)
+    if(pin === undefined || pin === null)
       return 1;
     if(pin.mode === "in" && outside !== true)
       return 2;
