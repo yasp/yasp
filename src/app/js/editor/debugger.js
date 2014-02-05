@@ -41,7 +41,6 @@ if (typeof yasp == 'undefined') yasp = { };
       if (!!yasp.Debugger.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
       yasp.Debugger.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
       yasp.Debugger.isEmulatorRunning = false;
-      yasp.Debugger.lastExecutedLine = 0;
 
       yasp.Debugger.breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.Debugger.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
       yasp.Debugger.breadboard.build();
@@ -77,7 +76,7 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.EmulatorCommunicator = null;
       }
 
-      yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
+      highlightLine(null, true);
 
       if(yasp.Debugger.breadboard) {
         yasp.Debugger.breadboard.destroy();
@@ -112,6 +111,7 @@ if (typeof yasp == 'undefined') yasp = { };
     });
 
     $('.debugger_continue').click(function () {
+      highlightLine(null,  true);
       yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
         count: null,
         skipBreakpoint: yasp.Debugger.breakpointHit
@@ -139,12 +139,23 @@ if (typeof yasp == 'undefined') yasp = { };
         firePartEvent("onState", [state]);
 
         var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
-        yasp.Debugger.editor.removeLineClass(yasp.Debugger.lastExecutedLine, 'background', 'line-active');
-        yasp.Debugger.editor.addLineClass(line, 'background', 'line-active');
-
-        yasp.Debugger.lastExecutedLine = line;
+        highlightLine(line, true);
       }
     );
+  }
+
+  function highlightLine (line, clearOthers) {
+
+    if(clearOthers) {
+      var count = yasp.Debugger.editor.lineCount();
+
+      for (var i = 0; i < count; i++) {
+        yasp.Debugger.editor.removeLineClass(i + 1, 'background', 'line-active');
+      }
+    }
+    if(line !== null) {
+      yasp.Debugger.editor.addLineClass(line, 'background', 'line-active');
+    }
   }
 
   yasp.Debugger.cycleNumberFormat = function ($span, current) {
