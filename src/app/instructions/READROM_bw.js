@@ -1,5 +1,5 @@
 {
-  "name": "READROM",
+  "name": "RDROM",
   "doc": {
     "de": {
       "description": "Liest den Wert im ROM an der Adresse des Word-Registers in das Byte-Register.",
