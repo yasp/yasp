@@ -1,5 +1,5 @@
 {
-  "name": "WRITERAM",
+  "name": "WRRAM",
   "doc": {
     "de": {
       "description": "Schreibt den Wert des Byte-Registers in den RAM an die adresse des Word-Registers.",

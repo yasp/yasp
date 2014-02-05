@@ -13,7 +13,7 @@ if (typeof yasp == 'undefined') yasp = { };
     /** the program code including strings, interrupt-table, etc
      * @member {Uint8Array} */
     this.rom = new Uint8Array(512);
-    /** contains the registers (first 63 bytes) and RAM accessible via READRAM/WRITERAM
+    /** contains the registers (first 63 bytes) and RAM accessible via ReadRAM/WriteRAM
      * @member {Uint8Array} */
     this.ram = new Uint8Array(512);
     /** emulator flags set by arithmetic and PIN-Instructions

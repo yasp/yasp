@@ -3,17 +3,17 @@
 
   var commandTestData = [];
 
-  // WRITERAM
+  // WRRAM
   commandTestData = commandTestData.concat([
     {
-      cmd: "WRITERAM w0,b2",
+      cmd: "WRRAM w0,b2",
       setup: { reg: { "w0": 0xFF, "b2": 0xFA } },
       steps: [
         { ram: { 0xFF: 0xFA } }
       ]
     },
     {
-      cmd: "WRITERAM w0,b2",
+      cmd: "WRRAM w0,b2",
       setup: { ram: new Uint8Array(160), reg: { "w0": 0xFFFF, "b2": 0xFA } },
       steps: [
         { flags: { "c": true, "z": false } }
