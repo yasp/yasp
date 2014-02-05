@@ -145,7 +145,7 @@ if (typeof yasp == 'undefined') yasp = { };
       var count = yasp.Debugger.editor.lineCount();
 
       for (var i = 0; i < count; i++) {
-        yasp.Debugger.editor.removeLineClass(i + 1, 'background', 'line-active');
+        yasp.Debugger.editor.removeLineClass(i, 'background', 'line-active');
       }
     }
     if(line !== null && !isNaN(line)) {
