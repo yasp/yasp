@@ -90,7 +90,7 @@ if (typeof yasp == 'undefined') yasp = { };
             for (var i = 0; i < str.length; i++) {
               generator.bitWriter.append(str.charCodeAt(i), 8);
             }
-            generator.bitWriter.append('\0', 8);
+            generator.bitWriter.append('\0'.charCodeAt(0), 8);
           }
         } else {
           generator.bitWriter.append(this.params.data, this.params.len);
