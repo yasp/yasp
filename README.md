@@ -20,8 +20,9 @@ yasp is licensed under the GPLv3-License, for details see [`LICENSE.txt`](LICENS
 ## Development
 
 ### Setup
-To develop on yasp you'll need npm and grunt.
+To develop on yasp you'll need nodejs.
 ```
+$ npm install -g grunt-cli   # install grunt (if needed)
 $ git clone git@github.com:yasp/yasp.git
 $ cd yasp
 $ npm install      # download grunt-dependencies
@@ -29,6 +30,11 @@ $ grunt deps       # download web-dependecies
 $ grunt commandsjs # build help and instructions
 $ grunt http       # start development http-server
 ```
+
+### Setup on Windows
+1. get nodejs vom http://nodejs.org/
+2. get msysgit http://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git
+4. open CMD and and follow the linux-setup
 
 ### Grunt-Tasks
 * `deps` download all client dependencies
