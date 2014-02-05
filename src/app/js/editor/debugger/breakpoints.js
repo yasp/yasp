@@ -5,13 +5,13 @@ if (!yasp.Debugger) yasp.Debugger = { };
   var breakpoints = {};
   yasp.Debugger.breakpoints = breakpoints;
 
-  breakpoints.breakpoints = [];
+  breakpoints.offsetBreakpoints = [];
 
   breakpoints.onInit = function () {
   };
 
   breakpoints.onOpen = function () {
-    yasp.Debugger.breakpoints.sendBreakpoints();
+    breakpoints.sendBreakpoints();
     yasp.Debugger.breakpointHit = false;
   };
 
@@ -19,30 +19,28 @@ if (!yasp.Debugger) yasp.Debugger = { };
     yasp.Debugger.breakpointHit = (reason === "breakpoint");
   };
 
-  breakpoints.breakpointsChanged = function (lines) {
-    yasp.Debugger.breakpoints.breakpoints = [];
+  breakpoints.offsetBreakpointsChanged = function (lines) {
+    breakpoints.offsetBreakpoints = [];
 
     for (var i = 0; i < lines.length; i++) {
       if(lines[i] === true) {
-        yasp.Debugger.breakpoints.breakpoints.push({
+        yasp.Debugger.offsetBreakpoints.offsetBreakpoints.push({
           offset: yasp.Editor.map[i + 1],
           condition: null
         });
       }
     }
 
-    yasp.Debugger.breakpoints.sendBreakpoints();
+    breakpoints.sendBreakpoints();
   };
 
   breakpoints.sendBreakpoints = function () {
     if(yasp.Debugger.EmulatorCommunicator) {
-      yasp.Debugger.EmulatorCommunicator.sendMessage("SET_BREAKPOINTS",
-        {
-          breakpoints: yasp.Debugger.breakpoints.breakpoints
-        },
-        function () {
-        }
-      )
+      var breakpoints = [];
+
+      breakpoints = breakpoints.concat(yasp.Debugger.breakpoints.offsetBreakpoints);
+
+      yasp.Debugger.EmulatorCommunicator.sendMessage("SET_BREAKPOINTS", { breakpoints: breakpoints }, function () { });
     }
   };
 })();

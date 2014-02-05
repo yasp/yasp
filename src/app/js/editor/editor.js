@@ -231,7 +231,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         yasp.Editor.breakpoints[info.line] = !!(info.gutterMarkers && info.gutterMarkers.breakpoints);
       });
 
-      yasp.Debugger.breakpoints.breakpointsChanged(yasp.Editor.breakpoints);
+      yasp.Debugger.breakpoints.offsetBreakpointsChanged(yasp.Editor.breakpoints);
     },
     getIdentifierOccurence: function(name) {
       if (!!yasp.Editor.symbols.instructions[name]) return yasp.Editor.symbols.instructions[name];
