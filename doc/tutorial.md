@@ -1,5 +1,6 @@
 # yasp-Assembler
-yasp uses a custom assembler which was created a decade ago by a teacher of our school, [HTL Spengergasse](http://www.spengergasse.at/). It has been designed to be easy to learn to help students learn assembly and therefore understand computers better.
+yasp uses a custom assembler which was created a decade ago by a teacher of our school, [HTL Spengergasse](http://www.spengergasse.at/).
+It has been designed to help students understand computers better and is therefore really simple and easy to learn.
 
 ## Basic Syntax
 ```
@@ -26,7 +27,11 @@ label:
 Use the help-feature of the IDE to get a full list of commands and their parameters and descriptions.
 
 ### Basic Commands
-All of these commands take two parameters: register & register or register & literal. The result of the operation will be written into the frist parameter, the register.
+All of these commands take two parameters:
+* `register`, `register`
+* `register`, `literal`
+
+The result of the operation will be written into the frist parameter, the register.
 * `MOV`
 * `ADD` / `SUB`
 * `DIV` / `MUL`
@@ -50,7 +55,7 @@ AND b3, b0 ; b3 is 4dec
 `DELAY` can be used to wait for a certain time. Both literal and word-registers can be used as the parameter. `60000` equals ~900 milliseconds.
 
 ## Debugging
-There are a few commands which can help you with debugging.
+There are a few commands which can help you on debugging.
 * `DEBUG` sends the value of a register to the debugger
 * `PRINT` sends a string to the debugger
 
