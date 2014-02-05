@@ -1,5 +1,5 @@
 {
-  "name": "WRITEROM",
+  "name": "WRROM",
   "doc": {
     "de": {
       "description": "Schreibt den Wert des Byte-Registers in den ROM an die Adresse des Word-Registers.",
