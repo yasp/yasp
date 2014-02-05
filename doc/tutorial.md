@@ -52,7 +52,8 @@ AND b3, b0 ; b3 is 4dec
 ```
 
 ## Sleep
-`DELAY` can be used to wait for a certain time. Both literal and word-registers can be used as the parameter. `60000` equals ~900 milliseconds.
+`DELAY` can be used to wait for a certain time. Both literal and word-registers can be used as the parameter. A value of
+`60000` roughly equals `900` milliseconds.
 
 ## Debugging
 There are a few commands which can help you on debugging.
