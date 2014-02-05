@@ -36,7 +36,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         type: "LED",
         params: {
           onColor: 'rgb(0,255,0)',
-          offColor: 'rgb(0,60,0)'
+          offColor: 'rgb(0,35,0)'
         },
         pin: 5,
         appearance: {
@@ -50,7 +50,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         type: "LED",
         params: {
           onColor: 'rgb(255,255,0)',
-          offColor: 'rgb(60,60,0)'
+          offColor: 'rgb(35,35,0)'
         },
         pin: 4,
         appearance: {
@@ -64,7 +64,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         type: "LED",
         params: {
           onColor: 'rgb(255,0,0)',
-          offColor: 'rgb(60,0,0)'
+          offColor: 'rgb(35,0,0)'
         },
         pin: 3,
         appearance: {
