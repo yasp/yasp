@@ -148,7 +148,7 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.editor.removeLineClass(i + 1, 'background', 'line-active');
       }
     }
-    if(line !== null) {
+    if(line !== null && !isNaN(line)) {
       yasp.Debugger.editor.addLineClass(line, 'background', 'line-active');
     }
   }
