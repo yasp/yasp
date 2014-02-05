@@ -1,5 +1,5 @@
 {
-  "name": "READRAM",
+  "name": "RDRAM",
   "doc": {
     "de": {
       "description": "Liest den Wert im RAM an der Adresse des Word-Registers in das Byte-Register.",
