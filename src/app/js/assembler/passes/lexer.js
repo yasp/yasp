@@ -183,7 +183,7 @@ if (typeof yasp == "undefined") yasp = { };
     
     // am i an unknown register
     var unknownRegister = validUnknownRegister.exec(name)
-    if (unknownRegister != null && unknownRegister.length > 0) {
+    if (unknownRegister != null && unknownRegister.length > 0 && (name.charAt(0).toUpperCase() == 'B' || name.charAt(0).toUpperCase() == 'W')) {
       return yasp.TokenType.UNKNOWN_REGISTER + "[" + name + "]";
     }
 
