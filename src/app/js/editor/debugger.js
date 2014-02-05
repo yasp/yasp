@@ -40,7 +40,6 @@ if (typeof yasp == 'undefined') yasp = { };
     }).on('shown.bs.modal', function() {
       if (!!yasp.Debugger.EmulatorCommunicator) yasp.EmulatorCommunicator.terminate();
       yasp.Debugger.EmulatorCommunicator = new yasp.Communicator("app/js/emulator/emulator_backend.js");
-      yasp.Debugger.isEmulatorRunning = false;
 
       yasp.Debugger.breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.Debugger.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
       yasp.Debugger.breadboard.build();
@@ -84,14 +83,10 @@ if (typeof yasp == 'undefined') yasp = { };
     });
 
     $('.debugger_step').click(function () {
-      if(!yasp.Debugger.isEmulatorRunning) {
-        yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
-          count: 1,
-          skipBreakpoint: true
-        });
-      } else {
-        alert("no")
-      }
+      yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
+        count: 1,
+        skipBreakpoint: true
+      });
     });
 
     $('.debugger_stepBack').click(function () {
