@@ -32,7 +32,7 @@ $ grunt http       # start development http-server
 ```
 
 ### Setup on Windows
-1. get nodejs vom http://nodejs.org/
+1. get nodejs http://nodejs.org/
 2. get msysgit http://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git
 4. open CMD and and follow the linux-setup
 
