@@ -1,11 +1,11 @@
 # Instructions
-An instruction in yasp consist of a single file inside the `/src/app/instructions/` directory. There is no code in the
+An instruction in yasp consist of a single file inside the [`/src/app/instructions/`](../src/app/instructions) directory. There is no code in the
 emulator or assembler dealing with specific instructions. Although some new instructions might need additional
 features in the emulator.
 
 The instructions in the `instructions`-directory are later combined into `/src/app/js/commands.js`. This is done by
 the grunt-task `commandsjs` or `watchcommands`, which can be used to update the file automatically once something has
-changed.
+changed. Internally this is done by the [doctool](https://github.com/yasp/doctool).
 
 ## Format of an instruction file
 ```javascript
