@@ -30,6 +30,11 @@ changed. Internally this is done by the [doctool](https://github.com/yasp/doctoo
     "de": { /* same as "en"-version */ }
   },
 
+  // Tests for this command, which are executed by the EmulatorTester. See /doc/testing/commands.md for more information.
+  // A testcase here must not use any commands but its own, as this is the only one available. Assembler directives may
+  // be used, though.
+  "tests": [ ],
+
   // the code is the static part of the bitcode which is representing this command. It is at the very
   // beginning of the bitcode and must be unique across all instructions since the emulator uses it
   // to identify the commands.
@@ -123,6 +128,13 @@ All functions marked as private must not be called.
       }
     }
   },
+  "tests": [
+    {
+      cmd: "",
+      setup: { },
+      steps: { }
+    }
+  ],
   "code": [
     {
       "value": 0x00
