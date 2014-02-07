@@ -53,13 +53,11 @@ changed. Internally this is done by the [doctool](https://github.com/yasp/doctoo
   // The parameters of this command are used by both, the assembler and the emulator. They consist of a type and
   // a optional "valueNeeded"-attribute, which indicates that the value of a register-parameter is not used in
   // the instructions code and should not be loaded, which can give your command a serious performance boost.
-  // currently the number of parameters is restricted to 0, 1 or 2 for performance reasons.
-  // for all the valid parameter-types see this next heading in this document
-  // if you end up with a total amount of bits which is not divisible by 8 the last bits
-  // will be filled up with zeros.
+  // Currently the number of parameters is restricted to 0, 1 or 2 for performance reasons.
+  // The total number of bits must be divisible by 8 (no half bytes).
   "params": [
     {
-      "valueNeeded": false,
+      "valueNeeded": false, // since this is ADD, this should be true.. but demo, hey!
       "type": "r_byte"
     },
     {
@@ -84,8 +82,7 @@ changed. Internally this is done by the [doctool](https://github.com/yasp/doctoo
 
 ```
 
-## Parameters
-### Value types
+### Parameter-Types
 | name          | bitcode-length  | description      | `value`        | `address`       |
 | ------------- | ---------------:| ---------------- | -------------- | --------------- |
 | r_byte        |  5 bits         | byte-register    | register-value | register-number |
