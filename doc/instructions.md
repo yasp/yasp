@@ -30,7 +30,7 @@ changed. Internally this is done by the [doctool](https://github.com/yasp/doctoo
     "de": { /* same as "en"-version */ }
   },
 
-  // Tests for this command, which are executed by the EmulatorTester. See /doc/testing/commands.md for more information.
+  // Tests for this command, which are executed by the EmulatorTester. See /doc/testing/instructions.md for more information.
   // A testcase here must not use any commands but its own, as this is the only one available. Assembler directives may
   // be used, though.
   "tests": [ ],
