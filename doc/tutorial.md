@@ -115,7 +115,7 @@ There are a number of commands which can be used to control hardware connected t
 * `HIGH` / `LOW` turn a pin on or off
 * `TOGGLE` invert a output pin
 * `PIN` read binary value from pin
-* `ADC0` / `ADC1` / `ADC2` read analogue value of the ADC-Pins
+* `ADC` read analogue value of the ADC-Pins (legacy commands: `ADC0`, `ADC1`, `ADC2`)
 
 Toggling LEDs:
 ```
