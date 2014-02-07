@@ -75,7 +75,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
 
     this.emulator.pc = 0;
 
-    tester.applySetup(test.setup);
+    tester.applySetup(test.setup, test.title);
 
     if(asm)
       this.emulator.load(asm.bitcode, 0);
@@ -199,11 +199,11 @@ yasp.test.EmulatorTester.prototype.done = function () {
       }
       if(step.ss !== undefined) {
         keys.splice("ss", 1);
-        this.applySetup(step.ss);
+        this.applySetup(step.ss, test.title);
       }
 
       if(keys.length !== 0) {
-        alert("Unhandled Step-Keys:\n" + keys.join(', '));
+        alert("Unhandled Step-Keys:\n" + keys.join(', ') + "\nin: " + test.title);
       }
     }
   }).bind(this));
@@ -213,7 +213,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
  * @param setup {?object}
  * @private
  */
-yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
+yasp.test.EmulatorTester.prototype.applySetup = function (setup, title) {
   if(!setup)
     return;
 
@@ -312,7 +312,7 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
   }
 
   if(keys.length !== 0) {
-    alert("Unhandled Setup-Keys:\n" + keys.join(', '));
+    alert("Unhandled Setup-Keys:\n" + keys.join(', ') + "\nin: " + title);
   }
 };
 
