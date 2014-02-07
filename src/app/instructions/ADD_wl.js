@@ -16,6 +16,23 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "ADD w0,1",
+      setup: { reg: { "w0": 0x02FA } },
+      steps: { reg: { "w0": 0x02FB }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "ADD w0,2",
+      setup: { reg: { "w0": 0xFFFF } },
+      steps: { reg: { "w0": 0x0001 }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "ADD w0,1",
+      setup: { reg: { "w0": 0xFFFF } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: true, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x20

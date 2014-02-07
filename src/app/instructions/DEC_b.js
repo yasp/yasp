@@ -16,6 +16,23 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "DEC b0",
+      setup: { reg: { "b0": 0x02 } },
+      steps: { reg: { "b0": 0x01 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "DEC b0",
+      setup: { reg: { "b0": 0x01 } },
+      steps: { reg: { "b0": 0x00 }, flags: { c: false, z: true } }
+    },
+    {
+      cmd: "DEC b0",
+      setup: { reg: { "b0": 0x00 } },
+      steps: { reg: { "b0": 0xFF }, flags: { c: true, z: false } }
+    }
+  ],
   "code": [
     {
       "value": 0x40

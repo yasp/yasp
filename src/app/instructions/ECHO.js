@@ -12,6 +12,12 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "ECHO str\nstr: STRING \"foo\"",
+      steps: { debug: { "addr": 5, "subtype": null, "type": "string", "val": "foo" } }
+    }
+  ],
   "code": [
     {
       "value": "11010"

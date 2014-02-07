@@ -16,6 +16,23 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "DEC w0",
+      setup: { reg: { "w0": 0xFF00 } },
+      steps: { reg: { "w0": 0xFEFF }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "DEC w0",
+      setup: { reg: { "w0": 0x0001 } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: false, z: true } }
+    },
+    {
+      cmd: "DEC w0",
+      setup: { reg: { "w0": 0x0000 } },
+      steps: { reg: { "w0": 0xFFFF }, flags: { c: true, z: false } }
+    }
+  ],
   "code": [
     {
       "value": 0x60

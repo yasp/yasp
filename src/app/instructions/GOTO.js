@@ -12,6 +12,12 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "JMP lbl\nDB 0xFF\nlbl:",
+      steps: { reg: { "pc": 3 } }
+    }
+  ],
   "code": [
     {
       "value": "10110"

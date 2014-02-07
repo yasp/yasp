@@ -14,6 +14,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "RDROM b2,w0",
+      setup: { reg: { "w0": 0x03 }, rom: { 0x03: 42 } },
+      steps: { reg: { "b2": 42 } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

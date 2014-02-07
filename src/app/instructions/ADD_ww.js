@@ -16,6 +16,23 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "ADD w0,w1",
+      setup: { reg: { "w0": 0x0A10, "w1": 0x01FF } },
+      steps: { reg: { "w0": 0x0C0F }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "ADD w0,w1",
+      setup: { reg: { "w0": 0xFFFF, "w1": 0x0002 } },
+      steps: { reg: { "w0": 0x0001 }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "ADD w0,w1",
+      setup: { reg: { "w0": 0xFFFF, "w1": 0x0001 } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: true, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

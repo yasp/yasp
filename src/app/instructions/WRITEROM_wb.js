@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "WRROM w0,b2",
+      setup: { reg: { "w0": 0xFF, "b2": 0xFA } },
+      steps: { rom: { 0xFF: 0xFA } }
+    },
+    {
+      cmd: "WRROM w0,b2",
+      setup: { rom: new Array(160), reg: { "w0": 0xFFFF, "b2": 0xFA } },
+      steps: { flags: { "c": true, "z": false } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

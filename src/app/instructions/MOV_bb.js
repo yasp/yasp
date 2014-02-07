@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "MOV b0,b1",
+      setup: { reg: { "b1": 1 } },
+      steps: { reg: { "b0": 1 } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

@@ -16,6 +16,23 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "ADD b0,1",
+      setup: { reg: { "b0": 1 } },
+      steps: { reg: { "b0": 2 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "ADD b0,2",
+      setup: { reg: { "b0": 0xFF } },
+      steps: { reg: { "b0": 1 }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "ADD b0,1",
+      setup: { reg: { "b0": 0xFF } },
+      steps: { reg: { "b0": 0 }, flags: { c: true, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x00

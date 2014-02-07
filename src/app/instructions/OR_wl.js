@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "OR w0,17346", // 01000011 11000010
+      setup: { reg: { "w0": "01010101 10101010" } },
+      steps: { reg: { "w0": "01010111 11101010" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "OR w0,0",
+      setup: { reg: { "w0": "00000000 00000000" } },
+      steps: { reg: { "w0": "00000000 00000000" }, flags: { c: false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x20

@@ -12,6 +12,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "PAUSE w0",
+      setup: { reg: { "w0": 1000 } },
+      steps: { waitTime: 15 }
+    },
+    {
+      cmd: "DELAY w0",
+      setup: { reg: { "w0": 1000 } },
+      steps: { waitTime: 15 }
+    }
+  ],
   "code": [
     {
       "value": 0x70

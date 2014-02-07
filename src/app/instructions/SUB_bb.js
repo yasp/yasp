@@ -16,6 +16,23 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "SUB b0,b1",
+      setup: { reg: { "b0": 2, "b1": 1 } },
+      steps: { reg: { "b0": 1 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "SUB b0,b1",
+      setup: { reg: { "b0": 1, "b1": 2 } },
+      steps: { reg: { "b0": 255 }, flags: { c: true, z: false } }
+    },
+    {
+      cmd: "SUB b0,b1",
+      setup: { reg: { "b0": 1, "b1": 1 } },
+      steps: { reg: { "b0": 0 }, flags: { c: false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

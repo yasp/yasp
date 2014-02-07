@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "JMPI w0",
+      setup: { reg: { "w0": 0xFAFB } },
+      steps: { reg: { "pc": 0xFAFB } }
+    }
+  ],
   "code": [
     {
       "value": 0x70

@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "INV w0",
+      setup: { reg: { "w0": "00000000 00000001" } },
+      steps: { reg: { "w0": "11111111 11111110" }, flags: { c:false, z: false } }
+    },
+    {
+      cmd: "INV w0",
+      setup: { reg: { "w0": "11111111 11111111" } },
+      steps: { reg: { "w0": "00000000 00000000" }, flags: { c:false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x60

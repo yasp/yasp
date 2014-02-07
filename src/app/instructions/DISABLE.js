@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "DISABLE",
+      setup: { interruptMask: [ true, true, true, true, true, true, true, true ] },
+      steps: { interruptMask: [ false, false, false, false, false, false, false, false ] }
+    }
+  ],
   "code": [
     {
       "value": "00111010",

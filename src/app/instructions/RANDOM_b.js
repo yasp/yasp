@@ -12,6 +12,12 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "RANDOM b1",
+      steps: { /* check for changed value.. uhm.. */ }
+    }
+  ],
   "code": [
     {
       "value": 0x50

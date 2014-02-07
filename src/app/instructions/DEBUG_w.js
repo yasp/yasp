@@ -12,6 +12,13 @@
     }
   }
 },
+  "tests": [
+    {
+      cmd: "DEBUG w1",
+      setup: { reg: { "w1": 0x0102 } },
+      steps: { debug: { "addr": 1, "subtype": "w", "type": "register", "val": 0x0102 } }
+    }
+  ],
   "code": [
     {
       "value": 0x70

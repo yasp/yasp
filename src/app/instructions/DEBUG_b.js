@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "DEBUG b2",
+      setup: { reg: { "b2": 0xFA } },
+      steps: { debug: { "addr": 2, "subtype": "b", "type": "register", "val": 0xFA } }
+    }
+  ],
   "code": [
     {
       "value": 0x50

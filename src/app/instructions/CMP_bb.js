@@ -16,6 +16,23 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "CMP b0,b1 ;equal",
+      setup: { reg: { "b0": 1, "b1": 1 } },
+      steps: { flags: { c: false, z: true } }
+    },
+    {
+      cmd: "CMP b0,b1 ;1st bigger",
+      setup: { reg: { "b0": 1, "b1": 0 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP b0,b1 ;2nd bigger",
+      setup: { reg: { "b0": 0, "b1": 1 } },
+      steps: { flags: { c: true, z: false } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

@@ -14,6 +14,20 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "PIN 3",
+      setup: { pin: { 3: 1 } },
+      steps: { flags: { z: false, c: false } }
+    },
+    {
+      cmd: "PIN 3",
+      setup: { pin: { 3: 0 } },
+      steps: [
+        { flags: { z: true, c: false } }
+      ]
+    }
+  ],
   "code": [
     {
       "value": 0xA0

@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "CLR b0",
+      setup: { reg: { "b0": 0xFF } },
+      steps: { reg: { "b0": 0 }, flags: { c: false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x40

@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "INV b0",
+      setup: { reg: { "b0": "00000001" } },
+      steps: { reg: { "b0": "11111110" }, flags: { c:false, z: false } }
+    },
+    {
+      cmd: "INV b0",
+      setup: { reg: { "b0": "11111111" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c:false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x40

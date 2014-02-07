@@ -14,6 +14,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "RDRAM b2,w0",
+      setup: { reg: { "w0": 0x03, "b3": 0xFA } },
+      steps: { reg: { "b2": 0xFA } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

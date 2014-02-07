@@ -16,6 +16,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "INC w0",
+      setup: { reg: { "w0": 0x0FFF } },
+      steps: { reg: { "w0": 0x1000 }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "INC w0",
+      setup: { reg: { "w0": 0xFFFF } },
+      steps: { reg: { "w0": 0x0000 }, flags: { c: true, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x60

@@ -16,6 +16,33 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "CMP w0,0x0001 ;equal",
+      setup: { reg: { "w0": 0x0001 } },
+      steps: { flags: { c: false, z: true } }
+    },
+    {
+      cmd: "CMP w0,0xAA00 ;1st bigger",
+      setup: { reg: { "w0": 0xAB00 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP w0,0x0000 ;1st bigger",
+      setup: { reg: { "w0": 0x0001 } },
+      steps: { flags: { c: false, z: false } }
+    },
+    {
+      cmd: "CMP w0,0xAB00 ;2nd bigger",
+      setup: { reg: { "w0": 0xAA00 } },
+      steps: { flags: { c: true, z: false } }
+    },
+    {
+      cmd: "CMP w0,0x0001 ;2nd bigger",
+      setup: { reg: { "w0": 0x0000 } },
+      steps: { flags: { c: true, z: false } }
+    }
+  ],
   "code": [
     {
       "value": 0x20

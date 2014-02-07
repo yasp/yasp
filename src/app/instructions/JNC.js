@@ -12,6 +12,22 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "JNC lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { c: false } },
+      steps: [
+        { reg: { "pc": 3 } }
+      ]
+    },
+    {
+      cmd: "JNC lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { c: true } },
+      steps: [
+        { reg: { "pc": 2 } }
+      ]
+    }
+  ],
   "code": [
     {
       "value": "00011"

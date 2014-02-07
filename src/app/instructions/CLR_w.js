@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "CLR w0",
+      setup: { reg: { "w0": 0xFFFF } },
+      steps: { reg: { "w0": 0 }, flags: { c: false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x60

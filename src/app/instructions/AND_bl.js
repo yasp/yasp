@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "AND b0,67",   // 01000011
+      setup: { reg: { "b0": "01010101" } },
+      steps: { reg: { "b0": "01000001" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "AND b0,1",
+      setup: { reg: { "b0": "10000000" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x00

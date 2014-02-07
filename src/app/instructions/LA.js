@@ -12,6 +12,12 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "LA w0,lbl\nlbl:",
+      steps: { reg: { "w0": 0x0003 } }
+    }
+  ],
   "code": [
     {
       "value": 0x28

@@ -219,6 +219,14 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup) {
 
   var keys = Object.keys(setup);
 
+  var validArrayKeys = [ "breakpoints", "interruptMask" ];
+
+  for (var i = 0; i < keys.length; i++) {
+    if(setup[keys[i]] instanceof Array && validArrayKeys.indexOf(keys[i]) === -1) {
+      setup[keys[i]] = new Uint8Array(setup[keys[i]]);
+    }
+  }
+
   if(setup.ram) {
     keys.splice("ram", 1);
     if(setup.ram instanceof Uint8Array) {

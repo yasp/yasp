@@ -12,6 +12,16 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "PAUSE 1000",
+      steps: { waitTime: 15 }
+    },
+    {
+      cmd: "DELAY 1000",
+      steps: { waitTime: 15 }
+    }
+  ],
   "code": [
     {
       "value": 0x30

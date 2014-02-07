@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "RET",
+      setup: { reg: { "sp": 1 }, stack: [ 0xFF, 0xFA ] },
+      steps: { reg: { "pc": 0xFAFF } }
+    }
+  ],
   "code": [
     {
       "value": "00111011"

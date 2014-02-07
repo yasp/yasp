@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "POP w0",
+      setup: { reg: { "sp": 1 }, stack: [0xFB, 0xFA] },
+      steps: { reg: { "w0": 0xFAFB } }
+    }
+  ],
   "code": [
     {
       "value": 0x60

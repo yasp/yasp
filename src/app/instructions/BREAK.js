@@ -12,6 +12,12 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "BREAK",
+      step: { running: false }
+    }
+  ],
   "code": [
     {
       "value": "00111000"

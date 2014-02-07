@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "XOR b0,b1",
+      setup: { reg: { "b0": "01010101", "b1": "01000011" } },
+      steps: { reg: { "b0": "00010110" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "XOR b0,b1",
+      setup: { reg: { "b0": "11000000", "b1": "11000000" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

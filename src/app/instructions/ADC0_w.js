@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "ADC0 w1",
+      setup: { pin: { 10: 0xFA } },
+      steps: { reg: { "w1": 0x00FA } }
+    }
+  ],
   "code": [
     {
       "value": 0x90

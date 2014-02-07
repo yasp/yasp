@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "RL w0",
+      setup: { reg: { "w0": "01111111 10101010" } },
+      steps: { reg: { "w0": "11111111 01010100" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "RL w0",
+      setup: { reg: { "w0": "11111111 10101010" } },
+      steps: { reg: { "w0": "11111111 01010100" }, flags: { c: true, z: false } }
+    }
+  ],
   "code": [
     {
       "value": 0x60

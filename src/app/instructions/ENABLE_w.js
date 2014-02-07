@@ -12,6 +12,12 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "ENABLE 42",
+      steps: { interruptMask: [ false, true, false, true, false, true, false, false ] }
+    }
+  ],
   "code": [
     {
       "value": 0x00

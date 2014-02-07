@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "OR b0,67",    // 01000011
+      setup: { reg: { "b0": "01010101" } },
+      steps: { reg: { "b0": "01010111" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "OR b0,0",
+      setup: { reg: { "b0": "00000000" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c: false, z: true } }
+    }
+  ],
   "code": [
     {
       "value": 0x00

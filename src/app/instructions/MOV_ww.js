@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "MOV w0,w1",
+      setup: { reg: { "w1": 0xFFAA } },
+      steps: { reg: { "w0": 0xFFAA } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

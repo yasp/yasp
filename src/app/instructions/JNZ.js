@@ -12,6 +12,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "JNZ lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { z: false } },
+      steps: { reg: { "pc": 3 } }
+    },
+    {
+      cmd: "JNZ lbl\nDB 0xFF\nlbl:",
+      setup: { flags: { z: true } },
+      steps: { reg: { "pc": 2 } }
+    }
+  ],
   "code": [
     {
       "value": "11110"

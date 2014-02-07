@@ -14,6 +14,18 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "RL b0",
+      setup: { reg: { "b0": "01000000" } },
+      steps: { reg: { "b0": "10000000" }, flags: { c: false, z: false } }
+    },
+    {
+      cmd: "RL b0",
+      setup: { reg: { "b0": "10000000" } },
+      steps: { reg: { "b0": "00000000" }, flags: { c: true, z: false } }
+    }
+  ],
   "code": [
     {
       "value": 0x40

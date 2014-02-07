@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "POT 10,w0",
+      setup: { pin: { 10: 0xFF } },
+      steps: { reg: { "w0": 0x00FF } }
+    }
+  ],
   "code": [
     {
       "value": 0x10

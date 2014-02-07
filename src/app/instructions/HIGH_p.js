@@ -12,6 +12,13 @@
       }
     }
   },
+  "tests": [
+    {
+      cmd: "HIGH 3",
+      setup: { pin: { 3: 0 } },
+      steps: { pin: { 3: 1 } }
+    }
+  ],
   "code": [
     {
       "value": 0xA0
