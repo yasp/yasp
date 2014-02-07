@@ -60,23 +60,23 @@ module.exports = function(grunt) {
       ]
     },
     doctool: {
-      doc: {
+      commandsjs: {
         converter: "commandsjs",
         input: "src/app/instructions/",
         output: "src/app/js/commands.js"
       },
-      gendoc: {
+      html: {
         converter: "htmlsimple",
         input: "src/app/instructions/",
         output: "src/app/help/help.html"
       }
     },
     watch: {
-      watchcommands: {
+      commands: {
         files: ['src/app/instructions/**/*.js'],
-        tasks: ['doctool:doc']
+        tasks: ['doctool']
       },
-      watchdoc: {
+      doc: {
         files: ['src/app/**/*.js'],
         tasks: ['jsdoc:dist']
       }
@@ -110,9 +110,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
-  grunt.registerTask('commandsjs', [ 'doctool' ]);
-  grunt.registerTask('watchcommands', [ 'watch' ]);
+  grunt.registerTask('commands', [ 'doctool' ]);
+  grunt.registerTask('watchcommands', [ 'watch:commands' ]);
   grunt.registerTask('http', [ 'connect' ]);
   grunt.registerTask('doc', [ 'jsdoc' ]);
-  grunt.registerTask('watchdoc', [ 'watch' ]);
+  grunt.registerTask('watchdoc', [ 'watch:doc' ]);
 };

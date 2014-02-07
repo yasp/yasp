@@ -38,8 +38,8 @@ $ grunt http       # start development http-server
 
 ### Grunt-Tasks
 * `deps` download all client dependencies
-* `commandsjs` build help and commands.js, see [instructions.md](/doc/instructions.md)
-* `watchcommands` watch-task for `commandsjs`
+* `commands` build help and commands.js, see [instructions.md](/doc/instructions.md)
+* `watchcommands` watch-task for `commands`
 * `http` start a development http-server
 * `doc` builds jsdoc to `/doc/jsdoc/`
 * `watchdoc` watch-task for `doc`
