@@ -11,7 +11,7 @@ if (typeof yasp == 'undefined') yasp = { };
       dec: 3,
       hex: 2
     },
-    parts: [ "breakpoints", "ramrom", "debugLog", "registers" ],
+    parts: [ "breakpoints", "ramrom", "debugLog", "registers", "status" ],
     states: []
   };
 
@@ -55,6 +55,7 @@ if (typeof yasp == 'undefined') yasp = { };
         start: 0
       }, function() {
         yasp.Debugger.EmulatorCommunicator.subscribe("BREAK", onEmulatorBreak);
+        yasp.Debugger.EmulatorCommunicator.subscribe("CONTINUE", onEmulatorContinue);
         yasp.Debugger.EmulatorCommunicator.subscribe("DEBUG", onEmulatorDebug);
 
         firePartEvent("onOpen");
@@ -118,6 +119,10 @@ if (typeof yasp == 'undefined') yasp = { };
     var reason = data.payload.reason;
     firePartEvent("onBreak", [reason]);
     refreshDebugger();
+  }
+
+  function onEmulatorContinue () {
+    firePartEvent("onContinue");
   }
 
   function onEmulatorDebug (data) {

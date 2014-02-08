@@ -222,6 +222,10 @@ END
                             <button type="button" class="btn btn-default btn-xs debugger_stepBack" data-l10n="debugger.toolbar.stepBack"></button>
                             <button type="button" class="btn btn-default btn-xs debugger_break" data-l10n="debugger.toolbar.break"></button>
                             <button type="button" class="btn btn-default btn-xs debugger_continue" data-l10n="debugger.toolbar.continue"></button>
+                            <span data-l10n="debugger.status"></span>
+                            <span id="debugger_statusWrapper">
+                                <span id="debugger_status"></span><span id="debugger_status_reason"></span>
+                            </span>
                         </div>
                         <div id="debuggercontent">
                             <div id="debuggercontent-left">
@@ -549,6 +553,7 @@ END
         <script src="app/js/editor/debugger/debugLog.js"></script>
         <script src="app/js/editor/debugger/ramrom.js"></script>
         <script src="app/js/editor/debugger/registers.js"></script>
+        <script src="app/js/editor/debugger/status.js"></script>
 
         <!-- hardware -->
         <script src="app/js/hardware/hardware.js"></script>

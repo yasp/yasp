@@ -16,6 +16,22 @@
     margin-bottom: 5px;
 }
 
+#debugger_statusWrapper {
+    font-weight: bold;
+}
+
+#debugger_statusWrapper.statusGood {
+    color: rgb(0, 255, 0);
+}
+
+#debugger_statusWrapper.statusNotSoGood {
+    color: rgb(255, 200, 0);
+}
+
+#debugger_statusWrapper.statusBad {
+    color: rgb(255, 0, 0);
+}
+
 #debugger_editor_wrapper {
     height: 100%;
 }
