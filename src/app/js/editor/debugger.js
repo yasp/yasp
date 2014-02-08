@@ -65,6 +65,7 @@ if (typeof yasp == 'undefined') yasp = { };
             count: null
           });
         } else {
+          yasp.Debugger.status.updateStatus("break", "count");
           refreshDebugger();
         }
       });
