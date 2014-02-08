@@ -247,9 +247,9 @@ DA isr2   ; interrupt service routine for pin 2
 ```
 
 ## Assembler-Directives
-* `DW` write a literal word into the bitcode
-* `DB` write a literal byte into the bitcode
-* `DA` write a literal label-adress into the bitcode
-* `ORG` set the current position in the bitcode
-* `STRING` write a zero-terminated string into the bitcode
+* `DW` write a literal word into the bitcode (length: 2 bytes)
+* `DB` write a literal byte into the bitcode (length: 1 byte)
+* `DA` write a literal label-adress into the bitcode (length: 2 bytes)
+* `ORG` set the current position in the bitcode (see [Interrupts](#interrupts))
+* `STRING` write a zero-terminated string into the bitcode (see [Debugging](#debugging))
 * `DEFINE` defines a assemble-time constant which will be replaced before the actual assembling process 
