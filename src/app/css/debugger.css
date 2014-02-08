@@ -219,7 +219,7 @@ table.breakpoints {
 }
 
 table.breakpoints tr.hit {
-    background-color: rgba(255, 0, 0, 0.1);
+    background-color: rgba(255, 0, 0, 0.1) !important;
 }
 
 table.breakpoints tr.inactive {
