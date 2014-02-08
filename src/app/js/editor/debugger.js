@@ -157,6 +157,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
     if(line !== null && !isNaN(line)) {
       yasp.Debugger.editor.addLineClass(line, 'background', 'line-active');
+      yasp.Debugger.editor.scrollIntoView({ line: line, ch: 0}, 20);
     }
   }
 
