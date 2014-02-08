@@ -19,7 +19,7 @@ Reasons:
 * `invalid_instr`: a invalid instruction has been found
 * `breakpoint`: a breakpoint has been hit
 
-### Broadcast: `CONTINUED`
+### Broadcast: `CONTINUE`
 The emulator has continued, this is caused by a `CONTINUE`-Message.
 #### Payload
 empty object

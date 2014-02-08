@@ -164,7 +164,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // events
     this.noop = function () {};
     this.events = {
-      'CONTINUED': this.noop,
+      'CONTINUE': this.noop,
       'BREAK': this.noop,
       'LOADED': this.noop,
       'DEBUG': this.noop,
@@ -220,8 +220,8 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** fired when the execution is started or resumed.
-   * @event yasp.Emulator~CONTINUED
-   * @see {@link https://github.com/yasp/yasp/blob/master/doc/emulator/messages.md#broadcast-continued|CONTINUED-Broadcast}
+   * @event yasp.Emulator~CONTINUE
+   * @see {@link https://github.com/yasp/yasp/blob/master/doc/emulator/messages.md#broadcast-continue|CONTINUE-Broadcast}
    */
 
   /** fired when the execution is halted.
@@ -295,7 +295,7 @@ if (typeof yasp == 'undefined') yasp = { };
   /** Continues the execution
    * @param count {Number|boolean} number of instructions to execute or null
    * @returns {Number|boolean}
-   * @fires yasp.Emulator~CONTINUED
+   * @fires yasp.Emulator~CONTINUE
    * @private
    */
   yasp.Emulator.prototype.continue = function (count, skipBreakpoint) {
@@ -311,7 +311,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.skipBreakpoint = !!skipBreakpoint;
 
-    this.events.CONTINUED();
+    this.events.CONTINUE();
     return true;
   };
 
