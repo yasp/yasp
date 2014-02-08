@@ -122,6 +122,7 @@ if (typeof yasp == 'undefined') yasp = { };
   }
 
   function onEmulatorContinue () {
+    yasp.Debugger.states = [];
     firePartEvent("onContinue");
   }
 
