@@ -30,6 +30,12 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.menu.about": "About",
     "editor.toolbar.menu.untitled": "Unbenannt",
 
+    "editor.tutorial.title": "Howdy!",
+    "editor.tutorial.title2": "Are you new around here?",
+    "editor.tutorial.text": "Wirf einen Blick auf das <a href='https://github.com/yasp/yasp/blob/master/doc/tutorial.md'>Tutorial</a>. Es gibt auch <a href='https://github.com/yasp/yasp/tree/master/doc/sampleprograms'>Beispielprogramme</a>.",
+    "editor.tutorial.hideNow": "Jetzt ausblenden",
+    "editor.tutorial.hideAlways": "Immer ausblenden",
+
     "editor.helpquick.flags": "Gesetzte Flags:",
 
     "editor.about.title": "About",

@@ -132,11 +132,11 @@ span.cm-keyword {
 
     padding: 10px;
 
-    z-index: 100;
+    z-index: 10200;
 
     color: white;
-    background-color: #00A;
-    box-shadow: 0 0 1em #00A;
+    background-color: #00C;
+    box-shadow: 0 0 1em #00C;
     border-radius: 5px;
 
     opacity: 0.5;
