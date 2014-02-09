@@ -683,7 +683,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         }
       }
       
-      if (!found) {
+      if (!found && $('#help_quick .helpquick_container').html() !== "") {
         changed = true;
         $('#help_quick .helpquick_container').html(""); // clear children
       }
