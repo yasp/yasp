@@ -280,6 +280,10 @@ table.breakpoints td.break-active {
     display: table !important;
 }
 
+.tab-pane:hover > .debuggerTabOverlay {
+    visibility: hidden;
+}
+
 .debuggerTabOverlay.break {
     display: none !important;
 }
