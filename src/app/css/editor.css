@@ -215,19 +215,27 @@ span.cm-keyword {
     margin-left: 16px;
 }
 
+.modal.fullscreen {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
 .modal.fullscreen .modal-dialog {
     width: 100%;
-    height: calc(100% - 60px);
+    height: 100%;
     padding: 0;
 }
 
 .modal.fullscreen .modal-body {
-    height: calc(100% - 150px);
+    width: 100%;
+    height: 100%;
 }
 
 .modal.fullscreen .modal-content {
     height: 100%;
-    margin: 20px;
+    width: 100%;
+    padding-bottom: 130px;
 }
 
 .modal-footer {

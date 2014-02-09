@@ -41,7 +41,8 @@
 }
 
 #debuggercontent {
-    height: calc(100% - 10px);
+    height: 100%;
+    padding-bottom: 10px;
 }
 
 #debuggercontent > * {
@@ -56,8 +57,12 @@
     height: 50%;
 }
 
+#debuggercontent-right > .dbgTabsWrapper {
+    padding-bottom: 36px;
+}
+
 #debugger-tabs {
-    height: calc(100% - 60px);
+    height: 100%;
 }
 
 #debugger-tabs > * {
@@ -209,7 +214,7 @@
 }
 
 .stack > pre {
-    height: calc(100% - 4px);
+    height: 100%;
     overflow-y: scroll;
 }
 
