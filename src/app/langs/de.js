@@ -78,6 +78,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.tabs.registers.registers.format": "Format: ",
     "debugger.tabs.registers.stack": "Stack",
     "debugger.tabs.breakpoints": "Breakpoints",
+    "debugger.tabs.breakpoints.nobreakpoints": "Es gibt keine Breakpoints.<br>Breakpoints können erstellt werden in dem man auf eine Zeilennummer klickt.",
 
     "help.title": "Hilfe",
     "help.search": "Suche: ",

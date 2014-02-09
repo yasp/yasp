@@ -16,6 +16,7 @@ if (!yasp.Debugger) yasp.Debugger = { };
 
   breakpoints.onOpen = function () {
     breakpoints.sendBreakpoints();
+    breakpoints.list.checkForEmpty();
     yasp.Debugger.breakpointHit = false;
   };
 
@@ -53,10 +54,27 @@ if (!yasp.Debugger) yasp.Debugger = { };
       }
     }
 
+    breakpoints.list.checkForEmpty();
     breakpoints.sendBreakpoints();
   };
 
   breakpoints.list = {};
+
+  breakpoints.list.checkForEmpty = function () {
+    if(breakpoints.offsetBreakpoints.length === 0 && breakpoints.table.find('.isEmpty').length === 0) {
+      var $tr = yasp.tabletools.addRow(breakpoints.table, [ {} ]);
+      var $td = $tr.find('td');
+
+      $tr.addClass('isEmpty');
+
+      $td.css('text-align', 'center');
+      $td.attr('colspan', 3);
+      $td.attr('data-l10n', 'debugger.tabs.breakpoints.nobreakpoints');
+      $td.attr('data-l10n-html', 'true');
+
+      yasp.l10n.translateSingleDomElement($td);
+    }
+  };
 
   breakpoints.list.clear = function () {
     breakpoints.inactiveBreakpoints = [];

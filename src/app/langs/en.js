@@ -80,6 +80,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.tabs.registers.registers.format": "Format: ",
     "debugger.tabs.registers.stack": "Stack",
     "debugger.tabs.breakpoints": "Breakpoints",
+    "debugger.tabs.breakpoints.nobreakpoints": "No breakpoints are set.<br>You can set one by clicking a line-number in the editor.",
 
     "help.title": "Help",
     "help.search": "Search: ",
