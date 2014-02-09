@@ -1,0 +1,15 @@
+; =====================================
+;        yasp - testprogram - 08
+; 
+; toggle the red LED every 0.5 seconds.
+; =====================================
+
+main:
+	high	3	; turn red LED on
+	delay	30000	; wait 0.5s
+	low	3	; turn red LED off
+	delay	30000	; wait 0.5s
+
+	jmp	main
+
+end

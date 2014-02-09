@@ -2,6 +2,8 @@
 yasp uses a custom assembler which was created a decade ago by a teacher of our school, [HTL Spengergasse](http://www.spengergasse.at/).
 It has been designed to help students understand computers better and is therefore really simple and easy to learn.
 
+A number of documented sample programs can be found in [`sampleprograms/`](./sampleprograms/).
+
 ## Basic Syntax
 ```
 label:

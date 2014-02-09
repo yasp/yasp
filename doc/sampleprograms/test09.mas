@@ -1,0 +1,48 @@
+; =====================================
+;        yasp - testprogram - 08
+;
+; Simulate a traffic light using the 3
+; LEDs (red, green, yellow).
+; =====================================
+
+	MOV	W1, 60000
+	MOV	W2, 20000
+	MOV	W3, 40000
+
+main:
+	HIGH	3	; red on
+	DELAY	W1	; long
+
+	HIGH	4	; yellow on
+	DELAY	W3	; short
+
+	LOW	3	; both off
+	LOW	4
+
+	HIGH	5	; green
+	DELAY	W1	; long
+	DELAY	W1
+
+	; loop 4 times
+	; ============
+	MOV	W4, 4
+blink:
+	LOW	5	; blink green LED
+	DELAY	W2
+	HIGH	5
+	DELAY	W2
+
+	DEC	W4
+	JNZ	blink
+	; ============
+
+	LOW	5	; green off
+	DELAY	W2
+
+	HIGH	4
+	DELAY	W3
+	LOW	4
+
+	JMP	main
+
+END

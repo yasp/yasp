@@ -1,0 +1,27 @@
+; =====================================
+;        yasp - testprogram - 03
+;
+; dimm an LED using PWM (Pulse width
+; modulation). The light level of the
+; LED can be changed via an potentiometer.
+;
+; For more information about PWM, take
+; a look at testprogram 02.
+; =====================================
+
+main:
+	adc	w0, 11	; Read potentiometer value into the higher byte
+			; of w0, which is b1.
+			; This value will be used as T-on.
+	
+	mov	w1, w0	; copy T-on to T-off
+	inv	b3	; T-on + T-off = 255
+
+	high	3	; turn the LED on
+	delay	w0	; wait for T-on
+	low	3	; turn the LED off
+	delay	w1	; wait for T-off
+
+	jmp	main
+
+end

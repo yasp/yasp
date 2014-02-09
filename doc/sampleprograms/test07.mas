@@ -1,0 +1,42 @@
+; =====================================
+;        yasp - testprogram - 07
+; 
+; increment or decrement the register
+; w0 by pressing the buttons. This is
+; done using interrupts.
+;
+; For more information on interrupts,
+; see testprogram 05.
+; =====================================
+
+; === init
+	enable	0x06	; enable interrupts on pin 1 and 2
+	mov	w0, 500	; initialize value
+
+; === interrupt service routine for pin 1
+main:
+	toggle	3	; toggle all LEDs
+	toggle	4
+	toggle	5
+	debug	w0	; send value to debugger
+	DELAY	30000
+	jmp	main
+
+
+; === interrupt service routine for pin 1
+isr1:
+	inc	w0
+	reti
+
+; === interrupt service routine for pin 2
+isr2:
+	dec	w0
+	reti
+
+; === interrupt table
+	org	0x102 ; pin 1
+	da	isr1
+	org	0x104 ; pin 2
+	da	isr2
+
+end

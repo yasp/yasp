@@ -1,0 +1,42 @@
+; =====================================
+;        yasp - testprogram - 06
+;
+; Test various bit-commands.
+;
+; b1:
+;  counter
+;
+; b0:
+;  1001 0011
+;  0101 0010
+;  0011 0110
+;  0001 1010
+;  0001 1010
+;  0011 0110
+;  0101 0010
+;    => back to start
+; =====================================
+
+start:
+	mov	b2, 1	; 0000 0001b
+	mov	b3, 128 ; 1000 0000b
+
+	mov	b1, 7	; counter for loop
+
+; === loop 7 times
+loop:
+	mov	b0, 18	; 0001 0010b
+	or	b0, b2	; combine b0, b2, b3 into b0
+	or	b0, b3
+
+	rl	b2	; shift single bit in b2 to the left
+	rr	b3	; shift single bit in b3 to the right
+
+	dec	b1	; decrement counter
+	jnz	loop	; loop
+
+	jmp	start	; back to start
+
+end
+
+

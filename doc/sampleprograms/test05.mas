@@ -1,0 +1,52 @@
+; =====================================
+;        yasp - testprogram - 05
+; 
+; the green LED blinks and the other LEDs
+; are controlled via button-interrupts.
+; =====================================
+
+; === init
+	; turn off all LEDs
+	low	3
+	low	4
+	low	5
+	
+	; turn on interrupts on pin 1 and 2
+	; Pin: 87654321
+	;  6 = 00000110b
+	enable	6
+
+; === main program
+; blinks the red LED
+main:
+	toggle	5
+	pause	50000
+	jmp	main
+
+; === interrupt service routine for pin 1
+; toggles the yellow LED
+isr1:
+	toggle	3
+	reti		; return to normal program
+
+; === interrupt service routine for pin 2
+; toggles the green LED
+isr2:
+	toggle	4
+	reti
+
+; === interrupt table
+; the interrupt table starts at 0x100, each entry has 2 bytes:
+;   0x100 0x101 ... pin 0
+;   0x102 0x103 ... pin 1
+;   0x104 0x105 ... pin 2
+
+	; ISR for pin 1
+	org	0x102
+	da	isr1
+	
+	; ISR for pin 2
+	org	0x104
+	da	isr2
+
+end

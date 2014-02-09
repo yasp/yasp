@@ -1,0 +1,79 @@
+; =====================================
+;        yasp - testprogram - 12
+;
+; Copy a string in the ROM to an other
+; location. This is done using
+; subroutines and the WRROM and RDROM
+; commands.
+; =====================================
+
+
+; =========================================
+; Main
+
+	; --- copyRom call
+	LA	w1, src	; source addr
+	LA	w2, dst	; destination addr
+	MOV	w3, 9	; length (8 chars + 0-terminator)
+	CALL	copyRom
+	; ---
+
+	PRINT	dst	; print bytes at destination
+
+	BREAK
+
+; =========================================
+; Subroutines
+
+; Copies a number of bytes to an other location
+; Parameters:
+;   w1 source address
+;   w2 destination address
+;   w3 length
+; Additionally uses:
+;   none
+copyRom:
+	ADD	w3, w2	; dest end
+
+copyRom_loop:
+	; --- copyOneRom call
+	; parameters are already read in w1 and 2
+	; because we modify the parameters to this
+	; procedure directly.
+	CALL	copyOneRom
+	; ---
+
+	INC	w1	; increment source pointer
+	INC	w2	; increment dest pointer
+
+	CMP	w2, w3	; compare dest pointer and last byte of dest
+	JZ	copyRom_loop_end
+
+	JMP	copyRom_loop
+
+copyRom_loop_end:
+	RET
+
+
+; Copies one byte of ROM to an other location.
+; Parameters:
+;   w1 source address
+;   w2 destination address
+; Additionally uses:
+;   b0
+copyOneRom:
+	RDROM	b0, w1
+	WRROM	w2, b0
+	RET
+
+; =========================================
+; Data
+
+; Addresses 0x80 and 0x90 so that the line up nicely in the debugger
+
+	ORG 0x80
+src: 	STRING	"A String"
+
+	ORG 0x90
+dst:
+

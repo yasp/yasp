@@ -1,0 +1,23 @@
+; =====================================
+;        yasp - testprogram - 06
+; 
+; light a LED if the button is not pressed.
+; =====================================
+
+start:
+	high	3	; turn on LED
+
+; === loop as long as the button is not pressed
+t1:
+	pin	1
+	jz	t1
+
+	low	3	; turn the LED off
+
+; === loop as long as the button is pressed
+t1n:	
+	pin	1
+	jnz	t1n
+	jmp	start
+
+end

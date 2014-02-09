@@ -1,0 +1,17 @@
+; =====================================
+;        yasp - testprogram - 04
+;
+; a very basic program to test various
+; register commands.
+; =====================================
+
+main:
+	mov	b0, 23	; write 23 to b0
+	mov	b1, 67	; write 67 to b1
+	mov	b0, b1	; copy the content of b1 (=67) to b0
+	inc	b0	; increment b0 by 1
+	add	b0, b1	; add b0 and b1, write the result (=135) to b0
+	debug	b0	; send b0 (=135) to the debugger
+	jmp	main
+
+end

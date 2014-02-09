@@ -1,0 +1,34 @@
+; =====================================
+;        yasp - testprogram - 11
+;
+; Output a counter via the debugger by
+; overwriting parts of a string.
+; =====================================
+
+	; load adress of label into w5
+	; add 9 to move "pointer" to the '0'-character
+	LA	w5, counter
+	ADD	w5, 9
+
+reset:
+	; character to be written at w5 (pointer)
+	; 0x30 = '0' in ASCII
+	MOV	b0, 0x30
+
+main:
+	WRROM	w5, b0	; overwrite '0'-character in string
+	PRINT	counter	; send to debugger
+	DELAY	20000
+
+	; count in ASCII '0' => '1'
+	INC	b0
+
+	; check if b0 is ASCII '9' (=0x3A), if yes:
+	; jump to reset and set it to '0' again
+	cmp	b0, 0x3A
+	jz	reset
+
+	jmp	main
+
+counter:
+	STRING	"Counter: 0"

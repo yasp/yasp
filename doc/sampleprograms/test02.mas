@@ -1,0 +1,68 @@
+; =====================================
+;        yasp - testprogram - 02
+;
+; dimm an LED using PWM (Pulse width
+; modulation). The light level of the
+; LED is controllable via two buttons.
+;
+; Impulse
+;     +--+
+;     |  |
+;   --+  +------------------
+;
+;
+; Pulse
+;     +--+  +--+  +--+  +--+  +--+
+;     |  |  |  |  |  |  |  |  |  |
+;   --+  +--+  +--+  +--+  +--+  +--
+;
+; Pulse width modulation
+;     t   t
+;      on  off
+;     <-><--->
+;     +-+     +--+    +---+   +----+  +--
+;     | |     |  |    |   |   |    |  |
+;   --+ +-----+  +----+   +---+    +--+
+;     |<----->|<----->|<----->|<----->|
+;       t
+;        const
+;
+;    t   + t    = t
+;     on    off    const
+;
+; =====================================
+
+	mov	w0, 1	; T-on
+	mov	w1, 200	; T-off
+
+main:
+	; === PWM
+	high	3	; turn the LED on
+	delay	w0	; wait for T on
+	low	3	; turn the LED off
+	delay	w1	; wait for T off
+	
+	; === control lightlevel
+	; lighter if button 1 is pressed
+	pin	1
+	jnz	ligher
+	
+	; darker if button 2 is pressed
+	pin	2
+	jnz	darker
+	
+	jmp main
+
+ligher:
+	inc	w0	; T-on
+	dec	w1	; T-off
+	jz	darker	; check for bounds in w1, if hit increase again
+	jnz	main
+
+darker:
+	inc	w1	; T-on
+	dec	w0	; T-off
+	jz	ligher	; check for bounds in w1, if hit increase again
+	jmp	main
+
+end

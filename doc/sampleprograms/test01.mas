@@ -1,0 +1,48 @@
+; =====================================
+;        yasp - testprogram - 01
+;
+; light a different LED depending on a
+; potentiometers state.
+;
+; Values:
+;     0 ...  80 => red LED
+;    81 ... 165 => yellow LED
+;   166 ... 255 => green LED
+; =====================================
+
+main:
+	adc 	w0, 11	; read value from potentiometer. The value is
+			; written to the higher byte of the given word
+	debug 	b1	; output said byte
+
+	; test for boundary; red is between 0 and 80,
+	; so if b1 is >= 81 we must jump to yellow
+	cmp 	b1, 81
+	jnc 	m1
+
+	; we're below the yellow boundary, so it's red
+	high 	3	; turn on red
+	low 	4	; turn off yellow
+	low 	5	; turn off green
+	jmp 	main
+
+m1:
+	; test for boundary; yellow is between 81 and 165,
+	; so if b1 is >= 166 we must jump to green
+	cmp 	b1, 166
+	jnc 	m2
+
+	low 	3	; turn off red
+	high 	4	; turn on yellow
+	low 	5	; turn off green
+	jmp 	main
+
+m2:
+	; we've checked all boundaries
+	; so b1 must be between 166 and 255
+	low	3	; turn off red
+	low	4	; turn off yellow
+	high	5	; turn on green
+	jmp	main
+
+end
