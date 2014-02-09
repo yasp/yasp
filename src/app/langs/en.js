@@ -69,6 +69,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.status.break.break_msg": "Debugger",
     "debugger.status.break.invalid_instr": "Invalid instruction",
     "debugger.status.break.breakpoint": "Breakpoint",
+    "debugger.tabs.refresh": "Step or Break to refresh",
     "debugger.tabs.debug": "Debug",
     "debugger.tabs.debug.format": "Format: ",
     "debugger.tabs.debug.clear": "Clear",

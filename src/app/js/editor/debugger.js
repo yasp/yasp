@@ -121,11 +121,13 @@ if (typeof yasp == 'undefined') yasp = { };
     var reason = data.payload.reason;
     firePartEvent("onBreak", [reason]);
     refreshDebugger();
+    $('.debuggerTabOverlay').addClass('break');
   }
 
   function onEmulatorContinue () {
     yasp.Debugger.states = [];
     firePartEvent("onContinue");
+    $('.debuggerTabOverlay').removeClass('break');
   }
 
   function onEmulatorDebug (data) {

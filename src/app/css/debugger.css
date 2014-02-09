@@ -67,6 +67,7 @@
 
 #debugger-tabs > * {
     height: 100%;
+    position: relative;
 }
 
 #debugger-tabs-debug > pre {
@@ -266,4 +267,24 @@ table.breakpoints td.break-condition {
 }
 
 table.breakpoints td.break-active {
+}
+
+.debuggerTabOverlay {
+    height: 100%;
+    position: absolute;
+    background-color: rgba(100, 100, 100, 0.2);
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 3em;
+    display: table !important;
+}
+
+.debuggerTabOverlay.break {
+    display: none !important;
+}
+
+.debuggerTabOverlay > p {
+    display: table-cell;
+    vertical-align: middle;
 }
