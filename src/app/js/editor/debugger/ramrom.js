@@ -10,7 +10,10 @@ if (!yasp.Debugger) yasp.Debugger = { };
 
   ramrom.onOpen = function () {
     yasp.Debugger.lastRom = null;
+    $('#debugger-romdump').empty();
+
     yasp.Debugger.lastRam = null;
+    $('#debugger-ramdump').empty();
   };
 
   ramrom.onState = function (state) {
