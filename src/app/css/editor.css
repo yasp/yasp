@@ -124,6 +124,57 @@ span.cm-keyword {
     background-color: rgba(128,128,128,0.25);
 }
 
+/* === tutorial === */
+#tutorial_popup {
+    position: absolute;
+    top: 70px;
+    right: 50px;
+
+    padding: 10px;
+
+    z-index: 100;
+
+    color: white;
+    background-color: #00A;
+    box-shadow: 0 0 1em #00A;
+    border-radius: 5px;
+
+    opacity: 0.5;
+    transition: opacity .2s ease;
+    -moz-transition: opacity .2s ease;
+    -webkit-transition: opacity .2s ease;
+
+    display: none;
+}
+
+#tutorial_popup:hover {
+    opacity: 1;
+    transition: opacity .5s ease;
+    -moz-transition: opacity .5s ease;
+    -webkit-transition: opacity .5s ease;
+}
+
+#tutorial_popup > h1,
+#tutorial_popup > h2 {
+    margin-top: 0;
+    display: inline-block;
+}
+
+#tutorial_popup > h2 {
+    font-size: 2em;
+    margin-top: 0.45em;
+    margin-left: 5px;
+    vertical-align: top;
+}
+
+#tutorial_popup a {
+    color: #F00;
+    font-weight: bold;
+}
+
+#tutorial_popup .btns {
+    float: right;
+}
 
 /* === help modal === */
 #dialog_help .modal-dialog,

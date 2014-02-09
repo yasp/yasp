@@ -241,7 +241,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
   };
   
   yasp.AssemblerCommunicator = new yasp.Communicator("app/js/assembler/assembler_backend.js");
-  
+
   $('body').ready(function() {
     // linting
     (function() {
@@ -277,6 +277,19 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       yasp.Storage['labellist'] = "slide";
     if(yasp.Storage['help'] == "true" || yasp.Storage['help'] == "false")
       yasp.Storage['help'] = "slide";
+
+
+    if(typeof yasp.Storage['firsttime'] == 'undefined') {
+      var $popup = $('#tutorial_popup');
+      $popup.css('display', 'block');
+      $popup.find('.hideNow').click(function () {
+        $('#tutorial_popup').css('display', 'none');
+      });
+      $popup.find('.hideAlways').click(function () {
+        $('#tutorial_popup').css('display', 'none');
+        yasp.Storage['firsttime'] = false;
+      });
+    }
     
     var editor = yasp.EditorManager.create($('#editor').get(0));
     
