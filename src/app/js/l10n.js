@@ -65,7 +65,10 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       var str = yasp.l10n.getTranslation(key, params);
-      $element.text(str);
+      if($element.attr('data-l10n-html') === "true")
+        $element.html(str);
+      else
+        $element.text(str);
     }
   };
 })();
