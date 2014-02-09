@@ -43,7 +43,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
       yasp.Debugger.breadboard = new yasp.BreadBoard($('#hardwarecontainer'), yasp.Debugger.EmulatorCommunicator, yasp.BreadBoardTypes.usbmaster);
       yasp.Debugger.breadboard.build();
-      yasp.Debugger.breadboard.render();
+      $(window).resize(); // force firefox to update the width of breadboard
 
       yasp.Debugger.editor.refresh();
 
@@ -59,6 +59,7 @@ if (typeof yasp == 'undefined') yasp = { };
         yasp.Debugger.EmulatorCommunicator.subscribe("DEBUG", onEmulatorDebug);
 
         firePartEvent("onOpen");
+        yasp.Debugger.breadboard.render();
 
         if(yasp.Debugger.mode === "run") {
           yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {

@@ -13,8 +13,8 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
     },
     image: {
       url: "./app/img/usbmaster.png",
-      height: "260px",
-      width: "335px"
+      height: "260",
+      width: "335"
     },
     hardware: [
       {
@@ -26,10 +26,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         pin: 11,
         appearance: {
-          top: "1px",
-          left: "120px",
-          height: "80px",
-          width: "80px"
+          top: "1",
+          left: "120",
+          height: "80",
+          width: "80"
         }
       },
       {
@@ -40,10 +40,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         pin: 5,
         appearance: {
-          top: "170px",
-          left: "175px",
-          height: "30px",
-          width: "30px"
+          top: "170",
+          left: "175",
+          height: "30",
+          width: "30"
         }
       },
       {
@@ -54,10 +54,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         pin: 4,
         appearance: {
-          top: "170px",
-          left: "210px",
-          height: "30px",
-          width: "30px"
+          top: "170",
+          left: "210",
+          height: "30",
+          width: "30"
         }
       },
       {
@@ -68,10 +68,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         pin: 3,
         appearance: {
-          top: "170px",
-          left: "245px",
-          height: "30px",
-          width: "30px"
+          top: "170",
+          left: "245",
+          height: "30",
+          width: "30"
         }
       },
       {
@@ -85,10 +85,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           placement: "left"
         },
         appearance: {
-          top: "208px",
-          left: "180px",
-          height: "40px",
-          width: "40px"
+          top: "208",
+          left: "180",
+          height: "40",
+          width: "40"
         }
       },
       {
@@ -102,10 +102,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           placement: "right"
         },
         appearance: {
-          top: "208px",
-          left: "240px",
-          height: "40px",
-          width: "40px"
+          top: "208",
+          left: "240",
+          height: "40",
+          width: "40"
         }
       }
     ]

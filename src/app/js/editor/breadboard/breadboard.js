@@ -34,13 +34,15 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var $innerContainer = $('<div>');
     $innerContainer.css('position', 'relative');
+    $innerContainer.css('height', '100%');
+    $innerContainer.css('display', 'inline-block');
     this.container.append($innerContainer);
 
     this.buildImage($innerContainer, this.type.image);
 
     this.hardware = [];
     for (var i = 0; i < this.type.hardware.length; i++) {
-      this.buildPiece($innerContainer, this.type.hardware[i]);
+      this.buildPiece($innerContainer, this.type.hardware[i], this.type.image);
     }
   };
 
@@ -50,10 +52,19 @@ if (typeof yasp == 'undefined') yasp = { };
    * @private
    */
   yasp.BreadBoard.prototype.buildImage = function ($container, image) {
-    var $image = $('<img style="position: absolute; top: 0; left: 0; z-index: 1;">');
+    var $image = $('<img>');
     $image.attr('src', image.url);
-    $image.css('height', image.height);
-    $image.css('width', image.width);
+    $image.css('height', "100%");
+
+    var that = this;
+    var ratio = image.width / image.height;
+
+    // since browsers are not able to scale this <img> correctly..
+    $(window).resize(function () {
+      $image.css('width', $image.height() * ratio + "px");
+      that.render();
+    });
+
     $container.append($image);
   };
 
@@ -62,7 +73,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param definition this pieces definition from the breadboard-type
    * @private
    */
-  yasp.BreadBoard.prototype.buildPiece = function ($container, definition) {
+  yasp.BreadBoard.prototype.buildPiece = function ($container, definition, image) {
     var appear = definition.appearance;
 
     if(appear.zindex === undefined)
@@ -70,14 +81,14 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var $wrapper = $('<div style="position: absolute; box-sizing: content-box !important;">');
     $wrapper.css('z-index', appear.zindex);
-    $wrapper.css('top', appear.top);
-    $wrapper.css('left', appear.left);
+    $wrapper.css('top', (appear.top / image.height) * 100 + "%");
+    $wrapper.css('left', (appear.left / image.width) * 100 + "%");
     $wrapper.attr('title', "Pin: " + definition.pin);
     $wrapper.tooltip(definition.tooltip || {});
     if(appear.height)
-      $wrapper.css('height', appear.height);
+      $wrapper.css('height', (appear.height / image.height) * 100 + "%");
     if(appear.width)
-      $wrapper.css('width', appear.width);
+      $wrapper.css('width', (appear.width / image.width) * 100 + "%");
 
     var hardware = new yasp.Hardware({
       cb: (function(hw) {
