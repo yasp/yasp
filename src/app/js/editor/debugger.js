@@ -108,6 +108,7 @@ if (typeof yasp == 'undefined') yasp = { };
     });
 
     $('.debugger_continue').click(function () {
+      yasp.Debugger.states = [];
       highlightLine(null,  true);
       yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
         count: null,
@@ -124,7 +125,6 @@ if (typeof yasp == 'undefined') yasp = { };
   }
 
   function onEmulatorContinue () {
-    yasp.Debugger.states = [];
     firePartEvent("onContinue");
     $('.debuggerTabOverlay').removeClass('break');
   }
