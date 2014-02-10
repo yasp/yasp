@@ -265,6 +265,10 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     })();
     
     
+    // force reload of USB-Master image
+    var usbmasterImg = new Image();
+    usbmasterImg.src = "./app/img/usbmaster.png";
+
     if (typeof yasp.Storage['theme'] == 'undefined')           yasp.Storage['theme'] = 'eclipse';
     if (typeof yasp.Storage['indentUnit'] == 'undefined')      yasp.Storage['indentUnit'] = "8"; // localStorage saves as string
     if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "true";
