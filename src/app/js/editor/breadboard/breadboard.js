@@ -115,9 +115,14 @@ if (typeof yasp == 'undefined') yasp = { };
   /** redraws all hardware elements
    */
   yasp.BreadBoard.prototype.render = function () {
-    for (var i = 0; i < this.hardware.length; i++) {
-      this.hardware[i].render();
-    }
+      for (var i = 0; i < this.hardware.length; i++) {
+        try {
+          this.hardware[i].render();
+        } catch (ex) {
+          console.log("Could not render breadboard-hardware: " + i);
+          console.log(ex);
+        }
+      }
   };
 
   /** removes all the hardware from the DOM and removes the event-handlers from the emulator
