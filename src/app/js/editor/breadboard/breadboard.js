@@ -60,10 +60,13 @@ if (typeof yasp == 'undefined') yasp = { };
     var ratio = image.width / image.height;
 
     // since browsers are not able to scale this <img> correctly..
-    $(window).resize(function () {
+    function fixSize () {
       $image.css('width', $image.height() * ratio + "px");
       that.render();
-    });
+    }
+
+    $(window).resize(fixSize);
+    $image.load(fixSize);
 
     $container.append($image);
   };
