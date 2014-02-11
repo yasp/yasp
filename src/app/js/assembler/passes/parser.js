@@ -42,7 +42,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // generate symbol table
     if (assembler.jobs.indexOf("symbols") != -1 && assembler.getFatalErrorCount() == 0) {
       // labels are already generated in the Analyser
-      // defines will be generated in parseDirectives
+      // defines are generated in Analyser
       // usedRegisters & instructions
       var registers = { };
       assembler.symbols.instructions = { };
@@ -267,28 +267,13 @@ if (typeof yasp == 'undefined') yasp = { };
     
     switch(iterator.current().text.toUpperCase()) {
       case "DEFINE":
-        // make new DEFINE
+        // skip DEFINE
         iterator.next();
         var from = iterator.current().text.toUpperCase();
         var fromToken = iterator.current();
         iterator.next();
         var to = iterator.current().text.toUpperCase();
         iterator.optNext();
-        if (!!iterator.assembler.symbols.defines[from]) {
-          iterator.riseSyntaxError("Duplicate DEFINE '" + fromToken.toString() + "'");
-        } else {
-          iterator.assembler.symbols.defines[from] = to;
-        }
-        // replace tokens
-        var replacer = new yasp.TokenIterator(iterator.assembler, this.input);
-        replacer.pos = iterator.pos;
-        while (replacer.hasNext()) {
-          if (replacer.current().text.toUpperCase() == from) {
-            replacer.current().text = to;
-          }
-          replacer.next();
-        }
-        
         break;
       case "ORG":
         var cur = iterator.current();

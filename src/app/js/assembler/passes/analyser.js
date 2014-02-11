@@ -31,6 +31,31 @@ if (typeof yasp == 'undefined') yasp = { };
           }
         }
       }
+      if (iterator.current().text.toUpperCase() == 'DEFINE') {
+        // make new DEFINE
+        iterator.optNext();
+        var from = iterator.current().text.toUpperCase();
+        var fromToken = iterator.current();
+        iterator.optNext();
+        var to = iterator.current().text.toUpperCase();
+        iterator.optNext();
+        if (!!assembler.symbols.defines[from]) {
+          iterator.riseSyntaxError("Duplicate DEFINE '" + fromToken.toString() + "'");
+        } else {
+          assembler.symbols.defines[from] = to;
+        }
+
+        // replace tokens
+        var replacer = new yasp.TokenIterator(assembler, input);
+        replacer.pos = iterator.pos;
+        while (replacer.hasNext()) {
+          if (replacer.current().text.toUpperCase() == from) {
+            replacer.current().text = to;
+          }
+          replacer.next();
+        }
+      }
+      
       while (iterator.hasNext() && !iterator.is('\n')) iterator.next(); // go to \n
     }).bind(this));
 

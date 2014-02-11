@@ -43,7 +43,7 @@
               if (type == yasp.TokenType.LABEL) {
                 state.labels.push(t.name); // used to force CodeMirror to redraw if changed
                 // does this label really exist?
-                if (!yasp.Editor.symbols.labels[t.text.toUpperCase()]) {
+                if (!yasp.Editor.symbols.labels[t.text.toUpperCase()] && !yasp.Editor.symbols.defines[t.text.toUpperCase()]) {
                   return TokenName4TokenType[yasp.TokenType.UNKNOWN];
                 }
               }
