@@ -6,7 +6,7 @@ if (typeof yasp == "undefined") yasp = { };
   var commentSplitter = ';';
   var stringSplitter = '"';
 
-  var validLabel = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_";
+  var validLabel = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-";
   var validByteRegisters = [];
   for (var i = 0; i < 32; i++) {
     validByteRegisters.push("B" + i);
