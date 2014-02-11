@@ -11,17 +11,17 @@
       "flags": {
       }
     }
-  },
+  }, // b0, b1   b2, b3
   "tests": [
     {
       cmd: "ADC w1,10",
-      setup: { pin: { 10: 0xFA } },
-      steps: { reg: { "w1": 0x00FA } }
+      setup: { reg: { "w1": 0xAAAA }, pin: { 10: 0xFA } },
+      steps: { reg: { "b2": 0xAA, "b3": 0xFA } }
     },
     {
       cmd: "ADC w1,11",
-      setup: { pin: { 11: 0xFA } },
-      steps: { reg: { "w1": 0x00FA } }
+      setup: { reg: { "w1": 0xAAAA }, pin: { 11: 0xFA } },
+      steps: { reg: { "b2": 0xAA, "b3": 0xFA } }
     }
   ],
   "code": [
@@ -43,6 +43,6 @@
     }
   ],
   "exec": function (rword, pin) {
-    this.writeWordRegister(rword.address, pin.value);
+    this.writeByteRegister(rword.address * 2 + 1, pin.value);
   }
 }

@@ -15,8 +15,8 @@
   "tests": [
     {
       cmd: "ADC2 w1",
-      setup: { pin: { 12: 0xFA } },
-      steps: { reg: { "w1": 0x00FA } }
+      setup: { reg: { "w1": 0xAAAA }, pin: { 12: 0xFA } },
+      steps: { reg: { "b2": 0xAA, "b3": 0xFA } }
     }
   ],
   "code": [
@@ -34,6 +34,6 @@
     }
   ],
   "exec": function (rword) {
-    this.writeWordRegister(rword.address, this.getIO(12));
+  this.writeByteRegister(rword.address * 2 + 1, this.getIO(12));
   }
 }
