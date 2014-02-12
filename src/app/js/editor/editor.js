@@ -69,6 +69,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     editor.on("gutterClick", (function(cm, n) {
       this.apply((function(cm) {
         var info = cm.lineInfo(n);
+        if(yasp.Editor.map[n + 1] === undefined)
+          return;
         cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : (function() {
           var marker = $(document.createElement('div'));
           marker.css({
