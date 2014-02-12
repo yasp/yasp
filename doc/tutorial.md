@@ -12,6 +12,10 @@ label:
         ; comment
 ```
 
+A valid label must:
+* only contain Numbers, Letters, `_` or `-`
+* not be a command-name (e.g. `MOV`)
+
 ## Processor Features
 * 32 byte registers: `b0` - `b31`
 * 32 word registers: `w0` - `w31`
