@@ -71,7 +71,7 @@
 }
 
 #debugger-tabs-debug > pre {
-    height: calc(100% - 30px);
+    height: calc(100% - 1em - 18px);
     margin-bottom: 10px;
 
     overflow: scroll;
@@ -162,7 +162,7 @@
 }
 
 .registers > .snapshots {
-    height: calc(100% - 22px);
+    height: calc(100% - 2em - 7px);
     overflow-y: scroll;
 }
 
@@ -215,8 +215,14 @@
 }
 
 .stack > pre {
-    height: 100%;
+    height: calc(100% - 1em);
     overflow-y: scroll;
+}
+
+#debugger-tabs-breakpoints {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 table.breakpoints {
