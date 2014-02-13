@@ -40,6 +40,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     this.file.content = this.editors[0].getValue();
     return this.file;
   }
+  EditorManager.prototype.reindent = function() {
+    this.apply(function(e) {
+      var val = e.getValue();
+      for (var i = 0; i < val.length; i++) {
+        e.indentLine(i, "smart");
+      }
+    });
+  }
   
   /**
    * Creates an editor instance
@@ -88,6 +96,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       }).bind(this));
     }).bind(this));
     this.editors.push(editor);
+    this.reindent();
     return editor;
   };
   
@@ -430,7 +439,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         CodeMirror.commands.saveas(editor);
       });
       $('.menu_new').click(function() {
-        CodeMirror.commands.new(editor);
+        CodeMirror.commands.new(editor);xr
       });
       
       $('.menu_undo').click(function() {
@@ -472,7 +481,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           yasp.Storage['indentUnit'] = this.value;
           yasp.EditorManager.apply((function(e) {
             e.setOption("indentUnit", +this.value);
+            e.setOption("indentWithTabs", true);
             e.setOption("tabSize", +this.value);
+            yasp.EditorManager.reindent();
           }).bind(this));
         }).val(+editor.getOption("indentUnit"));
 
