@@ -25,10 +25,10 @@ if (typeof yasp == 'undefined') yasp = { };
 
     /** number of milliseconds between two tickWrapper-calls
      * @member {Number} */
-    this.tickTimeout = 1;
+    this.tickTimeout = 100;
     /** number of ticks inside one tickWrapper call
      * @member {Number} */
-    this.ticksPerTick = 3;
+    this.ticksPerTick = 300;
 
     /** cache for already disassembled commands
      * @member {Object} */
