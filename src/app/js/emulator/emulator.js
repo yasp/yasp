@@ -25,10 +25,13 @@ if (typeof yasp == 'undefined') yasp = { };
 
     /** number of milliseconds between two tickWrapper-calls
      * @member {Number} */
-    this.tickTimeout = 100;
+    this.tickDelay = 100;
     /** number of ticks inside one tickWrapper call
      * @member {Number} */
     this.ticksPerTick = 300;
+    /** timeout id of the last tickWrapper-setTimeout
+     * @member {Number} */
+    this.tickTimeout = 0;
 
     /** cache for already disassembled commands
      * @member {Object} */
@@ -74,7 +77,6 @@ if (typeof yasp == 'undefined') yasp = { };
     this.waitTime = 0; // time to wait in ms
 
     this.waitTimeout = -1;
-    this.isWaiting = false;
 
     /** bits of the interrupt-mask
      * @member {boolean[]}
@@ -310,6 +312,7 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     this.skipBreakpoint = !!skipBreakpoint;
+    this.setTickWrapperTimeout(0);
 
     this.events.CONTINUE();
     return true;
@@ -741,17 +744,13 @@ if (typeof yasp == 'undefined') yasp = { };
       this.pwmTimeouts[p] = null;
     }
 
-    var desiredTicks = 300;
-    var timePerTick = this.tickTimeout / this.ticksPerTick;
-    var waitTime = desiredTicks * timePerTick;
-
     this.pwmTimeouts[p] =  {
       state: s,
       timeoutId: setTimeout(function () {
         this.events.IO_CHANGED(p, s, pin.mode, pin.type);
         if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
         this.pwmStatus[p] = null;
-      }.bind(this), waitTime)
+      }.bind(this), 300 * this.getTimePerTick()) // wait for 300 ticks
     };
   };
 
@@ -796,10 +795,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return false;
     if(debug) console.log("interrupt triggered: " + i);
     this.interruptToServe = i;
-    if(this.isWaiting === true) {
-      clearTimeout(this.waitTimeout);
-      this.setTickWrapperTimeout();
-    }
+    this.setTickWrapperTimeout(0);
     return true;
   };
 
@@ -835,12 +831,20 @@ if (typeof yasp == 'undefined') yasp = { };
   /** set the timeout for the next tickWrapper-call
    * @private
    * @see yasp.Emulator#tickTimeout
+   * @see yasp.Emulator#tickDelay
    * @see yasp.Emulator#tickWrapper
    */
-  yasp.Emulator.prototype.setTickWrapperTimeout = function () {
+  yasp.Emulator.prototype.setTickWrapperTimeout = function (delay) {
     if(this.forceStep === true)
       return;
-    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
+    if(delay === undefined)
+      delay = this.tickDelay;
+    clearTimeout(this.tickTimeout);
+    this.tickTimeout = setTimeout(this.tickWrapper.bind(this), delay);
+  };
+
+  yasp.Emulator.prototype.getTimePerTick = function () {
+    return this.tickDelay / this.ticksPerTick;
   };
 
   /** helper function, invoked by setTimeout, calls {@link yasp.Emulator#tick}. Do not call manually.
@@ -852,8 +856,6 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see yasp.Emulator#continue
    */
   yasp.Emulator.prototype.tickWrapper = function () {
-
-    this.isWaiting = false;
 
     for(var jj = 0; jj < this.ticksPerTick; jj++) {
 
@@ -904,14 +906,12 @@ if (typeof yasp == 'undefined') yasp = { };
           this.setTickWrapperTimeout();
         } else {
           // don't set the normal timeout but wait for the desired time
-          this.waitTimeout = setTimeout(this.tickWrapper.bind(this), this.waitTime);
-          this.isWaiting = true;
+          this.setTickWrapperTimeout(this.waitTime);
         }
 
         // fix the number of ticks executed. This has to be accurate since PWM relies on the tick-count
         // to calculate for how long a pin was high or low.
-        var timePerTick = this.tickTimeout / this.ticksPerTick;
-        var ticksSkipped = (this.waitTime / timePerTick);
+        var ticksSkipped = (this.waitTime / this.getTimePerTick());
         this.ticks += ticksSkipped;
         this.waitTime = 0;
         return;
