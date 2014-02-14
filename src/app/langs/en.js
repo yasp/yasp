@@ -60,6 +60,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "debugger.toolbar.stepBack": "Step Back",
     "debugger.toolbar.break": "Break",
     "debugger.toolbar.continue": "Continue",
+    "debugger.toolbar.jumpto": "Gehe zu",
     "debugger.status": "Status: ",
     "debugger.status.run": "Running",
     "debugger.status.break": "Break: ",

@@ -115,6 +115,43 @@ if (typeof yasp == 'undefined') yasp = { };
         skipBreakpoint: yasp.Debugger.breakpointHit
       });
     });
+    
+    $('.debugger_jumpto').click(function() {
+      // change cursor
+      $('#debugger_editor_wrapper .CodeMirror-lines').css({
+        'cursor': 'crosshair'
+      });
+      
+      // set listener
+      yasp.Debugger.editor.on('dblclick', function() {
+        var cursor = yasp.Debugger.editor.getCursor();
+        var line = cursor.line + 1;
+        var commandPosition;
+        do {
+          commandPosition = yasp.Editor.map[line];
+          line++;
+        } while(typeof commandPosition == 'undefined' && line < yasp.Debugger.editor.lineCount());
+        
+        console.log("Jump To "+cursor.line+" OpCode "+commandPosition);
+
+        yasp.Debugger.EmulatorCommunicator.sendMessage("BREAK", { });
+        
+        yasp.Debugger.EmulatorCommunicator.sendMessage("SET_STATE", {
+          registers: {
+            special: {
+              pc: commandPosition
+            }
+          }
+        });
+        
+        // disable listener
+        $('#debugger_editor_wrapper .CodeMirror-lines').css({
+          'cursor': 'text'
+        });
+
+        yasp.Debugger.editor.off('dblclick');
+      });
+    });
   });
 
   function onEmulatorBreak (data) {
