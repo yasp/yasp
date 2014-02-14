@@ -144,7 +144,7 @@ if (typeof yasp == 'undefined') yasp = { };
                 pc: commandPosition
               }
             }
-          });
+          }, getState);
           
           // disable listener
           $('#debugger_editor_wrapper .CodeMirror-lines').css({
@@ -174,13 +174,19 @@ if (typeof yasp == 'undefined') yasp = { };
     firePartEvent("onDebug", [data.payload]);
   }
 
+  function getState () {
+    yasp.Debugger.EmulatorCommunicator.sendMessage("GET_STATE", {},
+      function (data) { refreshDebugger(data.payload); }
+    );
+  }
+
   function refreshDebugger(state) {
-      yasp.Debugger.states.push(state);
+    yasp.Debugger.states.push(state);
 
-      firePartEvent("onState", [state]);
+    firePartEvent("onState", [state]);
 
-      var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
-      highlightLine(line, true);
+    var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
+    highlightLine(line, true);
   }
 
   function highlightLine (line, clearOthers) {
