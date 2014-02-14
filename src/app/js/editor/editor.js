@@ -834,9 +834,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
             break;
           }
         }
-        
+        var curWord = start != end && curLine.slice(start, end);
         if (!found) {
-          var curWord = start != end && curLine.slice(start, end);
+          
           if (!!curWord) {
             curWord = curWord.toUpperCase();
           } else {
@@ -846,13 +846,24 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
               curWord = null;
             }
           }
-          
+            
           console.log("Current Word: '"+curWord+"'");
           
           var osymbols = yasp.Editor.orderedSymbols;
           for (var i = 0; i < osymbols.length && curWord != null; i++) {
             if ((osymbols[i].toUpperCase().indexOf(curWord) == 0 && osymbols[i].toUpperCase() != curWord)) {
               symbols.push(osymbols[i]);
+            }
+          }
+        }
+        
+        // is current word in symbols exactly? if so, do not show any
+        if (!!curWord) {
+          curWord = curWord.toUpperCase();
+          for (var i = 0; i < symbols.length; i++) {
+            if (symbols[i].toUpperCase() == curWord) {
+              // yep
+              return {list: [ ], from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
             }
           }
         }
