@@ -10,7 +10,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     SAVEAS: 3,
     NEW: 4
   };
-
+  
   if (typeof yasp.Storage.files == 'undefined') yasp.Storage.files = JSON.stringify({ });
   
   var fileSystemDriver = {
@@ -108,18 +108,19 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         // TODO
       }
   }};
+  
   var fileSystem = fileSystemDriver.LOCAL;
   var dialogMode;
-  var saveFunc = function(name) {
+  var saveFunc = function(name, ignoreDialog) {
     var file = yasp.EditorManager.getAndUpdateFile();
     file.filename = name;
     fileSystem.saveFile(file, function(file) {
       if (!!file) {
         // success
         yasp.EditorManager.applyFile(file);
-        $('#dialog_file').modal('hide');
+        if (!ignoreDialog) $('#dialog_file').modal('hide');
       } else {
-        $('#fileerror').show().text(yasp.l10n.getTranslation("filedialog.save.error"));
+        if (!ignoreDialog) $('#fileerror').show().text(yasp.l10n.getTranslation("filedialog.save.error"));
       }
     });
   };
@@ -135,7 +136,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       dialogMode = mode;
       if (dialogMode == yasp.FileDialogMode.SAVE && (typeof yasp.EditorManager.getAndUpdateFile().filename != 'undefined' && yasp.EditorManager.getAndUpdateFile().filename != null)) {
         // already saved => just save brah
-        saveFunc(yasp.EditorManager.getAndUpdateFile().filename);
+        saveFunc(yasp.EditorManager.getAndUpdateFile().filename, true);
         return;
       }
       $('#dialog_file').modal({
@@ -256,4 +257,21 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       $('#dialog_file').modal('hide');
     }
   };
+
+  /**
+   * Quick helper function that returns an empty file
+   * @returns {{filename: null, username: string, createdate: number, group: string, changedate: number, content: string}}
+   */
+  yasp.FileDialog.createEmptyFile = function() {
+    return {
+      filename: null,
+      username: "local",
+      createdate: new Date().getTime(),
+      group: "local",
+      changedate: new Date().getTime(),
+      content: ""
+    };
+  };
+
+  yasp.FileDialog.FileSystemDriver = fileSystemDriver;
 })();

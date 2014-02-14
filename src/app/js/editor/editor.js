@@ -8,14 +8,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
    */
   var EditorManager = function() {
     this.editors = [ ];
-    this.applyFile({
-      filename: null,
-      username: "local",
-      createdate: new Date().getTime(),
-      group: "local",
-      changedate: new Date().getTime(),
-      content: ""
-    });
+    this.applyFile(yasp.FileDialog.createEmptyFile());
   };
 
   /**
@@ -726,6 +719,32 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         }
       }
     }, 500);
+    
+    // automatic save
+    setInterval(function() {
+      // check if automatic save is on
+      if (yasp.Storage['automaticsave'] == "true") {
+        // is there a name associated with this file?
+        var file = yasp.EditorManager.file;
+        if (!file.filename) {
+          // no? => Create empty file
+          file = yasp.FileDialog.createEmptyFile();
+          file.content = yasp.EditorManager.editors[0].getValue();
+          file.filename = "Automatic Save";
+          yasp.EditorManager.applyFile(file);
+        }
+        
+        // save it baby
+        yasp.FileDialog.show(yasp.FileDialogMode.SAVE);
+      }
+    }, 5000); // save every 5 seconds
+    
+    // automatically load automatic save if exists on startup
+    if (yasp.Storage['automaticsave'] == "true") {
+      yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Automatic Save", function(file) {
+        yasp.EditorManager.applyFile(file);
+      });
+    }
     
     // hinting
     (function() {
