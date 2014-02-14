@@ -40,6 +40,7 @@
     },
     steps: [
       { ss: { "triggerInterrupt": 1 } },
+      { }, // jumping
       { "reg": { "pc": 69 } } // not 66 because there is 0x00 0x00 0x00 at that address which is MOV b0,0
     ]
   });
