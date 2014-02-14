@@ -123,33 +123,36 @@ if (typeof yasp == 'undefined') yasp = { };
       });
       
       // set listener
-      yasp.Debugger.editor.on('dblclick', function() {
-        var cursor = yasp.Debugger.editor.getCursor();
-        var line = cursor.line + 1;
-        var commandPosition;
-        do {
-          commandPosition = yasp.Editor.map[line];
-          line++;
-        } while(typeof commandPosition == 'undefined' && line < yasp.Debugger.editor.lineCount());
-        
-        console.log("Jump To "+cursor.line+" OpCode "+commandPosition);
-
-        yasp.Debugger.EmulatorCommunicator.sendMessage("BREAK", { });
-        
-        yasp.Debugger.EmulatorCommunicator.sendMessage("SET_STATE", {
-          registers: {
-            special: {
-              pc: commandPosition
+      var func;
+      yasp.Debugger.editor.on('mousedown', func = function() {
+        setTimeout(function() { // CodeMirror needs time to update cursor properly
+          var cursor = yasp.Debugger.editor.getCursor();
+          var line = cursor.line + 1;
+          var commandPosition;
+          do {
+            commandPosition = yasp.Editor.map[line];
+            line++;
+          } while(typeof commandPosition == 'undefined' && line < yasp.Debugger.editor.lineCount());
+          
+          console.log("Jump To "+cursor.line+" OpCode "+commandPosition);
+  
+          yasp.Debugger.EmulatorCommunicator.sendMessage("BREAK", { });
+          
+          yasp.Debugger.EmulatorCommunicator.sendMessage("SET_STATE", {
+            registers: {
+              special: {
+                pc: commandPosition
+              }
             }
-          }
-        });
-        
-        // disable listener
-        $('#debugger_editor_wrapper .CodeMirror-lines').css({
-          'cursor': 'text'
-        });
-
-        yasp.Debugger.editor.off('dblclick');
+          });
+          
+          // disable listener
+          $('#debugger_editor_wrapper .CodeMirror-lines').css({
+            'cursor': 'text'
+          });
+  
+          yasp.Debugger.editor.off('mousedown', func);
+        }, 100);
       });
     });
   });
