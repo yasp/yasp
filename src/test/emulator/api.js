@@ -263,17 +263,17 @@
 
   test("pushByte", function () {
     emulator.pushByte(0xFA);
-    strictEqual(emulator.sp, 0, "SP incremented");
-    strictEqual(emulator.stack[0], 0xFA, "Value saved");
+    strictEqual(emulator.sp, emulator.initialSP + 1, "SP incremented");
+    strictEqual(emulator.ram[emulator.initialSP + 1], 0xFA, "Value saved");
   });
 
   test("popByte", function () {
-    emulator.sp = 0;
-    emulator.stack = [ 0xFA ];
+    emulator.sp = emulator.initialSP + 1;
+    emulator.ram[emulator.initialSP + 1] = 0xFA;
 
     var actual = emulator.popByte();
 
-    strictEqual(emulator.sp, -1, "SP decremented");
+    strictEqual(emulator.sp, emulator.initialSP, "SP decremented");
     strictEqual(actual, 0xFA);
   });
 
@@ -293,17 +293,18 @@
 
   test("pushWord", function () {
     emulator.pushWord(0xFAFB);
-    strictEqual(emulator.stack[0], 0xFB, "byte 2 saved");
-    strictEqual(emulator.stack[1], 0xFA, "byte 1 saved");
+    strictEqual(emulator.ram[emulator.initialSP + 1], 0xFB, "byte 2 saved");
+    strictEqual(emulator.ram[emulator.initialSP + 2], 0xFA, "byte 1 saved");
   });
 
   test("popWord", function () {
-    emulator.sp = 1;
-    emulator.stack = [ 0xFB, 0xFA ];
+    emulator.sp = emulator.initialSP + 2;
+    emulator.ram[emulator.initialSP + 1] = 0xFB;
+    emulator.ram[emulator.initialSP + 2] = 0xFA;
 
     var actual = emulator.popWord();
 
-    strictEqual(emulator.sp, -1, "SP decremented");
+    strictEqual(emulator.sp, emulator.initialSP, "SP decremented");
     strictEqual(actual, 0xFAFB);
   });
 

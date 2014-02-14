@@ -15,7 +15,7 @@
   "tests": [
     {
       cmd: "RET",
-      setup: { reg: { "sp": 1 }, stack: [ 0xFF, 0xFA ] },
+      setup: { reg: { "sp": 2 }, stack: [ 0xFF, 0xFA ] },
       steps: { reg: { "pc": 0xFAFF } }
     }
   ],

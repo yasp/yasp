@@ -13,7 +13,7 @@ if (typeof yasp == 'undefined') yasp = { };
     /** the program code including strings, interrupt-table, etc
      * @member {Uint8Array} */
     this.rom = new Uint8Array(512);
-    /** contains the registers (first 63 bytes) and RAM accessible via ReadRAM/WriteRAM
+    /** contains the registers (first 63 bytes), stack and RAM accessible via ReadRAM/WriteRAM
      * @member {Uint8Array} */
     this.ram = new Uint8Array(512);
     /** emulator flags set by arithmetic and PIN-Instructions
@@ -37,17 +37,13 @@ if (typeof yasp == 'undefined') yasp = { };
      * @member {Object} */
     this.commandCache = {};
 
-    /** stack used by PUSH, POP, subroutines and interrupts. It is filled from index 0 to 16.
-     * @member {Uint8Array} */
-    this.stack = new Uint8Array(16);
     /** initial value of the stackpointer
      * @member {Number}
-     * @see yasp.Emulator#stack
      * @default */
-    this.initialSP = -1;
-    /** offset of the top, last pushed byte in the stack
+    this.initialSP = 0x50;
+    /** offset of the top, last pushed byte in the stack. Points to a byte in the ram.
      * @member {Number}
-     * @see yasp.Emulator#stack */
+     */
     this.sp = this.initialSP;
 
     /** offset of the last executed instruction in the {@link yasp.Emulator#rom ROM}
@@ -75,8 +71,6 @@ if (typeof yasp == 'undefined') yasp = { };
      * @see yasp.Emulator#wait
      * @see yasp.Emulator#tickWrapper */
     this.waitTime = 0; // time to wait in ms
-
-    this.waitTimeout = -1;
 
     /** bits of the interrupt-mask
      * @member {boolean[]}
@@ -569,8 +563,8 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.pushWord = function (v) {
     if(debug) console.log("push word: " + v);
-    this.stack[++this.sp] = v & 0xFF;
-    this.stack[++this.sp] = v >> 8;
+    this.ram[++this.sp] = v & 0xFF;
+    this.ram[++this.sp] = v >> 8;
   };
 
   /** pushes one byte onto the stack
@@ -579,7 +573,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.pushByte = function (v) {
     if(debug) console.log("push byte: " + v);
-    this.stack[++this.sp] = v;
+    this.ram[++this.sp] = v;
   };
 
   /** gets two bytes from the stack, combines and removes them
@@ -595,9 +589,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * @see yasp.Emulator#pushByte
    */
   yasp.Emulator.prototype.popByte = function () {
-    if(this.sp === -1)
+    if(this.sp === this.initialSP)
       return 0;
-    return this.stack[this.sp--];
+    return this.ram[this.sp--];
   };
 
   /** sets the program counter

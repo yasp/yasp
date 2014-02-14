@@ -15,7 +15,7 @@
   "tests": [
     {
       cmd: "POP w0",
-      setup: { reg: { "sp": 1 }, stack: [0xFB, 0xFA] },
+      setup: { reg: { "sp": 2 }, stack: [0xFB, 0xFA] },
       steps: { reg: { "w0": 0xFAFB } }
     }
   ],

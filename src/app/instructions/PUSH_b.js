@@ -16,7 +16,7 @@
     {
       cmd: "PUSH b0",
       setup: { reg: { "b0": 0xFA } },
-      steps: { reg: { "sp": 0 }, stack: { 0: 0xFA } }
+      steps: { reg: { "sp": 1 }, stack: { 0: 0xFA } }
     }
   ],
   "code": [

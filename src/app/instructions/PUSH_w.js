@@ -16,7 +16,7 @@
     {
       cmd: "PUSH w0",
       setup: { reg: { "w0": 0xFAFB } },
-      steps: { reg: { "sp": 1 }, stack: { 0: 0xFB, 1: 0xFA } }
+      steps: { reg: { "sp": 2 }, stack: { 0: 0xFB, 1: 0xFA } }
     }
   ],
   "code": [

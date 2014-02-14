@@ -16,7 +16,7 @@
     {
       title: "CALL",
       cmd: "CALL lbl\nDB 0\nlbl:",
-      steps: { reg: { "pc": 3, "sp": 1 }, stack: [ 0x02, 0x00 ]  }
+      steps: { reg: { "pc": 3, "sp": 2 }, stack: [ 0x02, 0x00 ]  }
     }
   ],
   "code": [

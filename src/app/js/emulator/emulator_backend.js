@@ -84,7 +84,9 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       }
 
       if(state.stack instanceof Uint8Array) {
-        emulator.stack = state.stack;
+        for (var i = 0; i < state.stack.length; i++) {
+          emulator.ram[emulator.initialSP + i] = state.stack[i];
+        }
       }
 
       if(state.registers) {
@@ -198,7 +200,7 @@ function getState() {
   var state = {
     rom: emulator.rom,
     ram: emulator.ram,
-    stack: emulator.stack.subarray(emulator.initialSP + 1, (emulator.sp + 1) - (emulator.initialSP + 1)),
+    stack: emulator.ram.subarray(emulator.initialSP + 1, emulator.sp + 1),
     registers: {
       general: {
         b: {},

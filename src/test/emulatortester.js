@@ -108,7 +108,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
           if(r == "pc") {
             actual = this.emulator.pc;
           } else if (r == "sp") {
-            actual = this.emulator.sp;
+            actual = this.emulator.sp - this.emulator.initialSP;
           } else {
             var n = +r.substr(1);
 
@@ -180,9 +180,9 @@ yasp.test.EmulatorTester.prototype.done = function () {
         keys.splice("stack", 1);
         for (var r in step.stack) {
           var expected = this.parseLiteral(step.stack[r]);
-          var actual = this.emulator.stack[r];
+          var actual = this.emulator.ram[this.emulator.initialSP + (+r) + 1];
 
-          strictEqual(actual, expected, stepPrefix + "stack-entry " + r + " is " + expected);
+          strictEqual(actual, expected, stepPrefix + "stack-byte " + r + " is " + expected);
         }
       }
       if(step.waitTime !== undefined) {
@@ -250,7 +250,7 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup, title) {
       if(r == "pc") {
         this.emulator.pc = val;
       } else if (r == "sp") {
-        this.emulator.sp = val;
+        this.emulator.sp = this.emulator.initialSP + val;
       } else {
         var n = +r.substr(1);
 
@@ -268,10 +268,12 @@ yasp.test.EmulatorTester.prototype.applySetup = function (setup, title) {
   if(setup.stack) {
     keys.splice("stack", 1);
     if(setup.stack instanceof Uint8Array) {
-      this.emulator.stack = setup.stack;
+      for (var i = 0; i < setup.stack.length; i++) {
+        this.emulator.ram[this.emulator.initialSP + i + 1] = setup.stack[i];
+      }
     } else {
       for (var a in setup.stack) {
-        this.emulator.stack[a] = setup.stack[a];
+        this.emulator.ram[this.emulator.initialSP + a + 1] = setup.stack[a];
       }
     }
   }

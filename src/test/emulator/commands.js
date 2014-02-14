@@ -52,8 +52,8 @@
       + "RET",
     setup: { },
     steps: [
-      { reg: { "pc": 3, "sp": 1 }, stack: [ 0x02, 0x00 ]  },
-      { reg: { "pc": 2, "sp": -1 } }
+      { reg: { "pc": 3, "sp": 2 }, stack: [ 0x02, 0x00 ]  },
+      { reg: { "pc": 2, "sp": 0 } }
     ]
   });
 
