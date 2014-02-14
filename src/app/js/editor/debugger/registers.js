@@ -57,11 +57,6 @@ if (!yasp.Debugger) yasp.Debugger = { };
         $reg.addClass("pointer");
       }
 
-      if(reg === "SP") {
-        $reg.text(regs[reg]);
-        $reg.addClass("pointer");
-      }
-
       if(reg[0] === "B") {
         $reg.text(yasp.Debugger.formatNumber(regs[reg], padding, formatNum));
         $reg.addClass("register byte");
