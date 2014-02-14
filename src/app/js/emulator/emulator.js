@@ -917,6 +917,15 @@ if (typeof yasp == 'undefined') yasp = { };
         return;
       }
 
+      // interrupts
+      if(this.interruptToServe !== -1) {
+        if(debug) console.log("interrupt jumped: " + this.interruptToServe);
+        this.pushWord(this.pc); // for RETI
+        this.pc = this.getInterruptAddress(this.interruptToServe);
+        this.interruptToServe = -1;
+        break;
+      }
+
       this.tick();
     }
 
@@ -1040,14 +1049,6 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.tick = function () {
     this.ticks++;
-
-    // interrupts
-    if(this.interruptToServe !== -1) {
-      if(debug) console.log("interrupt jumped: " + this.interruptToServe);
-      this.pushWord(this.pc); // for RETI
-      this.pc = this.getInterruptAddress(this.interruptToServe);
-      this.interruptToServe = -1;
-    }
 
     // fetch instruction
     if(this.commandCache[this.pc] === undefined) {
