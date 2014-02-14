@@ -22,6 +22,12 @@ ticks is executed in each `tickWrapper()`-call.
     5. check and set the zero-flag, if specified in instruction-file
 2. [`setTickWrapperTimeout()`](http://doc.yasp.me/yasp.Emulator.html#setTickWrapperTimeout)
 
+The timeout which is set by `setTickWrapperTimeout()` can be interrupted by a number of things:
+* `CONTINUE`-message (to allow faster stepping)
+* Hardware-Interrupt
+
+In addition the timeout will be longer when the `emulator.waitTime` (see `DELAY`-instruction) is set.
+
 ## PWM
 The emulator is capable of simulating PWM, in terms of calculating a pins analogue output power when a pin is rapidly
 switched on and off. This is done in the [`updatePwm()`](http://doc.yasp.me/yasp.Emulator.html#updatePwm) helper function.

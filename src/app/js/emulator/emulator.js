@@ -822,7 +822,8 @@ if (typeof yasp == 'undefined') yasp = { };
     this.waitTime = ms;
   };
 
-  /** set the timeout for the next tickWrapper-call
+  /** set the timeout for the next tickWrapper-call. This also cancels all running timeouts.
+   * @param delay {Number} milliseconds to wait before the next tick
    * @private
    * @see yasp.Emulator#tickTimeout
    * @see yasp.Emulator#tickDelay
