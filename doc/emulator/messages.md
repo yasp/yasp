@@ -8,6 +8,7 @@ The emulator has been stopped by a `BREAK`-Message, breakpoint, etc.
 #### Payload
 ```javascript
 {
+  "state": { }, // see State in doc/emulator/data.md
   "reason": ""
 }
 ```

@@ -159,8 +159,9 @@ if (typeof yasp == 'undefined') yasp = { };
 
   function onEmulatorBreak (data) {
     var reason = data.payload.reason;
+    var state = data.payload.state;
     firePartEvent("onBreak", [reason]);
-    refreshDebugger();
+    refreshDebugger(state);
     $('.debuggerTabOverlay').addClass('break');
   }
 
@@ -173,19 +174,13 @@ if (typeof yasp == 'undefined') yasp = { };
     firePartEvent("onDebug", [data.payload]);
   }
 
-  function refreshDebugger() {
-    yasp.Debugger.EmulatorCommunicator.sendMessage("GET_STATE", {},
-      function (data) {
-        var state = data.payload;
+  function refreshDebugger(state) {
+      yasp.Debugger.states.push(state);
 
-        yasp.Debugger.states.push(state);
+      firePartEvent("onState", [state]);
 
-        firePartEvent("onState", [state]);
-
-        var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
-        highlightLine(line, true);
-      }
-    );
+      var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
+      highlightLine(line, true);
   }
 
   function highlightLine (line, clearOthers) {

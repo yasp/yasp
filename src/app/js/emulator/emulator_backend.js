@@ -41,46 +41,8 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
       });
       break;
     case "GET_STATE":
-      var payload = {
-        rom: emulator.rom,
-        ram: emulator.ram,
-        stack: emulator.stack.subarray(emulator.initialSP + 1, (emulator.sp + 1) - (emulator.initialSP + 1)),
-        registers: {
-          general: {
-            b: {},
-            w: {}
-          },
-          special: {
-            pc: emulator.pc,
-            sp: emulator.sp
-          },
-          flags: {
-            C: emulator.flags.c,
-            Z: emulator.flags.z
-          }
-        },
-        io: []
-      };
-
-      for (var i = 0; i < 32; i++) {
-        payload.registers.general.b[i] = emulator.readByteRegister(i);
-        payload.registers.general.w[i] = emulator.readWordRegister(i);
-      }
-
-      for (var i = 0; i < emulator.pins.length; i++) {
-        var pin = emulator.pins[i];
-        if(!pin)
-          continue;
-        payload.io.push({
-          "pin": i,
-          "type": pin.type,
-          "mode": pin.mode,
-          "state": pin.state
-        });
-      }
-
       ready({
-        payload: payload,
+        payload: getState(),
         error: null
       });
       break;
@@ -166,6 +128,7 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
 emulator.registerCallback('BREAK', function (reason) {
   communicator.broadcast('BREAK', {
     payload: {
+      state: getState(),
       reason: reason
     },
     error: null
@@ -229,4 +192,46 @@ function sendIOUpdate(pin) {
   });
 
   IOUpdateLimiter[pin].last = +new Date();
+}
+
+function getState() {
+  var state = {
+    rom: emulator.rom,
+    ram: emulator.ram,
+    stack: emulator.stack.subarray(emulator.initialSP + 1, (emulator.sp + 1) - (emulator.initialSP + 1)),
+    registers: {
+      general: {
+        b: {},
+        w: {}
+      },
+      special: {
+        pc: emulator.pc,
+        sp: emulator.sp
+      },
+      flags: {
+        C: emulator.flags.c,
+        Z: emulator.flags.z
+      }
+    },
+    io: []
+  };
+
+  for (var i = 0; i < 32; i++) {
+    state.registers.general.b[i] = emulator.readByteRegister(i);
+    state.registers.general.w[i] = emulator.readWordRegister(i);
+  }
+
+  for (var i = 0; i < emulator.pins.length; i++) {
+    var pin = emulator.pins[i];
+    if(!pin)
+      continue;
+    state.io.push({
+      "pin": i,
+      "type": pin.type,
+      "mode": pin.mode,
+      "state": pin.state
+    });
+  }
+
+  return state;
 }
