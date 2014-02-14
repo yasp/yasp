@@ -100,7 +100,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     /** do not ever execute a tick unless {@link yasp.Emulator#tick} is called directly. This is used by the test-suite and should not be used by anything else.
      * @member {boolean}
-     * @see yasp.Emulator#setTickWrapperInterval */
+     * @see yasp.Emulator#setTickWrapperTimeout */
     this.forceStep = false;
 
     this.skipBreakpoint = false;
@@ -216,7 +216,7 @@ if (typeof yasp == 'undefined') yasp = { };
      * @see yasp.Emulator#setBreakpoints */
     this.globalBreakpoints = [];
 
-    this.setTickWrapperInterval();
+    this.setTickWrapperTimeout();
   };
 
   /** fired when the execution is started or resumed.
@@ -794,7 +794,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.interruptToServe = i;
     if(this.isWaiting === true) {
       clearTimeout(this.waitTimeout);
-      this.setTickWrapperInterval();
+      this.setTickWrapperTimeout();
     }
     return true;
   };
@@ -828,21 +828,15 @@ if (typeof yasp == 'undefined') yasp = { };
     this.waitTime = ms;
   };
 
-  /** set the interval for the next tickWrapper-call
+  /** set the timeout for the next tickWrapper-call
    * @private
    * @see yasp.Emulator#tickTimeout
    * @see yasp.Emulator#tickWrapper
-   * @see yasp.Emulator#clearTickWrapperInterval
    */
-  yasp.Emulator.prototype.setTickWrapperInterval = function () {
-    this.tickInterval = setInterval(this.tickWrapper.bind(this), this.tickTimeout);
-  };
-
-  /** clear the interval set by {@link yasp.Emulator#setTickWrapperInterval}.
-   * @private
-   */
-  yasp.Emulator.prototype.clearTickWrapperInterval = function () {
-    clearInterval(this.tickInterval);
+  yasp.Emulator.prototype.setTickWrapperTimeout = function () {
+    if(this.forceStep === true)
+      return;
+    setTimeout(this.tickWrapper.bind(this), this.tickTimeout);
   };
 
   /** helper function, invoked by setTimeout, calls {@link yasp.Emulator#tick}. Do not call manually.
@@ -903,10 +897,10 @@ if (typeof yasp == 'undefined') yasp = { };
       if(this.waitTime !== 0) {
         if(this.running === 0 || this.forceStep === true) { // ignore WAIT/PAUSE when stepping or running in test-suite
           this.running = 1;
+          this.setTickWrapperTimeout();
         } else {
           // don't set the normal timeout but wait for the desired time
-          this.clearTickWrapperInterval();
-          this.waitTimeout = setTimeout(this.setTickWrapperInterval.bind(this), this.waitTime);
+          this.waitTimeout = setTimeout(this.tickWrapper.bind(this), this.waitTime);
           this.isWaiting = true;
         }
 
@@ -921,6 +915,8 @@ if (typeof yasp == 'undefined') yasp = { };
 
       this.tick();
     }
+
+    this.setTickWrapperTimeout();
   };
 
   yasp.Emulator.prototype.resetChangeBreakpointData = function () {
