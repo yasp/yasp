@@ -741,13 +741,17 @@ if (typeof yasp == 'undefined') yasp = { };
       this.pwmTimeouts[p] = null;
     }
 
+    var desiredTicks = 300;
+    var timePerTick = this.tickTimeout / this.ticksPerTick;
+    var waitTime = desiredTicks * timePerTick;
+
     this.pwmTimeouts[p] =  {
       state: s,
       timeoutId: setTimeout(function () {
         this.events.IO_CHANGED(p, s, pin.mode, pin.type);
         if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
         this.pwmStatus[p] = null;
-      }.bind(this), 100)
+      }.bind(this), waitTime)
     };
   };
 
