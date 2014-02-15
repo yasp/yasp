@@ -21,13 +21,19 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     }
   };
   EditorManager.prototype.applyFile = function(file) {
-    this.file = file;
-    // update content
-    this.apply(function(editor) {
-      editor.setValue(file.content);
-    });
+    if (this.file != file) {
+      this.file = file;
+      // update content
+      this.apply(function(editor) {
+        // save scroll position
+        var scrollInfo = editor.getScrollInfo();
+        editor.setValue(file.content);
+        editor.scrollIntoView(scrollInfo);
+      });
+    }
     // update filename
     $('#display_filename').text(file.filename ? file.filename : yasp.l10n.getTranslation("editor.toolbar.menu.untitled"));
+    
   };
   EditorManager.prototype.getAndUpdateFile = function() {
     this.file.content = this.editors[0].getValue();
@@ -742,7 +748,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     // automatically load automatic save if exists on startup
     if (yasp.Storage['automaticsave'] == "true") {
       yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Automatic Save", function(file) {
-        yasp.EditorManager.applyFile(file);
+        if (!!file) yasp.EditorManager.applyFile(file);
       });
     }
     
