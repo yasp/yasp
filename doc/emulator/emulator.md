@@ -85,14 +85,12 @@ of the pin will always be `1` or `0`. PWM causes the state to be between `1` and
 ```
 
 ## Stack
-The emulator has a 16-byte, pre-increment stack. So the `sp` always points to the last element. Words are pushed with
-the least significant byte first. An example is  in the [tutorial](../tutorial.md).
-
-## [Utils](./utils.md)
-A number of utilities used by the emulator.
+The is located in the RAM, beginning from `0x50`. The `sp` gets increment before the byte is pushed (pre-increment), so
+the `sp` always points to the last byte. Words are pushed with the least significant byte first.
+An example can be found in the [tutorial](../tutorial.md).
 
 ## [Data](./data.md)
-Data structures which are used inside the emulator and its messages.
+Data structures which are used inside the emulator and its messages and broadcasts.
 
 ## [Messages](./messages.md)
 Details about the [Communicator](../communicator.md)-Implementation for the emulator, including the messages and broadcasts.
