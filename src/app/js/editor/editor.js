@@ -538,6 +538,24 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         showDebugger("debug");
       });
 
+      $('.menu_share').click(function () {
+        $.ajax({
+          type: "POST",
+          url: "https://yasp.firebaseIO.com/codes.json",
+          data: JSON.stringify({ code: editor.getValue() }),
+          success: function (data) {
+            var name = data.name;
+            var url = document.location.href.split('#')[0];
+            if(url.charAt(url.length - 1) !== "/")
+              url += "/"
+            url += "#q=" + name;
+
+            prompt(yasp.l10n.getTranslation("editor.toolbar.quickshare.msg"), url);
+            location.replace(url);
+          }
+        });
+      });
+
       function fixHelpHeight() {
         $('#help_container').css('height', ($(window).height() - 250) + "px");
       }
@@ -725,11 +743,13 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         }
       }
     }, 500);
+
+    var isQuickshare = (window.location.hash.indexOf('#q=') === 0);
     
     // automatic save
     setInterval(function() {
       // check if automatic save is on
-      if (yasp.Storage['automaticsave'] == "true") {
+      if (yasp.Storage['automaticsave'] == "true" && !isQuickshare) {
         // is there a name associated with this file?
         var file = yasp.EditorManager.file;
         if (!file.filename) {
@@ -746,9 +766,25 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     }, 5000); // save every 5 seconds
     
     // automatically load automatic save if exists on startup
-    if (yasp.Storage['automaticsave'] == "true") {
+    if (yasp.Storage['automaticsave'] == "true" && !isQuickshare) {
       yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Automatic Save", function(file) {
         if (!!file) yasp.EditorManager.applyFile(file);
+      });
+    }
+
+    if(isQuickshare) {
+      var hash = window.location.hash.substr(3);
+
+      $.ajax({
+        type: "GET",
+        url: "https://yasp.firebaseIO.com/codes/" + hash + ".json",
+        success: function (data) {
+          var content = data.code;
+          yasp.EditorManager.applyFile({
+            filename: null,
+            content: content
+          });
+        }
       });
     }
     
