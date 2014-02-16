@@ -438,7 +438,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         CodeMirror.commands.saveas(editor);
       });
       $('.menu_new').click(function() {
-        CodeMirror.commands.new(editor);xr
+        CodeMirror.commands.new(editor);
       });
       
       $('.menu_undo').click(function() {
