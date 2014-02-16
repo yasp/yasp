@@ -260,6 +260,7 @@ span.cm-keyword {
 
 .toolbarcontainer .pull-right {
     margin-top: 5px;
+    margin-left: 3px;
 }
 
 #display_filename {
