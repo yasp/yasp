@@ -774,15 +774,16 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
     if(isQuickshare) {
       var hash = window.location.hash.substr(3);
-
       $.ajax({
         type: "GET",
         url: "https://yasp.firebaseIO.com/codes/" + hash + ".json",
         success: function (data) {
           var content = data.code;
-          yasp.EditorManager.applyFile({
-            filename: "Quickshare",
-            content: content
+          yasp.FileDialog.FileSystemDriver.LOCAL.newFile("Quick Share File", function(file) {
+            file.content = content;
+            yasp.FileDialog.FileSystemDriver.LOCAL.saveFile(file, function() {
+              yasp.EditorManager.applyFile(file); // gotta love callbacks
+            })
           });
         }
       });
