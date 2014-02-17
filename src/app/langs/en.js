@@ -12,7 +12,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.run": "Run",
     "editor.toolbar.debug": "Debug",
     "editor.toolbar.help": "Help",
-    "editor.toolbar.quickshare": "Quickshare",
+    "editor.toolbar.quickshare": "Share",
     "editor.toolbar.quickshare.msg": "Your code has been shared. Share this URL with your friends!",
 
     "editor.toolbar.filemenu": "File",

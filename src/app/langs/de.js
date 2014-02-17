@@ -10,8 +10,8 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.run": "Starten",
     "editor.toolbar.debug": "Debuggen",
     "editor.toolbar.help": "Hilfe",
-    "editor.toolbar.quickshare": "Quickshare",
-    "editor.toolbar.quickshare.msg": "Your code has been shared. Share this URL with your friends!",
+    "editor.toolbar.quickshare": "Teilen",
+    "editor.toolbar.quickshare.msg": "Dein Code wurde geteilt. Teile diese URL mit deinen Freunden!",
 
     "editor.toolbar.filemenu": "Datei",
     "editor.toolbar.filemenu.new": "Neu",
