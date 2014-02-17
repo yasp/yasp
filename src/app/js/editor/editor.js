@@ -763,7 +763,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         // save it baby
         yasp.FileDialog.show(yasp.FileDialogMode.SAVE);
       }
-    }, 5000); // save every 5 seconds
+    }, 2500); // save every 5 seconds
     
     // automatically load automatic save if exists on startup
     if (yasp.Storage['automaticsave'] == "true" && !isQuickshare) {
