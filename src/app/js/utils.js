@@ -1,5 +1,5 @@
 /**
- * Emulators Function.bind where it does not exist
+ * Emulates Function.bind where it does not exist
  * Code from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility
  */
 if (!Function.prototype.bind) {
@@ -34,6 +34,13 @@ if (typeof window != 'undefined') {
         window.setTimeout(callback, 1000 / 60);
       };
   })();
+  
+  // builds basic auth string
+  window.makeBasicAuth = function(user, password) {
+    var tok = user + ':' + password;
+    var hash = btoa(tok);
+    return "Basic " + hash;
+  }
 }
 
 if (!Uint8Array.prototype.equals) {

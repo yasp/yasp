@@ -2,7 +2,7 @@ if (typeof yasp == 'undefined') yasp = { };
 if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
 (function() {
-  yasp.ServerURL = "http://localhost:8000/file.php";
+  yasp.ServerURL = "http://localhost:8000/server/file.php";
   
   yasp.FileDialogMode = {
     OPEN: 1,
@@ -12,6 +12,29 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
   };
   
   if (typeof yasp.Storage.files == 'undefined') yasp.Storage.files = JSON.stringify({ });
+  
+  var send2Server = function(method, params, success, err) {
+    var filename;
+    if (!!params && !!params['filename']) {
+      filename = encodeURIComponent(params['filename']);
+      delete params['filename'];
+    }
+    $.ajax(yasp.ServerURL+"?username="+encodeURIComponent(yasp.Storage['login_usr'])+"&password="+encodeURIComponent(yasp.Storage['login_pw'])+(!!filename ? "&filename="+filename : ""), {
+      data: params,
+      type: method,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader('Authorization', makeBasicAuth(yasp.Storage['login_usr'], yasp.Storage['login_pw']));
+      },
+      success: function(data, status, xhr) {
+        if (!!success) success(data);
+      },
+      error: function(xhr, status, error) {
+        // TODO: Display error
+        console.log("FILE ERROR "+error);
+        if (!!err) err(error);
+      }
+    });
+  };
   
   var fileSystemDriver = {
     LOCAL: {
@@ -90,22 +113,54 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     },
     SERVER: {
       newFile: function(name, cb) {
-        // TODO
+        var file;
+        send2Server("POST", file = {
+          filename: name,
+          username: yasp.Storage['login_usr'],
+          createdate: new Date().getTime(),
+          group: "server",
+          changedate: new Date().getTime(),
+          content: ""
+        }, function(data) {
+          cb(file);
+        }, function(error) {
+          cb(null);
+        });
       },
       requestList: function(cb) {
-        // TODO
+        send2Server("GET", null, function(data) {
+          cb(JSON.parse(data));
+        }, function(error) {
+          cb(null);
+        });
       },
       deleteFile: function(name, cb) {
-        // TODO
+        send2Server("DELETE", {
+          filename: name
+        }, function(data) {
+          cb(true);
+        }, function(error) {
+          cb(false);
+        });
       },
       renameFile: function(oldname, newname, cb) {
         // ToDO
       },
       openFile: function(name, cb) {
-        // TODO
+        send2Server("GET", {
+          filename: name
+        }, function(data) {
+          cb(JSON.parse(data));
+        }, function(error) {
+          cb(null);
+        });
       },
-      saveFile: function(name, cb) {
-        // TODO
+      saveFile: function(file, cb) {
+        send2Server("POST", JSON.stringify(file), function(data) {
+          cb(file);
+        }, function(error) {
+          cb(null);
+        });
       }
   }};
   
@@ -153,6 +208,19 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         if (tab.hasClass('link_local')) fileSystem = fileSystemDriver.LOCAL;
         
         fileSystem.requestList(function(files) {
+          if (!files) {
+            if (fileSystem == fileSystemDriver.SERVER) {
+              $('#filedialog_login').show();
+              $('#server .filelist').hide();
+            }
+            return;
+          } else {
+            // hide login box
+            if (fileSystem == fileSystemDriver.SERVER) {
+              $('#server .filelist').show();
+              $('#filedialog_login').hide();
+            }
+          }
           resetFunc();
           
           var table = $('#dialog_file .filelist tbody');
@@ -250,6 +318,19 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           }
         });
       });
+
+      // login
+      $('#filedialog_login').submit(function(e) {
+        yasp.Storage['login_usr'] = $('#filedialog_usrname').val();
+        yasp.Storage['login_pw'] = $('#filedialog_password').val();
+        
+        e.preventDefault();
+        
+        // load file
+        updateFunc();
+      });
+      $('#filedialog_usrname').val(!!yasp.Storage['login_usr'] ? yasp.Storage['login_usr'] : "");
+      $('#filedialog_password').val(!!yasp.Storage['login_pw'] ? yasp.Storage['login_pw'] : "");
       
       updateFunc();
     },
@@ -257,6 +338,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       $('#dialog_file').modal('hide');
     }
   };
+  
+  // initially hide filelist in Server tab
+  $('#server .filelist').hide();
 
   /**
    * Quick helper function that returns an empty file

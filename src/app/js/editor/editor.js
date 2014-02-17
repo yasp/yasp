@@ -183,7 +183,6 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     compile: function(content, cb) {
       if (content != this.lastUpdate) {
         this.lastUpdate = content;
-        console.log("update");
         yasp.AssemblerCommunicator.sendMessage("assemble", {
           code: content,
           jobs: ['symbols', 'map', 'ast', 'bitcode']
@@ -367,7 +366,6 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         .find('.labellink')
         .click(function(e) {
           var elem = $(this);
-          console.log("Jump to "+elem.text());
           var label = yasp.Editor.symbols.labels[elem.text().toUpperCase()];
           if (!!label) {
             editor.scrollIntoView(CodeMirror.Pos(label.line, label.char), 32);
@@ -779,12 +777,24 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         url: "https://yasp.firebaseIO.com/codes/" + hash + ".json",
         success: function (data) {
           var content = data.code;
-          yasp.FileDialog.FileSystemDriver.LOCAL.newFile("Quick Share File", function(file) {
-            file.content = content;
-            yasp.FileDialog.FileSystemDriver.LOCAL.saveFile(file, function() {
-              yasp.EditorManager.applyFile(file); // gotta love callbacks
-            })
-          });
+          if (!!content) {
+            yasp.FileDialog.FileSystemDriver.LOCAL.newFile("Quick Share File", function(file) {
+              var save = function() {
+                file.content = content;
+                yasp.FileDialog.FileSystemDriver.LOCAL.saveFile(file, function() {
+                  yasp.EditorManager.applyFile(file); // gotta love callbacks
+                });
+              };
+              if (!file) {
+                yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Quick Share File", function(realfile) {
+                  file = realfile;
+                  save();
+                })
+              } else {
+                save();
+              }
+            });
+          }
         }
       });
     }
@@ -908,8 +918,6 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
               curWord = null;
             }
           }
-            
-          console.log("Current Word: '"+curWord+"'");
           
           var osymbols = yasp.Editor.orderedSymbols;
           for (var i = 0; i < osymbols.length && curWord != null; i++) {
