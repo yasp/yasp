@@ -19,8 +19,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       filename = encodeURIComponent(params['filename']);
       delete params['filename'];
     }
+    
     $.ajax(yasp.ServerURL+"?username="+encodeURIComponent(yasp.Storage['login_usr'])+"&password="+encodeURIComponent(yasp.Storage['login_pw'])+(!!filename ? "&filename="+filename : ""), {
-      data: params,
+      data: JSON.parse(JSON.stringify(params)), // look at that hack (used for saveFile that gives a new String())
       type: method,
       beforeSend: function (xhr){
         xhr.setRequestHeader('Authorization', makeBasicAuth(yasp.Storage['login_usr'], yasp.Storage['login_pw']));
@@ -156,7 +157,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         });
       },
       saveFile: function(file, cb) {
-        send2Server("POST", JSON.stringify(file), function(data) {
+        var content = new String(file.content);
+        content.filename = file.filename;
+        send2Server("POST", content, function(data) {
           cb(file);
         }, function(error) {
           cb(null);
