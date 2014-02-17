@@ -119,10 +119,11 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           filename: name,
           username: yasp.Storage['login_usr'],
           createdate: new Date().getTime(),
-          group: "server",
+          group: "grp",
           changedate: new Date().getTime(),
           content: ""
         }, function(data) {
+          file.filename = name; // add filename again because it is removed in send2Server
           cb(file);
         }, function(error) {
           cb(null);
@@ -145,7 +146,43 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         });
       },
       renameFile: function(oldname, newname, cb) {
-        // ToDO
+        // get old name
+        fileSystemDriver.SERVER.openFile(oldname, function(oldfile) {
+          if (!!oldfile) {
+            // remove old name
+            fileSystemDriver.SERVER.deleteFile(oldname, function(success) {
+              if (success) {
+                // create new file
+                fileSystemDriver.SERVER.newFile(newname, function(file) {
+                  if (!!file) {
+                    // save created file
+                    file.content = oldfile.content;
+                    fileSystemDriver.SERVER.saveFile(file, function(resultfile) {
+                      // no restore here, because it it expected if file can be created it can also be saved, otherwise some strange things may occur
+                      cb(!!resultfile);
+                    });
+                  } else {
+                    // restore file
+                    fileSystemDriver.SERVER.newFile(oldname, function(file) {
+                      if (!!file) {
+                        fileSystemDriver.SERVER.saveFile(oldfile, function(resultfile) {
+                          cb(false); // at least i was able to restore it
+                        });
+                      } else {
+                        console.log("Could not restore file");
+                        cb(false);
+                      }
+                    });
+                  }
+                });
+              } else {
+                cb(false);
+              }
+            });
+          } else {
+            cb(false);
+          }
+        });
       },
       openFile: function(name, cb) {
         send2Server("GET", {
@@ -171,17 +208,33 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
   var dialogMode;
   var saveFunc = function(name, ignoreDialog) {
     var file = yasp.EditorManager.getAndUpdateFile();
-    file.filename = name;
-    var fs = file.username == 'local' ? fileSystemDriver.LOCAL : fileSystemDriver.SERVER;
-    fs.saveFile(file, function(file) {
-      if (!!file) {
-        // success
-        yasp.EditorManager.applyFile(file);
-        if (!ignoreDialog) $('#dialog_file').modal('hide');
-      } else {
-        if (!ignoreDialog) $('#fileerror').show().text(yasp.l10n.getTranslation("filedialog.save.error"));
-      }
-    });
+    
+    var ready = function() {
+      var fs = ignoreDialog ? (file.username == 'local' ? fileSystemDriver.LOCAL : fileSystemDriver.SERVER) : fileSystem;
+      fs.saveFile(file, function(file) {
+        if (!!file) {
+          // success
+          yasp.EditorManager.applyFile(file);
+          if (!ignoreDialog) $('#dialog_file').modal('hide');
+        } else {
+          if (!ignoreDialog) $('#fileerror').show().text(yasp.l10n.getTranslation("filedialog.save.error"));
+        }
+      });
+    };
+    
+    
+    if (file.filename != name) {
+      // new file
+      fileSystem.newFile(name, function(newfile) {
+        newfile.content = file.content;
+        file = newfile;
+        ready();
+      });
+    } else {
+      ready();
+    }
+    
+    
   };
   
   var resetFunc = function() {
@@ -270,6 +323,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
                 var elem = $(this), newtext;
                 fileSystem.renameFile(row.filename, newtext = elem.find('input').val(), function() {
                   elem.text(newtext);
+                  updateFunc();
                 });
                 
                 return false;
