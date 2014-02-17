@@ -749,7 +749,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     // automatic save
     setInterval(function() {
       // check if automatic save is on
-      if (yasp.Storage['automaticsave'] == "true" && !isQuickshare) {
+      if (yasp.Storage['automaticsave'] == "true") {
         // is there a name associated with this file?
         var file = yasp.EditorManager.file;
         if (!file.filename) {
@@ -781,7 +781,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         success: function (data) {
           var content = data.code;
           yasp.EditorManager.applyFile({
-            filename: null,
+            filename: "Quickshare",
             content: content
           });
         }
