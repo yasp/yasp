@@ -172,7 +172,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
   var saveFunc = function(name, ignoreDialog) {
     var file = yasp.EditorManager.getAndUpdateFile();
     file.filename = name;
-    fileSystem.saveFile(file, function(file) {
+    var fs = file.username == 'local' ? fileSystemDriver.LOCAL : fileSystem.SERVER;
+    fs.saveFile(file, function(file) {
       if (!!file) {
         // success
         yasp.EditorManager.applyFile(file);
