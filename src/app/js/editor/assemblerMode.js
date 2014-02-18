@@ -58,6 +58,7 @@
             }
           }
           stream.next();
+          
           return "";
         }
       },
@@ -77,7 +78,7 @@
             }
           default:
             return indentUnit;
-        }
+       }
       }
     };
   });

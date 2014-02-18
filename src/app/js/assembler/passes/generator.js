@@ -98,7 +98,7 @@ if (typeof yasp == 'undefined') yasp = { };
       },
       calculateBitSize: function() {
         if (this.params.data instanceof String && !this.params.len) {
-          return this.params.data.length*8 + 8; // data + \0
+          return this.params.data.substring(1, this.params.data.length-1).length*8 + 8; // data + \0
         } else {
           return this.params.len;
         }
