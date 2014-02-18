@@ -20,16 +20,22 @@
       // electricChars: ' ', buggy
       startState: function() {
         return {
-          labels: [ ]
+          labels: [ ],
+          reachEnd: false
         };
       },
       token: function(stream, state) {
+        if (state.reachEnd) {
+          stream.skipToEnd();
+          return "comment";
+        }
         // check if comment
         if (stream.peek() == ';') {
           stream.skipToEnd();
           return "comment";
         } else {
           var line = stream.string, pos = stream.pos;
+          if (line.trim().toLowerCase() == 'end') state.reachEnd = true;
           var tokens = !!state.tokens ? state.tokens : new yasp.Lexer().pass({ }, line);
           
           // bad code is bad
