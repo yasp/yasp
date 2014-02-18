@@ -59,8 +59,8 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
       var maxRadius = Math.min(width, height)/2;
 
-      var outerRadius = maxRadius-10;
-      var innerRadius = maxRadius-20;
+      var outerRadius = Math.max(maxRadius-10, 5);
+      var innerRadius = Math.max(maxRadius-20, 10);
       var numTeeth = maxRadius/2;
       var color = "rgb(190,190,190)";
       var rad = (this.state/255)*359*(Math.PI/180);
@@ -74,7 +74,6 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       ctx.beginPath();
       ctx.lineJoin = 'bevel';
       for(var n = 0; n < numPoints; n++) {
-
         var radius = null;
 
         if(n % 2 == 0) {
@@ -99,7 +98,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       }
 
       ctx.closePath();
-      ctx.lineWidth = 5;
+      ctx.lineWidth = 7;
       ctx.strokeStyle = color;
       ctx.stroke();
 

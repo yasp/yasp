@@ -38,7 +38,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
   };
 
   yasp.HardwareType["LED"].renderLED = function(params, ctx, alpha, width, height) {
-    var radius = Math.min(width, height)/2;
+    var radius = Math.max(Math.min(width, height)/2, 5);
     var alpha = Math.min(1, Math.max(0, alpha)); // only values between 1 and 0
     
     ctx.clearRect(0,0,width, height); // clear it, baby

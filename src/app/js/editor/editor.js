@@ -784,6 +784,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
                 yasp.FileDialog.FileSystemDriver.LOCAL.saveFile(file, function() {
                   yasp.EditorManager.applyFile(file); // gotta love callbacks
                 });
+                break;
               };
               if (!file) {
                 yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Quick Share File", function(realfile) {
@@ -928,7 +929,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         }
         
         // is current word in symbols exactly? if so, do not show any
-        if (!!curWord) {
+        if (!!curWord && !options.force) {
           curWord = curWord.toUpperCase();
           for (var i = 0; i < symbols.length; i++) {
             if (symbols[i].toUpperCase() == curWord) {
