@@ -308,6 +308,21 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
             elem.find('.filedialog_select').click(function() {
               $('#filedialog_name').val(row.filename);
+              switch (mode) {
+                case yasp.FileDialogMode.OPEN:
+                  $('#filedialog_open').click();
+                  break;
+                case yasp.FileDialogMode.SAVE:
+                  $('#filedialog_save').click();
+                  break;
+                case yasp.FileDialogMode.SAVEAS:
+                  $('#filedialog_saveas').click();
+                  break;
+                case yasp.FileDialogMode.NEW:
+                  $('#filedialog_new').click();
+                  break;
+              }
+
             });
             
             elem.find('.filedialog_name').dblclick(function() {
