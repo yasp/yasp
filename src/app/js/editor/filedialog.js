@@ -257,6 +257,22 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       $('#dialog_file .open, #dialog_file .save, #dialog_file .saveas, #dialog_file .new').hide();
       
       var updateFunc;
+      var execSubmit = function() {
+        switch (mode) {
+          case yasp.FileDialogMode.OPEN:
+            $('#filedialog_open').click();
+            break;
+          case yasp.FileDialogMode.SAVE:
+            $('#filedialog_save').click();
+            break;
+          case yasp.FileDialogMode.SAVEAS:
+            $('#filedialog_saveas').click();
+            break;
+          case yasp.FileDialogMode.NEW:
+            $('#filedialog_new').click();
+            break;
+        }
+      };
       $('#dialog_file a[data-toggle="tab"]').on('shown.bs.tab', updateFunc = function (e) {
         resetFunc();
         
@@ -308,20 +324,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
             elem.find('.filedialog_select').click(function() {
               $('#filedialog_name').val(row.filename);
-              switch (mode) {
-                case yasp.FileDialogMode.OPEN:
-                  $('#filedialog_open').click();
-                  break;
-                case yasp.FileDialogMode.SAVE:
-                  $('#filedialog_save').click();
-                  break;
-                case yasp.FileDialogMode.SAVEAS:
-                  $('#filedialog_saveas').click();
-                  break;
-                case yasp.FileDialogMode.NEW:
-                  $('#filedialog_new').click();
-                  break;
-              }
+              execSubmit();
 
             });
             
@@ -346,6 +349,10 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
             });
           });
         });
+      });
+      
+      $('#dialog_file #filedialog_nameform').submit(function() {
+        execSubmit();
       });
       
       var visible;
