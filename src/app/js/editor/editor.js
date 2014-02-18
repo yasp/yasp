@@ -278,6 +278,15 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     var usbmasterImg = new Image();
     usbmasterImg.src = "./app/img/usbmaster.png";
 
+    if((!yasp.Storage['version'] || yasp.Storage['version'] != "1") && yasp.Storage.clear) {
+      console.log("cleared settings");
+      var files = yasp.Storage.files;
+      yasp.Storage.clear();
+      yasp.Storage.files = files;
+    }
+
+    yasp.Storage['version'] = "1";
+
     if (typeof yasp.Storage['theme'] == 'undefined')           yasp.Storage['theme'] = 'eclipse';
     if (typeof yasp.Storage['indentUnit'] == 'undefined')      yasp.Storage['indentUnit'] = "8"; // localStorage saves as string
     if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "true";
