@@ -61,7 +61,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
       var outerRadius = Math.max(maxRadius-10, 5);
       var innerRadius = Math.max(maxRadius-20, 10);
-      var numTeeth = maxRadius/2;
+      var numTeeth = Math.floor((2*maxRadius*Math.PI)/12);
       var color = "rgb(190,190,190)";
       var rad = (this.state/255)*359*(Math.PI/180);
 
