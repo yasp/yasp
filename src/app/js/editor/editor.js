@@ -282,7 +282,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     if (typeof yasp.Storage['indentUnit'] == 'undefined')      yasp.Storage['indentUnit'] = "8"; // localStorage saves as string
     if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "true";
     if (typeof yasp.Storage['codecompletion'] == 'undefined')  yasp.Storage['codecompletion'] = "true";
-    if (typeof yasp.Storage['language'] == 'undefined')        yasp.Storage['language'] = "English";
+    if (typeof yasp.Storage['language'] == 'undefined')        yasp.Storage['language'] = ((navigator.language || navigator.userLanguage).substr(0, 2) == "de") ? "de" : "en";
     if (typeof yasp.Storage['labellist'] == 'undefined')       yasp.Storage['labellist'] = "slide";
     if (typeof yasp.Storage['help'] == 'undefined')       yasp.Storage['help'] = "slide";
 
