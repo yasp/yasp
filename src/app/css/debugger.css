@@ -298,3 +298,8 @@ table.breakpoints td.break-active {
     display: table-cell;
     vertical-align: middle;
 }
+
+/* Fix Scale bug */
+#hardwarecontainer {
+    min-height: 100px;
+}
