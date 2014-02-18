@@ -25,7 +25,7 @@ span.cm-keyword {
 #editorcontainer {
     font-size: 12px;
     height: calc(100% - 16px);
-    width: 100%;
+    width: calc(100% - 20px);
     padding-top: 30px; /* Fix scrollbar bug */
     margin-top: -30px;
 
