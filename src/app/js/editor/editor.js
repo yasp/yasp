@@ -784,7 +784,6 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
                 yasp.FileDialog.FileSystemDriver.LOCAL.saveFile(file, function() {
                   yasp.EditorManager.applyFile(file); // gotta love callbacks
                 });
-                break;
               };
               if (!file) {
                 yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Quick Share File", function(realfile) {
