@@ -32,7 +32,9 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
     "editor.toolbar.menu.help": "Help",
     "editor.toolbar.menu.settings": "Settings",
     "editor.toolbar.menu.about": "About",
-    "editor.toolbar.menu.untitled": "Untitled",
+    "editor.toolbar.menu.file.untitled": "Untitled",
+    "editor.toolbar.menu.file.autosave": "Autosave",
+    "editor.toolbar.menu.file.quickshare": "Quickshare",
 
     "editor.tutorial.title": "Howdy!",
     "editor.tutorial.title2": "Do you need help?",

@@ -2,6 +2,10 @@ if (typeof yasp == 'undefined') yasp = { };
 if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
 (function() {
+  yasp.files = { };
+  yasp.files.quickShareFile = "Quick Share File";
+  yasp.files.autoSaveFile = "Automatic Save";
+
   /**
    * Initialize code mirror textarea and keeps track of every editor textarrea
    * @constructor
@@ -32,7 +36,16 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       });
     }
     // update filename
-    $('#display_filename').text(file.filename ? file.filename : yasp.l10n.getTranslation("editor.toolbar.menu.untitled"));
+    var filename = file.filename;
+
+    if(!filename)
+      filename = yasp.l10n.getTranslation("editor.toolbar.menu.file.untitled");
+    else if(filename == yasp.files.autoSaveFile)
+      filename = yasp.l10n.getTranslation("editor.toolbar.menu.file.autosave");
+    else if(filename == yasp.files.quickShareFile)
+      filename = yasp.l10n.getTranslation("editor.toolbar.menu.file.quickshare");
+
+    $('#display_filename').text(filename);
     
   };
   EditorManager.prototype.getAndUpdateFile = function() {
@@ -763,7 +776,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
           // no? => Create empty file
           file = yasp.FileDialog.createEmptyFile();
           file.content = yasp.EditorManager.editors[0].getValue();
-          file.filename = "Automatic Save";
+          file.filename = yasp.files.autoSaveFile;
           yasp.EditorManager.applyFile(file);
         }
         
@@ -784,7 +797,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     
     // automatically load automatic save if exists on startup
     if (yasp.Storage['automaticsave'] == "true" && !yasp.Editor.isQuickshare()) {
-      yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Automatic Save", function(file) {
+      yasp.FileDialog.FileSystemDriver.LOCAL.openFile(yasp.files.autoSaveFile, function(file) {
         if (!!file) {
           yasp.EditorManager.applyFile(file);
         } else {
@@ -803,7 +816,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         success: function (data) {
           var content = (data || { }).code;
           if (!!content) {
-            yasp.FileDialog.FileSystemDriver.LOCAL.newFile("Quick Share File", function(file) {
+            yasp.FileDialog.FileSystemDriver.LOCAL.newFile(yasp.files.quickShareFile, function(file) {
               var save = function() {
                 file.content = content;
                 yasp.FileDialog.FileSystemDriver.LOCAL.saveFile(file, function() {
@@ -811,7 +824,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
                 });
               };
               if (!file) {
-                yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Quick Share File", function(realfile) {
+                yasp.FileDialog.FileSystemDriver.LOCAL.openFile(yasp.files.quickShareFile, function(realfile) {
                   file = realfile;
                   save();
                 })
