@@ -801,7 +801,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         type: "GET",
         url: "https://yasp.firebaseIO.com/codes/" + hash + ".json",
         success: function (data) {
-          var content = data.code;
+          var content = (data || { }).code;
           if (!!content) {
             yasp.FileDialog.FileSystemDriver.LOCAL.newFile("Quick Share File", function(file) {
               var save = function() {
