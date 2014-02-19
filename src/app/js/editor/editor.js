@@ -751,7 +751,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       }
     }, 500);
 
-    var isQuickshare = (window.location.hash.indexOf('#q=') === 0);
+    yasp.Editor.isQuickshare = function () { return (window.location.hash.indexOf('#q=') === 0) };
     
     // automatic save
     setInterval(function() {
@@ -771,15 +771,31 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         yasp.FileDialog.show(yasp.FileDialogMode.SAVE);
       }
     }, 2500); // save every 5 seconds
-    
-    // automatically load automatic save if exists on startup
-    if (yasp.Storage['automaticsave'] == "true" && !isQuickshare) {
-      yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Automatic Save", function(file) {
-        if (!!file) yasp.EditorManager.applyFile(file);
+
+    function applyInitialCode () {
+      $.ajax('app/initialcode.txt').done(function(responseText) {
+        yasp.EditorManager.applyFile({
+          content: responseText
+        });
+      }).fail(function() {
+        console.log("failed to load initial code");
       });
     }
+    
+    // automatically load automatic save if exists on startup
+    if (yasp.Storage['automaticsave'] == "true" && !yasp.Editor.isQuickshare()) {
+      yasp.FileDialog.FileSystemDriver.LOCAL.openFile("Automatic Save", function(file) {
+        if (!!file) {
+          yasp.EditorManager.applyFile(file);
+        } else {
+          applyInitialCode();
+        }
+      });
+    } else if(!yasp.Editor.isQuickshare()) {
+      applyInitialCode();
+    }
 
-    if(isQuickshare) {
+    if(yasp.Editor.isQuickshare()) {
       var hash = window.location.hash.substr(3);
       $.ajax({
         type: "GET",

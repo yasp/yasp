@@ -116,52 +116,7 @@
         </div>
         
         <div id="editorcontainer">
-        <textarea id="editor" name="code">
-; Toggle the green LED and increment a byte-register by at a time.
-; Additionally the yellow LED is switched once an overflow occurs.
-; The red LED is toggled via an interrupt when the red button is pressed.
-
-; ---- INIT
-        MOV     b0, 0x00
-        MOV     b1, 0x20
-
-        ; Enable interrupts for the red button (= pin 2)
-        ; Pin:  7 6 5 4 3 2 1 0
-        ; Mask: 0 0 0 0 0 1 0 0 = 4dec
-        ENABLE  4
-
-
-; ---- Blink green and increment b0 by b1
-main:
-        ADD     b0, b1
-        DEBUG   b0      ; send current value of b0 to debugger
-        JC      carry   ; jump if b0 had an overflow
-        TOGGLE  5       ; toggle green LED
-        PAUSE   30000   ; wait for ~450ms
-        JMP     main
-
-; ---- Switch yellow
-carry:
-        TOGGLE  4       ; toggle yellow LED
-        JMP     main
-
-; ---- called via interrupt when the red button is pressed
-isr1:
-        TOGGLE  3       ; toggle red LED
-        ECHO helloWorld ; send string "hello world" to debugger
-        RETI            ; return to main program
-
-helloWorld:
-        STRING "hello world"
-
-; ---- interrupt table
-        ORG     0x100
-        DW      0	    ; pin 0 (not wired)
-        DW      0	    ; black button
-        DA      isr1    ; red button
-
-END
-</textarea>
+        <textarea id="editor" name="code"></textarea>
         </div>
 
         <!-- About Dialog -->
