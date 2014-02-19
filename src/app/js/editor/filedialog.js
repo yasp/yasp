@@ -224,9 +224,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     if (file.filename != name) {
       // new file
       fileSystem.newFile(name, function(newfile) {
-        newfile.content = file.content;
-        file = newfile;
-        ready();
+        if (!!newfile) {
+          newfile.content = file.content;
+          file = newfile;
+          ready();
+        } else {
+          // file already exists => it's ready baby
+          ready();
+        }
       });
     } else {
       ready();
