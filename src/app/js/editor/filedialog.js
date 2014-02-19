@@ -17,8 +17,12 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       filename = encodeURIComponent(params['filename']);
       delete params['filename'];
     }
+
+    var url = yasp.config.filemanager.drivers.SERVER.url + "/file.php"
+            + "?username=" + encodeURIComponent(yasp.Storage['login_usr']);
+    if(filename) url +="&filename="+filename;
     
-    $.ajax(yasp.config.filemanager.drivers.SERVER.url+"?username="+encodeURIComponent(yasp.Storage['login_usr'])+"&password="+encodeURIComponent(yasp.Storage['login_pw'])+(!!filename ? "&filename="+filename : ""), {
+    $.ajax(url, {
       data: JSON.parse(JSON.stringify(params)), // look at that hack (used for saveFile that gives a new String())
       type: method,
       beforeSend: function (xhr){
