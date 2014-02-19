@@ -433,9 +433,13 @@
                         <div id="fileerror" class="alert alert-danger">
                             
                         </div>
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#local" data-toggle="tab" data-l10n="filedialog.local" class="link_local"></a></li>
-                            <li><a href="#server" data-toggle="tab"  data-l10n="filedialog.server" class="link_server"></a></li>
+                        <ul class="nav nav-tabs drivers">
+                            <li data-driver="LOCAL">
+                                <a href="#local" data-toggle="tab" data-l10n="filedialog.local" class="link_local"></a>
+                            </li>
+                            <li data-driver="SERVER">
+                                <a href="#server" data-toggle="tab" data-l10n="filedialog.server" class="link_server"></a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="local">
@@ -513,6 +517,7 @@
         </div>
 
         <!-- yasp files -->
+        <script src="app/config.js"></script>
         <script src="app/js/utils.js"></script>
         <script src="app/js/communicator.js"></script>
         <script src="app/js/commands.js"></script>

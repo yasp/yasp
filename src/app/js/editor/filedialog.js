@@ -2,8 +2,6 @@ if (typeof yasp == 'undefined') yasp = { };
 if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
 (function() {
-  yasp.ServerURL = "http://localhost:8000/server/file.php";
-  
   yasp.FileDialogMode = {
     OPEN: 1,
     SAVE: 2,
@@ -20,7 +18,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       delete params['filename'];
     }
     
-    $.ajax(yasp.ServerURL+"?username="+encodeURIComponent(yasp.Storage['login_usr'])+"&password="+encodeURIComponent(yasp.Storage['login_pw'])+(!!filename ? "&filename="+filename : ""), {
+    $.ajax(yasp.config.filemanager.drivers.SERVER.url+"?username="+encodeURIComponent(yasp.Storage['login_usr'])+"&password="+encodeURIComponent(yasp.Storage['login_pw'])+(!!filename ? "&filename="+filename : ""), {
       data: JSON.parse(JSON.stringify(params)), // look at that hack (used for saveFile that gives a new String())
       type: method,
       beforeSend: function (xhr){
@@ -418,6 +416,21 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       $('#dialog_file').modal('hide');
     }
   };
+
+  // apply config
+  var $drivers = $('#dialog_file .drivers > *');
+
+  $drivers.removeClass('active');
+  $drivers.filter('[data-driver=' + yasp.config.filemanager.defaultDriver + ']').addClass('active');
+
+  $drivers.css('display', 'block');
+
+  for (var driver in yasp.config.filemanager.drivers) {
+    var conf = yasp.config.filemanager.drivers[driver];
+    if(conf.enabled === false) {
+      $drivers.filter('[data-driver=' + driver + ']').css('display', 'none');
+    }
+  }
   
   // initially hide filelist in Server tab
   $('#server .filelist').hide();

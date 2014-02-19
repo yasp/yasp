@@ -558,10 +558,14 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         showDebugger("debug");
       });
 
+      if(yasp.config.quickshare.enabled === false) {
+        $('.menu_share').css('display', 'none');
+      }
+
       $('.menu_share').click(function () {
         $.ajax({
           type: "POST",
-          url: "https://yasp.firebaseIO.com/codes.json",
+          url: yasp.config.quickshare.firebaseurl + "/codes.json",
           data: JSON.stringify({ code: editor.getValue() }),
           success: function (data) {
             var name = data.name;
@@ -765,7 +769,10 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       }
     }, 500);
 
-    yasp.Editor.isQuickshare = function () { return (window.location.hash.indexOf('#q=') === 0) };
+    yasp.Editor.isQuickshare = function () {
+      return (yasp.config.quickshare.enabled === true) &&
+             (window.location.hash.indexOf('#q=') === 0);
+    };
     
     // automatic save
     setInterval(function() {
@@ -787,6 +794,9 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     }, 2500); // save every 5 seconds
 
     function applyInitialCode () {
+      if(yasp.config.loadinitialcode === false)
+        return;
+
       $.ajax('app/initialcode.txt').done(function(responseText) {
         yasp.EditorManager.applyFile({
           content: responseText
@@ -813,7 +823,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       var hash = window.location.hash.substr(3);
       $.ajax({
         type: "GET",
-        url: "https://yasp.firebaseIO.com/codes/" + hash + ".json",
+        url: yasp.config.quickshare.firebaseurl + "/codes/" + hash + ".json",
         success: function (data) {
           var content = (data || { }).code;
           if (content || content === "") {
