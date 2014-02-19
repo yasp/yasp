@@ -559,7 +559,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       });
 
       if(yasp.config.quickshare.enabled === false) {
-        $('.menu_share').css('display', 'none');
+        $('.menu_share, .menu_shareseperator').css('display', 'none');
       }
 
       $('.menu_share').click(function () {
