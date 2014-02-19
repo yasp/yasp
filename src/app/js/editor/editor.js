@@ -572,6 +572,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
             prompt(yasp.l10n.getTranslation("editor.toolbar.quickshare.msg"), url);
             location.replace(url);
+            location.reload();
           }
         });
       });
@@ -815,7 +816,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
         url: "https://yasp.firebaseIO.com/codes/" + hash + ".json",
         success: function (data) {
           var content = (data || { }).code;
-          if (!!content) {
+          if (content || content === "") {
             yasp.FileDialog.FileSystemDriver.LOCAL.newFile(yasp.files.quickShareFile, function(file) {
               var save = function() {
                 file.content = content;
