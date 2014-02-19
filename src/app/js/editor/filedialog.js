@@ -427,6 +427,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
   $drivers.removeClass('active');
   $drivers.filter('[data-driver=' + yasp.config.filemanager.defaultDriver + ']').addClass('active');
+  $('#dialog_file .tab-pane#' + yasp.config.filemanager.defaultDriver).addClass('active');
 
   $drivers.css('display', 'block');
 
