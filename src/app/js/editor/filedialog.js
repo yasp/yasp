@@ -283,7 +283,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       $('#dialog_file a[data-toggle="tab"]').on('shown.bs.tab', updateFunc = function (e) {
         resetFunc();
         
-        var tab = $(!!e ? e.target : '#dialog_file .active');
+        var tab = $(!!e ? e.target : '#dialog_file li.active a');
         if (tab.hasClass('link_server')) fileSystem = fileSystemDriver.SERVER;
         if (tab.hasClass('link_local')) fileSystem = fileSystemDriver.LOCAL;
         
