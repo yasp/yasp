@@ -291,18 +291,20 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     var usbmasterImg = new Image();
     usbmasterImg.src = "./app/img/usbmaster.png";
 
-    if((!yasp.Storage['version'] || yasp.Storage['version'] != "1") && yasp.Storage.clear) {
+    var currentVersion = "2";
+
+    if((!yasp.Storage['version'] || yasp.Storage['version'] != currentVersion) && yasp.Storage.clear) {
       console.log("cleared settings");
       var files = yasp.Storage.files;
       yasp.Storage.clear();
       yasp.Storage.files = files;
     }
 
-    yasp.Storage['version'] = "1";
+    yasp.Storage['version'] = currentVersion;
 
     if (typeof yasp.Storage['theme'] == 'undefined')           yasp.Storage['theme'] = 'eclipse';
     if (typeof yasp.Storage['indentUnit'] == 'undefined')      yasp.Storage['indentUnit'] = "8"; // localStorage saves as string
-    if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "true";
+    if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "false";
     if (typeof yasp.Storage['codecompletion'] == 'undefined')  yasp.Storage['codecompletion'] = "true";
     if (typeof yasp.Storage['language'] == 'undefined')        yasp.Storage['language'] = ((navigator.language || navigator.userLanguage).substr(0, 2) == "de") ? "de" : "en";
     if (typeof yasp.Storage['labellist'] == 'undefined')       yasp.Storage['labellist'] = "slide";
