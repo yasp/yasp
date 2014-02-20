@@ -38,7 +38,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
 
     "editor.tutorial.title": "Howdy!",
     "editor.tutorial.title2": "Do you need help?",
-    "editor.tutorial.text": "You might want to take a look at the <a href='https://github.com/yasp/yasp/blob/master/doc/tutorial.md'>tutorial</a>. There are also <a href='https://github.com/yasp/yasp/tree/master/doc/sampleprograms'>sample programs</a>.",
+    "editor.tutorial.text": "You might want to take a look at the <a href='https://github.com/yasp/yasp/blob/master/doc/tutorial.md' target='_blank'>tutorial</a>. There are also <a href='https://github.com/yasp/yasp/tree/master/doc/sampleprograms' target='_blank'>sample programs</a>.",
     "editor.tutorial.hideNow": "Hide now",
     "editor.tutorial.hideAlways": "Hide always",
 
