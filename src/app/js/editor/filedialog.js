@@ -19,7 +19,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
     }
 
     var url = yasp.config.filemanager.drivers.SERVER.url + "/file.php"
-            + "?username=" + encodeURIComponent(yasp.Storage['login_usr']);
+            + "?username=" + encodeURIComponent(yasp.FileDialog.auth.username);
     if(filename) url +="&filename="+filename;
     
     $.ajax(url, {
