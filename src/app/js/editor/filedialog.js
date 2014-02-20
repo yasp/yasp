@@ -26,7 +26,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
       data: JSON.parse(JSON.stringify(params)), // look at that hack (used for saveFile that gives a new String())
       type: method,
       beforeSend: function (xhr){
-        xhr.setRequestHeader('Authorization', makeBasicAuth(yasp.Storage['login_usr'], yasp.Storage['login_pw']));
+        xhr.setRequestHeader('Authorization', makeBasicAuth(yasp.FileDialog.auth.username, yasp.FileDialog.auth.password));
       },
       success: function(data, status, xhr) {
         if (!!success) success(data);
@@ -251,6 +251,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
   };
   
   yasp.FileDialog = {
+    auth: { },
     show: function(mode) {
       dialogMode = mode;
       if (dialogMode == yasp.FileDialogMode.SAVE && (typeof yasp.EditorManager.getAndUpdateFile().filename != 'undefined' && yasp.EditorManager.getAndUpdateFile().filename != null)) {
@@ -408,17 +409,17 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
 
       // login
       $('#filedialog_login').submit(function(e) {
-        yasp.Storage['login_usr'] = $('#filedialog_usrname').val();
-        yasp.Storage['login_pw'] = $('#filedialog_password').val();
-        
+        yasp.FileDialog.auth = {
+          username: $('#filedialog_usrname').val(),
+          password: $('#filedialog_password').val()
+        };
+
         e.preventDefault();
         
         // load file
         updateFunc();
       });
-      $('#filedialog_usrname').val(!!yasp.Storage['login_usr'] ? yasp.Storage['login_usr'] : "");
-      $('#filedialog_password').val(!!yasp.Storage['login_pw'] ? yasp.Storage['login_pw'] : "");
-      
+
       updateFunc();
     },
     close: function() {
