@@ -1,5 +1,5 @@
 if (typeof yasp == 'undefined') yasp = { };
-if (typeof yasp.Storage == 'undefined') yasp.Storage = localStorage || { };
+if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () ? localStorage : { };
 
 (function() {
   yasp.FileDialogMode = {

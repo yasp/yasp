@@ -56,3 +56,14 @@ if (!Uint8Array.prototype.equals) {
     return true;
   }
 }
+
+function isLocalStorageEnabled () {
+  try {
+    // https://github.com/Modernizr/Modernizr/blob/master/feature-detects/storage/localstorage.js, MIT
+    localStorage.setItem("a", "a");
+    localStorage.removeItem("a");
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
