@@ -23,7 +23,7 @@ Note: The data directives (`DW`, `DB`, `DA`, `STRING`) are capable of writing mu
 
 The directives are parsed in the function `yasp.Parser.prototype.parseDirective` in `assembler/parser.js`.
 
-*Commands* are defined in the instructions.js file and are dynamically loaded. The commands are parsed in the function `yasp.Parser.prototype.parseCommand` in `assembler/parser.js`
+*Commands* are defined in the `instructions.js` file and are dynamically loaded. The commands are parsed in the function `yasp.Parser.prototype.parseCommand` in `assembler/parser.js`
 
 For more information see [Instructions](#instructions).
 ### Example
@@ -38,7 +38,7 @@ Important note about label names:
 * Cannot have the same name as a register or similiar names (b1, or b1000)
 * Cannot only contain alphanumeric characters, "_" and "-"
 * Cannot have the same name as an instruction or directive
-* Numbers are also permitted
+* Just numbers are also not allowed
 
 ### Example
 ```
@@ -52,7 +52,7 @@ The assembler is divided into 4 passes:
 * Parser
 * Generator
 
-The assembler is managing all the passes and holding information necassary for the editor, debugger and assembler itself. Additionally if features some helper functions for iterating over the token array (`yasp.TokenIterator') and other util functions (`yasp.Assembler.prototype.riseSyntaxError`).
+The assembler is managing all the passes and holding information necassary for the editor, debugger and assembler itself. Additionally if features some helper functions for iterating over the token array (`yasp.TokenIterator`) and other util functions (`yasp.Assembler.prototype.riseSyntaxError`).
 
 The function `yasp.Assembler.prototype.assemble` is responsible for all the assembling. The function is returning the following data structure if assembling was successful:
 ```
@@ -138,7 +138,7 @@ byteregister ::= "b0" | "b1" | "b2" | "b3" | "b4" | "b5" | "b6" | "b7" | "b8" | 
 wordregister ::= "w0" | "w1" | "w2" | "w3" | "w4" | "w5" | "w6" | "w7" | "w8" | "w9" | "w10" | "w11" | "w12" | "w13" | "w14" | "w15" | "w16" | "w17" | "w18" | "w19" | "w20" | "w21" | "w22" | "w23" | "w24" | "w25" | "w26" | "w27" | "w28" | "w29" | "w30" | "w31";
 
 simpleliteral ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
-literal ::= simpleliteral | "0x" , simpleliteral;
+literal ::= simpleliteral | ("0x" , simpleliteral);
 
 symbol ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t"  | "u" | "v" | "w" | "x" | "y" | "z"  | literal;
 
