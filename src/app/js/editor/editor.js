@@ -342,14 +342,22 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
     
     // force intendation everytime something changes
     var changing = false;
-    editor.on("change", function() {
+    editor.on("change", function(instance, changeObj) {
       if (changing) return;
 
       yasp.Editor.updateBreakpoints();
-
+      
+      // force indentation if multiple lines have changed
       var c = editor.getCursor();
+      
+      for (var i = changeObj.from.line; i <= changeObj.from.line + changeObj.text.length; i++) {
+        if (i != c.line) editor.indentLine(i);
+      }
+      
+      
       if (!!c) {
         try {
+          // go through lines
           var content = editor.getLine(c.line);
           editor.indentLine(c.line);
           var newc = editor.getCursor();
@@ -982,7 +990,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
           
           var osymbols = yasp.Editor.orderedSymbols;
           for (var i = 0; i < osymbols.length && curWord != null; i++) {
-            if ((osymbols[i].toUpperCase().indexOf(curWord) == 0 && osymbols[i].toUpperCase() != curWord)) {
+            if ((osymbols[i].toUpperCase().indexOf(curWord) == 0)) {
               symbols.push(osymbols[i]);
             }
           }

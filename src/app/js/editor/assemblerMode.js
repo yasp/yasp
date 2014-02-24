@@ -65,7 +65,7 @@
       indent: function(state, textAfter) {
         var tokens = !!state.tokens ? state.tokens : new yasp.Lexer().pass({ }, textAfter);
         
-        if (tokens.length == 1) return indentUnit; // lexer always appends \n
+        if (tokens.length == 1) return 0; // lexer always appends \n
         var t = tokens[0];
         if (t.text.toUpperCase() == "END") return 0;
         
