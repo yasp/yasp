@@ -303,6 +303,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
     yasp.Storage['version'] = currentVersion;
 
     if (typeof yasp.Storage['theme'] == 'undefined')           yasp.Storage['theme'] = 'eclipse';
+    if (typeof yasp.Storage['hiddenPopups'] == 'undefined')    yasp.Storage['hiddenPopups'] = '[]';
     if (typeof yasp.Storage['indentUnit'] == 'undefined')      yasp.Storage['indentUnit'] = "8"; // localStorage saves as string
     if (typeof yasp.Storage['automaticsave'] == 'undefined')   yasp.Storage['automaticsave'] = "false";
     if (typeof yasp.Storage['codecompletion'] == 'undefined')  yasp.Storage['codecompletion'] = "true";
@@ -315,18 +316,27 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
     if(yasp.Storage['help'] == "true" || yasp.Storage['help'] == "false")
       yasp.Storage['help'] = "slide";
 
+    var $popups = $('#popups > *');
+    var hiddenPopus = JSON.parse(yasp.Storage['hiddenPopups']);
 
-    if(typeof yasp.Storage['firsttime'] == 'undefined') {
-      var $popup = $('#tutorial_popup');
-      $popup.css('display', 'block');
-      $popup.find('.hideNow').click(function () {
-        $('#tutorial_popup').css('display', 'none');
-      });
-      $popup.find('.hideAlways').click(function () {
-        $('#tutorial_popup').css('display', 'none');
-        yasp.Storage['firsttime'] = false;
-      });
+    for (var i = 0; i < $popups.length; i++) {
+      var $popup = $($popups[i]);
+      if(hiddenPopus.indexOf($popup.attr('data-name')) === -1)
+        $popup.addClass('shown');
     }
+
+    $popups.find('.hideNow').click(function (e) {
+      var $popup = $(e.target).parents('.popup');
+      $popup.css('display', 'none');
+    });
+    $popups.find('.hideAlways').click(function (e) {
+      var $popup = $(e.target).parents('.popup');
+      $popup.css('display', 'none');
+
+      var hiddenPopus = JSON.parse(yasp.Storage['hiddenPopups']);
+      hiddenPopus.push($popup.attr('data-name'));
+      yasp.Storage['hiddenPopups'] = JSON.stringify(hiddenPopus);
+    });
     
     var editor = yasp.EditorManager.create($('#editor').get(0));
     
