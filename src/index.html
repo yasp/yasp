@@ -168,14 +168,37 @@
             </div>
         </div>
 
-        <!-- Tutorial -->
-        <div id="tutorial_popup">
-            <h1 data-l10n="editor.tutorial.title"></h1>
-            <h2 data-l10n="editor.tutorial.title2"></h2>
-            <p data-l10n-html="true" data-l10n="editor.tutorial.text"></p>
-            <div class="btns btn-group">
-                <button class="btn btn-default btn-xs hideNow" data-l10n="editor.tutorial.hideNow"></button>
-                <button class="btn btn-default btn-xs hideAlways" data-l10n="editor.tutorial.hideAlways">s</button>
+        <!-- Popups -->
+        <div id="popups">
+            <!-- Tutorial -->
+            <div id="tutorial_popup" class="popup" data-name="tutorial">
+                <h1 data-l10n="editor.tutorial.title"></h1>
+                <h2 data-l10n="editor.tutorial.title2"></h2>
+                <p data-l10n-html="true" data-l10n="editor.tutorial.text"></p>
+                <div class="btns btn-group">
+                    <button class="btn btn-default btn-xs hideNow" data-l10n="editor.tutorial.hideNow"></button>
+                    <button class="btn btn-default btn-xs hideAlways" data-l10n="editor.tutorial.hideAlways">s</button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <!-- New popup -->
+            <div id="popup_news" class="popup" data-name="news1">
+                <h1>News</h1>
+                <p>
+                    Hello yasp-user!
+                </p>
+                <p>
+                    We're working on now features and have prepared a little roadmap over at GitHub, you might want
+                    to take a look at it: <a href="https://github.com/yasp/yasp/issues/milestones">Roadmap</a>.
+                    If there is anything I'd like to see in yasp just <a href="https://github.com/yasp/yasp/issues/new">add an issue</a>
+                    or shoot us a mail via <b>team _et_ yasp.me</b>.
+                </p>
+                <div class="btns btn-group">
+                    <button class="btn btn-default btn-xs hideNow" data-l10n="editor.tutorial.hideNow"></button>
+                    <button class="btn btn-default btn-xs hideAlways" data-l10n="editor.tutorial.hideAlways">s</button>
+                </div>
+                <div class="clearfix"></div>
             </div>
         </div>
 

@@ -124,15 +124,19 @@ span.cm-keyword {
     background-color: rgba(128,128,128,0.25);
 }
 
-/* === tutorial === */
-#tutorial_popup {
+#popups {
     position: absolute;
     top: 70px;
     right: 50px;
 
-    padding: 10px;
-
     z-index: 10200;
+}
+
+#popups > * {
+    padding: 10px;
+    margin-bottom: 25px;
+
+    max-width: 450px;
 
     color: black;
     background-color: #dddddd;
@@ -147,31 +151,39 @@ span.cm-keyword {
     display: none;
 }
 
-#tutorial_popup:hover {
+#popups > *.shown {
+    display: block;
+}
+
+#popups > *:hover {
     opacity: 1;
     transition: opacity .5s ease;
     -moz-transition: opacity .5s ease;
     -webkit-transition: opacity .5s ease;
 }
 
-#tutorial_popup > h1,
-#tutorial_popup > h2 {
+#popups > * > p {
+    font-size: 1.2em;
+}
+
+#popups > * > h1,
+#popups > * > h2 {
     margin-top: 0;
     display: inline-block;
 }
 
-#tutorial_popup > h2 {
+#popups > * > h2 {
     font-size: 2em;
     margin-top: 0.45em;
     margin-left: 5px;
     vertical-align: top;
 }
 
-#tutorial_popup a {
+#popups > * a {
     font-weight: bold;
 }
 
-#tutorial_popup .btns {
+#popups > * .btns {
     float: right;
 }
 
