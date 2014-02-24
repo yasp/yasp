@@ -121,8 +121,6 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
   
   
   var fireDataReceived;
-
-  yasp.l10n.translateDocument();
   
   yasp.CompileManager = {
     lastCompile: null,
@@ -310,15 +308,17 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
     if (typeof yasp.Storage['language'] == 'undefined')        yasp.Storage['language'] = ((navigator.language || navigator.userLanguage).substr(0, 2) == "de") ? "de" : "en";
     if (typeof yasp.Storage['labellist'] == 'undefined')       yasp.Storage['labellist'] = "slide";
     if (typeof yasp.Storage['help'] == 'undefined')       yasp.Storage['help'] = "slide";
-
+    
     if(yasp.Storage['labellist'] == "true" || yasp.Storage['labellist'] == "false")
       yasp.Storage['labellist'] = "slide";
     if(yasp.Storage['help'] == "true" || yasp.Storage['help'] == "false")
       yasp.Storage['help'] = "slide";
 
+    yasp.l10n.translateDocument();
+
     var $popups = $('#popups > *');
     var hiddenPopus = JSON.parse(yasp.Storage['hiddenPopups']);
-
+    
     for (var i = 0; i < $popups.length; i++) {
       var $popup = $($popups[i]);
       if(hiddenPopus.indexOf($popup.attr('data-name')) === -1)
