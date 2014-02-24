@@ -303,3 +303,8 @@ table.breakpoints td.break-active {
 #hardwarecontainer {
     min-height: 100px;
 }
+
+/* Fix Text orientation in Register Tooltip for debugger */
+#debugger_editor_wrapper .tooltip-inner {
+    text-align: left !important;
+} 

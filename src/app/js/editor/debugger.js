@@ -168,6 +168,12 @@ if (typeof yasp == 'undefined') yasp = { };
   function onEmulatorContinue () {
     firePartEvent("onContinue");
     $('.debuggerTabOverlay').removeClass('break');
+    
+    // clear register hover stuff
+    $('#debugger_editor_wrapper .cm-variable')
+      .off('shown.bs.tooltip')
+      .off('hidden.bs.tooltip')
+      .tooltip('destroy');
   }
 
   function onEmulatorDebug (data) {
@@ -187,6 +193,39 @@ if (typeof yasp == 'undefined') yasp = { };
 
     var line = yasp.Editor.reverseMap[state.registers.special.pc] - 1;
     highlightLine(line, true);
+    
+    // make register values visible on hover
+    $('#debugger_editor_wrapper .cm-variable').each(function(index, value) {
+      var elem = $(value);
+      var text = elem.text().toLowerCase();
+      var val, paddingFactor;
+      if (text.charAt(0) == 'b') {
+        val = state.registers.general.b[+text.substr(1)];
+        paddingFactor = 1;
+      } else if (text.charAt(0) == 'w') {
+        val = state.registers.general.w[+text.substr(1)];
+        paddingFactor = 2;
+      } else {
+        val = "UNKNOWN";
+      }
+      
+      var formatFunc = function(format) {
+        format = format.toUpperCase();
+        return format + " " +yasp.Debugger.formatNumber(val, yasp.Debugger.formatPadding[format.toLowerCase()], yasp.Debugger.formatNameToRadix(format));
+      };
+      var text = formatFunc("hex") + "\n" + formatFunc("dec") + "\n" + formatFunc("bin");
+      elem.attr('title', text);
+      elem.tooltip({ 'placement': 'top'});
+      
+      var weight;
+      elem.on('shown.bs.tooltip', function() {
+        weight = elem.css('font-weight');
+        elem.css('font-weight', 'bold');
+      });
+      elem.on('hidden.bs.tooltip', function() {
+        elem.css('font-weight', weight);
+      });
+    });
   }
 
   function highlightLine (line, clearOthers) {
