@@ -211,7 +211,7 @@ if (typeof yasp == 'undefined') yasp = { };
       
       var formatFunc = function(format) {
         format = format.toUpperCase();
-        return format + " " +yasp.Debugger.formatNumber(val, yasp.Debugger.formatPadding[format.toLowerCase()], yasp.Debugger.formatNameToRadix(format));
+        return format + " " +yasp.Debugger.formatNumber(val, yasp.Debugger.formatPadding[format.toLowerCase()]*paddingFactor, yasp.Debugger.formatNameToRadix(format));
       };
       var text = formatFunc("hex") + "\n" + formatFunc("dec") + "\n" + formatFunc("bin");
       elem.attr('title', text);
