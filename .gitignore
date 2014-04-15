@@ -15,6 +15,7 @@ dest
 node_modules
 src/app/js/commands.js
 src/app/help/help.html
+src/app/help/complex_help.html
 
 # Generated HTML doc
 doc/jsdoc
