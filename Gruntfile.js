@@ -70,11 +70,11 @@ module.exports = function(grunt) {
         input: "src/app/instructions/",
         output: "src/app/help/help.html"
       },
-      complex: {
+/*      complex: {
         converter: "htmlcomplex",
         input: "src/app/instructions/",
         output: "src/app/help/complex_help.html"
-      }
+      }*/
     },
     watch: {
       commands: {
