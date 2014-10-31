@@ -20,5 +20,8 @@ src/app/help/complex_help.html
 # Generated HTML doc
 doc/jsdoc
 
-# Libs
+# old lib path
 src/lib
+
+# new lib path
+src/vendor

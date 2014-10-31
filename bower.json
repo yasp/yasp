@@ -1,0 +1,11 @@
+{
+  "name": "yasp",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "3.0.2",
+    "codemirror": "4.7.0",
+    "fontawesome": "4.0.3",
+    "qunit": "1.12.0",
+    "jquery": "1.10.2"
+  }
+}
