@@ -290,6 +290,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /** Continues the execution
    * @param count {Number|boolean} number of instructions to execute or null
+   * @param skipBreakpoint {boolean} if the next (and only that one) breakpoint should be skipped
    * @returns {Number|boolean}
    * @fires yasp.Emulator~CONTINUE
    * @private
