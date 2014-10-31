@@ -15,6 +15,7 @@ if (!yasp.Debugger) yasp.Debugger = { };
     registers.format.text('HEX');
     registers.registers.addClass("format-hex");
     registers.currentFormat = 'hex';
+    registers.usedRegisters = [];
   };
 
   registers.onOpen = function () {
@@ -26,7 +27,53 @@ if (!yasp.Debugger) yasp.Debugger = { };
     registers.heading.append('<div class="pointer">PC</div>');
     registers.heading.append('<div class="pointer">SP</div>');
 
+    registers.usedRegisters = [];
+
     for (var reg in yasp.Editor.symbols.usedRegisters) {
+      registers.usedRegisters.push(reg);
+    }
+
+    var additionalRegs = [];
+
+    for (var i = 0; i < registers.usedRegisters.length; i++) {
+      var reg = registers.usedRegisters[i];
+      var type = reg[0];
+      var num = +reg.substr(1);
+
+      if(type === "B") {
+        var newNum = ~~(num / 2);
+        additionalRegs.push("W" + newNum);
+      } else if(type == "W") {
+        var newNum = ~~(num * 2);
+        additionalRegs.push("B" + newNum);
+        additionalRegs.push("B" + (newNum + 1));
+      }
+    }
+
+    for (var i = 0; i < additionalRegs.length; i++) {
+      var reg = additionalRegs[i];
+
+      if(registers.usedRegisters.indexOf(reg) === -1) {
+        registers.usedRegisters.push(reg);
+      }
+    }
+
+    registers.usedRegisters.sort(function (a, b) {
+      var atype = a[0];
+      var anum = +a.substr(1);
+
+      var btype = b[0];
+      var bnum = +b.substr(1);
+
+      if(atype != btype) {
+        return atype === 'B' ? -1 : 1;
+      } else {
+        return anum - bnum;
+      }
+    });
+
+    for (var i = 0; i < registers.usedRegisters.length; i++) {
+      var reg = registers.usedRegisters[i];
       registers.heading.append(
         $('<div class="register">' + reg.toLowerCase() + '</div>').addClass(reg[0] === "B" ? "byte" : "word")
       );
@@ -121,7 +168,8 @@ if (!yasp.Debugger) yasp.Debugger = { };
     snap["PC"] = state.registers.special["pc"];
     snap["SP"] = state.registers.special["sp"];
 
-    for (var reg in yasp.Editor.symbols.usedRegisters) {
+    for (var i = 0; i < registers.usedRegisters.length; i++) {
+      var reg = registers.usedRegisters[i];
       snap[reg] = state.registers.general[reg[0].toLowerCase()][reg.substr(1)];
     }
 
