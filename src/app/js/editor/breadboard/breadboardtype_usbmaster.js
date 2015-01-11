@@ -26,10 +26,10 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         },
         pin: 11,
         appearance: {
-          top: "1",
-          left: "120",
-          height: "80",
-          width: "80"
+          top: "4",
+          left: "129",
+          height: "62",
+          width: "62"
         }
       },
       {
