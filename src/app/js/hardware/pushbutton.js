@@ -45,11 +45,13 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       var lightCol = 'rgb(200,200,200)';
 
       this.element.css({
-        'background-color': (this.state == states.PUSH) ? this.params.pushcolor : this.params.color,
-        'border-left': '3px solid ' + (this.state == states.PUSH ? darkCol :  lightCol),
-        'border-top': '3px solid ' + (this.state == states.PUSH ? darkCol :  lightCol),
-        'border-right': '3px solid ' + (this.state == states.PUSH ? lightCol :  darkCol),
-        'border-bottom': '3px solid ' + (this.state == states.PUSH ? lightCol :  darkCol)
+        'background-color': (this.state == states.PUSH ? this.params.pushcolor : this.params.color),
+        'border-width': '3px',
+        'border-style': 'solid',
+        'border-left-color': (this.state == states.PUSH ? darkCol : lightCol),
+        'border-top-color': (this.state == states.PUSH ? darkCol : lightCol),
+        'border-right-color': (this.state == states.PUSH ? lightCol : darkCol),
+        'border-bottom-color': (this.state == states.PUSH ? lightCol : darkCol)
       });
     },
     initialState: function() {
