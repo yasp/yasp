@@ -283,7 +283,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return 1;
 
     this.rom.set(bitcode, start);
-    this.commandCache = {};
+    this.clearCommandCache(start, bitcode.length);
     this.events.LOADED(start, bitcode.length);
     return true;
   };
