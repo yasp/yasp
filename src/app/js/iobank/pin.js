@@ -47,6 +47,16 @@ if (typeof yasp == 'undefined') yasp = { };
     this.setState(0, true);
   };
 
+  yasp.Pin.fromJSON = function (data, tickSupplier) {
+    return new yasp.Pin(
+      data.nr,
+      data.type,
+      data.mode,
+      data.pwm,
+      tickSupplier
+    );
+  };
+
   /** generates a json representation of the current pin state and its properties
    * @returns {{pin: Number, type: String, mode: String, state: Number}}
    */

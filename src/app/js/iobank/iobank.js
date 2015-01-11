@@ -9,6 +9,17 @@ if (typeof yasp == 'undefined') yasp = { };
     this.pins = [];
   };
 
+  yasp.IOBank.fromJSON = function (data, tickSupplier) {
+    var bank = new yasp.IOBank();
+
+    for (var i = 0; i < data.length; i++) {
+      var pin = data[i];
+      bank.addPin(yasp.Pin.fromJSON(pin, tickSupplier));
+    }
+
+    return bank;
+  };
+
   /** get the json representations of all pins as an array
    * @returns {Array}
    * @see yasp.Pin#getJSON
