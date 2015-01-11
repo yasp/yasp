@@ -13,7 +13,6 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.disasm.getCommand = function (rom, offset) {
     var parts = [ ];
     var ppc = offset;
-    var bytes = [ rom[ppc++] ];
 
     for (var i = 0; i < yasp.commands.length; i++) {
       var cmd = yasp.commands[i];
@@ -38,13 +37,8 @@ if (typeof yasp == 'undefined') yasp = { };
       }
       neededBytes = ~~(neededBytes / 8);
 
-      if(neededBytes > bytes.length) {
-        for (var j = bytes.length; j < neededBytes; j++) {
-          bytes.push(rom[ppc++]);
-        }
-      }
 
-      yasp.bitutils.extractBits(bytes, parts, parts);
+      yasp.bitutils.extractBits(rom, parts, parts, offset);
 
       var matches = true;
 

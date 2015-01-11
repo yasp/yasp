@@ -15,50 +15,64 @@
       title: "1 byte, 1 part",
       byte: [ i ],
       part: [ 2 ],
-      retn: [ 1 ]
+      retn: [ 1 ],
+      offset: 0
+    },
+    {
+      title: "1 byte, 1 part, offset",
+      byte: [ 1, 2, 3, i ],
+      part: [ 2 ],
+      retn: [ 1 ],
+      offset: 3
     },
     {
       title: "1 byte, 2 parts",
       byte: [ i ],
       part: [ 2, 3 ],
-      retn: [ 1, 2 ]
+      retn: [ 1, 2 ],
+      offset: 0
     },
     {
       title: "2 bytes, 1 part",
       byte: [ i, i ],
       part: [ 9 ],
-      retn: [ 170 ]
+      retn: [ 170 ],
+      offset: 0
     },
     {
       title: "3 bytes, 1 part",
       byte: [ i, i ],
       part: [ 17 ],
-      retn: [ 43690 ]
+      retn: [ 43690 ],
+      offset: 0
     },
     {
       title: "2 bytes, 2 parts",
       byte: [ i, i ],
       part: [ 7, 2 ],
-      retn: [ 42, 2 ]
+      retn: [ 42, 2 ],
+      offset: 0
     },
     {
       title: "2 bytes, 3 parts",
       byte: [ i, i ],
       part: [ 7, 2, 2 ],
-      retn: [ 42, 2, 2 ]
+      retn: [ 42, 2, 2 ],
+      offset: 0
     },
     {
       title: "3 bytes, 3 parts",
       byte: [ i, i, i ],
       part: [ 7, 2, 2, 8 ],
-      retn: [ 42, 2, 2, 170 ]
+      retn: [ 42, 2, 2, 170 ],
+      offset: 0
     }
   ];
 
   QUnit.cases(extractBitsData).test("extractBits", function (params) {
     var expected = params.retn;
     var actual = new Array(params.part.length);
-    yasp.bitutils.extractBits(params.byte, params.part, actual);
+    yasp.bitutils.extractBits(params.byte, params.part, actual, params.offset);
     deepEqual(actual, expected);
   });
 

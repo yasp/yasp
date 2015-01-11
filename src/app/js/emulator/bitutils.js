@@ -12,8 +12,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param bytes {Uint8Array} the source bytes
    * @param parts {Number} length of the parts to extract
    * @param retn {Uint8Array} to store the result in, has to be of the same length as parts
+   * @param offset {Number} the offset in bytes to start extracting
    */
-  yasp.bitutils.extractBits = function (bytes, parts, retn) {
+  yasp.bitutils.extractBits = function (bytes, parts, retn, offset) {
     var pointer = 0; // bit-pointer in bytes
 
     for (var i = 0; i < parts.length; i++) {
@@ -26,7 +27,7 @@ if (typeof yasp == 'undefined') yasp = { };
         var v;
         var ll = Math.min(l, 8 - pointerInByte); // number of bits to get from this byte
 
-        v = yasp.bitutils.extractFromByte(bytes[Math.floor(pointer / 8)], pointerInByte, ll);
+        v = yasp.bitutils.extractFromByte(bytes[offset + Math.floor(pointer / 8)], pointerInByte, ll);
         valPointer -= ll;
         v = v << valPointer;
         val = val | v;
