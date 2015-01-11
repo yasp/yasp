@@ -943,7 +943,7 @@ if (typeof yasp == 'undefined') yasp = { };
       this.changeBreakpointData.ram.length = 0;
     if(this.changeBreakpoints.rom === true)
       this.changeBreakpointData.rom.length = 0;
-  }
+  };
 
   /** check if a conditional breakpoint should be triggered with the current state
    * @param cond {object} optimized breakpoint condition, see {@link yasp.Emulator#setBreakpoints}

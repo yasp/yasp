@@ -53,7 +53,7 @@ if (typeof yasp == 'undefined') yasp = { };
     var val = byte & map;
     val = val >> 8 - p - l;
     return val;
-  }
+  };
 
   /** combines two bytes into one word
    * @param b1 {Number} the most significant byte
