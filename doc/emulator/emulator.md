@@ -28,61 +28,10 @@ The timeout which is set by `setTickWrapperTimeout()` can be interrupted by a nu
 
 In addition the timeout will be longer when the `emulator.waitTime` (see `DELAY`-instruction) is set.
 
-## PWM
-The emulator is capable of simulating PWM, in terms of calculating a pins analogue output power when a pin is rapidly
-switched on and off. This is done in the [`updatePwm()`](http://doc.yasp.me/yasp.Emulator.html#updatePwm) helper function.
-Note that this behaviour only used when the pins state changes more often than 10 times a second, otherwise the state
-of the pin will always be `1` or `0`. PWM causes the state to be between `1` and `255`.
-
-```
- Impulse
-     +--+
-     |  |
-   --+  +------------------
-
-
- Pulse
-     +--+  +--+  +--+  +--+  +--+
-     |  |  |  |  |  |  |  |  |  |
-   --+  +--+  +--+  +--+  +--+  +--
-
- Pulse width modulation
-     t   t
-      on  off
-     <--><-->
-     +---+  +---+  +---+  +---+  +-- ...
-     |   |  |   |  |   |  |   |  |
-   --+   +--+   +--+   +--+   +--+
-     |<---->|<---->|<---->|<---->|
-       t
-        const
-
-    t   +  t     = t
-     on     off     const
-
- Calculation of the output power
-
-     1234566789
-     +---+  +---+  +---+  +---+  +-- ...
-     |   |  |   |  |   |  |   |  |
-   --+   +--+   +--+   +--+   +--+
-
-    startOn1 = 1
-    startOff = 5
-    startOn2 = 7
-
-    t    = startOff - startOn1 = 4
-     on
-
-    t    = startOff - startOn2 = 2
-     off
-
-             t
-              on             4       2
-    x =  --------------  =  ---  =  ---  = 66.66%
-          t    +  t          6       3
-           off     on
-```
+## Pins
+The emulator pins and their state are handled by a `IOBank` instance. Please refer to the documentation for more
+information on this. The `setIO` and `getIO` function of the emulator api are essentially wrapper functions for
+the actual pin objects.
 
 ## Stack
 The is located in the RAM, beginning from `0x50`. The `sp` gets increment before the byte is pushed (pre-increment), so
