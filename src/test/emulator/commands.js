@@ -6,7 +6,9 @@
     var cmd = allCommands[i];
 
     if(cmd.tests) {
-      yasp.commands = [cmd];
+      for(var j = 0; j < cmd.tests.length; j++) {
+        cmd.tests[j].allCommands = [cmd];
+      }
       tester.addTests(cmd.tests);
     }
   }

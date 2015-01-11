@@ -73,6 +73,12 @@ yasp.test.EmulatorTester.prototype.done = function () {
         return;
     }
 
+    var allCommands = yasp.commands;
+
+    if(test.allCommands) {
+      yasp.commands = test.allCommands;
+    }
+
     this.emulator.pc = 0;
 
     tester.applySetup(test.setup, test.title);
@@ -206,6 +212,8 @@ yasp.test.EmulatorTester.prototype.done = function () {
         alert("Unhandled Step-Keys:\n" + keys.join(', ') + "\nin: " + test.title);
       }
     }
+
+    yasp.commands = allCommands;
   }).bind(this));
 };
 
