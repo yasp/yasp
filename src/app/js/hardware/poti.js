@@ -102,11 +102,13 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       ctx.strokeStyle = color;
       ctx.stroke();
 
+      // fill inner circle
       ctx.beginPath();
       ctx.arc(width/2, height/2, innerRadius+2, 0, 2 * Math.PI, false);
       ctx.fillStyle = color;
       ctx.fill();
 
+      // draw indicator line
       ctx.beginPath();
       ctx.moveTo(width/2, height/2);
       ctx.lineTo(width/2+Math.cos(rad)*radius, height/2+Math.sin(rad)*radius);
