@@ -399,6 +399,45 @@
     strictEqual(emulator.commandCache[8], undefined);
   });
 
+  test("clearCommandCache", function () {
+    emulator.commandCache[11] = true;
+    emulator.commandCache[10] = true;
+    emulator.commandCache[9] = true;
+    emulator.commandCache[8] = { neededBytes: 4 };
+
+    emulator.clearCommandCache(7, 2);
+
+    strictEqual(emulator.commandCache[11], undefined);
+    strictEqual(emulator.commandCache[10], undefined);
+    strictEqual(emulator.commandCache[9], undefined);
+    strictEqual(emulator.commandCache[8], undefined);
+    strictEqual(emulator.commandCache[7], undefined);
+  });
+
+  test("clearCommandCache - pre command", function () {
+    emulator.commandCache[10] = true;
+    emulator.commandCache[9] = true;
+    emulator.commandCache[8] = { neededBytes: 3 };
+
+    emulator.clearCommandCache(11, 2);
+
+    strictEqual(emulator.commandCache[10], true);
+    strictEqual(emulator.commandCache[9], true);
+    deepEqual(emulator.commandCache[8], { neededBytes: 3 });
+  });
+
+  test("clearCommandCache - post command", function () {
+    emulator.commandCache[10] = true;
+    emulator.commandCache[9] = true;
+    emulator.commandCache[8] = { neededBytes: 3 };
+
+    emulator.clearCommandCache(5, 2);
+
+    strictEqual(emulator.commandCache[10], true);
+    strictEqual(emulator.commandCache[9], true);
+    deepEqual(emulator.commandCache[8], { neededBytes: 3 });
+  });
+
   test("readROM", function () {
     var expected = 241;
     emulator.rom[100] = expected;

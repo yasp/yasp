@@ -626,10 +626,11 @@ if (typeof yasp == 'undefined') yasp = { };
     return 0;
   };
 
-  /** writes one byte to the rom. This also clears the {@link yasp.Emulator#commandCache} for the written bytes.
+  /** writes one byte to the rom. This also clears the {@link yasp.Emulator#commandCache} for the affected bytes.
    * @param o {Number} the position to write the byte to
    * @param v {Number} the byte to write
    * @returns {Number} 0 = success, 1 = o was out of bounds
+   * @see yasp.Emulator#clearCommandCache
    */
   yasp.Emulator.prototype.writeROM = function (o, v) {
     if(o < 0 || o >= this.rom.length)
@@ -640,24 +641,67 @@ if (typeof yasp == 'undefined') yasp = { };
     if(debug) console.log("rom[" + o + "] = " + v);
     if(this.changeBreakpoints.rom === true) this.changeBreakpointData.rom.push(o);
 
-    if(this.commandCache[o] !== undefined) {
-      var cmd = null;
-      var pos = o;
+    this.clearCommandCache(o, 1);
 
-      for (;; pos--) {
-        if (this.commandCache[pos] !== undefined && this.commandCache[pos] !== true) {
-          cmd = this.commandCache[pos];
-          break;
-        }
-      }
+    return 0;
+  };
 
-      var lastByte = pos + cmd.neededBytes;
-      for (var i = pos; i < lastByte; i++) {
-        this.commandCache[i] = undefined;
+  /** checks if the given byte is the start of a command in ROM
+   * @param pos {Number} the position in ROM to check
+   * @returns {Boolean} true, if pos is the start of a command, otherwise false
+   */
+  yasp.Emulator.prototype.isCacheCommand = function (pos) {
+    return (this.commandCache[pos] !== undefined && this.commandCache[pos] !== true);
+  };
+
+  /** clears the command cache for all bytes in ROM affected by the change of the len
+   * bytes starting at pos. An affected byte is either within that range, or of any
+   * command, which is partly within that range.
+   * @param pos {Number} starting position to clear
+   * @param len {Number} number of types to clear
+   */
+  yasp.Emulator.prototype.clearCommandCache = function (pos, len) {
+    var endPos = pos + len;
+    var cmd = null;
+    var firstCmdPos = pos;
+
+    // backtrack to the first command before pos
+    for (; firstCmdPos > 0; firstCmdPos--) {
+      if (this.isCacheCommand(firstCmdPos)) {
+        cmd = this.commandCache[firstCmdPos];
+        break;
       }
     }
 
-    return 0;
+    // check if an command has been found and if yes, if it is affected
+    if(cmd === null || firstCmdPos + (cmd.neededBytes - 1) < pos) {
+      // case 1: found command is before the area to clear
+      //     ----CMD--000000------
+      // case 2: there was no command before pos
+      //
+      // => do nothing and keep pos as is
+    } else {
+      // case 3: found command is intersects with the area to clear
+      //     ----CM000000---------
+      // => set pos to the start of found command, since we're
+      //    clearing part of its bytes
+
+      pos = firstCmdPos;
+      endPos = Math.max(endPos, pos + (cmd.neededBytes - 1));
+    }
+
+    // clear bytes and keep looking for commands within range.
+    // If there is a command found, which starts in the range
+    // but is longer than the range itself, the range is updated
+    // accordingly.
+    for(; pos < endPos; pos++) {
+      if (this.isCacheCommand(pos)) {
+        cmd = this.commandCache[pos];
+        endPos = Math.max(endPos, pos + cmd.neededBytes);
+      }
+
+      this.commandCache[pos] = undefined;
+    }
   };
 
   /** sets the state of a pin
