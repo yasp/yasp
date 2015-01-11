@@ -143,8 +143,8 @@ emulator.registerCallback('LOADED', function (start, length) {
   });
 });
 
-emulator.registerCallback('CONTINUE', function () {
-  communicator.broadcast('CONTINUE', { payload: {}, error: null });
+emulator.registerCallback('CONTINUE', function (running) {
+  communicator.broadcast('CONTINUE', { payload: { running: running }, error: null });
 });
 
 emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {

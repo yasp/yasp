@@ -23,7 +23,11 @@ Reasons:
 ### Broadcast: `CONTINUE`
 The emulator has continued, this is caused by a `CONTINUE`-Message.
 #### Payload
-empty object
+```javascript
+{
+  running: 0 // new state of the emulator (true, false or Number)
+}
+```
 
 ### Broadcast: `LOADED`
 A program has been loaded into the emulator using the `LOAD`-Message.

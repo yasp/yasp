@@ -189,6 +189,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /** fired when the execution is started or resumed.
    * @event yasp.Emulator~CONTINUE
+   * @param running {Number}
    * @see {@link https://github.com/yasp/yasp/blob/master/doc/emulator/messages.md#broadcast-continue|CONTINUE-Broadcast}
    */
 
@@ -282,7 +283,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.skipBreakpoint = !!skipBreakpoint;
     this.setTickWrapperTimeout(0);
 
-    this.events.CONTINUE();
+    this.events.CONTINUE(this.running);
     return true;
   };
 

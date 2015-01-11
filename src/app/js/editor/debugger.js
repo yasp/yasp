@@ -165,9 +165,13 @@ if (typeof yasp == 'undefined') yasp = { };
     $('.debuggerTabOverlay').addClass('break');
   }
 
-  function onEmulatorContinue () {
+  function onEmulatorContinue (data) {
     firePartEvent("onContinue");
-    $('.debuggerTabOverlay').removeClass('break');
+
+    // check if we're NOT just stepping, but running
+    if(data.payload.running !== 1) {
+      $('.debuggerTabOverlay').removeClass('break');
+    }
     
     // clear register hover stuff
     $('#debugger_editor_wrapper .cm-variable')
