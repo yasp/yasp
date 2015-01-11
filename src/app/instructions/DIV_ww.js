@@ -31,7 +31,7 @@
     {
       cmd: "DIV w0,w1",
       setup: { reg: { "w0": 0x000F, "w1": 0 } },
-      steps: { running: false }
+      steps: { running: false, breakReason: "divide_by_zero" }
     }
   ],
   "code": [

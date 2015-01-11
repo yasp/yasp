@@ -15,7 +15,7 @@
   "tests": [
     {
       cmd: "BREAK",
-      step: { running: false }
+      steps: { running: false, breakReason: "break_instr" }
     }
   ],
   "code": [

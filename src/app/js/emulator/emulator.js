@@ -60,6 +60,13 @@ if (typeof yasp == 'undefined') yasp = { };
      * @default */
     this.running = false;
 
+    /** reason for the current break, if any.
+     * @member {String}
+     * @see yasp.Emulator#continue
+     * @see yasp.Emulator#break
+     * @default */
+    this.breakReason = null;
+
     /** number of ticks executed in total, used by PWM for timing
      * @member {Number}
      * @see yasp.Emulator#updatePwm
@@ -306,6 +313,7 @@ if (typeof yasp == 'undefined') yasp = { };
       return 1;
     }
 
+    this.breakReason = null;
     this.skipBreakpoint = !!skipBreakpoint;
     this.setTickWrapperTimeout(0);
 
@@ -318,6 +326,7 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Emulator.prototype.break = function (reason) {
     this.running = false;
+    this.breakReason = reason;
     this.events.BREAK(reason);
   };
 

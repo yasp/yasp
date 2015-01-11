@@ -199,6 +199,10 @@ yasp.test.EmulatorTester.prototype.done = function () {
         keys.splice("running", 1);
         strictEqual(this.emulator.running, step.running, stepPrefix + "Emulator is " + (step.running ? "" : "not ") + "running");
       }
+      if(step.breakReason !== undefined) {
+        keys.splice("breakReason", 1);
+        strictEqual(this.emulator.breakReason, step.breakReason, stepPrefix + "Emulator reason for break is " + step.breakReason);
+      }
       if(step.debug !== undefined) {
         keys.splice("debug", 1);
         deepEqual(this.lastDebugMessage, step.debug, "Debug " + JSON.stringify(step.debug) + " was issued");
