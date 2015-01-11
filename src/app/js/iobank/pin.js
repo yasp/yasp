@@ -65,6 +65,7 @@ if (typeof yasp == 'undefined') yasp = { };
       "pin": this.nr,
       "type": this.type,
       "mode": this.mode,
+      "pwm": this.pwm,
       "state": this.state
     };
   };
