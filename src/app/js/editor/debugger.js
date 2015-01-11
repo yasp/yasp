@@ -84,6 +84,13 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     });
 
+    function fixDebuggerHeight() {
+      $('#debuggercontent-right > .dbgTabsWrapper').css('padding-bottom', $('#debuggercontent-right > .dbgTabsWrapper > .nav').height() + "px");
+    }
+
+    fixDebuggerHeight();
+    $(window).resize(fixDebuggerHeight);
+
     $('.debugger_step').click(function () {
       yasp.Debugger.EmulatorCommunicator.sendMessage("CONTINUE", {
         count: 1,

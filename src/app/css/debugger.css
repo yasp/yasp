@@ -59,6 +59,11 @@
 
 #debuggercontent-right > .dbgTabsWrapper {
     padding-bottom: 36px;
+    overflow: hidden;
+}
+
+#debuggercontent-right > #hardwarecontainer {
+    overflow-x: auto;
 }
 
 #debugger-tabs {
