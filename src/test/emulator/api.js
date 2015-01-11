@@ -459,7 +459,8 @@
 
   test("setIO - set an input pin", function () {
     var expected = 2;
-    emulator.pins = { 0: { mode: "in" } };
+    emulator.iobank = new yasp.IOBank();
+    emulator.iobank.addPin(new yasp.Pin(0, 'gpio', 'in', false, null));
     var actual = emulator.setIO(0, 1);
     strictEqual(actual, expected);
   });
@@ -467,10 +468,11 @@
   test("setIO - set an input pin from outside", function () {
     var expected = 0;
     var state = 1;
-    emulator.pins = { 0: { mode: "in" } };
+    emulator.iobank = new yasp.IOBank();
+    emulator.iobank.addPin(new yasp.Pin(0, 'gpio', 'in', false, null));
     var actual = emulator.setIO(0, state, true);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[0].state, state);
+    strictEqual(emulator.getIO(0), state);
   });
 
   test("setIO - invalid state, string", function () {
@@ -502,7 +504,7 @@
     var state = 1;
     var actual = emulator.setIO(3, state);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[3].state, state);
+    strictEqual(emulator.getIO(3), state);
   });
 
   test("setIO - state = 0", function () {
@@ -510,21 +512,21 @@
     var state = 0;
     var actual = emulator.setIO(3, state);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[3].state, state);
+    strictEqual(emulator.getIO(3), state);
   });
 
   test("setIO - state = min", function () {
     var expected = 0;
     var actual = emulator.setIO(3, 0);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[3].state, 0);
+    strictEqual(emulator.getIO(3), 0);
   });
 
   test("setIO - state = max", function () {
     var expected = 0;
     var actual = emulator.setIO(3, 255);
     strictEqual(actual, expected);
-    strictEqual(emulator.pins[3].state, 255);
+    strictEqual(emulator.getIO(3), 255);
   });
 
   test("getIO - unknown pin", function () {
@@ -535,7 +537,12 @@
 
   test("getIO", function () {
     var expected = true;
-    emulator.pins = { 0: { mode: "in", state: expected } };
+
+    var pin = new yasp.Pin(0, 'gpio', 'in', false, null);
+    emulator.iobank = new yasp.IOBank();
+    emulator.iobank.addPin(pin);
+    pin.setState(expected, true);
+
     var actual = emulator.getIO(0);
     strictEqual(actual, expected);
   });

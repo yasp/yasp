@@ -69,7 +69,6 @@ if (typeof yasp == 'undefined') yasp = { };
 
     /** number of ticks executed in total, used by PWM for timing
      * @member {Number}
-     * @see yasp.Emulator#updatePwm
      * @see yasp.Emulator#tick */
     this.ticks = 0;
 
@@ -108,61 +107,27 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.skipBreakpoint = false;
 
-    // status (waiting for high or low) and timeout-ids for PWM
-    this.pwmStatus = {};
-    this.pwmTimeouts = {};
-
     // pin definitions (see setIO, getIO and interrupts)
-    this.pins = [];
-    this.pins[0] = null;
-    this.pins[1] = {
-        type: "gpio",
-        state: 0,
-        mode: "in"
-      };
-    this.pins[2] = {
-        type: "gpio",
-        state: 0,
-        mode: "in"
-      };
-    // LEDs
-    this.pins[3] =  {
-        type: "gpio",
-        state: 0,
-        mode: "out"
-      };
-    this.pins[4] =  {
-        type: "gpio",
-        state: 0,
-        mode: "out"
-      };
-    this.pins[5] = {
-        type: "gpio",
-        state: 0,
-        mode: "out"
-      };
-    this.pins[6] = null;
-    this.pins[7] = null;
-    this.pins[8] = null;
-    this.pins[9] = null;
-    // ADC0
-    this.pins[10] = {
-        type: "adc",
-        state: 0,
-        mode: "in"
-      };
-    // ADC1
-    this.pins[11] = {
-        type: "adc",
-        state: 0,
-        mode: "in"
-      };
-    // ADC2
-    this.pins[12] = {
-        type: "adc",
-        state: 0,
-        mode: "in"
-      };
+    this.iobank = new yasp.IOBank();
+    this.iobank.addPins([
+      // buttons
+      new yasp.Pin(1, "gpio", "in", false, this),
+      new yasp.Pin(2, "gpio", "in", false, this),
+      // LEDs
+      new yasp.Pin(3, "gpio", "out", true, this),
+      new yasp.Pin(4, "gpio", "out", true, this),
+      new yasp.Pin(5, "gpio", "out", true, this),
+      // ADC0 - ADC2
+      new yasp.Pin(10, "adc", "in", false, this),
+      new yasp.Pin(11, "adc", "in", false, this),
+      new yasp.Pin(12, "adc", "in", false, this)
+    ]);
+
+    this.iobank.setStateChangedEvent((function (pin) {
+        this.events.IO_CHANGED(pin.nr, pin.state, pin.mode, pin.type);
+        if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(pin.nr);
+      }).bind(this)
+    );
 
     // events
     this.noop = function () {};
@@ -721,11 +686,11 @@ if (typeof yasp == 'undefined') yasp = { };
    * @fires yasp.Emulator~IO_CHANGED
    */
   yasp.Emulator.prototype.setIO = function (p, s, outside) {
-    var pin = this.pins[p];
+    var pin = this.iobank.getPin(p);
 
     if(typeof s !== "number" || (s < 0 || s > 255))
       return 3;
-    if(pin === undefined || pin === null)
+    if(pin === undefined)
       return 1;
     if(pin.mode === "in" && outside !== true)
       return 2;
@@ -735,78 +700,17 @@ if (typeof yasp == 'undefined') yasp = { };
     }
 
     if(debug) console.log("p" + p + "=" + s + " (outside: " + (!!outside) + ")");
-    pin.state = s;
 
-    if(outside !== true) {
-      this.updatePwm(p, pin, s);
-    } else {
-      this.events.IO_CHANGED(p, s, pin.mode, pin.type);
-      this.pwmTimeouts[p] = null;
-      this.pwmStatus[p] = null;
-
-      if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
-    }
+    pin.setState(s, outside);
 
     return 0;
-  };
-
-  /** helper function to handle PWM
-   * @param p {Number} pin-number
-   * @param pin {object} pin instance
-   * @param s {Number} state which has been set
-   * @fires yasp.Emulator~IO_CHANGED
-   * @see {@link https://github.com/yasp/yasp/blob/master/doc/emulator/emulator.md#pwm|Additional documentation}
-   * @see yasp.Emulator#setIO
-   * @private
-   */
-  yasp.Emulator.prototype.updatePwm = function (p, pin, s) {
-    var now = this.ticks;
-
-    if(s === 1) {
-      if(!this.pwmStatus[p]) {
-        this.pwmStatus[p] = {
-          startOn: now
-        };
-      } else {
-        var status = this.pwmStatus[p];
-        var timeOn = status.startOff - status.startOn;
-        var timeOff = now - status.startOff;
-        var total = timeOn + timeOff;
-
-        var percentOn = timeOn / total;
-        this.events.IO_CHANGED(p, percentOn, pin.mode, pin.type);
-        clearTimeout(this.pwmTimeouts[p]);
-
-        this.pwmStatus[p] = null;
-
-        if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
-      }
-    } else if(s === 0 && this.pwmStatus[p]) {
-      this.pwmStatus[p].startOff = now;
-    }
-
-    if(this.pwmTimeouts[p]) {
-      if(this.pwmTimeouts[p].state === s)
-        return;
-      clearTimeout(this.pwmTimeouts[p].timeoutId);
-      this.pwmTimeouts[p] = null;
-    }
-
-    this.pwmTimeouts[p] =  {
-      state: s,
-      timeoutId: setTimeout(function () {
-        this.events.IO_CHANGED(p, s, pin.mode, pin.type);
-        if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(p);
-        this.pwmStatus[p] = null;
-      }.bind(this), 300 * this.getTimePerTick()) // wait for 300 ticks
-    };
   };
 
   /** gets the state of a pin
    * @returns {?number} the pins state, or null if the pin does not exist
    */
   yasp.Emulator.prototype.getIO = function (p) {
-    var pin = this.pins[p];
+    var pin = this.iobank.getPin(p);
 
     if(pin === undefined)
       return null;
@@ -890,6 +794,13 @@ if (typeof yasp == 'undefined') yasp = { };
       delay = this.tickDelay;
     clearTimeout(this.tickTimeout);
     this.tickTimeout = setTimeout(this.tickWrapper.bind(this), delay);
+  };
+
+  /**
+   * @returns {Number} number of ticks executed, since the emulator has been created. This also takes sleeps into account.
+   */
+  yasp.Emulator.prototype.getTicks = function () {
+    return this.ticks;
   };
 
   yasp.Emulator.prototype.getTimePerTick = function () {

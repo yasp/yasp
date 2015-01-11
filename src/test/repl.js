@@ -122,13 +122,9 @@
 
   yasp.Repl.prototype.getPinDump = function () {
     var pins = "";
+    var objPins = this.emulator.iobank.getJSON();
 
-    for (var p in this.emulator.pins) {
-      var pin = this.emulator.pins[p];
-
-      if(!pin)
-        continue;
-
+    for (var pin in objPins) {
       pins += (p < 10 ? " " : "") + "P" + p;
       pins += "  state = " + pin.state + "\n";
       pins += "     type  = " + pin.type + "\n";

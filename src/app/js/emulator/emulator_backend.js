@@ -1,5 +1,14 @@
 if (typeof yasp == 'undefined') yasp = { };
-importScripts('../communicator.js', '../commands.js', '../assembler/passes/generator.js', 'bitutils.js', 'disasm.js', 'emulator.js');
+importScripts(
+  '../communicator.js',
+  '../commands.js',
+  '../assembler/passes/generator.js',
+  '../iobank/pin.js',
+  '../iobank/iobank.js',
+  'bitutils.js',
+  'disasm.js',
+  'emulator.js'
+);
 
 var emulator = new yasp.Emulator();
 
@@ -56,22 +65,9 @@ var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
           if(!io || io.pin === undefined)
             continue;
 
-          if(!emulator.pins[io.pin]) {
-            emulator.pins[io.pin] = {
-              type: "gpio",
-              state: 0,
-              mode: "out"
-            };
-          }
-
-          var pin = emulator.pins[io.pin];
-
-          if(io.type === "gpio" || io.type === "adc")
-            pin.type = io.type;
-          if(io.mode === "in" || io.mode === "out")
-            pin.mode = io.mode;
-          if(io.state !== undefined)
+          if(io.state !== undefined) {
             emulator.setIO(io.pin, io.state, true);
+          }
         }
       }
 
@@ -223,17 +219,7 @@ function getState() {
     state.registers.general.w[i] = emulator.readWordRegister(i);
   }
 
-  for (var i = 0; i < emulator.pins.length; i++) {
-    var pin = emulator.pins[i];
-    if(!pin)
-      continue;
-    state.io.push({
-      "pin": i,
-      "type": pin.type,
-      "mode": pin.mode,
-      "state": pin.state
-    });
-  }
+  state.io = emulator.iobank.getJSON();
 
   return state;
 }
