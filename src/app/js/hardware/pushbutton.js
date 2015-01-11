@@ -2,64 +2,74 @@ if (typeof yasp == 'undefined') yasp = { };
 if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
 (function () {
-  /**
-   * A simple PushButton.
-   * Params: { color: 0xFFF }
-   */
-  yasp.HardwareType["PUSHBUTTON"] = {
-    render: function() {
-      var states = yasp.HardwareType.PUSHBUTTON.States;
-      if (!this.element) {
-        this.element = $('<div></div>');
+  yasp.HardwareType['PUSHBUTTON'] = {
+    'backend': null,
+    'frontend': {}
+  };
 
-        var locked = false;
-
-        this.element.mousedown((function(e) {
-          if(e.shiftKey) {
-            locked = true;
-          }
-          this.receiveStateChange(states.PUSH);
-        }).bind(this));
-        this.element.mouseup((function(e) {
-          if(e.shiftKey) {
-            return;
-          }
-          this.receiveStateChange(states.NO_PUSH);
-        }).bind(this));
-        this.element.mouseleave((function() {
-          if(locked) {
-            return;
-          }
-          this.receiveStateChange(states.NO_PUSH);
-        }).bind(this));
-
-        this.element.css({
-          'width': '100%',
-          'height': '100%'
-        });
-
-        this.element.appendTo(this.container);
+  yasp.HardwareType['PUSHBUTTON']['backend'] = yasp.Hardware.makeHardware({
+    name: 'PUSHBUTTON',
+    pins: [ { nr: 1, type: 'gpio', mode: 'out' } ],
+    receiveStateChange: function (pin) {
+    },
+    uiEvent: function (name, pressed) {
+      if(name === 'push') {
+        this.getPin(1).setState(pressed ? 1 : 0, true);
       }
+    },
+    getState: function () {
+      return {
+        pushed: this.getPin(1).state
+      };
+    }
+  });
 
+  yasp.HardwareType['PUSHBUTTON']['frontend']['dom'] = yasp.HardwareRenderer.makeRenderer({
+    create: function () {
+      this.element = $('<div></div>');
+
+      var locked = false;
+
+      this.element.mousedown((function(e) {
+        if(e.shiftKey) {
+          locked = true;
+        }
+        this.backend.uiEvent('push', true);
+      }).bind(this));
+      this.element.mouseup((function(e) {
+        if(e.shiftKey) {
+          return;
+        }
+        this.backend.uiEvent('push', false);
+      }).bind(this));
+      this.element.mouseleave((function() {
+        if(locked) {
+          return;
+        }
+        this.backend.uiEvent('push', false);
+      }).bind(this));
+
+      this.element.css({
+        'width': '100%',
+        'height': '100%'
+      });
+
+      this.element.appendTo(this.container);
+    },
+    render: function () {
+      var state = this.backend.getState();
       var darkCol = 'rgb(50,50,50)';
       var lightCol = 'rgb(200,200,200)';
 
       this.element.css({
-        'background-color': (this.state == states.PUSH ? this.params.pushcolor : this.params.color),
+        'background-color': (state.pushed ? this.params.pushcolor : this.params.color),
         'border-width': '3px',
         'border-style': 'solid',
-        'border-left-color': (this.state == states.PUSH ? darkCol : lightCol),
-        'border-top-color': (this.state == states.PUSH ? darkCol : lightCol),
-        'border-right-color': (this.state == states.PUSH ? lightCol : darkCol),
-        'border-bottom-color': (this.state == states.PUSH ? lightCol : darkCol)
+        'border-left-color': (state.pushed ? darkCol : lightCol),
+        'border-top-color': (state.pushed ? darkCol : lightCol),
+        'border-right-color': (state.pushed ? lightCol : darkCol),
+        'border-bottom-color': (state.pushed ? lightCol : darkCol)
       });
-    },
-    initialState: function() {
-      return yasp.HardwareType.PUSHBUTTON.States.NO_PUSH;
-    },
-    States: {
-      PUSH: 1,
-      NO_PUSH: 0
     }
-  };
+  });
 })();

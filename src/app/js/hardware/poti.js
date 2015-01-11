@@ -2,60 +2,86 @@ if (typeof yasp == 'undefined') yasp = { };
 if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
 (function () {
-  /**
-   * A potentiometer
-   * The state Object is a value from 0-255 describing the current angle
-   */
-  yasp.HardwareType["POTI"] = {
-    render: function() {
-      if (!this.element) {
-        this.element = $('<canvas></canvas>');
-        this.element.css({
-          'width': '100%',
-          'height': '100%'
-        });
+  yasp.HardwareType['POTI'] = {
+    'backend': null,
+    'frontend': {}
+  };
 
-        var handler;
-        var isDown = false;
-        this.element.mousedown(function () {
-          isDown = true;
-        });
-        this.element.mouseup(function () {
-          isDown = false;
-        });
-        this.element.mouseleave(function () {
-          isDown = false;
-        });
-        this.element.mousemove(handler = (function(evt) {
-          if (isDown) {
-            var parentOffset = this.element.parent().offset();
-            var x = evt.pageX - parentOffset.left;
-            var y = evt.pageY - parentOffset.top;
-
-            var origx = this.element.width()/2;
-            var origy = this.element.height()/2;
-
-            var angle = Math.atan2((origy - y), (origx - x));
-            angle = Math.floor(angle*(180/Math.PI)+180)
-            angle = (angle/359)*255;
-
-            this.receiveStateChange(angle);
-          }
-        }).bind(this));
-        this.element.mousedown(handler);
-
-        this.element.appendTo(this.container);
+  yasp.HardwareType['POTI']['backend'] = yasp.Hardware.makeHardware({
+    name: 'POTI',
+    pins: [ { nr: 1, type: 'gpio', mode: 'out' } ],
+    receiveStateChange: function (pin) {
+    },
+    uiEvent: function (name, turn) {
+      if(name === 'turn') {
+        this.getPin(1).setState(turn, true);
       }
+    },
+    getState: function () {
+      return {
+        turn: this.getPin(1).state
+      };
+    }
+  });
+
+  yasp.HardwareType['POTI']['frontend']['dom'] = yasp.HardwareRenderer.makeRenderer({
+    create: function () {
+      this.element = $('<canvas>');
+      this.element.css({
+        'width': '100%',
+        'height': '100%'
+      });
+
+      var onMousemove;
+      var isDown = false;
+
+      this.element.mousedown(function () {
+        isDown = true;
+      });
+
+      this.element.mouseup(function () {
+        isDown = false;
+      });
+
+      this.element.mouseleave(function () {
+        isDown = false;
+      });
+
+      this.element.mousemove(onMousemove = (function(evt) {
+        if (isDown) {
+          var parentOffset = this.element.parent().offset();
+          var x = evt.pageX - parentOffset.left;
+          var y = evt.pageY - parentOffset.top;
+
+          var origx = this.element.width()/2;
+          var origy = this.element.height()/2;
+
+          var angle = Math.atan2((origy - y), (origx - x));
+          angle = Math.floor(angle*(180/Math.PI)+180)
+          angle = (angle/359)*255;
+
+          this.backend.uiEvent('turn', angle);
+        }
+      }).bind(this));
+
+      this.element.mousedown(onMousemove);
+
+      this.element.appendTo(this.container);
+    },
+    render: function () {
+      var state = this.backend.getState();
+
       var width = this.element.width();
       var height = this.element.height();
+
       // fix HTML5 behaviour
       this.element.attr({
         "width": width,
         "height": height
       });
 
-      var width = this.element.width();
-      var height = this.element.height();
+      width = this.element.width();
+      height = this.element.height();
 
       var maxRadius = Math.min(width, height) / 2;
 
@@ -63,10 +89,9 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       var innerRadius = Math.max(outerRadius - 10, 10);
       var numTeeth = Math.floor((2*maxRadius*Math.PI)/12);
       var color = "rgb(190,190,190)";
-      var rad = (this.state/255)*359*(Math.PI/180);
+      var rad = (state.turn/255)*359*(Math.PI/180);
 
-      var obj = this.element.get(0);
-      var ctx = obj.getContext('2d');
+      var ctx = this.element.get(0).getContext('2d');
 
       ctx.save();
       var numPoints = numTeeth * 2;
@@ -117,9 +142,6 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       ctx.stroke();
 
       ctx.restore();
-    },
-    initialState: function() {
-      return 0;
     }
-  };
+  });
 })();

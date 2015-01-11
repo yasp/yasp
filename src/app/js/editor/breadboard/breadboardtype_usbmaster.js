@@ -19,12 +19,12 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
     hardware: [
       {
         type: "POTI",
-        params: {
-        },
+        renderer: 'dom',
+        params: {},
         tooltip: {
           placement: "bottom"
         },
-        pin: 11,
+        pins: [ { emulator: 11, hardware: 1 } ],
         appearance: {
           top: "4",
           left: "129",
@@ -34,11 +34,12 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
       },
       {
         type: "LED",
+        renderer: 'dom',
         params: {
           onColor: 'rgb(0,255,0)',
           offColor: 'rgb(0,35,0)'
         },
-        pin: 5,
+        pins: [ { emulator: 5, hardware: 1 } ],
         appearance: {
           top: "170",
           left: "175",
@@ -48,11 +49,12 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
       },
       {
         type: "LED",
+        renderer: 'dom',
         params: {
           onColor: 'rgb(255,255,0)',
           offColor: 'rgb(35,35,0)'
         },
-        pin: 4,
+        pins: [ { emulator: 4, hardware: 1 } ],
         appearance: {
           top: "170",
           left: "210",
@@ -62,11 +64,12 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
       },
       {
         type: "LED",
+        renderer: 'dom',
         params: {
           onColor: 'rgb(255,0,0)',
           offColor: 'rgb(35,0,0)'
         },
-        pin: 3,
+        pins: [ { emulator: 3, hardware: 1 } ],
         appearance: {
           top: "170",
           left: "245",
@@ -76,11 +79,12 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
       },
       {
         type: "PUSHBUTTON",
+        renderer: 'dom',
         params: {
           color: 'rgb(100,100,100)',
           pushcolor: 'rgb(60,60,60)'
         },
-        pin: 1,
+        pins: [ { emulator: 1, hardware: 1 } ],
         tooltip: {
           placement: "left"
         },
@@ -93,11 +97,12 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
       },
       {
         type: "PUSHBUTTON",
+        renderer: 'dom',
         params: {
           color: 'rgb(255,0,0)',
           pushcolor: 'rgb(180,0,0)'
         },
-        pin: 2,
+        pins: [ { emulator: 2, hardware: 1 } ],
         tooltip: {
           placement: "right"
         },

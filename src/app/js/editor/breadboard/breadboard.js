@@ -25,8 +25,19 @@ if (typeof yasp == 'undefined') yasp = { };
       var payload = data.payload;
 
       for (var i = 0; i < this.type.hardware.length; i++) {
-        if(this.type.hardware[i].pin === payload.pin && this.type.hardware[i].type === "LED")
-          this.hardware[i].receiveStateChange(payload.state);
+        var hwCfg = this.type.hardware[i];
+        var hw = this.hardware[i];
+
+        for (var j = 0; j < hwCfg.pins.length; j++) {
+          var pinCfg = hwCfg.pins[j];
+
+          if(pinCfg.emulator === payload.pin) {
+            hw.backend.receiveStateChange(pinCfg.hardware, payload.state);
+            break;
+          }
+        }
+
+        this.render();
       }
     }).bind(this);
 
@@ -79,8 +90,9 @@ if (typeof yasp == 'undefined') yasp = { };
   yasp.BreadBoard.prototype.buildPiece = function ($container, definition, image) {
     var appear = definition.appearance;
 
-    if(appear.zindex === undefined)
+    if(appear.zindex === undefined) {
       appear.zindex = 2;
+    }
 
     var $wrapper = $('<div style="position: absolute; box-sizing: content-box !important;">');
     $wrapper.css('z-index', appear.zindex);
@@ -93,25 +105,37 @@ if (typeof yasp == 'undefined') yasp = { };
     if(appear.width)
       $wrapper.css('width', (appear.width / image.width) * 100 + "%");
 
-    var hardware = new yasp.Hardware({
-      cb: (function(hw) {
-        if(definition.type === "POTI" || definition.type === "PUSHBUTTON") {
-          this.communicator.sendMessage("SET_STATE", {
-            io: [
-              {
-                pin: definition.pin,
-                state: hw.state
-              }
-            ]
-          });
-        }
-      }).bind(this),
-      container: $wrapper,
-      type: yasp.HardwareType[definition.type],
-      params: definition.params
-    });
+    var hardware = yasp.HardwareType[definition.type];
 
-    this.hardware.push(hardware);
+    var backend = hardware.backend();
+
+    backend.setStateChangedEvent((function (pin) {
+      var emulatorPin = -1;
+
+      for (var i = 0; i < definition.pins.length; i++) {
+        var cfgPin = definition.pins[i];
+
+        if(cfgPin.hardware === pin.nr) {
+          emulatorPin = cfgPin.emulator;
+          break;
+        }
+      }
+
+      if(emulatorPin === -1) {
+        return;
+      }
+
+      this.communicator.sendMessage("SET_STATE", {
+        io: [ { pin: emulatorPin, state: pin.state } ]
+      });
+
+      frontend.render();
+    }).bind(this));
+
+    var frontend = hardware.frontend[definition.renderer](backend, $wrapper, definition.params);
+    frontend.create();
+
+    this.hardware.push(frontend);
     $container.append($wrapper);
   };
 
