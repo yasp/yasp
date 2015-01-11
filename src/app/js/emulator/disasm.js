@@ -16,39 +16,48 @@ if (typeof yasp == 'undefined') yasp = { };
 
     for (var i = 0; i < yasp.commands.length; i++) {
       var cmd = yasp.commands[i];
-      parts.length = 0;
+      var neededBytes = 0;
+      parts.length = 0; // reuse parts array
 
+      // collect parts and sum up their length
       for (var j = 0; j < cmd.code.length; j++) {
-        if(typeof cmd.code[j].value == "string")
-          parts.push(cmd.code[j].value.length);
-        else if(!isNaN((+cmd.code[j].value)))
-          parts.push(8);
+        var part = 0;
+
+        if(typeof cmd.code[j].value === "string") {
+          // literal binary value, eg: "00011"
+          part = cmd.code[j].value.length;
+        } else if(isNaN(cmd.code[j].value) === false) {
+          // literal byte value, eg: 0x10
+          part = 8;
+        }
+
+        neededBytes += part;
+        parts.push(part);
       }
 
       for (var j = 0; j < cmd.params.length; j++) {
         var len = yasp.ParamType[cmd.params[j].type].len;
+        neededBytes += len;
         parts.push(len);
       }
 
-      var neededBytes = 0;
+      // convert to from number of bits to bytes
+      neededBytes = Math.floor(neededBytes / 8);
 
-      for (var j = 0; j < parts.length; j++) {
-        neededBytes += parts[j];
-      }
-      neededBytes = ~~(neededBytes / 8);
-
-
+      // parse needed parts from ROM
       yasp.bitutils.extractBits(rom, parts, parts, offset);
 
+      // check if the code of the current command matches our parts
       var matches = true;
 
       for (var k = 0; k < cmd.code.length; k++) {
         var cc = cmd.code[k].value;
-        if(typeof cc == "string")
-          cc = parseInt(cc, 2);
 
-        if(cc != parts[k])
-        {
+        if(typeof cc === "string") {
+          cc = parseInt(cc, 2);
+        }
+
+        if(cc !== parts[k]) {
           matches = false;
           break;
         }
@@ -56,11 +65,12 @@ if (typeof yasp == 'undefined') yasp = { };
 
       if(matches) {
         break;
+      } else {
+        cmd = null;
       }
-
-      cmd = null;
     }
 
+    // no command found
     if(cmd === null) {
       return null;
     }
@@ -70,12 +80,10 @@ if (typeof yasp == 'undefined') yasp = { };
     var debugStr = "";
 
     if(cmd.name instanceof Array) {
-      debugStr = cmd.name[0];
+      debugStr = cmd.name[0] + " ";
     } else {
-      debugStr = cmd.name;
+      debugStr = cmd.name + " ";
     }
-
-    debugStr += " ";
 
     for (var i = 0; i < cmd.params.length; i++) {
       var param = { type: cmd.params[i].type, value: null, address: null };
@@ -123,8 +131,14 @@ if (typeof yasp == 'undefined') yasp = { };
       debugStr += ", ";
     }
 
+    // remove last comma+space
     debugStr = debugStr.substr(0, debugStr.length - 2);
 
-    return { cmd: cmd, str: debugStr, neededBytes: neededBytes, params: params };
+    return {
+      cmd: cmd,
+      str: debugStr,
+      neededBytes: neededBytes,
+      params: params
+    };
   };
 })();
