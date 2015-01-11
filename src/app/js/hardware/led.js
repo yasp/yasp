@@ -41,13 +41,17 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
     var radius = Math.max(Math.min(width, height)/2, 5);
     var alpha = Math.min(1, Math.max(0, alpha)); // only values between 1 and 0
     
-    ctx.clearRect(0,0,width, height); // clear it, baby
+    ctx.clearRect(0, 0, width, height);
+
+    var small = (width < 20);
 
     // draw outer circle
-    ctx.beginPath();
-    ctx.arc(width/2, height/2, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = 'rgba(10,10,10,0.9)';
-    ctx.fill();
+    if(!small) {
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 2, radius, 0, 2 * Math.PI, false);
+      ctx.fillStyle = 'rgba(10,10,10,0.9)';
+      ctx.fill();
+    }
 
     ctx.globalAlpha = 1 - alpha;
     ctx.beginPath();
@@ -64,16 +68,18 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
     ctx.globalAlpha = 1;
 
-    // draw inner circle
-    ctx.beginPath();
-    ctx.arc(width/2, height/2, radius-4, 0, 2 * Math.PI, false);
-    ctx.strokeStyle = 'rgba(20,20,2,0.5)';
-    ctx.stroke();
+    if(!small) {
+      // draw inner circle
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 2, radius - 4, 0, 2 * Math.PI, false);
+      ctx.strokeStyle = 'rgba(20,20,2,0.5)';
+      ctx.stroke();
 
-    // draw white dot
-    ctx.beginPath();
-    ctx.arc(width/2 + 3, height/2 + 3, radius/6, 0, 2 * Math.PI, false);
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fill();
+      // draw white dot
+      ctx.beginPath();
+      ctx.arc(width / 2 + 3, height / 2 + 3, radius / 6, 0, 2 * Math.PI, false);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.fill();
+    }
   };
 })();
