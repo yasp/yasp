@@ -56,8 +56,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
       this.element.appendTo(this.container);
     },
-    render: function () {
-      var state = this.backend.getState();
+    render: function (state) {
       var darkCol = 'rgb(50,50,50)';
       var lightCol = 'rgb(200,200,200)';
 

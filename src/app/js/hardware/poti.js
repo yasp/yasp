@@ -68,9 +68,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
       this.element.appendTo(this.container);
     },
-    render: function () {
-      var state = this.backend.getState();
-
+    render: function (state) {
       var width = this.element.width();
       var height = this.element.height();
 

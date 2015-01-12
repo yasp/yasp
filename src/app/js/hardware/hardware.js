@@ -51,7 +51,12 @@ if (typeof yasp == 'undefined') yasp = { };
     this.params = params;
 
     this.create = data.create.bind(this);
-    this.render = data.render.bind(this);
+    this.subRender = data.render.bind(this);
+  };
+
+  yasp.HardwareRenderer.prototype.render = function () {
+    var state = this.backend.getState();
+    return this.subRender(state);
   };
 
   yasp.HardwareRenderer.makeRenderer = function (data) {
