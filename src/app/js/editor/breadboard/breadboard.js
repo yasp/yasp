@@ -98,8 +98,29 @@ if (typeof yasp == 'undefined') yasp = { };
     $wrapper.css('z-index', appear.zindex);
     $wrapper.css('top', (appear.top / image.height) * 100 + "%");
     $wrapper.css('left', (appear.left / image.width) * 100 + "%");
-    $wrapper.attr('title', "Pin: " + definition.pin);
-    $wrapper.tooltip(definition.tooltip || {});
+
+    var tooltipTitle = "";
+
+    if(definition.pins.length) {
+      tooltipTitle = "Pin: " + definition.pins[0].emulator;
+    } else {
+      tooltipTitle = "Pins:<br>";
+      for (var i = 0; i < definition.pins.length; i++) {
+        var pin = definition.pins[i];
+        tooltipTitle += pin.hardware + "\u2794" + pin.emulator;
+
+        if(i != definition.pins.length - 1) {
+          tooltipTitle += "<br>";
+        }
+      }
+    }
+
+    $wrapper.attr('title', tooltipTitle);
+
+    var tooltipOptions = definition.tooltip || {};
+    tooltipOptions.html = true;
+    $wrapper.tooltip(tooltipOptions);
+
     if(appear.height)
       $wrapper.css('height', (appear.height / image.height) * 100 + "%");
     if(appear.width)
