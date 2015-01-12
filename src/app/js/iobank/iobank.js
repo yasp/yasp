@@ -24,7 +24,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** sets the handler, which is called when one of the pin-states changes
-   * @param func
+   * @param func {Function}
    */
   yasp.IOBank.prototype.setStateChangedEvent = function(func) {
     if(typeof func !== 'function') {
@@ -38,15 +38,15 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** get the pin object with number nr
-   * @param nr
+   * @param nr {Number}
    * @returns {yasp.Pin}
    */
   yasp.IOBank.prototype.getPin = function (nr) {
     return this.pins[nr];
   };
 
-  /** add a pin to this IOBank. Existing Pins will ob overwritten and their STATE_CHANGED event cleared.
-   * @param pin {Number}
+  /** add a pin. If a pin with the same number already exists, it will be overwritten and their STATE_CHANGED event cleared.
+   * @param pin {yasp.Pin}
    */
   yasp.IOBank.prototype.addPin = function (pin) {
     if(!(pin instanceof yasp.Pin)) {
@@ -58,7 +58,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** add multiple pins
-   * @param pins {Array}
+   * @param pins {yasp.Pin[]}
    * @see yasp.IOBank#addPin
    */
   yasp.IOBank.prototype.addPins = function (pins) {
@@ -69,7 +69,7 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** removes a pin and resets its STATE_CHANGED function
-   * @param nr
+   * @param nr {Number}
    */
   yasp.IOBank.prototype.removePin = function (nr) {
     if(this.pins[nr] !== undefined) {
