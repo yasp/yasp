@@ -89,6 +89,7 @@ if (yasp.l10n.lang === undefined) yasp.l10n.lang = { };
 
     "help.title": "Help",
     "help.search": "Search: ",
+    "help.search.cmdonly": "only search in instruction name",
     "help.close": "Close",
 
     "settings.title": "Settings",

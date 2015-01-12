@@ -637,18 +637,30 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
     });
 
     // init help search
-    $('#help_search > input').keyup(function () {
-      var text = $('#help_search > input').val().toLowerCase();
+    function refreshSearch() {
+      var needle = $('#help_search > input').val().toLowerCase();
+      var cmdmode = $('#help_search_onlycmd').prop('checked');
       var commands = $('#help_container .command');
 
       for (var i = 0; i < commands.length; i++) {
         var $cmd = $(commands[i]);
-        if($cmd.text().toLowerCase().indexOf(text) !== -1)
+        var haystack;
+
+        if(cmdmode) {
+          haystack = $cmd.children('h1').text();
+        } else {
+          haystack = $cmd.text();
+        }
+
+        if(haystack.toLowerCase().indexOf(needle) !== -1)
           $cmd.show();
         else
           $cmd.hide();
       }
-    });
+    }
+
+    $('#help_search > input').keyup(refreshSearch);
+    $('#help_search_onlycmd').change(refreshSearch);
     
     // update help rendering parameters
     var setQuickhelpCommand = function(command, singleLine) {
