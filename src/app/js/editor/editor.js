@@ -602,7 +602,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
       });
 
       function fixHelpHeight() {
-        $('#help_container').css('height', ($(window).height() - 250) + "px");
+        $('#help_container').css('height', ($(window).height() - 275) + "px");
       }
 
       fixHelpHeight();
