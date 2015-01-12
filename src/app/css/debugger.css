@@ -304,6 +304,10 @@ table.breakpoints td.break-active {
     vertical-align: middle;
 }
 
+#hardwarecontainer .tooltip-inner {
+    white-space: nowrap;
+}
+
 /* Fix Scale bug */
 #hardwarecontainer {
     min-height: 100px;
