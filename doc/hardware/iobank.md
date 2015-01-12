@@ -15,6 +15,22 @@ iobank.addPin(new yasp.Pin(1, "gpio", "in", false, this));
 // * tickSupplier
 ```
 
+## JSON
+Both the IOBank and the Pins can be serialized and deserialized to JSON.
+
+```javascript
+[
+    {
+        "nr: 1,
+        "type": "gpio",
+        "mode": "out",
+        "pwm": false
+    }
+]
+```
+
+Please refer to the Pin constructor arguments for an explanation.
+
 ## Pins
 
 ### PWM
