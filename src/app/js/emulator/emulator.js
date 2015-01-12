@@ -107,6 +107,11 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.skipBreakpoint = false;
 
+    /** if PWM is enabled or disabled (used by test suite)
+     * @type {boolean}
+     */
+    this.pwmEnabled = true;
+
     // pin definitions (see setIO, getIO and interrupts)
     this.iobank = new yasp.IOBank();
     this.iobank.addPins([
@@ -679,6 +684,12 @@ if (typeof yasp == 'undefined') yasp = { };
     }
   };
 
+  /** disables PWM simulation for all pins
+   */
+  yasp.Emulator.prototype.disablePwm = function () {
+    this.pwmEnabled = false;
+  };
+
   /** sets the state of a pin
    * @param p {Number} pin-number
    * @param s {Number} new state to set
@@ -702,7 +713,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(debug) console.log("p" + p + "=" + s + " (outside: " + (!!outside) + ")");
 
-    pin.setState(s, outside);
+    pin.setState(s, outside || !this.pwmEnabled);
 
     return 0;
   };

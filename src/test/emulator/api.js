@@ -5,6 +5,7 @@
   module("emulator api", {
     setup: function () {
       emulator = new yasp.Emulator();
+      emulator.disablePwm();
       emulator.forceStep = true;
     },
     teardown: function () {

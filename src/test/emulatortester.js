@@ -41,6 +41,7 @@ yasp.test.EmulatorTester.prototype.done = function () {
       tester.assembler = new yasp.Assembler();
 
       tester.emulator = new yasp.Emulator();
+      tester.emulator.disablePwm();
       tester.emulator.ticksPerTick = 1;
       tester.emulator.forceStep = true;
       tester.emulator.running = true;
