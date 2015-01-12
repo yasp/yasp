@@ -17,8 +17,8 @@ if (typeof yasp == "undefined") yasp = { };
   }
   var validUnknownRegister = /[BW]\d+/;
   
-  /**
-   * @class Tokenizes (= Lexer) all the tokens
+  /** Tokenizes (= Lexer) all the tokens
+   * @class
    */
   yasp.Lexer = function () {
     this.tokens = [];

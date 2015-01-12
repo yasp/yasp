@@ -1,8 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function () {
-  /**
-   * @class Generates the machine code that can be executed by the emulator
+  /** Generates the machine code that can be executed by the emulator
+   * @class
    */
   yasp.Generator = function () {
     this.bitWriter = null;

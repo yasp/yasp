@@ -1,8 +1,8 @@
 if (typeof yasp == 'undefined') yasp = { };
 
 (function () {
-  /**
-   * @class Analyzes the source code and returns all the labels defined in the source code
+  /** Analyzes the source code and returns all the labels defined in the source code
+   * @class
    */
   yasp.Analyser = function () {
 
