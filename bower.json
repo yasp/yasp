@@ -8,6 +8,7 @@
     "qunit": "1.12.0",
     "qunit-parameterize": "git@github.com:luto/qunit-parameterize.git#bower",
     "blanket": "~1.1.5",
-    "jquery": "1.10.2"
+    "jquery": "1.10.2",
+    "screenfull": "~2.0.0"
   }
 }

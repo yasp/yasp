@@ -5,6 +5,10 @@ if (typeof yasp == 'undefined') yasp = { };
     show: function(mode) {
       yasp.Debugger.mode = mode;
       $('#dialog_debugger').modal('show');
+
+      if (screenfull.enabled && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        screenfull.request($('#dialog_debugger')[0]);
+      }
     },
     formatPadding : {
       bin: 8,
