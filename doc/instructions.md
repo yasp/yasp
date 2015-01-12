@@ -45,8 +45,7 @@ changed. Internally this is done by the [doctool](https://github.com/yasp/doctoo
       "value": 0x10
     },
     {
-      "value": "000001",
-      "length": 6
+      "value": "000001"
     }
   ],
 

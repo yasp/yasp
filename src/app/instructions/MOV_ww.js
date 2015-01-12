@@ -24,8 +24,7 @@
       "value": 0x10
     },
     {
-      "value": "010000",
-      "length": 6
+      "value": "010000"
     }
   ],
   "params": [

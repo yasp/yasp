@@ -24,8 +24,7 @@
       "value": 0x60
     },
     {
-      "value": "011",
-      "length": 3
+      "value": "011"
     }
   ],
   "params": [
