@@ -18,8 +18,8 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** translates a single key and replaces placeholders (`{0}`) with values given in the params-parameter.
-   * @param key {String} the key to translate
-   * @param params {String[]} the parameters to put in the translated string
+   * @param {String} key the key to translate
+   * @param {String[]=} params the parameters to put in the translated string
    */
   yasp.l10n.getTranslation = function (key, params) {
     params = params || [];

@@ -160,7 +160,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
       // init commands if uninitialized
       if (!this.commands) {
         this.commands = [ ];
-        var added = { }
+        var added = { };
         for (var i = 0; i < yasp.commands.length; i++) {
           var commandName = yasp.commands[i].name;
           for (var j = 0; j < (commandName instanceof Array ? commandName.length : 1); j++) {
@@ -175,7 +175,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
       }
 
       // add commands
-      var added = { }
+      var added = { };
       for (var i = 0; i < this.commands.length; i++) {
         var name = this.commands[i];
         if (!added[name] && !yasp.Editor.symbols.instructions[name] && name != null) {
@@ -244,7 +244,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
     labelText: "",
     breakpoints: [ ],
     ast: [ ],
-    bitcode: new Uint8Array(),
+    bitcode: new Uint8Array(0),
     updateBreakpoints: function  () {
       var editor = yasp.EditorManager.editors[0];
       yasp.Editor.breakpoints = [];
@@ -753,11 +753,11 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
 
       $('#automaticsave_picker').change(function() {
         yasp.Storage['automaticsave'] = this.checked;
-      }).attr('checked', yasp.Storage['automaticsave'] == "true" ? true : false);
+      }).attr('checked', yasp.Storage['automaticsave'] === "true");
 
       $('#codecompletion_picker').change(function() {
         yasp.Storage['codecompletion'] = this.checked;
-      }).attr('checked', yasp.Storage['codecompletion'] == "true" ? true : false);
+      }).attr('checked', yasp.Storage['codecompletion'] === "true");
 
       $('#labellist_picker').change(function() {
         yasp.Storage['labellist'] = this.value;
@@ -1028,7 +1028,7 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
             var name = data.name;
             var url = document.location.href.split('#')[0];
             if(url.charAt(url.length - 1) !== "/")
-              url += "/"
+              url += "/";
             url += "#q=" + name;
 
             prompt(yasp.l10n.getTranslation("editor.toolbar.quickshare.msg"), url);
