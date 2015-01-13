@@ -160,22 +160,24 @@ function flushDebugQueue () {
 }
 
 emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
-  var now = +new Date();
+  var now = Date.now();
   var tt = 50;
 
-  if(!IOUpdateLimiter[pin])
-    IOUpdateLimiter[pin] = { last: 0 };
+  if(IOUpdateLimiter[pin] === undefined) {
+    IOUpdateLimiter[pin] = {
+      last: 0,
+      state: {}
+    };
+  }
 
-  IOUpdateLimiter[pin].state = {
-    pin: pin,
-    state: state,
-    mode: mode,
-    type: type
-  };
+  IOUpdateLimiter[pin].state.pin = pin;
+  IOUpdateLimiter[pin].state.state = state;
+  IOUpdateLimiter[pin].state.mode = mode;
+  IOUpdateLimiter[pin].state.type = type;
 
   if(now - IOUpdateLimiter[pin].last > tt) {
     sendIOUpdate(pin);
-  } else {
+  } else if (IOUpdateLimiter[pin].timeout === null) {
     IOUpdateLimiter[pin].timeout = setTimeout(function () {
       IOUpdateLimiter[pin].timeout = null;
       sendIOUpdate(pin);
@@ -189,7 +191,7 @@ function sendIOUpdate(pin) {
     error: null
   });
 
-  IOUpdateLimiter[pin].last = +new Date();
+  IOUpdateLimiter[pin].last = Date.now();
 }
 
 function getState() {
