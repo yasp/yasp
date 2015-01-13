@@ -44,6 +44,15 @@ if (typeof yasp == 'undefined') yasp = { };
     this.pwmStatus = {};
     this.pwmTimeout = {};
 
+    var pin = this;
+
+    this.pwmTimeoutFunc = function () {
+      // called by setTimeout, which resets `this`
+      pin.setState(pin.state, true);
+    };
+
+    this.resetPwm();
+
     this.setState(0, true);
   };
 
@@ -74,10 +83,7 @@ if (typeof yasp == 'undefined') yasp = { };
    * @private
    */
   yasp.Pin.prototype.clearPwmTimeout = function () {
-    if(this.pwmTimeout !== null) {
-      clearTimeout(this.pwmTimeout);
-    }
-
+    clearTimeout(this.pwmTimeout);
     this.pwmTimeout = null;
   };
 
@@ -88,7 +94,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.pwmStatus = {
       startOn: null,
       startOff: null,
-      state: null
+      state: 0
     };
 
     this.clearPwmTimeout();
@@ -107,7 +113,7 @@ if (typeof yasp == 'undefined') yasp = { };
       if(this.pwmStatus.startOn === null) {
         this.pwmStatus.startOn = now;
         this.pwmStatus.startOff = null;
-      } else {
+      } else if(this.pwmStatus.startOff !== null) {
         var status = this.pwmStatus;
         var timeOn = status.startOff - status.startOn;
         var timeOff = now - status.startOff;
@@ -116,18 +122,14 @@ if (typeof yasp == 'undefined') yasp = { };
 
         this.setState(percentOn, true);
       }
-    } else if(s === 0 && this.pwmStatus !== null) {
+    } else if(s === 0 && this.pwmStatus.startOn !== null) {
       this.pwmStatus.startOff = now;
     }
 
-    if(this.pwmTimeout !== null) {
-      this.clearPwmTimeout();
-    }
-
     this.pwmStatus.state = s;
-    this.pwmTimeout = setTimeout(function () {
-      this.setState(this.pwmStatus.state, true);
-    }.bind(this), 100);
+
+    this.clearPwmTimeout();
+    this.pwmTimeout = setTimeout(this.pwmTimeoutFunc, 100);
   };
 
   /** updates the pin state. If PWM is enabled and ignorePwm is not false
@@ -135,7 +137,8 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param ignorePwm {Boolean} true if all PWM code should be skipped and the PWM status reset
    */
   yasp.Pin.prototype.setState = function (state, ignorePwm) {
-    if(!ignorePwm && this.pwm === true) {
+    if(ignorePwm === false && this.pwm === true) {
+      this.state = state;
       this.updatePwm(state);
     } else {
       this.state = state;
