@@ -12,7 +12,6 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.disasm.getCommand = function (rom, offset) {
     var parts = [ ];
-    var ppc = offset;
 
     for (var i = 0; i < yasp.commands.length; i++) {
       var cmd = yasp.commands[i];
