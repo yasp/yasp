@@ -1027,6 +1027,8 @@ if (typeof yasp == 'undefined') yasp = { };
       var cmd = yasp.disasm.getCommand(this.rom, this.pc);
 
       if(cmd !== null) {
+        cmd.boundExec = cmd.cmd.exec.bind(this);
+
         this.commandCache[this.pc] = cmd;
 
         var lastByte = this.pc + cmd.neededBytes;
@@ -1056,7 +1058,7 @@ if (typeof yasp == 'undefined') yasp = { };
     // instruction file. Refer to the instruction documentation for further details:
     //                   https://github.com/yasp/yasp/blob/master/doc/instructions.md
     if(ccmd.params.length === 0) {
-      cmd.exec.call(this);
+      ccmd.boundExec();
     } else {
       if(p0.valueNeeded) {
         // isRByte, isRWord and isPin are added by yasp.disasm.getCommand
@@ -1070,7 +1072,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
 
       if(ccmd.params.length === 1) {
-        cmd.exec.call(this, p0);
+        ccmd.boundExec(p0);
       } else if(ccmd.params.length === 2) {
         var p1 = ccmd.params[1];
 
@@ -1083,7 +1085,7 @@ if (typeof yasp == 'undefined') yasp = { };
             p1.value = this.getIO(p1.address);
         }
 
-        cmd.exec.call(this, p0, p1);
+        ccmd.boundExec(p0, p1);
       } else {
         throw "Instructions with more than 2 parameters are not supported.";
       }
