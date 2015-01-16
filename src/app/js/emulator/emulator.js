@@ -25,10 +25,10 @@ if (typeof yasp == 'undefined') yasp = { };
 
     /** number of milliseconds between two tickWrapper-calls
      * @member {Number} */
-    this.tickDelay = 100;
+    this.tickDelay = 50;
     /** number of ticks inside one tickWrapper call
      * @member {Number} */
-    this.ticksPerTick = 300;
+    this.ticksPerTick = 150;
     /** timeout id of the last tickWrapper-setTimeout
      * @member {Number} */
     this.tickTimeout = 0;

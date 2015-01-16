@@ -48,7 +48,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.pwmTimeoutFunc = function () {
       // called by setTimeout, which resets `this`
-      pin.setState(pin.state, true);
+      pin.setState(pin.pwmStatus.state, true);
     };
 
     this.resetPwm();
@@ -84,7 +84,6 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.Pin.prototype.clearPwmTimeout = function () {
     clearTimeout(this.pwmTimeout);
-    this.pwmTimeout = null;
   };
 
   /**
