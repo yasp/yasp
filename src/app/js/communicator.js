@@ -119,12 +119,33 @@ if (typeof yasp == 'undefined') yasp = { };
    */
   yasp.CommunicatorBackend = function(self, listener) {
     console = {
-      log: function(msg) {
-        self.postMessage({
-          action: "internal_log",
-          payload: msg
-        });
+      log: function() {
+        if(debug) {
+          var msg = "";
+
+          for (var i = 0; i < arguments.length; i++) {
+            var arg = arguments[i];
+
+            if(typeof arg === 'object') {
+              msg += JSON.stringify(arg);
+            } else {
+              msg += arg;
+            }
+          }
+
+          self.postMessage({
+            action: "internal_log",
+            payload: msg
+          });
+        }
       }
+    };
+
+    var broadcastObj = {
+      action: "",
+      id: null,
+      error: 0,
+      payload: null
     };
     
     listener = listener.bind(this);
@@ -137,13 +158,14 @@ if (typeof yasp == 'undefined') yasp = { };
      * @see Communicator#unsubscribe
      */
     this.broadcast = function(action, result) {
-      console.log("Send broadcast: " + action + " result " + JSON.stringify(result));
-      self.postMessage({
-        action: action,
-        id: null,
-        error: result.error,
-        payload: result.payload
-      });
+      console.log("Send broadcast: ", action, " result ", result);
+
+      broadcastObj.action = action;
+      broadcastObj.id = null;
+      broadcastObj.error = result.error;
+      broadcastObj.payload = result.payload;
+
+      self.postMessage(broadcastObj);
     };
     
     self.addEventListener('message', function(e) {
