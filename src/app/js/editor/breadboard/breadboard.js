@@ -55,7 +55,8 @@ if (typeof yasp == 'undefined') yasp = { };
       this.buildPiece($innerContainer, this.type.hardware[i], this.type.image);
     }
 
-    this.render();
+    this.boundRender = this.render.bind(this);
+    this.boundRender();
   };
 
   /** Generates a image and adds it to the DOM
@@ -177,7 +178,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     }
 
-    window.requestAnimFrame(this.render.bind(this));
+    window.requestAnimFrame(this.boundRender);
   };
 
   /** removes all the hardware from the DOM and removes the event-handlers from the emulator
