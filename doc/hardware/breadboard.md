@@ -49,6 +49,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
 
         // where to show the tooltip which contains additional information such as used pin
         // possible values: left, right, top, bottom  (default = top)
+        // to disable the tooltip entirely, set 'tooltip' to false
         tooltip: {
           placement: "bottom"
         },
