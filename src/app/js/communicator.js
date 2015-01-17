@@ -142,6 +142,8 @@ if (typeof yasp == 'undefined') yasp = { };
             } else {
               msg += arg;
             }
+
+            msg += " ";
           }
 
           self.postMessage({
