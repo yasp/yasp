@@ -169,19 +169,23 @@ if (typeof yasp == 'undefined') yasp = { };
     };
     
     self.addEventListener('message', function(e) {
-      e = e.data;
-      console.log("Receive message: " + e.action+" payload " + JSON.stringify(e.payload));
+      var data = e.data;
+
+      console.log("Receive message: ", data.action, " payload ", data.payload);
+
       var ready = function(result) {
-        console.log("Send response: " + e.action+" result " + JSON.stringify(result));
+        console.log("Send response: ", data.action, " result ", result);
         self.postMessage({
-          action: e.action,
-          id: e.id,
+          action: data.action,
+          id: data.id,
           error: result.error,
           payload: result.payload
         });
       };
-      listener(e, ready);
+
+      listener(data, ready);
     });
+
     self.addEventListener('error', function(e) {
       self.postMessage({
         action: 'internal_error',
