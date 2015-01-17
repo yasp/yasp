@@ -3,16 +3,11 @@
   var pin;
 
   var ticks;
-  var ticker = {
-    getTicks: function () {
-      return ticks;
-    }
-  };
 
   module("pin pwm", {
     setup: function () {
       ticks = 0;
-      pin = new yasp.Pin(0, "gpio", "out", true, ticker);
+      pin = new yasp.Pin(0, "gpio", "out", true);
     },
     teardown: function () {
       ticks = 0;
@@ -24,9 +19,9 @@
     // 0123456789
     //  HHLLLHH
 
-    ticks = 1; pin.setState(1, false);
-    ticks = 3; pin.setState(0, false);
-    ticks = 6; pin.setState(1, false);
+    pin.setState(1, false, 1);
+    pin.setState(0, false, 3);
+    pin.setState(1, false, 6);
 
     strictEqual(pin.state, 2 / (2 + 3));
   });
@@ -37,7 +32,7 @@
       start();
     };
 
-    ticks = 1; pin.setState(1, false);
+    pin.setState(1, false, 1);
   });
 
   asyncTest("HIGH, LOW", function (assert) {
@@ -46,8 +41,8 @@
       start();
     };
 
-    ticks = 1; pin.setState(1, false);
-    ticks = 2; pin.setState(0, false);
+    pin.setState(1, false, 1);
+    pin.setState(0, false, 2);
   });
 
   asyncTest("HIGH, LOW, HIGH", function (assert) {
@@ -61,9 +56,9 @@
       }
     };
 
-    ticks = 1; pin.setState(1, false);
-    ticks = 2; pin.setState(0, false);
-    ticks = 3; pin.setState(1, false);
+    pin.setState(1, false, 1);
+    pin.setState(0, false, 2);
+    pin.setState(1, false, 3);
   });
 
 })();
