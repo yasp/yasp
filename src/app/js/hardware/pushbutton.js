@@ -10,11 +10,13 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
   yasp.HardwareType['PUSHBUTTON']['backend'] = yasp.Hardware.makeHardware({
     name: 'PUSHBUTTON',
     pins: [ { nr: 1, type: 'gpio', mode: 'out' } ],
-    receiveStateChange: function (pin) {
+    init: function () {
+    },
+    receiveStateChange: function (pin, tick) {
     },
     uiEvent: function (name, pressed) {
       if(name === 'push') {
-        this.getPin(1).setState(pressed ? 1 : 0, true);
+        this.getPin(1).setState(pressed ? 1 : 0, true, 0);
       }
     },
     getState: function () {

@@ -116,20 +116,20 @@ if (typeof yasp == 'undefined') yasp = { };
     this.iobank = new yasp.IOBank();
     this.iobank.addPins([
       // buttons
-      new yasp.Pin(1, "gpio", "in", false, this),
-      new yasp.Pin(2, "gpio", "in", false, this),
+      new yasp.Pin(1, "gpio", "in", false),
+      new yasp.Pin(2, "gpio", "in", false),
       // LEDs
-      new yasp.Pin(3, "gpio", "out", true, this),
-      new yasp.Pin(4, "gpio", "out", true, this),
-      new yasp.Pin(5, "gpio", "out", true, this),
+      new yasp.Pin(3, "gpio", "out", false),
+      new yasp.Pin(4, "gpio", "out", false),
+      new yasp.Pin(5, "gpio", "out", false),
       // ADC0 - ADC2
-      new yasp.Pin(10, "adc", "in", false, this),
-      new yasp.Pin(11, "adc", "in", false, this),
-      new yasp.Pin(12, "adc", "in", false, this)
+      new yasp.Pin(10, "adc", "in", false),
+      new yasp.Pin(11, "adc", "in", false),
+      new yasp.Pin(12, "adc", "in", false)
     ]);
 
-    this.iobank.setStateChangedEvent((function (pin) {
-        this.events.IO_CHANGED(pin.nr, pin.state, pin.mode, pin.type);
+    this.iobank.setStateChangedEvent((function (pin, tick) {
+        this.events.IO_CHANGED(pin.nr, pin.state, pin.mode, pin.type, tick);
         if(this.changeBreakpoints.io === true) this.changeBreakpointData.io.push(pin.nr);
       }).bind(this)
     );
@@ -713,7 +713,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(debug) console.log("p" + p + "=" + s + " (outside: " + (!!outside) + ")");
 
-    pin.setState(s, outside || !this.pwmEnabled);
+    pin.setState(s, outside || !this.pwmEnabled, this.getTicks());
 
     return 0;
   };

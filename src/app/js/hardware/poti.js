@@ -10,11 +10,13 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
   yasp.HardwareType['POTI']['backend'] = yasp.Hardware.makeHardware({
     name: 'POTI',
     pins: [ { nr: 1, type: 'gpio', mode: 'out' } ],
-    receiveStateChange: function (pin) {
+    init: function () {
+    },
+    receiveStateChange: function (pin, tick) {
     },
     uiEvent: function (name, turn) {
       if(name === 'turn') {
-        this.getPin(1).setState(turn, true);
+        this.getPin(1).setState(turn, true, 0);
       }
     },
     getState: function () {

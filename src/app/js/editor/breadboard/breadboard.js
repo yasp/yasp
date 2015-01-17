@@ -14,6 +14,7 @@ if (typeof yasp == 'undefined') yasp = { };
     this.container = $(container);
     this.communicator = communicator;
     this.type = type;
+    this.destroyed = false;
   };
 
   /** Generates this breadboard: wire emulator to hardware, generate html
@@ -32,12 +33,10 @@ if (typeof yasp == 'undefined') yasp = { };
           var pinCfg = hwCfg.pins[j];
 
           if(pinCfg.emulator === payload.pin) {
-            hw.backend.receiveStateChange(pinCfg.hardware, payload.state);
+            hw.backend.receiveStateChange(pinCfg.hardware, payload.state, payload.tick);
             break;
           }
         }
-
-        this.render();
       }
     }).bind(this);
 
@@ -55,6 +54,8 @@ if (typeof yasp == 'undefined') yasp = { };
     for (var i = 0; i < this.type.hardware.length; i++) {
       this.buildPiece($innerContainer, this.type.hardware[i], this.type.image);
     }
+
+    this.render();
   };
 
   /** Generates a image and adds it to the DOM
@@ -149,8 +150,6 @@ if (typeof yasp == 'undefined') yasp = { };
       this.communicator.sendMessage("SET_STATE", {
         io: [ { pin: emulatorPin, state: pin.state } ]
       });
-
-      frontend.render();
     }).bind(this));
 
     var frontend = hardware.frontend[definition.renderer](backend, $wrapper, definition.params);
@@ -163,14 +162,20 @@ if (typeof yasp == 'undefined') yasp = { };
   /** redraws all hardware elements
    */
   yasp.BreadBoard.prototype.render = function () {
-      for (var i = 0; i < this.hardware.length; i++) {
-        try {
-          this.hardware[i].render();
-        } catch (ex) {
-          console.log("Could not render breadboard-hardware: " + i);
-          console.log(ex);
-        }
+    if(this.destroyed === true) {
+      return;
+    }
+
+    for (var i = 0; i < this.hardware.length; i++) {
+      try {
+        this.hardware[i].render();
+      } catch (ex) {
+        console.log("Could not render breadboard-hardware: " + i);
+        console.log(ex);
       }
+    }
+
+    window.requestAnimFrame(this.render.bind(this));
   };
 
   /** removes all the hardware from the DOM and removes the event-handlers from the emulator

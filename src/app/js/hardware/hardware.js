@@ -16,6 +16,8 @@ if (typeof yasp == 'undefined') yasp = { };
       receiveStateChange: data.receiveStateChange.bind(this),
       getState: data.getState.bind(this)
     };
+
+    data.init.call(this);
   };
 
   /** sets a callback function which should be called, if one
@@ -23,20 +25,21 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param func {Function} callback with the Pin as only parameter
    */
   yasp.Hardware.prototype.setStateChangedEvent = function (func) {
-    this.iobank.setStateChangedEvent(func);
+    this.iobank.setStateChangedEvent(func, 'out');
   };
 
   /** called by the breadboard when a pin state has been changes by
    * the outside environment (e.g. the emulator).
-   * @param nr
-   * @param state
+   * @param nr {Number}
+   * @param state {Number}
+   * @param tick {Number}
    */
-  yasp.Hardware.prototype.receiveStateChange = function (nr, state) {
+  yasp.Hardware.prototype.receiveStateChange = function (nr, state, tick) {
     var pin = this.getPin(nr);
 
     if(pin.mode === 'in') {
-      pin.state = state;
-      this.funcs.receiveStateChange(pin);
+      pin.setState(state, false, tick);
+      this.funcs.receiveStateChange(pin, tick);
     }
   };
 

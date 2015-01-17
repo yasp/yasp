@@ -8,10 +8,9 @@ if (typeof yasp == 'undefined') yasp = { };
    * @param type {String} 'gpio' or 'adc'
    * @param mode {String} 'in' or 'out'
    * @param pwm {Boolean} true, if PWM should be enabled, otherwise false
-   * @param tickSupplier {Object} an object, which has a getTicks()-function to tell the pin how much time has passed. Only needed when PWM is enabled.
    * @constructor
    */
-  yasp.Pin = function (nr, type, mode, pwm, tickSupplier) {
+  yasp.Pin = function (nr, type, mode, pwm) {
     if(typeof nr !== 'number') {
       throw "nr must be a number";
     }
@@ -33,12 +32,6 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.pwm = (typeof pwm === 'boolean') ? pwm : false;
 
-    if(this.pwm === true && tickSupplier && typeof tickSupplier.getTicks !== 'function') {
-      throw "invalid tick supplier (must have getTicks() and getTimePerTick())";
-    }
-
-    this.tickSupplier = tickSupplier;
-
     this.STATE_CHANGED = function () {};
 
     this.pwmStatus = {};
@@ -48,21 +41,20 @@ if (typeof yasp == 'undefined') yasp = { };
 
     this.pwmTimeoutFunc = function () {
       // called by setTimeout, which resets `this`
-      pin.setState(pin.pwmStatus.state, true);
+      pin.setState(pin.pwmStatus.state, true, pin.pwmStatus.tick);
     };
 
     this.resetPwm();
 
-    this.setState(0, true);
+    this.setState(0, true, 0);
   };
 
-  yasp.Pin.fromJSON = function (data, tickSupplier) {
+  yasp.Pin.fromJSON = function (data) {
     return new yasp.Pin(
       data.nr,
       data.type,
       data.mode,
-      data.pwm,
-      tickSupplier
+      data.pwm
     );
   };
 
@@ -104,28 +96,28 @@ if (typeof yasp == 'undefined') yasp = { };
    * by measuring how long the pin is high compared to its low-time.
    * @private
    * @param s {Number} new pin state set
+   * @param tick {Number}
    */
-  yasp.Pin.prototype.updatePwm = function (s) {
-    var now = this.tickSupplier.getTicks();
-
+  yasp.Pin.prototype.updatePwm = function (s, tick) {
     if(s === 1) {
       if(this.pwmStatus.startOn === null) {
-        this.pwmStatus.startOn = now;
+        this.pwmStatus.startOn = tick;
         this.pwmStatus.startOff = null;
       } else if(this.pwmStatus.startOff !== null) {
         var status = this.pwmStatus;
         var timeOn = status.startOff - status.startOn;
-        var timeOff = now - status.startOff;
+        var timeOff = tick - status.startOff;
         var timeTotal = timeOn + timeOff;
         var percentOn = timeOn / timeTotal;
 
-        this.setState(percentOn, true);
+        this.setState(percentOn, true, tick);
       }
     } else if(s === 0 && this.pwmStatus.startOn !== null) {
-      this.pwmStatus.startOff = now;
+      this.pwmStatus.startOff = tick;
     }
 
     this.pwmStatus.state = s;
+    this.pwmStatus.tick = tick;
 
     this.clearPwmTimeout();
     this.pwmTimeout = setTimeout(this.pwmTimeoutFunc, 100);
@@ -134,14 +126,15 @@ if (typeof yasp == 'undefined') yasp = { };
   /** updates the pin state. If PWM is enabled and ignorePwm is not false
    * @param state {Number} state (0 or 1) to set
    * @param ignorePwm {Boolean} true if all PWM code should be skipped and the PWM status reset
+   * @param tick {Number}
    */
-  yasp.Pin.prototype.setState = function (state, ignorePwm) {
+  yasp.Pin.prototype.setState = function (state, ignorePwm, tick) {
     if(ignorePwm === false && this.pwm === true) {
       this.state = state;
-      this.updatePwm(state);
+      this.updatePwm(state, tick);
     } else {
       this.state = state;
-      this.STATE_CHANGED(this);
+      this.STATE_CHANGED(this, tick);
       this.resetPwm();
     }
   };

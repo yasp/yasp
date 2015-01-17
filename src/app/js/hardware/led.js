@@ -9,14 +9,21 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
   yasp.HardwareType['LED']['backend'] = yasp.Hardware.makeHardware({
     name: 'LED',
-    pins: [ { nr: 1, type: 'gpio', mode: 'in' } ],
-    receiveStateChange: function (pin) {
+    pins: [ { nr: 1, type: 'gpio', mode: 'in', pwm: true } ],
+    init: function () {
+      this.pwmState = 0;
+
+      this.iobank.pins[1].STATE_CHANGED = (function (pin, tick) {
+        this.pwmState = pin.state;
+      }).bind(this);
+    },
+    receiveStateChange: function (pin, tick) {
     },
     uiEvent: function (name, data) {
     },
     getState: function () {
       return {
-        light: this.getPin(1).state
+        light: this.pwmState
       };
     }
   });

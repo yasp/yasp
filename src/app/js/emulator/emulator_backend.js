@@ -12,8 +12,6 @@ importScripts(
 
 var emulator = new yasp.Emulator();
 
-var IOUpdateLimiter = {};
-
 var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
     case "LOAD":
@@ -151,40 +149,18 @@ emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {
   });
 });
 
-emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
-  var now = Date.now();
-  var tt = 50;
-
-  if(IOUpdateLimiter[pin] === undefined) {
-    IOUpdateLimiter[pin] = {
-      last: 0,
-      state: {}
-    };
-  }
-
-  IOUpdateLimiter[pin].state.pin = pin;
-  IOUpdateLimiter[pin].state.state = state;
-  IOUpdateLimiter[pin].state.mode = mode;
-  IOUpdateLimiter[pin].state.type = type;
-
-  if(now - IOUpdateLimiter[pin].last > tt) {
-    sendIOUpdate(pin);
-  } else if (IOUpdateLimiter[pin].timeout === null) {
-    IOUpdateLimiter[pin].timeout = setTimeout(function () {
-      IOUpdateLimiter[pin].timeout = null;
-      sendIOUpdate(pin);
-    }, tt);
-  }
-});
-
-function sendIOUpdate(pin) {
+emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type, tick) {
   communicator.broadcast('IO_CHANGED', {
-    payload: IOUpdateLimiter[pin].state,
+    payload: {
+      pin: pin,
+      state: state,
+      mode: mode,
+      type: type,
+      tick: tick
+    },
     error: null
   });
-
-  IOUpdateLimiter[pin].last = Date.now();
-}
+});
 
 function getState() {
   var state = {

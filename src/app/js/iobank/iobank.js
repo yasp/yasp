@@ -36,15 +36,20 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /** sets the handler, which is called when one of the pin-states changes
    * @param func {Function}
+   * @param mode {String=all} only set event for pins of this mode. Use 'all' or omit to set for all pins.
    */
-  yasp.IOBank.prototype.setStateChangedEvent = function(func) {
+  yasp.IOBank.prototype.setStateChangedEvent = function(func, mode) {
     if(typeof func !== 'function') {
       throw "invalid callback function";
     }
 
+    mode = mode || 'all';
+
     for(var nr in this.pins) {
       var pin = this.getPin(nr);
-      pin.STATE_CHANGED = func;
+      if(mode === 'all' || pin.mode === mode) {
+        pin.STATE_CHANGED = func;
+      }
     }
   };
 
