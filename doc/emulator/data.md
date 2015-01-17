@@ -35,7 +35,8 @@ State of an input or output pin. Used by the `IO_CHANGED`-Broadcast and `SET_STA
   "pin": 0,   // pin number
   "type": "", // "adc" or "gpio"
   "mode": "", // "in" or "out"
-  "state": 0  // 0-255
+  "state": 0, // 0-255
+  "tick": 0   // tick number at which this change happened (used for timing in HW/PWM)
 }
 ```
 

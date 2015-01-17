@@ -15,11 +15,20 @@ Hardware is connected to the emulator via a [breadboard](./breadboard.md).
 yasp.Hardware.makeHardware({
   name: '',
   pins: [ /* JSON serialized pins, see /doc/hardware/iobank.md */  ],
-  receiveStateChange: function (pin) {
+  init: function () {
+    // Called once the hardware has been created. This
+    // can be used to add custom events to the IOBank
+    // or start intervals/timeouts.
+  },
+  receiveStateChange: function (pin, tick) {
     // Called if the state of one of the hardware pins
     // in 'in'-mode has changed. This normally happens
     // when the pin is changed by the emulator or some
     // other hardware it is connected to.
+    // Tick is the tick number at which the pin state
+    // was set in the emulator. It must be used for
+    // any time comparisons (e.g. how long since the
+    // last HIGH?), instead of real time.
   },
   uiEvent: function (name, data) {
     // Called by the frontend to notify the logic of
@@ -72,7 +81,9 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
   yasp.HardwareType['NAME']['backend'] = yasp.Hardware.makeHardware({
     name: 'NAME',
     pins: [ { nr: 1, type: 'gpio', mode: 'IN OR OUT' } ],
-    receiveStateChange: function (pin) {
+    init: function () {
+    },
+    receiveStateChange: function (pin, tick) {
     },
     uiEvent: function (name, turn) {
     },

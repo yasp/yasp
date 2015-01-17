@@ -30,9 +30,9 @@ if (typeof yasp == 'undefined') yasp = { };
 
   /** called by the breadboard when a pin state has been changes by
    * the outside environment (e.g. the emulator).
-   * @param nr {Number}
-   * @param state {Number}
-   * @param tick {Number}
+   * @param nr {Number} pin number
+   * @param state {Number} new state to set
+   * @param tick {Number} current tick number supplied by the emulator
    */
   yasp.Hardware.prototype.receiveStateChange = function (nr, state, tick) {
     var pin = this.getPin(nr);
