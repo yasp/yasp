@@ -33,6 +33,19 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
         }
       },
       {
+        type: "OSCI",
+        renderer: 'dom',
+        params: {},
+        tooltip: false,
+        pins: [ { emulator: 3, hardware: 3 }, { emulator: 4, hardware: 4 }, { emulator: 5, hardware: 5 } ],
+        appearance: {
+          top: "0",
+          left: "350",
+          height: "250",
+          width: "350"
+        }
+      },
+      {
         type: "LED",
         renderer: 'dom',
         params: {
