@@ -20,8 +20,15 @@ if (typeof yasp == 'undefined') yasp = { };
     var lastSlash = path.lastIndexOf("/") + 1;
     var filename = path.substring(lastSlash);
 
-    this.worker.addEventListener("message", (function(event) {
-      var data = event.data;
+    var handleMessage = (function(data) {
+      if(data.batched === true) {
+        for (var i = 0; i < data.msgs.length; i++) {
+          var msg = data.msgs[i];
+          handleMessage(msg);
+        }
+        return;
+      }
+
       if (!!data.id) {
         if (!this.openMessages[data.id]) {
           throw "Message with ID "+data.id+" does not exist.";
@@ -44,7 +51,11 @@ if (typeof yasp == 'undefined') yasp = { };
           }
         }
       }
-    }).bind(this), false);
+    }).bind(this);
+
+    this.worker.addEventListener("message", function () {
+      handleMessage(event.data);
+    }, false);
   };
 
   /**
@@ -141,13 +152,51 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     };
 
-    var broadcastObj = {
-      action: "",
-      id: null,
-      error: 0,
-      payload: null
-    };
-    
+    function sendBroadcasts () {
+      if(broadcastMsgsLen > 0) {
+        console.log("!!!", broadcastMsgs);
+        var msgs = broadcastMsgs.slice(0, broadcastMsgsLen);
+
+        console.log("!!!", msgs);
+
+        self.postMessage({
+          batched: true,
+          msgs: msgs
+        });
+
+        broadcastMsgsLen = 0;
+      }
+    }
+
+    setInterval(sendBroadcasts, 50);
+
+    function getBroadcastMsg(action, error, payload) {
+      var obj;
+
+      if(broadcastMsgsLen > broadcastMsgs.length && false) {
+        obj = broadcastMsgs[broadcastMsgsLen];
+      } else {
+        obj = {
+          batched: false,
+          action: "",
+          id: null,
+          error: 0,
+          payload: null
+        };
+
+        broadcastMsgs[broadcastMsgsLen] = obj;
+      }
+
+      obj.action = action;
+      obj.error = error;
+      obj.payload = payload;
+
+      broadcastMsgsLen++;
+    }
+
+    var broadcastMsgs = [];
+    var broadcastMsgsLen = 0;
+
     listener = listener.bind(this);
 
     /**
@@ -159,13 +208,7 @@ if (typeof yasp == 'undefined') yasp = { };
      */
     this.broadcast = function(action, result) {
       console.log("Send broadcast: ", action, " result ", result);
-
-      broadcastObj.action = action;
-      broadcastObj.id = null;
-      broadcastObj.error = result.error;
-      broadcastObj.payload = result.payload;
-
-      self.postMessage(broadcastObj);
+      getBroadcastMsg(action, result.error, result.payload);
     };
     
     self.addEventListener('message', function(e) {
@@ -176,6 +219,7 @@ if (typeof yasp == 'undefined') yasp = { };
       var ready = function(result) {
         console.log("Send response: ", data.action, " result ", result);
         self.postMessage({
+          batched: false,
           action: data.action,
           id: data.id,
           error: result.error,
@@ -188,6 +232,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     self.addEventListener('error', function(e) {
       self.postMessage({
+        batched: false,
         action: 'internal_error',
         payload: {
           code: 0,

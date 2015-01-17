@@ -12,10 +12,7 @@ importScripts(
 
 var emulator = new yasp.Emulator();
 
-var debugQueue = [];
 var IOUpdateLimiter = {};
-
-setInterval(flushDebugQueue, 100);
 
 var communicator = new yasp.CommunicatorBackend(self, function(data, ready) {
   switch (data.action) {
@@ -148,16 +145,11 @@ emulator.registerCallback('CONTINUE', function (running) {
 });
 
 emulator.registerCallback('DEBUG', function (type, subtype, addr, val) {
-  var log = { type: type, subtype: subtype, addr: addr, val: val };
-  debugQueue.push(log);
+  communicator.broadcast('DEBUG', {
+    payload: { type: type, subtype: subtype, addr: addr, val: val },
+    error: null
+  });
 });
-
-function flushDebugQueue () {
-  if(debugQueue.length !== 0) {
-    communicator.broadcast('DEBUG', { payload: debugQueue, error: null });
-    debugQueue.length = 0;
-  }
-}
 
 emulator.registerCallback('IO_CHANGED', function (pin, state, mode, type) {
   var now = Date.now();
