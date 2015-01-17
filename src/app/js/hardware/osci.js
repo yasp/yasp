@@ -15,73 +15,100 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       { nr: 5, type: 'gpio', mode: 'in' }
     ],
     init: function () {
-      this.voffset = 0;
       this.runningState = {
         tracers: {
         }
       };
+
+      this.retracePt = 0;
+
+      var traceFunc = (function () {
+        var now = Date.now();
+
+        for(var nr in this.iobank.pins) {
+          var pin = this.iobank.pins[nr];
+
+          if(!this.runningState.tracers[nr]) {
+            var values = new Array(points);
+
+            for (var i = 0; i < values.length; i++) {
+              values[i] = [
+                i,
+                null
+              ];
+            }
+
+            this.runningState.tracers[nr] = {
+              values: values,
+              offset: now,
+              mode: 'retrace'
+            };
+          }
+
+          var trace = this.runningState.tracers[nr];
+
+          var time = Date.now() - trace.offset;
+
+          var set = false;
+
+          trace.values[this.retracePt][1] = pin.state;
+        }
+
+        this.retracePt++;
+
+        if(this.retracePt >= trace.values.length) {
+          trace.offset = now;
+          time = 0;
+          trace.lastTime = -1;
+          this.retracePt = 0;
+        }
+
+        requestAnimationFrame(traceFunc);
+      }).bind(this);
+
+      requestAnimationFrame(traceFunc);
     },
     receiveStateChange: function (pin, tick) {
-      if(!this.runningState.tracers[pin.nr]) {
-        this.runningState.tracers[pin.nr] = {
-          values: []
-        }
-      }
-
-      var trac = this.runningState.tracers[pin.nr];
-
-      var y = tick - this.voffset;
-
-      if(y < 0) {
-        return;
-      }
-
-      var start = [y, pin.state];
-      var end = [y, pin.state];
-
-      if(trac.values.length > 0) {
-        var last = trac.values[trac.values.length - 1];
-
-        if (last[1] !== start[1]) {
-          last[0] = start[0];
-        }
-      }
-
-      trac.values.push(start);
-      trac.values.push(end);
-
-      if(y * scaling >= verticalGuides - 1) {
-        this.voffset = tick;
-
-        for(var nr in this.runningState.tracers) {
-          var tr = this.runningState.tracers[nr];
-          tr.values.length = 0;
-        }
-      }
     },
     uiEvent: function (name, turn) {
     },
     getState: function () {
       var state = {
-        tracers: []
+        tracers: [],
+        scanner: (this.retracePt / points) * (verticalGuides - 1)
       };
-
-      var max = 0;
 
       for(var nr in this.runningState.tracers) {
         var tracer = this.runningState.tracers[nr];
-
-        max = Math.max(max, tracer.values[tracer.values.length - 1][0]);
-
-        state.tracers.push({
+        var o = {
           label: "MASTER\nPin: " + nr,
-          trace: tracer.values
-        });
-      }
+          trace: []
+        };
 
-      for (var i = 0; i < state.tracers.length; i++) {
-        var trace = state.tracers[i].trace;
-        trace[trace.length - 1][0] = max;
+        var lastY = null;
+
+        for (var i = 0; i < tracer.values.length; i++) {
+          var y = tracer.values[i][1];
+
+          if(y === null) {
+            break;
+          }
+
+          if(y !== lastY) {
+            o.trace.push(tracer.values[i].slice());
+            o.trace.push(tracer.values[i].slice());
+          } else {
+            o.trace[o.trace.length - 1][0] = tracer.values[i][0];
+          }
+
+          lastY = y;
+        }
+
+        for (var i = 0; i < o.trace.length; i++) {
+          o.trace[i][0] = (o.trace[i][0] / points) * (verticalGuides - 1);
+        }
+
+        state.tracers.push(o);
       }
 
       return state;
@@ -102,19 +129,21 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
   var verticalGuides = 20;
   var horzontalGuides = 10;
 
-  var scaling = 0.1;
+  var width = guideSpacing * (verticalGuides - 1)
+  + guideMarginHorizontalLeft
+  + guideMarginHorizontalRight;
+
+  var height = guideSpacing * (horzontalGuides - 1)
+  + guideMarginVerticalTop
+  + guideMarginVerticalBottom;
+
+  var scaling = 0.5;
+
+  var points = scaling * 600;
 
   yasp.HardwareType['OSCI']['frontend']['dom'] = yasp.HardwareRenderer.makeRenderer({
     create: function () {
-      this.o_width = guideSpacing * (verticalGuides - 1)
-      + guideMarginHorizontalLeft
-      + guideMarginHorizontalRight;
-
-      this.o_height = guideSpacing * (horzontalGuides - 1)
-      + guideMarginVerticalTop
-      + guideMarginVerticalBottom;
-
-      this.element = $('<canvas height="' + this.o_height + '" width="' + this.o_width + '">');
+      this.element = $('<canvas height="' + height + '" width="' + width + '">');
       this.element.css({
         'width': '100%',
         'height': '100%'
@@ -126,7 +155,7 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       var that = this;
       var ctx = that.element[0].getContext("2d");
 
-      function drawGuideline(s, d) {
+      function drawGuidelines(d, n) {
         ctx.save();
         ctx.strokeStyle = '#AAA';
         ctx.beginPath();
@@ -134,20 +163,39 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
         ctx.lineWidth = 2;
         ctx.setLineDash([2,3]);
 
-        var offset = guideSpacing * s;
+        var offset = 0;
 
-        if(d === 'h') {
-          offset += guideMarginVerticalTop;
-          ctx.moveTo(guideMarginHorizontalLeft - 1, offset);
-          ctx.lineTo(that.o_width - guideMarginHorizontalRight + 1, offset);
+        if (d === 'h') {
+          offset = guideMarginVerticalTop;
         } else {
-          offset += guideMarginHorizontalLeft;
-          ctx.moveTo(offset, guideMarginVerticalTop - 1);
-          ctx.lineTo(offset, that.o_height - guideMarginVerticalBottom + 1);
+          offset = guideMarginHorizontalLeft;
+        }
+
+        for(; offset < n * guideSpacing; offset += guideSpacing) {
+          if (d === 'h') {
+            ctx.moveTo(guideMarginHorizontalLeft - 1, offset);
+            ctx.lineTo(width - guideMarginHorizontalRight + 1, offset);
+          } else {
+            ctx.moveTo(offset, guideMarginVerticalTop - 1);
+            ctx.lineTo(offset, height - guideMarginVerticalBottom + 1);
+          }
         }
 
         ctx.stroke();
         ctx.restore();
+      }
+
+      function drawScanner(s) {
+        var voffset = s * guideSpacing + guideMarginHorizontalLeft;
+
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'white';
+
+        ctx.moveTo(voffset, guideMarginVerticalTop);
+        ctx.lineTo(voffset, height - guideMarginVerticalBottom);
+
+        ctx.stroke();
       }
 
       function drawTracer(desc, h, c, points) {
@@ -171,12 +219,19 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
         ctx.lineWidth = 3;
         ctx.beginPath();
 
+        var lastX = null;
+
         for(var i = 0; i < points.length; i++) {
-          var x = hoffset + (points[i][0] * guideSpacing * scaling);
+          var x = hoffset + (points[i][0] * guideSpacing);
           var y = voffset + ((points[i][1] - 1) * guideSpacing * -1);
 
-          ctx.lineTo(x, y);
+          if(lastX === null || lastX <= x) {
+            ctx.lineTo(x, y);
+          }
+
           ctx.moveTo(x, y);
+
+          lastX = x;
         }
 
         ctx.stroke();
@@ -206,15 +261,10 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
       }
 
       function drawBackground() {
-        ctx.fillRect(0, 0, that.o_width, that.o_height);
+        ctx.fillRect(0, 0, width, height);
 
-        for(var i = 0; i < verticalGuides; i++) {
-          drawGuideline(i, 'v');
-        }
-
-        for(var i = 0; i < horzontalGuides; i++) {
-          drawGuideline(i, 'h');
-        }
+        drawGuidelines('v', verticalGuides);
+        drawGuidelines('h', horzontalGuides);
       }
 
       var dd = 0;
@@ -236,6 +286,8 @@ if (yasp.HardwareType === undefined) yasp.HardwareType = { };
 
         drawTracer(tracer.label, i * 2, color, tracer.trace);
       }
+
+      drawScanner(state.scanner);
     }
   });
 })();
