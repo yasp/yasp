@@ -53,7 +53,7 @@ if (typeof yasp == 'undefined') yasp = { };
       }
     }).bind(this);
 
-    this.worker.addEventListener("message", function () {
+    this.worker.addEventListener("message", function (event) {
       handleMessage(event.data);
     }, false);
   };
