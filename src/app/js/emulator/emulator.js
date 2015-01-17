@@ -713,7 +713,7 @@ if (typeof yasp == 'undefined') yasp = { };
 
     if(debug) console.log("p" + p + "=" + s + " (outside: " + (!!outside) + ")");
 
-    pin.setState(s, outside || !this.pwmEnabled, this.getTicks());
+    pin.setState(s, outside || !this.pwmEnabled, this.ticks);
 
     return 0;
   };
@@ -806,13 +806,6 @@ if (typeof yasp == 'undefined') yasp = { };
       delay = this.tickDelay;
     clearTimeout(this.tickTimeout);
     this.tickTimeout = setTimeout(this.tickWrapper.bind(this), delay);
-  };
-
-  /**
-   * @returns {Number} number of ticks executed, since the emulator has been created. This also takes sleeps into account.
-   */
-  yasp.Emulator.prototype.getTicks = function () {
-    return this.ticks;
   };
 
   yasp.Emulator.prototype.getTimePerTick = function () {
