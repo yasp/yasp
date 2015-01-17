@@ -784,10 +784,13 @@ if (typeof yasp == 'undefined') yasp = { };
   };
 
   /** halts the execution for a given time.
-   * @param ticks {Number} number of ticks to wait (1 tick ~= 0.015ms; 60000 ~= 900ms)
+   * @param amount {Number} number of ticks to wait (1 tick ~= 0.015ms; 60000 ~= 900ms)
    */
-  yasp.Emulator.prototype.wait = function (ticks) {
-    var ms = ticks * 0.015;
+  yasp.Emulator.prototype.wait = function (amount) {
+    // normalize number to milliseconds
+    var ms = amount * 0.015;
+    // normalize to whole ticks
+    ms = Math.round(ms / this.getTimePerTick()) * this.getTimePerTick();
     if(debug) console.log("wait " + ms + "ms");
     this.waitTime = ms;
   };
