@@ -742,6 +742,8 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
   }
 
   $('body').ready(function() {
+    initStorage();
+
     initLinting();
     initHinting();
 
@@ -750,8 +752,6 @@ if (typeof yasp.Storage == 'undefined') yasp.Storage = isLocalStorageEnabled () 
     initAutoindent();
 
     cacheUsbMasterImage();
-
-    initStorage();
 
     yasp.Editor.popups.init();
 
