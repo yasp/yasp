@@ -32,6 +32,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           width: "62"
         }
       },
+      /*
       {
         type: "OSCI",
         renderer: 'dom',
@@ -45,6 +46,7 @@ if (!yasp.BreadBoardTypes) yasp.BreadBoardTypes = { };
           width: "350"
         }
       },
+      */
       {
         type: "LED",
         renderer: 'dom',
