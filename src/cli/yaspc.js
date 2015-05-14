@@ -8,10 +8,16 @@ var TYPE_PACKET_RUN = 2;
 var TYPE_PACKET_STEP = 3;
 
 function build_packet(type, payload) {
-    var pak = new Buffer(1 + 4 + payload.length);
+    var pak = new Buffer(1 + 4 + (payload !== null ? payload.length : 0));
     pak.writeUInt8(type, 0);
-    pak.writeUInt32LE(payload.length, 1);
-    payload.copy(pak, 5);
+
+    if(payload !== null) {
+        pak.writeUInt32LE(payload.length, 1);
+        payload.copy(pak, 5);
+    } else {
+        pak.writeUInt32LE(0, 1);
+    }
+
     return pak;
 }
 
@@ -33,6 +39,10 @@ var commands = {
             }
             cb();
         });
+    },
+    run: function (params, cb) {
+        client.write(build_packet(TYPE_PACKET_RUN, null));
+        cb();
     },
     exit: function (params, cb) {
         process.exit(0);
