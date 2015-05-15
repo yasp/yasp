@@ -4,8 +4,7 @@ var async = require("async");
 var fs = require("fs");
 
 var TYPE_PACKET_LOAD = 1;
-var TYPE_PACKET_RUN = 2;
-var TYPE_PACKET_STEP = 3;
+var TYPE_PACKET_CONTINUE = 2;
 
 function build_packet(type, payload) {
     var pak = new Buffer(1 + 4 + (payload !== null ? payload.length : 0));
@@ -40,14 +39,10 @@ var commands = {
             cb();
         });
     },
-    run: function (params, cb) {
-        client.write(build_packet(TYPE_PACKET_RUN, null));
-        cb();
-    },
-    step: function (params, cb) {
+    continue: function (params, cb) {
         var payload = new Buffer(2);
         payload.writeUInt16LE(1, 0);
-        client.write(build_packet(TYPE_PACKET_STEP, payload));
+        client.write(build_packet(TYPE_PACKET_CONTINUE, payload));
         cb();
     },
     exit: function (params, cb) {
