@@ -3,11 +3,15 @@ var net = require("net");
 var async = require("async");
 var fs = require("fs");
 
-var TYPE_PACKET_LOAD = 1;
-var TYPE_PACKET_CONTINUE = 2;
+var packettypes = {
+    LOAD: 1,
+    CONTINUE: 2
+};
 
-function build_packet(type, payload) {
-    var pak = new Buffer(1 + 4 + (payload !== null ? payload.length : 0));
+function send_packet(client, type, payload) {
+    var len = 1 + 4 + (payload !== null ? payload.length : 0);
+    var pak = new Buffer(len);
+
     pak.writeUInt8(type, 0);
 
     if(payload !== null) {
@@ -17,7 +21,7 @@ function build_packet(type, payload) {
         pak.writeUInt32LE(0, 1);
     }
 
-    return pak;
+    client.write(pak);
 }
 
 var commands = {
@@ -31,8 +35,7 @@ var commands = {
                 var payload = new Buffer(4 + data.length);
                 payload.writeUInt32LE(data.length, 0);
                 data.copy(payload, 4);
-                var pak = build_packet(TYPE_PACKET_LOAD, payload);
-                client.write(pak);
+                send_packet(client, packettypes.LOAD, payload);
             } else {
                 console.log("could not load file: ", err);
             }
@@ -42,7 +45,7 @@ var commands = {
     continue: function (params, cb) {
         var payload = new Buffer(2);
         payload.writeUInt16LE(1, 0);
-        client.write(build_packet(TYPE_PACKET_CONTINUE, payload));
+        send_packet(client, packettypes.CONTINUE, payload);
         cb();
     },
     exit: function (params, cb) {
