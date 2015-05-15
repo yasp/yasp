@@ -44,6 +44,12 @@ var commands = {
         client.write(build_packet(TYPE_PACKET_RUN, null));
         cb();
     },
+    step: function (params, cb) {
+        var payload = new Buffer(2);
+        payload.writeUInt16LE(1, 0);
+        client.write(build_packet(TYPE_PACKET_STEP, payload));
+        cb();
+    },
     exit: function (params, cb) {
         process.exit(0);
     }
