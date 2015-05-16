@@ -1,11 +1,13 @@
 var repl = require("repl");
 var net = require("net");
+var zpad = require("zpad");
 var async = require("async");
 var fs = require("fs");
 
 var packettypes = {
     LOAD: 1,
-    CONTINUE: 2
+    CONTINUE: 2,
+    GET_STATE: 3
 };
 
 function send_packet(client, type, payload) {
@@ -22,6 +24,14 @@ function send_packet(client, type, payload) {
     }
 
     client.write(pak);
+}
+
+function read_array(data, start) {
+    var len = data.readUInt32LE(start);
+    start += 4;
+    var arr = new Buffer(len);
+    data.copy(arr, 0, start, start + len);
+    return arr;
 }
 
 var commands = {
@@ -47,6 +57,31 @@ var commands = {
         payload.writeUInt16LE(1, 0);
         send_packet(client, packettypes.CONTINUE, payload);
         cb();
+    },
+    getstate: function (params, cb) {
+        receive_response(function (data) {
+            var rom = read_array(data, 0);
+            var ram = read_array(data, 4 + rom.length);
+
+            for(var i = 0; i < 32; i++) {
+                process.stdout.write("b");
+                process.stdout.write(i.toString());
+                process.stdout.write(" ");
+                if(i < 10) {
+                    process.stdout.write(" ");
+                }
+                process.stdout.write("= 0x");
+                process.stdout.write(zpad(ram[i].toString(16), 2));
+                process.stdout.write("  ");
+
+                if((i + 1) % 4 === 0) {
+                    process.stdout.write("\n");
+                }
+            }
+
+            cb();
+        });
+        send_packet(client, packettypes.GET_STATE, null);
     },
     exit: function (params, cb) {
         process.exit(0);
@@ -91,3 +126,28 @@ client.on("connect", function() {
     console.log("connected!");
     startRepl();
 });
+
+function receive_response(func) {
+    var len = null;
+    var offset = 0;
+    var alldata = null;
+
+    function handledata(data) {
+        if(alldata === null) {
+            len = data.readUInt32LE(0);
+            alldata = new Buffer(len);
+            data.copy(alldata, offset, 4);
+            offset += data.length - 4;
+        } else {
+            data.copy(alldata, offset);
+            offset += data.length;
+        }
+
+        if(offset === len) {
+            client.removeListener("data", handledata);
+            func(alldata);
+        }
+    }
+
+    client.on("data", handledata);
+}
