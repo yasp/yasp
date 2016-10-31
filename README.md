@@ -44,9 +44,6 @@ $ grunt http       # start development http-server
 * `doc` builds jsdoc to `/doc/jsdoc/`
 * `watchdoc` watch-task for `doc`
 
-### Server
-yasp can additionally upload code-files to an simple server which can be found in the [server repository](https://github.com/yasp/server).
-
 ### Documentation
 The documentation lives in the [/doc/](/doc/)-directory. Additional documentation in the German language can be found on the [project homepage](http://yasp.me).
 
